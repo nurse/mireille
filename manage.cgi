@@ -9,9 +9,9 @@
 # Scripted by NARUSE,Yui.
 #------------------------------------------------------------------------------#
 # $cvsid = q$Id$;
-require 5.005;
-use strict;
-use vars qw(%AT %CF %IN %IC);
+#require 5.005;
+#use strict;
+#use vars qw(%AT %CF %IN %IC);
 $|=1;
 
 
@@ -305,10 +305,6 @@ Iconリスト編集（タグ）(<SPAN class="ak">Y</SPAN>)</LABEL>
 <INPUT name="mode" class="radio" id="icons" type="radio" value="icons">
 Iconリスト編集(Sharp）(<SPAN class="ak">U</SPAN>)</LABEL>
 <BR>
-<LABEL accesskey="g" for="icong">
-<INPUT name="mode" class="radio" id="icong" type="radio" value="icong">
-IconGUI編集(<SPAN class="ak">G</SPAN>)</LABEL>
-<BR>
 <LABEL accesskey="i" for="iconsmp">
 <INPUT name="mode" class="radio" id="iconsmp" type="radio" value="iconsmp" checked>
 <SPAN class="ak">I</SPAN>con見本を更新</LABEL>
@@ -339,267 +335,6 @@ index.cgi編集(<SPAN class="ak">C</SPAN>)</LABEL>
 <INPUT type="reset" class="reset" value="キャンセル"></P>
 ASDF
 	exit;
-}
-
-#-------------------------------------------------
-# アイコン（GUI）
-#
-sub icong{
-	&loadcfg;
-	$CF{'icls'}='iconLite.txt';
-	if(!$IN{'phase'}||1==$IN{'phase'}){#アイコンリスト編集
-		open(RD,"<$CF{'icls'}")||die"Can't read iconlist($CF{'icls'})[$!]";
-		eval{flock(RD,1)};
-		my$iconlist;
-		read(RD,$iconlist,-s$CF{'icls'});
-		close(RD);
-		
-		my@items;
-		my%group;
-		
-		my$i=0;
-		my$j=0;
-		$AT{'x'}=6;
-		my$cols=$AT{'x'};
-		for(&parseMir0x($iconlist)){
-			$i++;
-			my%DT=%{$_};
-=pod
-			if($DT{'cmd'}){
-				if('PAGE-BREAK'eq$DT{'cmd'}){
-					
-				}elsif('COPY'eq$DT{'cmd'}){
-					if('BEGIN'eq$DT{'swt'}){
-						push(@items,'<P>'
-							.qq(<INPUT type="text" name="$i-cmd" value="$DT{'cmd'}">\n)
-							.qq(<INPUT type="text" name="$i-swt" value="$DT{'swt'}">\n)
-						.'</P>');
-						push(@items,qq(<FIELDSET>));
-					}elsif('END'eq$DT{'swt'}){
-						push(@items,'<P>'
-							.qq(<INPUT type="text" name="$i-cmd" value="$DT{'cmd'}">\n)
-							.qq(<INPUT type="text" name="$i-swt" value="$DT{'swt'}">\n)
-						.'</P>');
-						push(@items,qq(</FIELDSET>));
-					}elsif('SET'eq$DT{'swt'}){
-						push(@items,'<P>'
-							.qq(<INPUT type="text" name="$i-cmd" value="$DT{'cmd'}">\n)
-							.qq(<INPUT type="text" name="$i-swt" value="$DT{'swt'}">\n)
-							.qq(<INPUT type="text" name="$i-name" value="$DT{'name'}">\n)
-							.qq(<INPUT type="text" name="$i-item" value="$DT{'item'}">\n)
-							.qq(<INPUT type="text" name="$i-value" value="$DT{'value'}">\n)
-						.'</P>');
-					}
-				}
-				next;
-			}
-=cut
-			
-			if('item'eq$DT{'type'}){
-				my$item='<TD>'
-					.qq(<INPUT type="hidden" name="$i-type" value="$DT{'type'}">\n)
-					.qq(<IMG name="icon$i" id="icon$i" title="$i" src="$CF{'icon'}$DT{'value'}"><BR>\n)
-					.qq(<INPUT type="text" name="$i-name" value="$DT{'name'}"><BR>\n)
-					.qq(<INPUT type="text" name="$i-value" value="$DT{'value'}")
-					.qq( onchange="changeIcon($i,this.value)"></TD>\n);
-				if($j<$cols){ #グループ内1-5桁
-					$j++;
-				}else{ #グループ内6桁目：改行
-					$item.="</TR><TR>\n";$j=1;
-				}
-				push(@items,$item);
-			}elsif('startGroup'eq$DT{'type'}){
-				$group{$i}=$DT{'name'};
-				push(@items,qq(\n<TABLE class="icon" id="iconTable$i" style="display:none">\n)
-					.qq(<CAPTION style="text-align:center">)
-					.qq(<INPUT type="hidden" name="$i-type" value="$DT{'type'}">\n)
-					.qq(GROUP: <INPUT type="text" name="$i-name" value="$DT{'name'}"></CAPTION>\n)
-					.qq(<COL span="$cols"><TR>\n));
-				$j=1;
-			}elsif('endGroup'eq$DT{'type'}){
-				push(@items,($j>1?"</TR><TR>\n":'')
-					.qq(<TD colspan="$cols"><INPUT type="hidden" name="$i-type" value="$DT{'type'}">)
-					.qq(<BUTTON onclick="alert('まーだだよ')">アイコンを追加する</BUTTON></TD>\n</TR></TABLE>\n));
-				$i+=100;
-				$j=0;
-			}
-		}
-		print&getManageHeader;
-		print<<"_HTML_";
-<SCRIPT type="text/javascript">
-var presentTable=null;
-var iconDir="$CF{'icon'}";
-function showTable(newTable){
-	presentTable&&(document.getElementById(presentTable).style.display='none');
-	document.getElementById('iconTable'+newTable).style.display='block';
-	presentTable='iconTable'+newTable;
-}
-function changeIcon(number,value){
-	document.getElementById('icon'+number).src=iconDir+value;
-}
-</SCRIPT>
-<FORM accept-charset="euc-jp" name="iconedit" method="post" action="$AT{'manage'}">
-_HTML_
-		print qq(<TABLE class="icon" style="float:left;margin-left:1em;text-align:left">\n);
-		print map{qq(<TR><TD onclick="showTable($_)" title="$_">$group{$_}</TD></TR>\n)}
-			sort{$a<=>$b}keys%group;
-		print qq(</TABLE>\n);
-		print@items;
-		print<<"_HTML_";
-<P style="float:clear">
-<INPUT name="mode" type="hidden" value="icong">
-<INPUT name="phase" type="hidden" value="2">
-<INPUT name="pass" type="hidden" value="$IN{'pass'}">
-<INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
-</FORM>
-_HTML_
-		print&getManageFooter;
-		exit;
-	}else{
-		my@events;
-		for(map{m/^((\d+)-(\w+))$/o;[$1,$2,$3]}grep{m/^\d+-\w+$/o}keys%IN){
-			$events[$_->[1]]->{$_->[2]}=$IN{$_->[0]};
-		}
-		
-		my@tmp=@events;undef@events;
-		for(@tmp){'HASH'eq ref$_&& push(@events,$_)}
-		
-		print&getManageHeader;
-		print"<PRE>".generateEalis3qw(@events)."</PRE>";
-		print<<"_HTML_";
-<FORM accept-charset="euc-jp" name="iconedit" method="post" action="$AT{'manage'}">
-<INPUT name="pass" type="hidden" value="$IN{'pass'}">
-<INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
-</FORM>
-_HTML_
-		print&getManageFooter;
-		exit;
-	}
-	exit;
-}
-
-sub generateEalis3qw{
-	my@list;
-	my$max=1;
-	for(@_){
-		my%DT=%{$_};
-		if($DT{'cmd'}){
-		}elsif('item'eq$DT{'type'}){
-			$max=length$DT{'value'}if$max<length$DT{'value'};
-			push(@list,$DT{'value'},$DT{'name'});
-		}elsif('startGroup'eq$DT{'type'}){
-			push(@list,'**',$DT{'name'});
-		}elsif('endGroup'eq$DT{'type'}){
-		}
-	}
-	return wantarray?@list:join('',
-	map{sprintf("\t\t%-${max}s\t%s\n",$list[$_*2],$list[$_*2+1])}(0..@list/2));
-}
-
-#-------------------------------------------------
-# Mireille0.x Parser and Generator
-#
-
-=head2 Mireille0.x形式アイコンリストの解析と生成
-
-Mireille0.x形式は主にMireilleやMarldiaで用いられるアイコンリスト形式で、
-少ない処理でHTMLに書き出すために、もとからHTMLの断片として作られたリスト形式である。
-HTML断片という性格から幅広い拡張性を持つが、ともすれば煩雑になりやすい。
-そのため、正規表現が実装されていない言語でこのリスト形式を扱うのは難しいと思われる。
-
-=over 4
-
-=cut
-
-sub parseMir0x{
-	my$iconlist=shift;
-	my@events;
-	for($iconlist=~/.*/go){
-		if(/<!--\s*%(?:(BEGIN|END|SET)_)?(VENDOR|COPY1|PAGE-BREAK)(?:_(NAME|URL|LINK))?(?:\s+(\S.*?))?\s*-->/o){
-
-=item MireilleIconListCommand
-
- /<!--\s*%(?:(BEGIN|END)_)?([-A-Z0-9]+)(?:_([A-Z0-9]+))?(?:\s+(\S.*?))?\s*-->/o
- イベント：アイコンリストの命令を発見した
- 現在存在する命令の形式は以下のよう
-
-swt:  $1: 'BEGIN','END','SET'
-name: $2: 'VENDOR','COPY1','PAGE-BREAK'
-item: $3: 'NAME','URL','LINK'
-value:$4: 命令の引数
-
-=cut
-
-			if('PAGE-BREAK'eq$2){
-				#改ページ処理を。
-				push(@events,{cmd=>'PAGE-BREAK'});
-			}elsif($1&&('BEGIN'eq$1||'END' eq$1)){
-#				'VENDOR'eq$2||'COPY1'eq$2||next;
-#上は暗黙の仮定とする
-#将来拡張する際に注意すること
-				push(@events,{cmd=>'COPY',swt=>$1,name=>$2});
-				'BEGIN'eq$1&&$4&& push(@events,{cmd=>'COPY',swt=>'SET',name=>$2,item=>'NAME',value=>$4});
-			}elsif($3&&$4){
-				push(@events,{cmd=>'COPY',swt=>'SET',name=>$2,item=>$3,value=>$4});
-			}
-			next
-		}
-		
-		if(/^\s*<OPTION ([^>]*)\bvalue=(["'])(.+?)\2([^>]*)>([^<]+)(<\/OPTION>)?$/io){
-
-=item OPTION要素
-
- /^\s*<OPTION (.*)value=(["'])(.+?)\2([^>]*)>([^<]*)(<\/OPTION>)?$/io
- <TD><IMG $1src="$CF{'iconDir'}$3" title="$5"$4><BR>$5</TD>\n
- イベント：一つのアイコンを発見
-
-=cut
-
-			push(@events,{type=>'item',value=>$3,pre=>$1,suf=>$4,name=>$5});
-		}elsif(/^<OPTGROUP ([^>]*)\blabel=(["'])(.+?)\2(.*)>$/io){
-
-=item OPTGOUP要素始
-
- ^<OPTGROUP (.*)label=(["'])(.+?)\2(.*)>$
- <TABLE $1summary="$2"$3>
- イベント：OPTGROUP内に入った
-
-=cut
-
-			push(@events,{type=>'startGroup',name=>$3,pre=>$1,suf=>$4});
-		}elsif(/<\/OPTGROUP>/io){#</OPTGROUP>
-
-=item OPTGOUP要素終
-
- /OPTGROUP/io
- イベント：OPTGROUP外に出た
-
-=cut
-
-			push(@events,{type=>'endGroup'});
-		}
-		next;
-	}
-
-=back
-
-=cut
-
-	undef$iconlist;
-	return@events;
-}
-sub generateMir0x{
-	die"未実装";
-	my@list;
-	for(@_){
-		my%DT=%{$_};
-		if('item'eq$DT{'type'}){
-		}elsif('startGroup'eq$DT{'type'}){
-		}elsif('endGroup'eq$DT{'type'}){
-			next;
-		}
-	}
-	return@list;
 }
 
 
@@ -949,9 +684,9 @@ my@required=(
 ,'logmax'	=>'最大スレッド数'
 ,'maxChilds'=>'一スレッドあたりの最大子記事数を制限する'
 ,'sekitm'	=>'検索できる項目（"項目のname 選択字の名前 "をくりかえす）'
-,'prtitm'	=>'親記事の項目(+color +email +home +icon +ra +hua cmd +subject)'
-,'chditm'	=>'子記事の項目(+color +email +home +icon +ra +hua cmd)'
-,'cokitm'	=>'Cookieの項目(color email home icon)'
+,'prtitm'	=>'親記事の項目(+color +email +home +icon +ra +hua +cmd +subject)'
+,'chditm'	=>'子記事の項目(+color +email +home +icon +ra +hua +cmd)'
+,'cokitm'	=>'Cookieの項目(color email home icon cmd)'
 ,'conenc'	=>'圧縮転送のやり方(Content-Encodingの方法)'
 ,'ckpath'	=>'Cookieを登録するPATH(path=/ といった形で)'
 );
@@ -970,8 +705,8 @@ my@required=(
  'colorList'=>'色リスト'
 ,'bodyHead'	=>'HTML-BODYのヘッダー（ページ最上部のバナー広告はここに）'
 ,'bodyFoot'	=>'HTML-BODYのフッター（ページ最下部のバナー広告はここに）'
-,'iched'	=>'アイコンリストのヘッダー'
-,'icfot'	=>'アイコンリストのフッター'
+,'iched'	=>'アイコンカタログのヘッダー'
+,'icfot'	=>'アイコンカタログのフッター'
 );
 	unless($IN{'name'}){
 		my$message='';
@@ -1130,9 +865,9 @@ ASDF
 # "This file is written in euc-jp, CRLF." 空
 # Scripted by NARUSE,Yui.
 #------------------------------------------------------------------------------#
-require 5.005;
-use strict;
-use vars qw(\%CF \%IC);
+#require 5.005;
+#use strict;
+#use vars qw(\%CF \%IC);
 \$|=1;
 
 #-------------------------------------------------
@@ -1167,6 +902,8 @@ ASDF
 ASDF
 		}
 		$config.=<<"ASDF";
+#ファイル名指定アイコンのコマンド名
+#\$CF{'exicfi'}='iconfile';
 #専用アイコン機能 (ON 1 OFF 0)
 \$CF{'exicon'}=\'$IN{'exicon'}\';
 #専用アイコン列挙
@@ -1223,7 +960,6 @@ BEGIN{
 			print"ERROR: $_[0]\n"if@_;
 			print join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(Index Style Core Exte))
 			."\n".join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(log icon icls style));
-			print"\ngetlogin\t: ".getlogin;
 			print"\n".join('',map{"$$_[0]\t: $$_[1]\n"}
 			([PerlVer=>$]],[PerlPath=>$^X],[BaseTime=>$^T],[OSName=>$^O],[FileName=>$0],[__FILE__=>__FILE__]))
 			."\n\t= = = ENV = = =\n".join('',map{sprintf"%-20.20s : %s\n",$_,$ENV{$_}}grep{$ENV{"$_"}}
@@ -1239,10 +975,9 @@ ASDF
 
 	$CF{'Index'}=~/(\d+((?:\.\d+)*))/o;
 	$CF{'IndexRevision'}=$1;
-	getlogin||umask(0); #nobody権限で作ったファイルをユーザが消せるように
 }
 
-$CF{'IndexRevision'};
+1;
 __END__
 ASDF
 		open(WR,'+>>index.cgi')||die"Can't write index.cgi[$!]";
@@ -1706,7 +1441,6 @@ BEGIN{
 			print"ERROR: $_[0]\n"if@_;
 			print join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(Manage Index Style Core Exte))
 			."\n".join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(log icon icls style));
-			print"\ngetlogin\t: ".getlogin;
 			print"\n".join('',map{"$$_[0]\t: $$_[1]\n"}
 			([PerlVer=>$]],[PerlPath=>$^X],[BaseTime=>$^T],[OSName=>$^O],[FileName=>$0],[__FILE__=>__FILE__]))
 			."\n\t= = = ENV = = =\n".join('',map{sprintf"%-20.20s : %s\n",$_,$ENV{$_}}grep{$ENV{"$_"}}

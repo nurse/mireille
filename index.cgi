@@ -8,9 +8,9 @@
 # "This file is written in euc-jp, CRLF." 空
 # Scripted by NARUSE,Yui.
 #------------------------------------------------------------------------------#
-require 5.005;
-use strict;
-use vars qw(%CF %IC);
+#require 5.005;
+#use strict;
+#use vars qw(%CF %IC);
 $|=1;
 
 #-------------------------------------------------
@@ -68,12 +68,12 @@ $CF{'logmax'}='100';
 $CF{'maxChilds'}='100';
 #検索できる項目（"項目のname 選択字の名前 "をくりかえす）
 $CF{'sekitm'}='ALL 全て name 名前 email E-mail home ホーム subject 題名 body 本文';
-#親記事の項目(+color +email +home +icon +ra +hua cmd +subject)
-$CF{'prtitm'}='+color +email +home +icon +ra +hua cmd +subject';
-#子記事の項目(+color +email +home +icon +ra +hua cmd)
-$CF{'chditm'}='+color +email +home +icon +ra +hua cmd';
-#Cookieの項目(color email home icon)
-$CF{'cokitm'}='color email home icon';
+#親記事の項目(+color +email +home +icon +ra +hua +cmd +subject)
+$CF{'prtitm'}='+color +email +home +icon +ra +hua +cmd +subject';
+#子記事の項目(+color +email +home +icon +ra +hua +cmd)
+$CF{'chditm'}='+color +email +home +icon +ra +hua +cmd';
+#Cookieの項目(color email home icon cmd)
+$CF{'cokitm'}='color email home icon cmd';
 #圧縮転送のやり方(Content-Encodingの方法)
 $CF{'conenc'}='|gzip -cfq9';
 #Cookieを登録するPATH(path=/ といった形で)
@@ -96,6 +96,8 @@ $CF{'readOnly'}='0';
 $CF{'use304'}='0';
 #常に「Last-Modified」を渡すか否か (0 渡さない 1 渡す)
 $CF{'useLastModified'}='0';
+#ファイル名指定アイコンのコマンド名
+#$CF{'exicfi'}='iconfile';
 #専用アイコン機能 (ON 1 OFF 0)
 $CF{'exicon'}='0';
 #専用アイコン列挙
@@ -269,13 +271,13 @@ $CF{'bodyFoot'}=<<'_CONFIG_';
 _CONFIG_
 
 #-----------------------------
-# アイコンリストのヘッダー
+# アイコンカタログのヘッダー
 $CF{'iched'}=<<'_CONFIG_';
 
 _CONFIG_
 
 #-----------------------------
-# アイコンリストのフッター
+# アイコンカタログのフッター
 $CF{'icfot'}=<<'_CONFIG_';
 
 _CONFIG_
@@ -303,7 +305,6 @@ BEGIN{
 			print"ERROR: $_[0]\n"if@_;
 			print join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(Index Style Core Exte))
 			."\n".join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(log icon icls style));
-			print"\ngetlogin\t: ".getlogin;
 			print"\n".join('',map{"$$_[0]\t: $$_[1]\n"}
 			([PerlVer=>$]],[PerlPath=>$^X],[BaseTime=>$^T],[OSName=>$^O],[FileName=>$0],[__FILE__=>__FILE__]))
 			."\n\t= = = ENV = = =\n".join('',map{sprintf"%-20.20s : %s\n",$_,$ENV{$_}}grep{$ENV{"$_"}}
@@ -317,8 +318,7 @@ BEGIN{
 	$CF{'Index'}=q$Revision$;
 	$CF{'Index'}=~/(\d+((?:\.\d+)*))/o;
 	$CF{'IndexRevision'}=$1;
-	getlogin||umask(0); #nobody権限で作ったファイルをユーザが消せるように
 }
 
-$CF{'IndexRevision'};
+1;
 __END__
