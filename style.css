@@ -48,7 +48,7 @@ BODY{
 	border-style: none;
 	border-width: 0;
 	color: #355;
-	font-family: '£Í£Ó £Ð¥´¥·¥Ã¥¯',sans-serif;
+	font-family: 'MS UI Gothic',sans-serif;
 	font-size: 13px;
 	margin: 0.2em 0;
 	padding: 0;
@@ -65,7 +65,7 @@ BUTTON:hover{
 	color: #355;
 }
 BUTTON,INPUT,SELECT,TEXTAREA{
-	font-family: '£Í£Ó £Ð¥´¥·¥Ã¥¯',sans-serif;
+	font-family: 'MS UI Gothic',sans-serif;
 	font-size: 13px;
 }
 DFN{
@@ -121,7 +121,7 @@ SMALL{
 TABLE{
 /*	background-color: transparent;*/
 	color: #355;
-	font-family: '£Í£Ó £Ð¥´¥·¥Ã¥¯',sans-serif;
+	font-family: 'MS UI Gothic',sans-serif;
 	font-size: 100%;
 	margin: 1em auto;
 	text-align: center;
@@ -233,7 +233,7 @@ DIV.right{
 .heading2{
 	background-color: #ace;
 	color: #fff;
-	font-family: 'Comic Sans MS','£Í£Ó £Ð¥´¥·¥Ã¥¯',sans-serif;
+	font-family: 'Comic Sans MS','MS UI Gothic',sans-serif;
 	font-size: 130%;
 	font-weight: bold;
 	margin: 1em auto;
@@ -285,7 +285,7 @@ DIV.right{
 }
 /* Second Level */
 .section .section{
-	border: 1px solid #cdf;
+	border: #cdf solid 1px;
 	margin: 1em 2em;
 }
 .section .section .h{
@@ -296,7 +296,7 @@ DIV.right{
 }
 /* ThirdLevel */
 .section .section .section{
-	border: 1px solid #aaf;
+	border: #aaf solid 1px;
 }
 .section .section .section .h{
 	background-color: #ccf;
@@ -305,7 +305,7 @@ DIV.right{
 }
 /* Forth Level */
 .section .section .section .section{
-	border: 1px solid #55f;
+	border: #55f solid 1px;
 }
 .section .section .section .section .h{
 	background-color: #eef;
@@ -359,7 +359,7 @@ DIV.right{
 	border-spacing: 0; 
 	border-style: solid;
 	border-width: 1px;
-	font-family: '£Í£Ó £Ð¥´¥·¥Ã¥¯',sans-serif;
+	font-family: 'MS UI Gothic',sans-serif;
 	font-size: 100%;
 	margin-left: 4em;
 	text-align: left;
@@ -520,17 +520,23 @@ TABLE.head{
 TABLE.head TH{
 	font-size: 100%;
 	padding: 3px 5px;
-	text-align: left;
 	white-space: nowrap;
 }
 H1.head,DIV.head A{
 	color: #fff;
-	font-family: 'Comic Sans MS','£Í£Ó £Ð¥´¥·¥Ã¥¯',sans-serif;
+	font-family: 'Comic Sans MS','MS UI Gothic',sans-serif;
 	font-size: 145%;
 	font-weight: normal;
 }
-H1.head{margin: 0;}
-DIV.head A:visited{color: #fff;}
+TH H1.head{
+	margin: 0;
+	text-align: left;
+}
+TH DIV.head{
+	margin: 0;
+	text-align: right;
+}
+DIV.head A:visited{color: #fff}
 TABLE.head TD{
 	color: #fff;
 	font-size: 115%;
