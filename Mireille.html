@@ -1666,7 +1666,7 @@ $IC{'hoe'}='moe.png'; #乃絵</CODE></PRE>
 	
 	また<STRONG>文字はまったく表示されずただ画面が真っ白になる場合</STRONG>や<STRONG>広告と共に化けた文字が表示される場合</STRONG>は、<BR>
 	たいてい、GZIP圧縮転送機能と無料サーバーによくある強制広告挿入機構のコンボが原因でしょう<BR>
-	対策としては、index.cgiの「圧縮転送の方法」を <CODE>$CF{'conenc'}='';</CODE>と空にしてください<BR>
+	対策としては、index.cgiのどこかに <CODE>undef$ENV{'HTTP_ACCEPT_ENCODING'};</CODE> という行を追加して下さい<BR>
 	
 	最後に<STRONG>以上の三つ以外の症状で動作しない場合</STRONG>は、<BR>
 	原因が特定できないのでAiremixの掲示板で成瀬に聞いてください<BR>
