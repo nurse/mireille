@@ -374,15 +374,21 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 		$IN{'pass'}||($CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'})
 		or push(@error,'¥Ñ¥¹¥ï¡¼¥É')&&push(@message,'¥Ñ¥¹¥ï¡¼¥É¤Ï8Ê¸»ú°Ê¾å¡¢128Ê¸»ú°Ê²¼¤Ç¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó¡£');
 		if($CF{'ngWords'}&&!@error){
+#if EUCJP
 			my$eucpre=qr{(?<!\x8F)};
 			my$eucpost=qr{(?=(?:[\xA1-\xFE][\xA1-\xFE])*(?:[\x00-\x7F\x8E\x8F]|\z))};
+#endif
 			my%item=(body=>'ËÜÊ¸',subject=>'ÂêÌ¾',name=>'Ì¾Á°');
 			for(keys%item){
 				my$item=$IN{$_};
 				my$err=$item{$_};
 				study$item;
 				for($CF{'ngWords'}=~/\S+/go){
+#if EUCJP
 					$item=~/$eucpre$_$eucpost/||next;
+#else
+#					index($item,$_)+1||next;
+#endif
 					push(@error,$err);
 					last;
 				}
@@ -576,7 +582,7 @@ _HTML_
 	#-----------------------------
 	#@zer1¥Ù¡¼¥¹¹Ó¤é¤·ÂÐºö(?)
 	#120ÉÃ°ÊÆâ¤Ë@zer1¤¬Á´¤ÆÆþ¤ìÂØ¤ï¤Ã¤¿¤é´í¸±¤ÎÃû¸õ
-	$zer1[$#zer1]=~/\d+:\w+:\d+\[(\d+)\]/o&&$1+120>$^T&&&showUserError('Å·Ê¸´±¤¬¶§Ãû¤òÃÎ¤é¤»¤Æ¤­¤¿');
+	@zer1>4&&$zer1[$#zer1]=~/\d+:\w+:\d+\[(\d+)\]/o&&$1+120>$^T&&&showUserError('Å·Ê¸´±¤¬¶§Ãû¤òÃÎ¤é¤»¤Æ¤­¤¿');
 	
 	#-----------------------------
 	#@zer2¤Î¥¨¥é¡¼ÄûÀµ
@@ -855,47 +861,43 @@ sub res{
 /* ========== ÏÈ¤Î¹â¤µÀßÄê ========== */
 function setDivHeight(){
 	if(!document.getElementById)return false;
-	var div=document.getElementById('threadBox');
-	var but=document.getElementById('inpDivBorder');
-	var inp=document.getElementById('inpDivHeight');
-	if(!div.style||!div.style.height)return false;
-	but.value='ÏÈ¤ò¹­¤²¤ë';
-	div.style.height=inp.value=inp.value.match(/([1-9]\d*)/)?RegExp.$1+'px':'400px';
-	div.style.overflow='auto';
+	if(!threadBox.style||!threadBox.style.height)return false;
+	inpDivBorder.value='ÏÈ¤ò¹­¤²¤ë';
+	threadBox.style.height=inpDivHeight.value=inpDivHeight.value.match(/([1-9]\d*)/)?RegExp.$1+'px':'400px';
+	threadBox.style.overflow='auto';
 }
 
 /* ========== ÏÈ¤ò¹­¤²¤¿¤ê¶¹¤á¤¿¤ê ========== */
 function switchDivBorder(self){
 	if(!document.getElementById)return false;
-	var div=document.getElementById('threadBox');
-	var inp=document.getElementById('inpDivHeight');
-	if(!div.style||!div.style.overflow){
-		return false;
-	}else if(div.style.height=='auto'){
-		self.value='ÏÈ¤ò¹­¤²¤ë';
-	div.style.height=inp.value=inp.value.match(/([1-9]\d*)/)?RegExp.$1+'px':'400px';
-		div.style.overflow='auto';
-	}else{
+	if(!threadBox.style||typeof(threadBox.style.overflow)=='undefined')return false;
+	
+	var value=inpDivHeight.value.match(/([1-9]\d*)/)?RegExp.$1+'px':'400px';
+	if(threadBox.style.height==value){
 		self.value='ÏÈ¤ò¶¹¤á¤ë';
-		div.style.height='auto';
-		div.style.overflow='visible';
+		threadBox.style.height='auto';
+		threadBox.style.overflow='visible';
+	}else{
+		self.value='ÏÈ¤ò¹­¤²¤ë';
+		threadBox.style.height=value
+		threadBox.style.overflow='auto';
 	}
 }
 
 /* ========== ÏÈ¤ò½é´ü²½ ========== */
 function initDiv(){
 	if(!document.getElementById)return false;
-	var div=document.getElementById('threadBox');
-	var but=document.getElementById('inpDivBorder');
-	var inp=document.getElementById('inpDivHeight');
-	if(!div.style||!div.style.height)return false;
-	but.value='ÏÈ¤ò¹­¤²¤ë';
-	div.style.height=inp.value=inp.value.match(/([1-9]\d*)/)?RegExp.$1+'px':'400px';
-	div.style.overflow='auto';
+	if(!threadBox.style||!threadBox.style.height)return false;
+	inpDivBorder.value='ÏÈ¤ò¹­¤²¤ë';
+	threadBox.style.height=inpDivHeight.value=inpDivHeight.value.match(/([1-9]\d*)/)?RegExp.$1+'px':'400px';
+	threadBox.style.overflow='auto';
 }
 
 /* ==========  ========== */
 //initDiv();
+var div=document.getElementById('threadBox');
+var but=document.getElementById('inpDivBorder');
+var inp=document.getElementById('inpDivHeight');
 -->
 </SCRIPT>
 
@@ -1180,12 +1182,14 @@ sub showArtSeek{
 		
 		&logfiles('number');
 		
+#if EUCJP
 		#Àµ¤·¤¯¥Ñ¥¿¡¼¥ó¥Þ¥Ã¥Á¤µ¤»¤ë
 		my$eucpre=qr{(?<!\x8F)};
 		my$eucpost=qr{(?=
 			(?:[\xA1-\xFE][\xA1-\xFE])*	# JIS X 0208 ¤¬ 0Ê¸»ú°Ê¾åÂ³¤¤¤Æ
 			(?:[\x00-\x7F\x8E\x8F]|\z)	# ASCII, SS2, SS3 ¤Þ¤¿¤Ï½ªÃ¼
 		)}x;
+#endif
 		
 		if('i'eq$IN{'every'}){
 			#¥¹¥ì¥Ã¥É¤´¤È¸¡º÷
@@ -1196,8 +1200,11 @@ sub showArtSeek{
 				my$thread;
 				read(RD,$thread,-s"$CF{'log'}$_.cgi");
 				close(RD);
-#				index($thread,$IN{'seek'})>-1||next;
+#if EUCJP
 				$thread=~/$item=\t[^\t]*$eucpre$seek$eucpost[^\t]*;\t/o||next;
+#else
+#				index($thread,$IN{'seek'})+1||next;
+#endif
 				$result.=qq(<A href="index.cgi?read=$_#art$_">No.$_</A>\n);
 			}
 		}else{
@@ -1212,8 +1219,12 @@ sub showArtSeek{
 				index($thread,$IN{'seek'})+1||next;
 				my$i=$_;
 				my$j=0;
-				while($thread=~m/$item=\t[^\t]*$eucpre($seek)$eucpost[^\t]*;\t/go){
-					$j=substr($thread,0,pos$thread)=~tr/\n//;
+#if EUCJP
+				while($thread=~/$item=\t[^\t]*$eucpre$seek$eucpost[^\t]*;\t/go){
+#else
+#				while($thread=~/$item=\t[^\t]*$seek$eucpost[^\t]*;\t/go){
+#endif
+						$j=substr($thread,0,pos$thread)=~tr/\n//;
 					$result.=qq(<A href="index.cgi?read=$i#art$i-$j">No.$i-$j</A>\n);
 				}
 			}
@@ -1372,12 +1383,27 @@ sub getParam{
 		$params=$ENV{'QUERY_STRING'};
 	}
 	
+#if EUCJP
 	# EUC-JPÊ¸»ú
-	my$eucchar=qr((?:
+	my$char=qr((?:
 		[\x09\x0A\x0D\x20-\x7E]			# 1¥Ð¥¤¥È EUC-JPÊ¸»ú²þ
 		|(?:[\x8E\xA1-\xFE][\xA1-\xFE])	# 2¥Ð¥¤¥È EUC-JPÊ¸»ú
 		|(?:\x8F[\xA1-\xFE]{2})			# 3¥Ð¥¤¥È EUC-JPÊ¸»ú
 	))x;
+#elif UTF8
+#	# UTF-8Ê¸»ú
+#	my$char=qr((?:
+#		[\x09\x0A\x0D\x20-\x7E]			# 1¥Ð¥¤¥È UTF-8 Ê¸»ú
+#		|(?:[\xC2-\xDF][\x80-\xBF])		# 2¥Ð¥¤¥È UTF-8 Ê¸»ú
+#		|(?:[\xE0-\xEF][\x80-\xBF]{2})	# 3¥Ð¥¤¥È UTF-8 Ê¸»ú
+#		|(?:[\xF0-\xF7][\x80-\xBF]{3})	# 4¥Ð¥¤¥È UTF-8 Ê¸»ú
+#		|(?:[\xF8-\xFB][\x80-\xBF]{4})	# 5¥Ð¥¤¥È UTF-8 Ê¸»ú
+#		|(?:[\xFD-\xFE][\x80-\xBF]{5})	# 6¥Ð¥¤¥È UTF-8 Ê¸»ú
+#	))x;
+#	
+#else
+#	my$char=qr([\W\w]);
+#endif
 	
 	#°ú¿ô¤ò¥Ï¥Ã¥·¥å¤Ë
 	unless($params){
@@ -1401,7 +1427,7 @@ sub getParam{
 		study$j;
 		$j=~tr/+/\ /;
 		$j=~s/%([\dA-Fa-f]{2})/pack('H2',$1)/ego;
-		$j=$j=~/($eucchar*)/o?$1:'';
+		$j=$j=~/($char*)/o?$1:'';
 		#¥á¥¤¥ó¥Õ¥ì¡¼¥à¤Î²þ¹Ô¤Ï\x85¤é¤·¤¤¤±¤É¡¢ÂÐ±þ¤¹¤ëÉ¬Í×¤Ê¤¤¤è¤Í¡©
 		$j=~s/\x0D\x0A/\n/go;$j=~tr/\r/\n/;
 		if('body'ne$i){
@@ -1420,7 +1446,7 @@ sub getParam{
 	
 	#°ú¿ô¤Î±øÀ÷½üµî
 	$IN{'ra'}=($ENV{'REMOTE_ADDR'}&&$ENV{'REMOTE_ADDR'}=~/([\d\:\.]{2,56})/o)?$1:'';
-	$IN{'hua'}=($ENV{'HTTP_USER_AGENT'}&&$ENV{'HTTP_USER_AGENT'}=~/($eucchar+)/o)?$1:'';
+	$IN{'hua'}=($ENV{'HTTP_USER_AGENT'}&&$ENV{'HTTP_USER_AGENT'}=~/($char+)/o)?$1:'';
 	$IN{'hua'}=~tr/\x09\x0A\x0D/\x20\x20\x20/;
 	if(defined$DT{'body'}){
 		#µ­»ö½ñ¤­¹þ¤ß
@@ -1599,16 +1625,29 @@ $ Ê¸»ú¿ôÀ©¸Â
 	
 	if(length$str>$length){
 		#Ê¸»úÀ©¸Â¥ª¡¼¥Ð¡¼
-		# EUC-JPÊ¸»ú
-		my$eucchar=qr((?:
-			[\x09\x0A\x0D\x20-\x7E]			# 1¥Ð¥¤¥È EUC-JPÊ¸»ú²þ
-			|(?:[\x8E\xA1-\xFE][\xA1-\xFE])	# 2¥Ð¥¤¥È EUC-JPÊ¸»ú
-			|(?:\x8F[\xA1-\xFE]{2})			# 3¥Ð¥¤¥È EUC-JPÊ¸»ú
-		))x;
+#if EUCJP
+	# EUC-JPÊ¸»ú
+	my$char=qr((?:
+		[\x09\x0A\x0D\x20-\x7E]			# 1¥Ð¥¤¥È EUC-JPÊ¸»ú²þ
+		|(?:[\x8E\xA1-\xFE][\xA1-\xFE])	# 2¥Ð¥¤¥È EUC-JPÊ¸»ú
+		|(?:\x8F[\xA1-\xFE]{2})			# 3¥Ð¥¤¥È EUC-JPÊ¸»ú
+	))x;
+#elif UTF8
+#	# UTF-8Ê¸»ú
+#	my$char=qr((?:
+#		[\x09\x0A\x0D\x20-\x7E]			# 1¥Ð¥¤¥È UTF-8 Ê¸»ú
+#		|(?:[\xC2-\xDF][\x80-\xBF])		# 2¥Ð¥¤¥È UTF-8 Ê¸»ú
+#		|(?:[\xE0-\xEF][\x80-\xBF]{2})	# 3¥Ð¥¤¥È UTF-8 Ê¸»ú
+#		|(?:[\xF0-\xF7][\x80-\xBF]{3})	# 4¥Ð¥¤¥È UTF-8 Ê¸»ú
+#		|(?:[\xF8-\xFB][\x80-\xBF]{4})	# 5¥Ð¥¤¥È UTF-8 Ê¸»ú
+#		|(?:[\xFD-\xFE][\x80-\xBF]{5})	# 6¥Ð¥¤¥È UTF-8 Ê¸»ú
+#	))x;
+#	
+#else
+#	my$char=qr([\W\w]);
+#endif
 		#1byteÊ¸»ú¤Ï2byteÊ¸»ú¤ÎÈ¾Ê¬¤ÎÄ¹¤µ¤À¤«¤é¡¢É½¼¨»þ¤ÎÄ¹¤µ¤ò¤½¤í¤¨¤ë°Ù¡¢
-		#Ê¸»ú¿ô¤Ç¤Ê¤¯byte¿ô¤ÇÀÚ¤ë
-		#3byteEUCÊ¸»ú¤Ï¤Û¤Ü»È¤ï¤Ê¤¤¤Î¤Ç¹ÍÎ¸³°
-		substr($str,0,$length-3)=~/($eucchar*)/o;
+		$str=~/((?:\w{1,2}|$char){0,$length-3})/o;
 		$1=~/([^&]*(?:&#?\w+;[^&]*)*)/o;
 		$str="$1...";
 	}
@@ -1902,15 +1941,30 @@ _HTML_
 #
 sub getCookie{
 	$ENV{'HTTP_COOKIE'}||return undef;
+#if EUCJP
 	# EUC-JPÊ¸»ú
-	my$eucchar=qr((?:
-		[\x0A\x0D\x20-\x7E]			# 1¥Ð¥¤¥È EUC-JPÊ¸»ú²þ-\x09
+	my$char=qr((?:
+		[\x09\x0A\x0D\x20-\x7E]			# 1¥Ð¥¤¥È EUC-JPÊ¸»ú²þ
 		|(?:[\x8E\xA1-\xFE][\xA1-\xFE])	# 2¥Ð¥¤¥È EUC-JPÊ¸»ú
 		|(?:\x8F[\xA1-\xFE]{2})			# 3¥Ð¥¤¥È EUC-JPÊ¸»ú
 	))x;
+#elif UTF8
+#	# UTF-8Ê¸»ú
+#	my$char=qr((?:
+#		[\x09\x0A\x0D\x20-\x7E]			# 1¥Ð¥¤¥È UTF-8 Ê¸»ú
+#		|(?:[\xC2-\xDF][\x80-\xBF])		# 2¥Ð¥¤¥È UTF-8 Ê¸»ú
+#		|(?:[\xE0-\xEF][\x80-\xBF]{2})	# 3¥Ð¥¤¥È UTF-8 Ê¸»ú
+#		|(?:[\xF0-\xF7][\x80-\xBF]{3})	# 4¥Ð¥¤¥È UTF-8 Ê¸»ú
+#		|(?:[\xF8-\xFB][\x80-\xBF]{4})	# 5¥Ð¥¤¥È UTF-8 Ê¸»ú
+#		|(?:[\xFD-\xFE][\x80-\xBF]{5})	# 6¥Ð¥¤¥È UTF-8 Ê¸»ú
+#	))x;
+#	
+#else
+#	my$char=qr([\W\w]);
+#endif
 	for($ENV{'HTTP_COOKIE'}=~/(?:^|; )Mireille=([^;]*)/go){
 		s/%([\dA-Fa-f]{2})/pack('H2',$1)/ego;
-		my%DT=(/(\w+)\t($eucchar*)/go);
+		my%DT=(/(\w+)\t($char*)/go);
 		for(keys%DT){
 			if(!defined$CK{$_}||$CK{'lastModified'}<$DT{'lastModified'}){
 				$CK{$_}=$DT{$_};
