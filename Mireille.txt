@@ -4,12 +4,12 @@
 = Mireille - Bulletin Board System
 # - Mireille Manpage -
 #
-# $Mireille: 1_2_8 $
+# $Mireille: 1_2_11 $
 # $Revision$
 # "This file is written in shift_jis, CRLF." ‹ó
 # http://www.airemix.com/
 # naruse@airemix.com
-# Scripted by NARUSE Yui.
+# Scripted by NARUSE,Yui.
 #------------------------------------------------------------------------------#
 # $Id$
 == ‚±‚ê‚Í‚È‚É‚©
@@ -35,7 +35,7 @@ Mozilla1.0.0ˆÈãA
 Opera7A
 ‚»‚Ì‚Ù‚©‚Ìƒuƒ‰ƒEƒU‚Å‚à‘½•ª“Ç‚Ý‘‚«‚Å‚«‚Ü‚·B
 ŒÃ‚¢ƒuƒ‰ƒEƒU‚âƒ}ƒCƒi[‚Èƒuƒ‰ƒEƒUA
-—á‚¦‚ÎWinIE4, MacIE, Netscape4, Opera, iCab, Konqueror‚È‚Ç‚Å‚àA
+—á‚¦‚ÎWinIE4, MacIE, Netscape4, Opera, iCab, Konqueror, Safari‚È‚Ç‚Å‚àA
 ‹LŽ–‚Ì“Ç‚Ý‘‚«ƒŒƒxƒ‹‚·‚ç‚Å‚«‚È‚¢ê‡‚Í‹³‚¦‚Ä‚­‚¾‚³‚¢B
 Å’áŒÀ‹LŽ–‚Ì“Ç‚Ý‘‚«‚Ío—ˆ‚é‚×‚«‚¾‚ÆŽv‚Á‚Ä‚¢‚Ü‚·‚Ì‚ÅB
 
@@ -64,26 +64,16 @@ index.cgi‚Ì’†‚Ì(({$CF{'conenc'}='|gzip -cfq9';}))‚Æ‚¢‚¤Š‚ð(({$CF{'conenc'}='';}
 #------------------------------------------------------------------------------#
 == Coming soon...?/memo.
 :suƒIƒvƒVƒ‡ƒ“
-  ŠÇ—ŽÒƒpƒXƒ[ƒh‚ªuhoehoev‚ÌŽž‚ÉA“ŠeŽžƒIƒvƒVƒ‡ƒ“—“‚Éu(({su=hoehoe;}))v‚Æ“ü‚ê‚Ä‚¨‚­‚ÆA
+  ŠÇ—ŽÒƒpƒXƒ[ƒh‚ªuhoehoev‚ÌŽž‚ÉA“ŠeŽžƒRƒ}ƒ“ƒh—“‚Éu(({su=hoehoe;}))v‚Æ“ü‚ê‚Ä‚¨‚­‚ÆA
   ‚»‚êˆÈ~Cookie‚ÉŠÇ—ŽÒ‚Å‚ ‚é‚±‚Æ‚ª•Û‘¶‚³‚êA‚¢‚¿‚¢‚¿ŠÇ—ŽÒƒpƒXƒ[ƒh‚ð“ü‚ê‚È‚­‚Ä‚àA
   ‹LŽ–‚Ìíœ‚âC³A Å‘åŽq‹LŽ–”§ŒÀ‚É’B‚µ‚½ƒXƒŒƒbƒh‚Ö‚Ì•ÔM‚È‚Ç‚ª‚Å‚«‚é‚æ‚¤‚É‚È‚éB
   ƒZƒLƒ…ƒŠƒeƒBƒz[ƒ‹‚ðì‚è‚±‚Ý‚©‚Ë‚È‚¢‚Ì‚ÅTd‚ÉŽÀ‘•‚µ‚È‚¢‚ÆB
-
-:‚ ‚é’ö“x’·‚¢ƒXƒŒƒbƒh‚Å‚ÍAV‚µ‚¢•û‚©‚çŽw’èŒÂ”‚ÌŽq‹LŽ–‚Ì‚Ý•\Ž¦‚·‚é
-  ‚Q‚¿‚á‚ñ‚Ë‚é‚ÌŒfŽ¦”ÂƒVƒXƒeƒ€‚ÅŽÀ‘•‚³‚ê‚Ä‚¢‚é‹@”\A‚¾‚»‚¤‚Å‚·B
-  Mireille‚ÉŽÀ‘•‚·‚é‚©‚Í–¢’èB
-  
-  core.cgi:Revision:1.14‚ÅŽÀ‘•‚µ‚Ü‚µ‚½B
-  	$CF{'maxChildsShown'}=uÅ‘å•\Ž¦Žq‹LŽ–”v;
-  ‚ÅÝ’è‚Å‚«‚Ü‚·B
-  ‚½‚¾‚µ‰¼ŽÀ‘•/ŽÀŒ±ˆµ‚¢‚Å‚·B
-  i‚¢‚í‚ä‚éeexperimentalf‚Á‚Ä‚â‚Â‚Å‚·‚Ëj
 
 :MireilleIconList‹KŠi‚Ì‹­‰»
   BNF‚à‚Ç‚«‚Å‘‚­‚Æ¡‚Í‚±‚ñ‚ÈŠ´‚¶B
   	( 'BEGIN' | 'END' ) '_' ( 'VENDOR' | COPY1' ) (#x20 |#x9)+ <VALUE>?
   	( 'VENDOR' | 'COPY1' ) '_' ( 'NAME' | URL' | 'LINK' ) (#x20 |#x9)+ <VALUE>
-  	'PAGE_BREAK'
+  	'PAGE-BREAK'
   	#BEGIN_*‚Å‚Í<VALUE>‚ðŽæ‚ê‚éA‚±‚ê‚Í*_NAME‚É–{—ˆ“ü‚é<VALUE>‚Å‚ ‚éA‚Â‚Ü‚è—ª‹LB
   
   ‚±‚ê‚ðˆÈ‰º‚Ì‚æ‚¤‚ÈŠ´‚¶‚ÉŠg’£‚µ‚½‚¢B
@@ -98,8 +88,8 @@ index.cgi‚Ì’†‚Ì(({$CF{'conenc'}='|gzip -cfq9';}))‚Æ‚¢‚¤Š‚ð(({$CF{'conenc'}='';}
   ‚à‚Á‚Æ‚¢‚¢ˆÄ‚ª‚Ù‚µ‚¢‚ÈBB
   ƒAƒCƒRƒ“”z•zƒTƒCƒg‘¤‚ª‚±‚ÌŒ`Ž®‚ÌƒAƒCƒRƒ“ƒŠƒXƒg‚ð”z•z‚·‚é`‚Ü‚Å‚¢‚¯‚ÎÅ‚‚Å‚·‚¯‚Ç‚ËB
 
-:Mireille•W€“Y•tƒAƒCƒRƒ“
-  ‚ ‚Á‚½‚ç‚¢‚¢‚ÈB
+:Mireille‚ÌƒpƒbƒP[ƒW‚É‰½‚©‚µ‚çƒAƒCƒRƒ“‚ð“Y•t‚·‚é
+  ‚ ‚Á‚½‚ç‚¢‚¢‚È‚ŸB
 
 :Undocumented‚ÈŽ–€‚ð•¶Í‰»‚·‚é
   ƒRƒ}ƒ“ƒhŽü‚è‚Å‚Í“Á‚É•¶Í‰»‚³‚ê‚Ä‚¢‚È‚¢‹@”\‚ª‘½‚­‘¶Ý‚µ‚Ü‚·B
@@ -112,6 +102,90 @@ index.cgi‚Ì’†‚Ì(({$CF{'conenc'}='|gzip -cfq9';}))‚Æ‚¢‚¤Š‚ð(({$CF{'conenc'}='';}
 
 #------------------------------------------------------------------------------#
 == Mireille History
+=== 2003-07-05 Release 1.2.11
+”z•zˆ³kƒtƒ@ƒCƒ‹‚ÌƒfƒBƒŒƒNƒgƒŠ\¬‚ð•ÏX
+:core.cgi
+  * ƒRƒ}ƒ“ƒh‚©‚çŽ‚¿ž‚ÝƒAƒCƒRƒ“‚ðíœ
+  * style.pl‚©‚çiptico(),iptcol()‚ðˆÚ“®
+  * getIconTag()‚ð’Ç‰Á
+  * ƒRƒ}ƒ“ƒh‚Éâ‘ÎŽw’èƒAƒCƒRƒ“‚ð’Ç‰Á
+  * ƒtƒ@ƒCƒ‹–¼Žw’èƒAƒCƒRƒ“‚ð‘Š‘ÎŽw’èƒAƒCƒRƒ“‚Æ‰üÌ
+  * $CF{'conenc'}‚ðÄÝ’è‚·‚éÛ‚ÉA•¶Žš—ñ‚Ì”äŠr‚È‚Ì‚É==‚Å‚â‚Á‚Ä‚¢‚½‚Ì‚ðC³
+  * –¼‹@”\‚ð’Ç‰Á
+  * ‘½d“Še–hŽ~‚Ì‚½‚ß‚Ìî•ñ‚ðA–{•¶‚ðCRC32‚µ‚½‚à‚Ì‚É‚µ‚½
+  * ˆê“xíœ‚µ‚½‹LŽ–‚ÍA–³—‚â‚èC³‚µ‚æ‚¤‚Æ‚µ‚Ä‚àA•œ‹A‚Å‚«‚È‚¢‚æ‚¤‚É‚µ‚½
+  * ƒXƒŒƒbƒh‚ªƒƒbƒN‚³‚ê‚Ä‚¢‚éê‡AV‚µ‚­‚»‚ÌƒXƒŒƒbƒh‚É•ÔM‚Å‚«‚È‚¢‚æ‚¤‚É‚µ‚½
+  * ‹LŽ–‘‚«ž‚Ý‘O‚Ìˆ—‚Ì\¬‚ð•ÏX
+  * signatureƒRƒ}ƒ“ƒh‚ð’Ç‰Á
+  * “ÁŽê–¼‹@”\‚ð’Ç‰Á
+  * getSignatureƒAƒ‹ƒSƒŠƒYƒ€‚Ì•ÏX
+  * C³EíœŽž‚ÌƒpƒXƒ[ƒh—“‚àtext‚É‚µ‚½
+  * “ÁŽê–¼‚ÍsignatureƒRƒ}ƒ“ƒh‚ÅŽw’è‚µ‚È‚¢‚Æ‚¢‚¯‚È‚¢‚æ‚¤‚É‚µ‚½
+  * lockThreadƒRƒ}ƒ“ƒh‚ð’Ç‰Á
+  * lockArticleƒRƒ}ƒ“ƒh‚ð’Ç‰Á
+  * tabindex‚ð–¢“Ç‹LŽ–‚ÉŽw’è‚·‚é‚æ‚¤‚É‚µ‚½
+  * ˆê•”ƒXƒ^ƒCƒ‹‚Ì•ÏX
+  * URLŽ©“®ƒŠƒ“ƒN‚ÌƒAƒ‹ƒSƒŠƒYƒ€‚ð•ÏX
+  * XMP/PLAINTEXTƒ^ƒO‚ÌŽg—p‚ð‹–‰Â‚µ‚½ê‡‚É‚»‚Ì’†g‚ª‚¤‚Ü‚­ˆ—‚³‚ê‚È‚¢ƒoƒO‚ðC³
+  * infoseekŒn‚ÌLƒT[ƒo[‘Îô‚ðŽ{‚µ‚½
+  * C³/íœƒ‚[ƒh‚ÌƒXƒ^ƒCƒ‹‚ðC³
+  * ‹LŽ–”Ô†Ž©“®ƒŠƒ“ƒN‚ªƒtƒH[ƒ€Ä‘‚«o‚µŽž‚É‚Å³í‚Éˆµ‚í‚ê‚Ä‚¢‚È‚©‚Á‚½ƒoƒO‚ðC³
+  * ƒRƒ}ƒ“ƒh•¶Žš—ñ‚ðƒƒO—p‚ÉÄ\¬‚·‚é•”•ª‚ÌƒoƒO‚ðC³
+  * ŠÈˆÕr‚ç‚µ‘Îô
+  * ƒwƒbƒ_‚Ì•\Ž¦•û–@‚ð•ÏX
+  * ‘‚«ž‚ÝŒã‚ÌƒƒbƒZ[ƒW‚ð•\Ž¦‚·‚é•”•ª‚ð•ÏX
+  * •ÔMƒ‚[ƒh‚Ì˜gƒTƒCƒY’²®‚ª‰ó‚ê‚Ä‚¢‚½‚Ì‚ðC³
+  * UTF-8‰»‚Ì‚½‚ß‚Ì•šü‚ð–„‚ßž‚ñ‚Å‚¨‚­
+  * encodingŽw’è‚Ì‚½‚ß‚Ì•šü‚Ì’²®
+  * ‚»‚Ì‘¼’²®
+:style.pl
+  * IconPreview‚ÌJavaScript‚ðâ‘ÎŽw’èƒAƒCƒRƒ“‚É‘Î‰ž
+  * –¼•\Ž¦‹@”\‚ð‚Â‚¯‚½
+  * ƒpƒXƒ[ƒh‚Ì•¶Žš”§ŒÀ‚ðŠÉ˜a
+  * ƒpƒXƒ[ƒh‚ÌƒtƒH[ƒ€‚Ìƒ^ƒCƒv‚ðpassword‚©‚çtext‚É
+  * tabindex‚ð–¢“Ç‹LŽ–‚ÉŽw’è‚·‚é‚æ‚¤‚É‚µ‚½
+  * –{•¶Ž©“®•Û‘¶‹@”\‚ð‚Â‚¯‚½
+  * ‹LŽ–ƒtƒbƒ^‚©‚ç‚Ì•ÔMƒ‚[ƒh‚Ö‚ÌƒŠƒ“ƒN‚ÌFI‚ð#Form‚É•ÏX
+  * ‘‚«ž‚ÝƒtƒH[ƒ€‚ÌƒXƒ^ƒCƒ‹‚ð•ÏX
+  * ƒwƒbƒ_‚Ì•\Ž¦‚ðŽi‚égetHeader()‚ð’Ç‰Á
+  * ‹LŽ–ƒiƒr‚Å‚Ì•¶Žš‚ ‚Ó‚ê‚ÍCSS‚Å’²ß‚·‚é‚±‚Æ‚É‚µ‚½
+  * ‘‚«ž‚ÝƒtƒH[ƒ€‚ÌHTML‚ÌÝ’è‚ðAƒTƒuƒ‹[ƒ`ƒ“Ž©‘Ì‚Æ“‡
+  * ƒy[ƒWƒZƒŒƒNƒ^Aã‰º‹LŽ–î•ñ•\Ž¦•”‚È‚Ç‚ðcore.cgi‚©‚çˆÚŠÇ
+  * ‚»‚Ì‘¼’²®
+:style.css
+  * Œê‹å‹­’²—p‚ÌÝ’è‚ð•ÏX
+  * –¼—p‚ÌCSSƒNƒ‰ƒX‚ð’Ç‰Á
+  * ƒpƒXƒ[ƒhƒtƒH[ƒ€‚ðime-mode:active‚É‚µ‚½
+  * CSS3 Color Module‚ªŠ©Œó•â‚É‚È‚Á‚½‚Ì‚ÅAopacityƒvƒƒpƒeƒB‚ÌŽw’è‚ð’Ç‰Á
+  * ‰ðàŒn‚ÌƒXƒ^ƒCƒ‹‚ð‘å•‚É•ÏX
+  * ‘‚«ž‚ÝƒtƒH[ƒ€‚ÌƒXƒ^ƒCƒ‹‚ð•ÏX
+  * font-sizeŽw’è‚ðpxE%•¹—p‚É‚µ‚½
+  * ‹LŽ–ƒiƒr‚Ì•¶Žš‚ ‚Ó‚ê‘Îô‚ÌŽw’è‚ð’Ç‰Á
+  * ‘S‘Ì“I‚É‹Lq‚ÌŽd•û‚ð’²®
+  * .pageSelector A.warning‚È‚Ç‚ð’Ç‰Á
+:index.cgi,manage.cgi
+  * â‘ÎE‘Š‘ÎŽw’èƒAƒCƒRƒ“‚ÌÝ’è‚ð’Ç‰Á
+  * –¼•\Ž¦‹@”\‚ÌƒIƒ“EƒIƒtÝ’è‚ð’Ç‰Á
+  * NGƒ[ƒhŽw’è‹@”\‚ð’Ç‰Á
+  * “ÁŽê–¼‚ÌÝ’è‚ð’Ç‰Á
+:index.cgi
+  * Œê‹å‹­’²‚Ì‰ŠúÝ’è‚Éu¥ s819ev‚Æu˜ s8198v‚ð’Ç‰ÁA‘¼‚Ì•ÏX
+:manage.cgi
+  * ƒXƒŒƒbƒh‚ÌƒƒbƒN‹@”\‚ð’Ç‰Á
+:artnavi.js
+  * ƒtƒŒ[ƒ€ƒŠƒTƒCƒYŽž‚Ì‹““®‚ð•ÏX
+  * IE‚Å‚ÌƒXƒNƒ[ƒ‹Žž‚Ì‹““®‚ð•ÏX
+:help.pl
+  * ‘Š‘ÎŽw’èEâ‘ÎŽw’èƒAƒCƒRƒ“‚ª—˜—p‰Â”\‚©‚Ç‚¤‚©‚Ì•\Ž¦‚ð’Ç‰Á
+  * –¼‚ð•\Ž¦‚·‚éÝ’è‚É‚È‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©‚Ì•\Ž¦‚ð’Ç‰Á
+  * ƒƒbƒN‹@”\‚â–¼‹@”\‚È‚Ç‚É‘Î‚·‚éŒ¾‹y‚ð’Ç‰Á
+  * ƒXƒ^ƒCƒ‹‚ð‘å•‚É•ÏX
+  * ‚»‚Ì‘¼‰Á•MC³
+:Mireille.html
+  * Mireille License
+  * L‚Ìo‚éƒT[ƒo[‚Å‚Ì’ˆÓ‚ðC³
+  * Mozilla‚ÅŠO•”CSSƒtƒ@ƒCƒ‹‚ð“Ç‚Ýž‚ñ‚Å‚­‚ê‚È‚¢‚±‚Æ‚ª‚ ‚é–â‘è‚É‘Î‚·‚éŒ¾‹y‚ð’Ç‰Á
+  * ƒXƒ^ƒCƒ‹‚ð‘å•‚É•ÏX
 === 2003-03-30 Release 1.2.8
 :core.cgi
   * uZERO‚ªMir12Œ^‚Å‚È‚¢v‚Æ–¾Ž¦‚·‚é‚æ‚¤‚É‚µ‚½
@@ -310,11 +384,18 @@ Perl5.8+UTF-8‚É•Ï‚¦‚é‚©AƒXƒNƒŠƒvƒgŽ©‘Ì‚ÍASCII‚É‚µ‚Ästyle‚ÍopenFile‚µ‚Ä‚Æ‚Á‚Ä‚­‚
 
 
 #------------------------------------------------------------------------------#
-== Œ»Ý—\’è‚µ‚Ä‚¢‚é‚±‚Æ
-TODO‚Å‚·B
-=== Airemix•W€”z•zƒXƒ^ƒCƒ‹‚ð‰½Ží—Þ‚©—pˆÓ‚·‚é
-‚±‚ê‚Í1.2.1.xŽž‘ã‚©‚ç—\’è‚µ‚Ä‚¢‚é‚Ì‚Å‚·‚ªA‚¢‚Ü‚¾‚É’B¬‚Å‚«‚Ä‚¢‚Ü‚¹‚ñB
-style.pl‚ð‰½Ží—Þ‚©—pˆÓ‚µ‚Ä”z•z‚·‚é‚Æ‚¢‚¢‚©‚È`‚ÆŽv‚¢‚Â‚ÂA‚»‚Ì‚Ü‚Ü‚Ù‚Á‚½‚ç‚©‚µBB
+== “ú˜aŒ©’†
+=== ˆêsƒŒƒX‹@”\
+•’Ê‚É‚â‚é‚ÆƒAƒCƒRƒ“ƒŠƒXƒg‚ªd‰ß‚¬‚é‚Ì‚ÅA
+Cookie‚ª•Û‘¶‚³‚ê‚Ä‚¢‚éŽž‚Ì‚ÝACookie‚Ìî•ñ‚ðŽg‚¤‚±‚Æ‚Å‚Å‚«‚éEEE‚©‚ÈB
+=== NoIconStyleˆÈŠO‚ÌƒXƒ^ƒCƒ‹‚Ì”z•z
+Œ»Ý‚ÌÂƒx[ƒXƒfƒUƒCƒ“‚Ì‘¼‚ÉAÔ‚â—Î‚âžò‚È‚ÇH
+‚à‚Á‚Æ‘å•‚ÉƒfƒUƒCƒ“‚ð•Ï‚¦‚½‚à‚ÌH
+‚Ç‚È‚½‚©‰ü‘¢‚µ‚½‚à‚Ì‚ðŠñ‘¡‚µ‚Ä‚­‚¾‚³‚é‚ÆŠy‚È‚Ì‚Å‚·‚¯‚Çi‚§‚¡
+=== RSS‘Î‰ž
+Žù—v‚ª‚È‚³‚»‚¤EEEB
+=== Œg‘Ñ’[––‚ÅŒ©‚ê‚é‚æ‚¤‚É
+ƒXƒLƒ“‚É‘Î‰ž‚µ‚½‚çA‚»‚Ì‚Æ‚«‚ÉŒg‘Ñ’[––—pƒXƒLƒ“‚ðì‚é‚±‚Æ‚Å‘Î‰ž‚·‚é—\’è‚Å‚·B
 
 
 #------------------------------------------------------------------------------#
@@ -342,13 +423,6 @@ TODO‚Ì‹tA‚Ý‚½‚¢‚È‚à‚Ì‚Å‚·B
 === uŒŸõ‚·‚é’PŒêv‚Å³‹K•\Œ»‚ðŽg‚¦‚é‚æ‚¤‚É‚·‚éorAND/ORŒŸõ
 ¡‚ÍquotemetaŠÖ”‚Å•¶Žš—ñ‚É‚µ‚Ä‚¢‚Ü‚·B
 ³‹K•\Œ»‚ðŽg‚¦‚é‚Æ‚æ‚è•¡ŽG‚ÈŒŸõ‚ªo—ˆ‚Ü‚·B
-=== Œg‘Ñ’[––—pƒ‚[ƒh
-Mireille‚Å‚àÌ‚Í•ÊCGI‚Å‚ ‚ésimple.cgiiÅI”Å‚ÍBeta60j‚É‚æ‚Á‚Ä‘Î‰ž‚µ‚Ä‚¢‚Ü‚µ‚½‚ªA
-Rev:1.1‚Å‚ÌƒƒOŒ`Ž®•ÏX‚É‚æ‚Á‚Ä”ñ‘Î‰ž‚É‚È‚Á‚Ä‚µ‚Ü‚¢A‚»‚ÌŒã‚Ù‚Á‚½‚ç‚©‚µ‚Æ‚È‚Á‚Ä‚¢‚Ü‚·B
-‰½“x‚©‘Î‰ž‚³‚¹‚æ‚¤‚©‚ÆŽv‚Á‚ÄAiremix‚ÌŒfŽ¦”Â‚Å˜b‘è‚ðo‚µ‚Ä‚Ý‚Ü‚µ‚½‚ª”½‰ž‚ª‚È‚©‚Á‚½‚½‚ßA
-Œg‘Ñ’[––‚ÅMireille‚ðŒ©‚æ‚¤‚Æ‚¢‚¤Žù—v‚ª‚È‚¢A‚Æ”»’f‚µ‚Ü‚µ‚½B
-‚±‚Ì‚Ü‚Ü‚¸‚Á‚Æ—lŽqŒ©‚ðŒˆ‚ßž‚ñ‚Å‚¢‚ê‚ÎAŒg‘Ñ’[––‚Å‚à‚»‚Ì‚Ü‚ÜŒ©‚ê‚é‚æ‚¤‚É‚È‚é‚©‚à(?)
-‚Æ‚¢‚¤‘Ó‚¯S‚à‚í‚¢‚Ä‚¢‚Ü‚·i‚—
 === P3P‘Î‰ž
 ‚»‚à‚»‚à‚±‚Ì‘¶Ý‚ð’m‚Á‚Ä‚¢‚éƒ†[ƒU[‚ª­‚È‚¢‚ÆŽv‚í‚ê‚éB
 
@@ -436,7 +510,7 @@ $CF{'icls'}‚ÌÅ‰‚Ìˆê•¶Žš‚ª' 'i”¼Šp‹ó”’j‚¾‚Á‚½ê‡•¡”ƒŠƒXƒgƒ‚[ƒh‚É‚È‚è‚Ü‚·B
   	<!-- %BEGIN_COPY1 SQUARE -->
   	<!-- %COPY1_URL http://www.playonline.com/ -->
   	#FINAL FANTASY VII
-  		cloud.gif#ƒNƒ‰ƒEƒh
+   		cloud.gif#ƒNƒ‰ƒEƒh
   		tifa.gif#ƒeƒBƒtƒ@
   		aerith.gif#ƒGƒAƒŠƒX
   		yuffie.gif#ƒ†ƒtƒB
@@ -450,11 +524,11 @@ $CF{'icls'}‚ÌÅ‰‚Ìˆê•¶Žš‚ª' 'i”¼Šp‹ó”’j‚¾‚Á‚½ê‡•¡”ƒŠƒXƒgƒ‚[ƒh‚É‚È‚è‚Ü‚·B
   	<!-- END_COPY1 -->
   ‚Æ‚¢‚¤Š´‚¶‚Å‚·B
 
-=== ƒtƒ@ƒCƒ‹–¼Žw’èƒAƒCƒRƒ“
-1.2.7‚©‚çƒtƒ@ƒCƒ‹–¼Žw’èƒAƒCƒRƒ“‚Æ‚¢‚¤ƒRƒ}ƒ“ƒh‚ªŽÀ‘•‚³‚ê‚Ä‚¢‚é‚Ì‚Å‚·‚ªA
+=== ‘Š‘ÎŽw’èƒAƒCƒRƒ“
+1.2.9‚©‚ç‘Š‘ÎŽw’èƒAƒCƒRƒ“‚Æ‚¢‚¤ƒRƒ}ƒ“ƒh‚ªŽÀ‘•‚³‚ê‚Ä‚¢‚é‚Ì‚Å‚·‚ªA
 ‚±‚±‚Å‚Í‚±‚Ì‹@”\‚É‚Â‚¢‚Äà–¾‚µ‚Ü‚·B
 
-‚±‚Ì‹@”\‚Í((%iconfile=hutsuha/shitei/dekinai/icon.png%))‚ÆƒRƒ}ƒ“ƒh—“‚É“ü—Í‚·‚é‚±‚Æ‚ÅŽg‚¦‚Ü‚·B
+‚±‚Ì‹@”\‚Í((%relativeIcon=hutsuha/shitei/dekinai/icon.png%))‚ÆƒRƒ}ƒ“ƒh—“‚É“ü—Í‚·‚é‚±‚Æ‚ÅŽg‚¦‚Ü‚·B
 —˜“_‚ÍƒAƒCƒRƒ“ƒŠƒXƒg‚É“o˜^‚³‚ê‚Ä‚¢‚È‚¢‚à‚Ì‚Å‚àŽg‚¦‚éA‚Æ‚¢‚¤‚±‚Æ‚È‚Ì‚Å‚·‚ªA
 “–‘Ru‚í‚´‚ÆƒAƒCƒRƒ“ƒŠƒXƒg‚É“o˜^‚µ‚Ä‚¢‚È‚¢‚à‚Ìv‚àŽg‚¦‚Ä‚µ‚Ü‚¢‚Ü‚·B
 
@@ -463,11 +537,30 @@ $CF{'icls'}‚ÌÅ‰‚Ìˆê•¶Žš‚ª' 'i”¼Šp‹ó”’j‚¾‚Á‚½ê‡•¡”ƒŠƒXƒgƒ‚[ƒh‚É‚È‚è‚Ü‚·B
 ‚»‚Ìª‹’‚ÍˆÈ‰º‚ÌŽO“_‚É‚È‚è‚Ü‚·B
 (1)ƒtƒ@ƒCƒ‹–¼Žw’èƒAƒCƒRƒ“‹@”\‚ðŽg‚í‚È‚­‚Ä‚àADUKE‚ðŽg‚¦‚ÎˆÈ‘O‚©‚ç“¯‚¶‚±‚Æ‚ª‚Å‚«‚éB
 (2)ƒtƒ@ƒCƒ‹–¼Žw’èƒAƒCƒRƒ“‹@”\‚Å‚Í((%../%))‚Ì‚æ‚¤‚ÈƒfƒBƒŒƒNƒgƒŠ‚ð‚³‚©‚Ì‚Ú‚éŽw’è‚ª‚Å‚«‚È‚¢B
-(3)ƒtƒ@ƒCƒ‹–¼Žw’èƒAƒCƒRƒ“‹@”\‚ðŽÀs‚³‚¹‚é‚½‚ß‚ÌƒRƒ}ƒ“ƒh‚ð•Ï‚¦‚ç‚ê‚éB
+(3)ƒtƒ@ƒCƒ‹–¼Žw’èƒAƒCƒRƒ“‹@”\‚ðŽÀs‚³‚¹‚é‚½‚ß‚ÌON/OFF‚ðÝ’è‚Å‚«‚éB
 ‚Ç‚¤“]‚ñ‚¾‚Æ‚µ‚Ä‚àA‚¢‚©‚ª‚í‚µ‚¢–Ú“I‚Å–{—ˆŽg‚¦‚È‚¢ƒAƒCƒRƒ“‚ðŽg‚¨‚¤‚ÆŽv‚Á‚½‚çA
 ƒtƒ@ƒCƒ‹–¼Žw’èƒAƒCƒRƒ“‹@”\‚ðŽg‚¤‚æ‚è‚àAŠù‘¶‚ÌƒAƒCƒRƒ“Žw’è‚Ì˜g‘g‚Ý“à‚ÅA
 ƒtƒH[ƒ€‚ð‹U‘•‚µ‚Ä“Še‚µ‚½•û‚ªŽ©—R“x‚ªã‚Å‚·B
 ˆÈã‚æ‚èA‚±‚Ì‹@”\‚Ì’Ç‰Á‚É‚æ‚Á‚ÄAMireille‚ÌƒZƒLƒ…ƒŠƒeƒB‚ª‰º‚ª‚é‚Æ‚¢‚¤‚±‚Æ‚Í‚ ‚è‚Ü‚¹‚ñB
+
+=== â‘ÎŽw’èƒAƒCƒRƒ“
+â‘ÎƒpƒX‚ðŽw’è‚µ‚Ü‚·B
+ƒRƒ}ƒ“ƒh‚Í((%absoluteIcon=http://www.airemix.com/airemix.png%))‚Æ‚¢‚¤Š´‚¶‚Å‚·B
+
+
+=== ƒAƒCƒRƒ“ƒŠƒXƒg‚ÌŠg’£ƒRƒ}ƒ“ƒh
+‚Ü‚¾version0.x‚È‚Ì‚ÅA«—ˆ‹KŠi‚ª•Ï‚í‚é‰Â”\«‚ª‚ ‚è‚Ü‚·B
+’ˆÓ‚µ‚ÄŽg‚Á‚Ä‚­‚¾‚³‚¢B
+:COPY1
+  ˆêŽž’˜ìŒ ŽÒ‚Ìî•ñ‚ðÝ’è‚µ‚Ü‚·B
+  Šî–{“I‚É‚ÍNAME‚ÆURL‚ðŽw’è‚µ‚Ü‚·B
+  LINK‚ÍƒAƒCƒRƒ“ƒJƒ^ƒƒO‚È‚Ç‚ÅŽg‚¤ƒŠƒ“ƒN‚ð–¾Ž¦“I‚ÉŽw’è‚·‚é‚Æ‚«‚ÉŽg‚¢‚Ü‚·B
+:VENDOR
+  ƒAƒCƒRƒ“‚Ì»ìŽÒ‚Ìî•ñ‚ðÝ’è‚µ‚Ü‚·B
+  ‘¼‚ÍCOPY1‚Æ“¯‚¶B
+:PAGE-BREAK
+  ‚±‚ÌƒRƒ}ƒ“ƒh‚ªoŒ»‚µ‚½‚Æ‚±‚ë‚ÅAƒAƒCƒRƒ“ƒJƒ^ƒƒO‚Íƒy[ƒW‚ð•Ï‚¦‚Ü‚·B
+
 
 
 #------------------------------------------------------------------------------#
@@ -560,6 +653,9 @@ Mireille‚ÍEUC‚ðŽg‚Á‚Ä‚¢‚é‚Ì‚ÅEUC‚Å•Û‘¶‚µ‚È‚¨‚µ‚Ä‚­‚¾‚³‚¢B
 ‚±‚Ì‚æ‚¤‚È•¶Žš‚Íu”\vué\v‚È‚Ç”\•¶Žš‚ ‚è‚Ü‚·B
 ‰ñ”ðô‚Í‰½ŒÂ‚©‚ ‚è‚Ü‚·‚ªAˆê”ÔŠmŽÀ‚È‰ñ”ðô‚ªEUC‚ðŽg‚¤A‚Æ‚¢‚¤‚±‚Æ‚¾‚Á‚½‚í‚¯‚Å‚·B
 EUC‚É‚Í‚±‚Ì‚æ‚¤‚ÈƒGƒ‰[‚ð—U”­‚·‚é•¶Žš‚ªA–³‚¢‚æ‚¤‚Éì‚ç‚ê‚Ä‚¢‚Ü‚·‚Ì‚ÅB
+‚±‚Ì‚±‚Æ‚É‚Â‚¢‚Ä‚ÍA
+((<perl ƒXƒNƒŠƒvƒg‚Í EUC-JP ‚Å‘‚­|URL:http://www.din.or.jp/~ohzaki/perl.htm#JP_EUC_JP>))
+‚ªÚ‚µ‚¢‚Å‚·B
 
 ‚»‚ÌˆÓ–¡‚Å‚Í¡—¬s‚ÌA¢ŠE’†‚Ì‘S‚Ä‚Ì•¶Žš‚ðˆê‚Â‚É‹l‚ßž‚à‚¤‚Æ‚¢‚¤–³’ƒ‚È‹KŠiA
 Unicode‚Å‚à‚¢‚¢‚Ì‚Å‚·‚ªA‚Ü‚¾ƒGƒfƒBƒ^‘¤‚Ì‘Î‰ž‚ðŒ©‚é‚ÆŽžŠú®‘‚¾‚ÆŽv‚¢‚Ü‚·‚Ì‚Å^^;;
@@ -588,6 +684,13 @@ getlogin‚Åƒ†[ƒU[‚ð’²‚×A''‚¾‚Á‚½‚çumask(0)‚ð‚©‚¯‚éA‚Æ‚µ‚½‚½‚ß‚Å‚·B
 ‚»‚ÌƒT[ƒo[‚Í¡‚Å‚ÍSuEXEC‚ðŽg‚¤‚æ‚¤‚É‚È‚Á‚½‚ßumask(0)‚·‚é•K—v‚È‚¢‚Ì‚Å‚·‚¯‚Ç‚ËB
 ‚à‚Á‚ÆƒXƒ}[ƒg‚È‰ðŒˆ•û–@‚Á‚Ä‚ ‚Á‚½‚Ì‚©‚ÈBB
 
+=== ‚È‚ºfont-family‚ª'‚l‚r ‚o ƒSƒVƒbƒN'‚È‚ñ‚Å‚·‚©
+—ðŽj“IŒoˆÜ‚Å‚·B
+'MS UI Gothic'‚Ì‚æ‚¤‚ÈA‘¼‚ÌƒtƒHƒ“ƒg‚Ì•û‚ª‚æ‚¢‚Æ‚¢‚¤•û‚ª‘½‚¢‚æ‚¤‚¾‚Á‚½‚ç•Ï‚¦‚Ü‚·‚æB
+
+=== ‘‚«ž‚ÝƒtƒH[ƒ€‚ÌA–{•¶“ü—Í—“‚ÌˆÊ’u‚ªV‹K‚Æ•ÔM‚Åˆá‚¤
+‚±‚¤‚µ‚½•û‚ªŽg‚¢‚â‚·‚¢‚©‚È‚ÆB
+
 
 #------------------------------------------------------------------------------#
 == Mireille‚ÌŽd—l
@@ -598,8 +701,8 @@ Release1.2.4ˆÈ~‚Å‚ÍA
 Mireille‚ð\¬‚·‚éŒÂX‚Ìƒtƒ@ƒCƒ‹‚Íg?.?h‚Æ“ñŒ…‚ÌRevision‚Å‚ ‚ç‚í‚³‚ê‚Ü‚·B
 MireillePackage‚Ìƒo[ƒWƒ‡ƒ“‚Í3Œ…‚Ìê‡‚Æ4Œ…‚Ìê‡‚ª‚ ‚èA
 Release”Å‚âStable”Å‚Ìê‡‚Í3Œ…AExperiment”Å‚Ìê‡‚Í4Œ…‚É‚È‚è‚Ü‚·B
-Experiment”Å‚Ì4Œ…–Ú‚Ícore.cgi‚ÌRevisin‚Ì2Œ…–Ú‚Æˆê’v‚µ‚Ü‚·B
-1Œ…–Ú‚©‚ç3Œ…–Ú‚Í‹C•ª‚ÉŽŸ‘æ‚Å“K“–‚É‘‚â‚µ‚Ü‚·B
+3Œ…–Ú‚ÍMireille.txt‚ÌRevisin‚Ì2Œ…–Ú‚ÆA4Œ…–Ú‚Ícore.cgi‚ÌRevisin‚Ì2Œ…–Ú‚Æˆê’v‚µ‚Ü‚·B
+1Œ…–Ú‚Æ2Œ…–Ú‚Í‹C•ª‚ÉŽŸ‘æ‚Å“K“–‚É‘‚â‚µ‚Ü‚·B
 Šî–{“I‚É‚ÍAs‚Á‚½•ÏX‚Ìd—v‚³i”hŽè‚³j‰ÁŒ¸‚É‚æ‚Á‚Ä•Ï‚í‚éEEE‚Í‚¸B
 
 === CSS‚Æ‚»‚Ì“®“IØ‚è‘Ö‚¦
@@ -767,8 +870,8 @@ Shift_JIS‚ÌƒGƒXƒP[ƒv–â‘è‚âAPerlŽ©‘Ì‚Ì“ú–{Œê‘Î‰ž‚Ì•sŠ®‘S‚³‚ð•â‚¤‚½‚ß‚Å‚·B
 Œã•ûŒÝŠ·«‚Ì‚½‚ßINPUT‚âTEXTAREA‚É‚ÍID‘®«‚ÆNAME‘®«‚ð—¼•û‚Â‚¯‚Ä‚¢‚Ü‚·B
 ‚»‚Ì‚½‚ßA–¼Ì‚ÍID‘®«‚ÆNAME‘®«‚Ì—¼•û‚Ì§ŒÀ‚É”›‚ç‚ê‚Ü‚·B
 	ID  : /[A-Za-z][-.:\w]*/‚Éƒ}ƒbƒ`‚·‚é‚à‚ÌA‘å•¶Žš¬•¶Žš‚ð‹æ•Ê‚·‚é
-	NAME: CDATAA‘å•¶Žš¬•¶Žš‚ð‹æ•Ê‚·‚é
-Mireille‚ªHTML‚Æ‚µ‚Äo—Í‚·‚éŽž‚É‚ÍŠî–{“I‚É‰p‘å•¶Žš‚ÍŽg‚í‚¢‚Ü‚¹‚ñB
+	NAME: CDATAA‘å•¶Žš¬•¶Žš‚ð‹æ•Ê‚·‚é(HTML4), NMTOKEN(XHTML1.0)
+Mireille‚ªHTML‚Æ‚µ‚Äo—Í‚·‚éŽž‚É‚ÍŠî–{“I‚É‰p‘å•¶Žš‚ÍŽg‚¢‚Ü‚¹‚ñB
 
 ‚Ü‚½%IN‚â%CK‚Åkey‚ª‰p‘å•¶Žš‚©‚çŽn‚Ü‚é‚à‚Ì‚Í“à•”ˆ——p‚Å‚·B
 FORM‚©‚çˆø”‚ðŽæ“¾‚·‚éÛ‚à‰p‘å•¶Žš‚©‚ç‚Í‚¶‚Ü‚é‚à‚Ì‚Í“Ç‚Ýž‚Ý‚Ü‚¹‚ñB
@@ -821,9 +924,8 @@ r1.2.2.17‚Ìcore.cgi‚Å‚ÍƒRƒƒ“ƒg‚¾‚¯‚Å19KB‚ ‚é‚æ‚¤‚Å‚·i‚§B
 
 === ˜A‘±“Še‚Ì–hŒä
 ‚±‚¤Œ©‚¦‚Äˆê‰ž‚â‚Á‚Ä‚Ü‚·A‚¢‚¿‚¨‚¤0.cgi‚Ì2s–Ú‚ª‚»‚ê‚ÅA
-uƒXƒŒƒbƒh”Ô†:‹LŽ–“à—e‚ÌƒTƒCƒY:•ÔM”Ô†v
+uƒXƒŒƒbƒh”Ô†:‹LŽ–“à—e‚ÌCRC32:•ÔM”Ô†v
 ‚ð•Û‘¶‚µA‚»‚ê‚ÆV‚½‚É—ˆ‚½“Še‚Æ‚ð”ä‚×‚é‚±‚Æ‚É‚æ‚Á‚Äs‚Á‚Ä‚¢‚Ü‚·B
-“K“–‚Å‚·‚Ë^^;;
 
 === HTML‹KŠiã‚Í•Â‚¶ƒ^ƒO‚ðÈ—ª‚µ‚½‚èo—ˆ‚é‚¯‚ÇA
 Mireille‚Å‚Í–Ê“|‚È‚Ì‚ÅŠî–{“I‚Éƒ^ƒO‚ÌÈ—ªA‘®«ˆø—p•„‚ÌÈ—ª‚È‚Ç‚É‚Í‘Î‰ž‚µ‚Ä‚¢‚Ü‚¹‚ñB
@@ -842,6 +944,45 @@ Marldia‚Ì•\îƒAƒCƒRƒ“‚Æ‚ÌŒÝŠ·«‚ð•Û‚Â–Ú“I‚ÅA
 ƒ}ƒbƒ`ƒ“ƒO‚ð(({/^\s*([^#]+(?:#\d+)?)\s*\#\s*(.+)$/}))‚Ås‚Á‚Ä‚¢‚é‚½‚ßA
 uhoe.png#uso#800v‚Íu<OPTION value="hoe.png#uso">800</OPTION>v‚É‚È‚è‚Ü‚·‚ªA
 uhoe.png#777#slotv‚Íu<OPTION value="hoe.png#777">slot</OPTION>v‚É‚È‚è‚Ü‚·B
+
+=== XV§ŒäƒRƒ}ƒ“ƒh
+Žå‚ÉC³Žž‚ÉA‹LŽ–‚ðXV‚µ‚½‚±‚Æ‚ª‚í‚©‚é‚æ‚¤‚É‚µ‚Ü‚·B
+:dnew
+  ‹LŽ–‚Ì“Še“úŽž‚ðXV‚µ‚Ü‚·
+:znew
+  ƒXƒŒƒbƒh‚ÌÅI•ÏX“úŽž‚ðXV‚µ‚Ü‚·
+:renew
+  dnew‚Æznew‚ð“¯Žž‚És‚¢‚Ü‚·
+
+=== Å‘åŽq‹LŽ–”‚ÅŽg‚Á‚Ä‚¢‚é•Ï”‚Ì–¼‘O
+maxChildren‚Å‚È‚­AmaxChilds‚É‚È‚Á‚Ä‚¢‚é‚Ì‚ÍŽd—l‚Å‚·B
+uChildArticlesv—ª‚µ‚ÄuChildsv‚È‚ñ‚Å‚·B
+
+=== ƒXƒŒƒbƒh‚ÌƒƒbƒN‹@”\
+ulockThread = (all| (revise|delete).. )v
+ƒXƒŒƒbƒh‚ðƒƒbƒN‚µ‚Ü‚·B
+ŠÇ—ƒpƒXƒ[ƒh‚©Ae‹LŽ–‚ÌƒpƒXƒ[ƒh‚ðŽg‚Á‚ÄA
+ƒƒbƒN‚µ‚½‚¢ƒXƒŒƒbƒh‚É•ÔM‚·‚é‚ÆƒƒbƒN‚Å‚«‚Ü‚·
+ƒIƒvƒVƒ‡ƒ“‚ðŽw’è‚µ‚È‚¢ê‡‚ÍA‚»‚ÌƒXƒŒƒbƒh‚É‘Î‚·‚é•ÔM‚ªƒƒbƒN‚³‚ê‚Ü‚·B
+:all
+  ‘S‚Ä‚ÌƒIƒvƒVƒ‡ƒ“‚ðƒIƒ“
+:revise
+  C³‚ðƒƒbƒN
+:delete
+  íœ‚ðƒƒbƒN
+
+=== ‹LŽ–‚ÌƒƒbƒN‹@”\
+ulockArticlevƒRƒ}ƒ“ƒh‚Å‹LŽ–‚ðƒƒbƒN‚Å‚«‚Ü‚·B
+
+=== –¼
+ƒpƒXƒ[ƒh‚©ƒRƒ}ƒ“ƒh‚ÅŽw’è‚³‚ê‚½Œ³•¶Žš—ñ‚ðACRC32->Crypt->CRC32‚Æ‚µ‚Ä‚©‚çƒƒO‚É•Û‘¶‚µA
+•\Ž¦Žž‚É‚Ü‚½CRC32‚âCrypt‚µ‚½‚è‚µ‚Ä•\Ž¦‚µ‚Ü‚·B
+‘“–‚è‘Îô‚Ì‚½‚ßAr1.2.9.20‚©‚ç•\Ž¦Œ‹‰Ê‚É‚Í–¼‘O‚Ìî•ñ‚ªŽg‚í‚ê‚é‚æ‚¤‚É‚È‚è‚Ü‚µ‚½B
+Œ»s‚Å‚Í•\Ž¦Œ‹‰Ê‚Ì–¼‚©‚çŒ³‚Ì•¶Žš—ñ‚ð„‘ª‚·‚é‚Ì‚ÍA‚½‚Æ‚¦‘“–‚è‚ðŽg‚Á‚Ä‚à–³—EEE‚Ì‚Í‚¸B
+
+=== NGƒ[ƒh
+Žw’è‚µ‚½•¶Žš—ñ‚ª–{•¶ŠÜ‚Ü‚ê‚éê‡‚Í‚¶‚«‚Ü‚·B
+‚½‚¾A•¶ŽšŽQÆ‚ðŽg‚Á‚½‚è‚Å‰ñ”ð‚Å‚«‚é‚Ì‚Í‚²ˆ¤›gB
 
 === “úŽžŒ`Ž®‚ ‚ê‚±‚ê
 ISO8601‚â‚çRFC822‚â‚çRFC2822‚â‚ç‚ÆA“úŽž‚ÉŠÖ‚·‚éŽæ‚èŒˆ‚ß‚Í‚¢‚­‚Â‚©‚ ‚è‚Ü‚·B
@@ -923,12 +1064,13 @@ JST‚Ì‘¼‚ÉEST‚Æ‚©PST‚Æ‚©‚ ‚é‚¯‚ÇALT(LunaTime)‚âMT(MarsTime)‚È‚ñ‚Ä‚ ‚é‚Ì‚ËGj
 :KHTML - Konqueror, Safari
   i‚½‚Ô‚ñj‚Ù‚Ç‚Ù‚Ç‚É“®‚«‚Üi‚·b‚µ‚½jB
   ˆÓ}“I‚É’e‚­‚æ‚¤‚È‚±‚Æ‚Í‚µ‚Ä‚¢‚È‚¢‚Ì‚ÅA‹LŽ–ƒiƒr‚à“®‚­‚Æ‚«‚Í“®‚­‚±‚Æ‚Å‚µ‚å‚¤B
+  Safari‚Å‚ÍŽŽ‚µ‚½‚±‚Æ‚ª‚È‚¢‚Ì‚Å‚·‚ªAKonqueror‚É‡‚¸‚é‚ñ‚Å‚·‚æ‚ËH
 :iCab
   MacintoshŒü‚¯‚Å‚·B
   Ì‚ÍiCab‚ªu‘æŽO‚Ìƒuƒ‰ƒEƒUv‚ÆŒÄ‚Î‚ê‚Ä‚¢‚½A‚Æ‹L‰¯‚µ‚Ä‚¢‚Ü‚·B
   Å‹ß‚ÍgCSS support badly brokenh‚È‚Ì‚ÅA‚¾‚ß‚Á‚ÛBB
 :OmniWeb
-  gDoesnft support HTML 4 and CSS1!h‚¤[‚ñBB
+  gDoesn't support HTML 4 and CSS1!h‚¤[‚ñBB
 :Amaya
   ‚ ‚ÌW3C‹Þ»‚ÌWebƒuƒ‰ƒEƒU‚Å‚·B
   ‚ªEEE‚Í‚Á‚«‚èŒ¾‚Á‚Äƒ’ƒ^ƒuƒ‰ƒEƒU‚Å‚·i‚§B
@@ -947,6 +1089,23 @@ JST‚Ì‘¼‚ÉEST‚Æ‚©PST‚Æ‚©‚ ‚é‚¯‚ÇALT(LunaTime)‚âMT(MarsTime)‚È‚ñ‚Ä‚ ‚é‚Ì‚ËGj
   ‚ÆA‚Æ‚±‚Æ‚ñ—lŽqŒ©‚Æ‚·‚é‚±‚Æ‚ª“à’è‚µ‚Ü‚µ‚½B
   i‰½“x‚©Žù—v’²¸‚µ‚½‚¯‚Ç”½‰žŠF–³‚¾‚Á‚½‚Ì‚Å‚·j
 
+=== ƒp[ƒ~ƒbƒVƒ‡ƒ“Šo‘
+¢‚Ì’†‚ÌƒT[ƒo[‚É‚Í3Ží—Þ‚ ‚éB
+suEXEC‚ª—LŒø‚É‚È‚Á‚Ä‚¢‚éApacheAsuEXEC‚ª–³Œø‚É‚È‚Á‚Ä‚¢‚éApacheA‚»‚µ‚Ä‚»‚Ì‘¼B
+:Apache with suEXEC
+  * ƒfƒBƒŒƒNƒgƒŠ‚Ìƒp[ƒ~ƒbƒVƒ‡ƒ“‚Í755
+  * CGIƒtƒ@ƒCƒ‹‚Ìƒp[ƒ~ƒbƒVƒ‡ƒ“‚Í700
+  * ‘‚«ž‚Þƒtƒ@ƒCƒ‹‚Í644
+  * “Ç‚Ý‘‚«‚·‚éCGIƒtƒ@ƒCƒ‹‚Ìƒp[ƒ~ƒbƒVƒ‡ƒ“‚Í700
+:Apache with suEXEC
+  * ƒfƒBƒŒƒNƒgƒŠ‚Ìƒp[ƒ~ƒbƒVƒ‡ƒ“‚Í777
+  * CGIƒtƒ@ƒCƒ‹‚Ìƒp[ƒ~ƒbƒVƒ‡ƒ“‚Í755
+  * ‘‚«ž‚Þƒtƒ@ƒCƒ‹‚Í666
+  * “Ç‚Ý‘‚«‚·‚éCGIƒtƒ@ƒCƒ‹‚Ìƒp[ƒ~ƒbƒVƒ‡ƒ“‚Í777
+:‚»‚Ì‘¼
+  ‚Ü‚¸Windows+Internet Infomation Server‚¾‚Æl‚¦‚Ä‚æ‚¢‚Å‚µ‚å‚¤B
+  Windows‚Íƒp[ƒ~ƒbƒVƒ‡ƒ“‚ÌŠT”O‚ªžB–†‚È‚Ì‚ÅA“Á‚É‹C‚É‚µ‚È‚­‚Ä‚à‰½‚Æ‚©‚È‚è‚Ü‚·B
+
 === ƒT[ƒo[•Êî•ñ
 :ccsnet.ne.jp
   * #!/usr/bin/perl
@@ -962,7 +1121,7 @@ JST‚Ì‘¼‚ÉEST‚Æ‚©PST‚Æ‚©‚ ‚é‚¯‚ÇALT(LunaTime)‚âMT(MarsTime)‚È‚ñ‚Ä‚ ‚é‚Ì‚ËGj
   * #!/usr/bin/perl
   * .htaccess‘Î‰ž
 :infoseek.co.jp
-  * #!usr/local/bin/perl
+  * #!/usr/local/bin/perl
   * .htaccess”ñ‘Î‰ž
   * CGIƒp[ƒ~ƒbƒVƒ‡ƒ“‚Í755
   * ƒfƒBƒŒƒNƒgƒŠ‚Í777
@@ -971,22 +1130,23 @@ JST‚Ì‘¼‚ÉEST‚Æ‚©PST‚Æ‚©‚ ‚é‚¯‚ÇALT(LunaTime)‚âMT(MarsTime)‚È‚ñ‚Ä‚ ‚é‚Ì‚ËGj
   * .pl‚ÍCGI‚Æ‚Ý‚È‚³‚ê‚È‚¢
   * cgi-binƒfƒBƒŒƒNƒgƒŠˆÈ‰º‚Ì‚ÝCGI“®ì
   * L‚ ‚è
+  * http://isweb.www.infoseek.co.jp/Icont?pg=iw_faq6.html&sv=IW
 :tripod.co.jp
   * Šg’£Žq‚ÅŒ©‚é‚Ì‚ÅŠÖŒW‚È‚µ
   * ƒp[ƒ~ƒbƒVƒ‡ƒ“‚ÍŠÖŒW‚È‚µ
   * Perl‚Ìƒo[ƒWƒ‡ƒ“‚ª5.004_04‚È‚Ì‚Å“®‚«‚Ü‚¹‚ñ
   * #‚©‚È‚èŽè‚ð“ü‚ê‚ê‚Î“®‚«‚»‚¤‚Å‚Í‚ ‚é‚¯‚ÇBB
 :sakura.ad.jp
-  * #!usr/local/bin/perl
+  * #!/usr/local/bin/perl
   * ƒfƒBƒŒƒNƒgƒŠACGI‹¤‚É755i777‚Í•s‰Âj
 :mixedmedia.net
-  * #!usr/local/bin/perl
+  * #!/usr/local/bin/perl
   * ƒfƒBƒŒƒNƒgƒŠ‚Í755ACGI‚Í700‚ð„§i777‚Í•s‰Âj
   * .htaccess‘Î‰žiexecŒnEOPTIONSƒfƒBƒŒƒNƒeƒBƒu‚Í•s‰Âj
   * .pl‚ÍCGI‚Æ‚Ý‚È‚·
   * perl5.005_03
 :cside.jp
-  * #!usr/local/bin/perl
+  * #!/usr/local/bin/perl
   * ƒfƒBƒŒƒNƒgƒŠ‚Í755ACGI‚Í700‚ð„§
   * .htaccess‘Î‰ž
   * .pl‚ÍCGI‚Æ‚Ý‚È‚³‚ê‚È‚¢
@@ -996,7 +1156,7 @@ JST‚Ì‘¼‚ÉEST‚Æ‚©PST‚Æ‚©‚ ‚é‚¯‚ÇALT(LunaTime)‚âMT(MarsTime)‚È‚ñ‚Ä‚ ‚é‚Ì‚ËGj
   * CGI‚Í700‚ð„§
   * L‚ ‚è
 :tukaeru.net
-  * Content-typeˆÈŠO‚ÌHTTPƒwƒbƒ_‚ð‚»‚Ì‚Ü‚Üo—Í‚µ‚Ä‚µ‚Ü‚¤
+  * Content-typeˆÈ~‚Éo—Í‚³‚ê‚½HTTPƒwƒbƒ_‚ð‚»‚Ì‚Ü‚Üo—Í‚µ‚Ä‚µ‚Ü‚¤
 
 === ‹Zp
 :ðŒ•ªŠòƒRƒƒ“ƒg
@@ -1020,6 +1180,13 @@ JST‚Ì‘¼‚ÉEST‚Æ‚©PST‚Æ‚©‚ ‚é‚¯‚ÇALT(LunaTime)‚âMT(MarsTime)‚È‚ñ‚Ä‚ ‚é‚Ì‚ËGj
 :“§–¾“xŽw’è
   uTransparency: the 'opacity' propertyv
   ((<URL:http://www.w3.org/TR/css3-color/#opacity>))
+:userData
+  Microsoft Internet Explorer‚Ì“ÆŽ©‹Zp
+  ((<URL:http://msdn.microsoft.com/workshop/author/behaviors/reference/behaviors/userdata.asp>))
+:DOMUserData
+  DOM Level 3 Core WD2003-06-09‚ÉUserData‚ªŽæ‚èž‚Ü‚ê‚Ä‚¢‚Ü‚µ‚½B
+  ‚Ç‚Ì‚æ‚¤‚È‚à‚Ì‚É‚È‚é‚©‚ÍA‚Ü‚¾‚í‚©‚è‚Ü‚¹‚ñ‚ªAˆê‰žŠo‘‚Æ‚µ‚ÄB
+  ((<URL:http://www.w3.org/TR/2003/WD-DOM-Level-3-Core-20030609/core.html#DOMUserData>))
 
 
 #------------------------------------------------------------------------------#
@@ -1136,7 +1303,7 @@ jcode.pl‚Ì‹@”\‚ÉUnicode‚ðˆµ‚¤‹@”\‚ª’Ç‰Á‚³‚ê‚Ä‚¢‚Ü‚·B
 ((<URL:http://openlab.ring.gr.jp/Jcode/index-j.html>))
 === KENT-WEB
 ‚È‚É‚Í‚Æ‚à‚ ‚ê“ú–{‚ÌCGI/PerlŠE‚É—^‚¦‚½‰e‹¿‚Í­‚È‚­‚Í‚È‚¢‚Í‚¸‚Å‚·B
-Ž„ŒÂl‚Å‚Í“Á‚ÉYYBOARD,YYCHAT‚É‚Í‚¨¢˜b‚É‚È‚è‚Ü‚µ‚½B
+‚í‚½‚µŒÂl‚Å‚Í“Á‚ÉYYBOARD,YYCHAT‚É‚Í‚¨¢˜b‚É‚È‚è‚Ü‚µ‚½B
 ‚«‚í‚ß‚Ä‚Æ‚Á‚Â‚«ˆÕ‚¢CGI‚ª‘½‚¢‚Å‚·B
 
 ((<URL:http://www.kent-web.com/>))
@@ -1189,6 +1356,6 @@ imac—ëŽ®‚³‚ñA—H—ì”L‚³‚ñA¼–¼‚³‚ñA_”T‚³‚ñAB‚³‚ñATAKE4‚³‚ñA‚©‚ë‚©‚ë‚³‚ñAxb
 
 
 == Copyright
-Copyright (c) 2001-2003 NARUSE Yui (((<Airemix|URL:http://www.airemix.com/>))). All rights reserved.
+Copyright (c) 2001-2003 NARUSE,Yui (((<Airemix|URL:http://www.airemix.com/>))). All rights reserved.
 
 =end
