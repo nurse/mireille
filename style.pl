@@ -79,37 +79,54 @@ $CF{'SaveBody2Cookie'}=<<'_CONFIG_';
 // Save/Load BodyData from Cookie
 
 function saveBodyCk(){
+	if(!confirm("新しい本文を保存すると、古い本文データは消えてしまいます\nそれでも保存してよろしいですか？"))
+		return false;
 	var bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
 	if(!bodyObj)return false;
-	if(confirm("新しい本文を保存すると、古い本文データは消えてしまいます\nそれでも保存しちゃってよいですか？")){
-		var backup='';
-		if(document.cookie.match(/(^|; )MirBody=([^;]+)/))backup=unescape(RegExp.$2);
-		if(bodyObj.value.length){
-			document.cookie='MirBody='+escape(bodyObj.value)+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';
-		}else{
-			document.cookie='MirBody=; expires=Thu, 01-Jan-1970 00:00:00; ';
-			alert('一時保存されていた本文データを削除しましたょ');
-			return;
-		}
+	
+	var backup='';
+	if(document.cookie.match(/(^|; )MirBody=([^;]+)/))backup=unescape(RegExp.$2);
+	if(!bodyObj.value.length){
+		//valueが空
+		document.cookie='MirBody=; expires=Thu, 01-Jan-1970 00:00:00; ';
+		alert('一時保存されていた本文データを削除しました');
+		return;
+	}else if(bodyObj.addBehavior){
+		//bahavior版（IE依存）（サイズ制限128KB）
+		if(!bodyObj.getAttribute('MireilleBody'))bodyObj.addBehavior('#default#userData');
+		bodyObj.setAttribute('MireilleBody',bodyObj.value);
+		bodyObj.save('MireilleBody');
+		alert("今の本文データを一時保存しました\nあくまでIEによる“一時保存”だから過信しないでください");
+	}else{
+		//Cookie版（サイズ制限3KBほど）
+		document.cookie='MirBody='+escape(bodyObj.value)+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';
 		if(document.cookie.match(/(^|; )MirBody=([^;]+)/)&&bodyObj.value==unescape(RegExp.$2)){
 			alert("今の本文データを一時保存しましたょ\nあくまで“一時保存”だから過信しないでねっ");
 		}else{
 			//3850byte程度でサイズ制限がかかる。
-			document.cookie='MirBody='+backup+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';//終わりの日
+			document.cookie='MirBody='+backup+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';//終末の日
 			alert("save失敗\nサイズオーバーかも。");
 			return false;
 		}
 	}
 }
 function loadBodyCk(){
+	if(!confirm("Cookieから本文データを読み出すと、現在の本文は消えてしまいます\nそれでも読み出してよろしいですか？"))
+		return false;
 	var bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
 	if(!bodyObj)return false;
-	if(!confirm('Cookieから本文データをロードしますよ？？'))return;
-	if(!document.cookie.match(/(^|; )MirBody=([^;]+)/)){
+	
+	if(bodyObj.addBehavior){
+		if(!bodyObj.getAttribute('MireilleBody'))bodyObj.addBehavior('#default#userData');
+		bodyObj.load('MireilleBody');
+		var temp=bodyObj.getAttribute('MireilleBody');
+		if(temp)bodyObj.value=temp;
+	}else if(document.cookie.match(/(^|; )MirBody=([^;]+)/)){
+		bodyObj.value=unescape(RegExp.$2);
+	}else{
 		alert('load失敗');
 		return false;
 	}
-	bodyObj.value=unescape(RegExp.$2);
 }
 -->
 </SCRIPT>
@@ -722,7 +739,7 @@ $CF{'icls'}の最初の一文字が' '（半角空白）だった場合複数リストモードになります
 	
 	#選択アイコンの決定＋SELECTタグの中身
 	my$isEconomy=$CK{'cmd'}=~/\biconlist=economy(?:\s*;|$)/o;
-	unless(defined$_[0]){
+	unless(@_){
 	}elsif($CF{'exicon'}&&($CK{'cmd'}=~/\bicon=([^;]*)/o)&&$IC{$1}){
 		#パスワード型
 		$_[0]=$IC{$1};
