@@ -70,9 +70,9 @@ sub main{
 	#検索
 	defined$IN{'seek'}&&&showArtSeek;
 	#ヘルプ
-	defined$IN{'help'}&&(require($CF{'help'}?$CF{'help'}:'help.pl'));
+	defined$IN{'help'}&&(require($CF{'help'}?$CF{'help'}:'help.pl'))&& exit;
 	#アイコン
-	defined$IN{'icct'}&&(require($CF{'icct'}?$CF{'icct'}:'iconctlg.cgi'));
+	defined$IN{'icct'}&& require($CF{'icct'}?$CF{'icct'}:'iconctlg.cgi')&&&iconctlg&& exit;
 	#ホーム
 	defined$IN{'home'}&&&locate($CF{'home'});
 	#記事表示
@@ -90,7 +90,7 @@ sub main{
 # Index 記事表示
 #
 sub showIndex{
-	&xmlmode if 'xml'eq$IN{'viewstyle'};
+	&xmlmode if$IN{'viewstyle'}&& 'xml'eq$IN{'viewstyle'};
 
 	#-----------------------------
 	#Cookie取得＆書き込み
@@ -463,9 +463,7 @@ _HTML_
 	index($zero[0],"Mir12=\t")&&die"ログ形式がMir12型以外です($zero[0])";
 	%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
 	my@zer1=split(/\s+/o,$zero[1]);
-	@zer2=split(/\s/o,$zero[2]);
-	$zer2[0]||($zer2[0]=0);
-
+	@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
 	#-----------------------------
 	&logfiles('number');
 	$IN{'i'}=$file[0]+1if$IN{'i'}&&$IN{'i'}>$file[0]+1;
@@ -1140,10 +1138,10 @@ _HTML_
 #
 sub getParam{
 	my$param;
-	my@param;
+	my@params=();
 	#引数取得
 	unless($ENV{'REQUEST_METHOD'}){
-		@param=@ARGV;
+		@params=@ARGV;
 	}elsif('HEAD'eq$ENV{'REQUEST_METHOD'}){ #forWWWD
 #MethodがHEADならばLastModifedを出力して、
 #最後の投稿時刻を知らせる
@@ -1165,7 +1163,8 @@ sub getParam{
 	))x;
 	
 	#引数をハッシュに
-	if(length$param>262114){ # 262114:引数サイズの上限(byte)
+	unless($param){
+	}elsif(length$param>262114){ # 262114:引数サイズの上限(byte)
 		#サイズ制限
 		&showHeader;
 		print"いくらなんでも量が多すぎます\n$param";
@@ -1173,14 +1172,14 @@ sub getParam{
 		exit;
 	}elsif(length$param>0){
 		#入力を展開
-		@param=split(/[&;]/o,$param);
+		@params=split(/[&;]/o,$param);
 	}
 	
 	#入力を展開してハッシュに入れる
 	my%DT;
-	while(@param){
-		my($i,$j)=split('=',shift(@param),2);
-		$i=~/(\w+)/o?($i=$1):next;
+	while(@params){
+		my($i,$j)=split('=',shift(@params),2);
+		$i=~/([a-z][-.:\w]*)/o?($i=$1):next;
 		defined$j||($DT{$i}='')||next;
 		study$j;
 		$j=~tr/+/\ /;
@@ -1360,8 +1359,8 @@ sub getParam{
 		$IN{'read'}=0;
 		$IN{'page'}=($DT{'page'}&&$DT{'page'}=~/([1-9]\d*)/o)?$1:1;
 	}
-	$IN{'viewstyle'}="$1"if$DT{'viewstyle'}=~/(\w+)/o;
-	$IN{'xslurl'}="$1"if$DT{'xslurl'}=~/(.+)/o;
+	$IN{'viewstyle'}=$1 if$DT{'viewstyle'}&&$DT{'viewstyle'}=~/(\w+)/o;
+	$IN{'xslurl'}=$1 if$DT{'xslurl'}&&$DT{'xslurl'}=~/(.+)/o;
 	return%IN;
 }
 
@@ -1458,9 +1457,9 @@ _HTML_
 			eval{flock(ZERO,1)};
 			my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
 			close(ZERO);
-			index($zero[0],"Mir12=\t")&&die"ログ形式がMir12型以外です($zero[0])";
+			(!$zero[0]||index($zero[0],"Mir12=\t")!=0)&& die"ログ形式がMir12型以外です($zero[0])";
 			%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
-			@zer2=split(/\s/o,$zero[2]);
+			@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
 		}
 		my$date=&date($Z0{'time'});
 		#exp.
@@ -1567,11 +1566,12 @@ $ 記事スレッドファイルリストの順番(date|number)
 	if('date'eq$_[0]){
 		#日付順 'date'
 		@file=map{$_->[0]+$zer2[0]}sort{$b->[1]<=>$a->[1]or$b->[0]<=>$a->[0]}
-		map{[$_,$zer2[$_]]}map{$_-$zer2[0]}grep{$_>$zer2[0]}map{m/^(\d+)\.cgi$/}readdir(DIR);
+		map{[$_,$zer2[$_]]}map{$_-$zer2[0]}grep{$_>$zer2[0]}
+		map{m/^(\d+)\.cgi$/}grep{m/^\d+\.cgi$/}readdir(DIR);
 		push(@file,0);
 	}else{
 		#記事番号順 'number'
-		@file=sort{$b<=>$a}map{m/^(\d+)\.cgi$/}readdir(DIR);
+		@file=sort{$b<=>$a}map{m/^(\d+)\.cgi$/}grep{m/^\d+\.cgi$/}readdir(DIR);
 	}
 	closedir(DIR);
 }
@@ -1994,17 +1994,11 @@ BEGIN{
 		};
 	}
 	# Version
-	$CF{'Core'}=q$Revision$;
 	$CF{'Version'}=join('.',q$Mireille: 1_2_5 $=~/(\d+[a-z]?)/go);
-	if(q$State$=~/Exp/o){
-		$CF{'Core'}=~/(\d+((?:\.\d+)*))/o;
-		$CF{'CoreRevision'}=$1;
-		$CF{'Version'}.=".$1"&&$2;
-	}else{
-		$CF{'Core'}=~/(\d+((?:\.\d+)*))/o;
-		$CF{'CoreRevision'}=$1;
-	}
+	($CF{'Core'}=q$Revision$)=~/(\d+((?:\.\d+)*))/o;
+	$CF{'CoreRevision'}=$1;
+	$CF{'Version'}.=$2 if-1<index(q$State$,'Exp');
 }
 
-$CF{'CoreRevision'};
+1;
 __END__
