@@ -68,9 +68,29 @@ $CF{'delpg'}='10';
 #最大スレッド数
 $CF{'logmax'}='100';
 #一スレッドあたりの最大子記事数を制限する
-$CF{'maxChilds'}='100';
+$CF{'maxChildren'}='100';
 #一スレッドあたりの最大表示子記事数を制限する
-$CF{'maxChildsShown'}='10';
+$CF{'maxChildrenShown'}='10';
+#読み込む最大サイズ
+$CF{'MaxSize'}='1048576';
+#ファイルを添付可能にする
+$CF{'Attach'}='1';
+#添付可能な最大ファイルサイズ
+$CF{'AttachMaxSize'}='300000';
+#親記事に添付できるファイル数
+$CF{'AttachParentLength'}='3';
+#子記事に添付できるファイル数
+$CF{'AttachChildLength'}='3';
+#添付ファイルを保存するディレクトリ
+$CF{'AttachDir'}='attach';
+#添付イメージファイルのサムネイルを作る
+$CF{'AttachThumbnail'}='1';
+#添付イメージファイルのサムネイルを保存するディレクトリ
+$CF{'AttachThumbnailDir'}='attach/thumbnail';
+#添付イメージファイルのサムネイル幅
+$CF{'AttachThumbnailWidth'}='100';
+#添付イメージファイルのサムネイル高さ
+$CF{'AttachThumbnailHeight'}='100';
 #検索できる項目（「項目のname 表示名 項目のname 表示名 ・・・」）
 $CF{'sekitm'}='ALL 全て name 名前 email E-mail home ホーム subject 題名 body 本文';
 #親記事の項目(+color +email +home +icon +ra +hua +cmd +subject)
@@ -110,7 +130,7 @@ $CF{'relativeIcon'}='1';
 #専用アイコン機能 (ON 1 OFF 0)
 $CF{'exicon'}='0';
 #専用アイコン列挙
-#$IC{'PASSWORD'}='FILENAME'; #NAME
+#$IC{'PASSWOFILE'}='FILENAME'; #NAME
 #$IC{'hae'}='mae.png'; #苗
 #$IC{'hie'}='mie.png'; #贄
 #$IC{'hue'}='mue.png'; #鵺
@@ -304,8 +324,8 @@ if($CF{'program'}eq __FILE__){
 #-------------------------------------------------
 # 初期設定
 BEGIN{
-	$CF{'index'}=$1 if!$CF{'index'}&&__FILE__=~/([^\\\/:]+)$/o;
-	$CF{'encoding'}||='euc-jp';
+	$CF{'index'}=$1 if!$CF{'index'}&&__FILE__=~/[^\\\/:]+$/o;
+	$CF{'encoding'}='euc-jp';
 	# Mireille Error Screen 1.2.2
 	unless($CF{'program'}){
 		$CF{'program'}=__FILE__;

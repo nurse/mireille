@@ -692,8 +692,18 @@ sub config{
 		,page	=>'通常モードでの1ページあたりのスレッド数'
 		,delpg	=>'削除・修正モードでの1ページあたりのスレッド数'
 		,logmax	=>'最大スレッド数'
-		,maxChilds		=>'一スレッドあたりの最大子記事数を制限する'
-		,maxChildsShown	=>'一スレッドあたりの最大表示子記事数を制限する'
+		,maxChildren			=>'一スレッドあたりの最大子記事数を制限する'
+		,maxChildrenShown		=>'一スレッドあたりの最大表示子記事数を制限する'
+		,MaxSize			=>'読み込む最大サイズ'
+		,Attach				=>'ファイルを添付可能にする'
+		,'AttachMaxSize'		=>'添付可能な最大ファイルサイズ'
+		,'AttachParentLength'		=>'親記事に添付できるファイル数'
+		,'AttachChildLength'		=>'子記事に添付できるファイル数'
+		,'AttachDir'			=>'添付ファイルを保存するディレクトリ'
+		,'AttachThumbnail'		=>'添付イメージファイルのサムネイルを作る'
+		,'AttachThumbnailDir'		=>'添付イメージファイルのサムネイルを保存するディレクトリ'
+		,'AttachThumbnailWidth'		=>'添付イメージファイルのサムネイル幅'
+		,'AttachThumbnailHeight'	=>'添付イメージファイルのサムネイル高さ'
 		,sekitm	=>'検索できる項目（「項目のname 表示名 項目のname 表示名 ・・・」）'
 		,prtitm	=>'親記事の項目(+color +email +home +icon +ra +hua +cmd +subject)'
 		,chditm	=>'子記事の項目(+color +email +home +icon +ra +hua +cmd)'
@@ -740,6 +750,15 @@ _HTML_
 	    $config{"$_"}=~s/</&#60;/go;
 	    $config{"$_"}=~s/>/&#62;/go;
 	}
+	$config{'newnc'}='86400'			if '' eq $config{'newnc'};
+	$config{'newuc'}='600'				if '' eq $config{'newuc'};
+	$config{'new'}='<SPAN class="new">New!</SPAN>'	if '' eq $config{'new'};
+	$config{'page'}='5'				if '' eq $config{'page'};
+	$config{'delpg'}='20'				if '' eq $config{'delpg'};
+	$config{'logmax'}='200'				if '' eq $config{'logmax'};
+	$config{'maxChildren'}='100'			if '' eq $config{'maxChildren'};
+	$config{'maxChildrenShown'}='10'		if '' eq $config{'maxChildrenShown'};
+	
 	print&getManageHeader.<<"ASDF";
 <H2 class="heading2">index.cgi編集モード</H2>
 $message
@@ -866,12 +885,16 @@ ASDF
 
 ASDF
     }else{
+	#Vverify
 	for(keys%IN){
 	    $IN{"$_"}=~s/(\n)*$//o;
 	    $IN{"$_"}=~s/'/\\'/go;
 	    $IN{"$_"}=~s/^_CONFIG_$/(_CONFIG_)/gmo;
 	}
-		
+	
+	
+	
+	# write
 	open(FILE,'<'."$AT{'manage'}")||die"Can't read manage($AT{'manage'})[$?:$!]";
 	eval{flock(FILE,1)};
 	my$config=<FILE>;
