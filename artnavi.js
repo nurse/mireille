@@ -31,6 +31,10 @@ var docmentObj; //clientWidthやclientHeightを取得するためのオブジェクト
 
 function artnavi(p){
 	//初期化
+	if( screen.width < 640 || screen.height < 480 ){
+		//ディスプレイ小さすぎ
+		return false;
+	}
 	if(!window.opera&&document.all){
 		naviwind=document.all('naviwind');
 //		navititl=document.all('navititl');
