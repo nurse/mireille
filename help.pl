@@ -67,8 +67,8 @@ print<<'_HTML_';
 	
 	<DIV class="section">
 	<H4 class="h">本文</H4>
-	<P>URL文字列があると自動的にリンクしてくれます。
-	たとえURLでも、httpから書かないようにすれば自動リンクされないようになりますが、そうする時は本当に自動リンクされないようにした方がいいのか、良く考えてからにしてください。</P>
+	<P>URL系の文字列があると自動的にリンクしてくれます。
+	たとえHTTPなURLでも、httpから書かないようにすれば自動リンクされないようになりますが、そうする時は本当に自動リンクされないようにした方がいいのか、良く考えてからにしてください。</P>
 	<P>別項目に示してある強調記号から始まる行や、正規表現にマッチする語句は、書いた時に何らかの形で強調されます。</P>
 	<P>ちなみに半角カタカナもたぶん使えます。</P>
 	</DIV>
@@ -100,6 +100,21 @@ print<<'_HTML_';
 		<DT>signature=<VAR>seed of signature</VAR></DT>
 		<DD>署名を生成する際に使う文字列を、パスワードでなく、これを使うようにします。</DD>
 	</DL>
+	</DIV>
+	
+	<DIV class="section">
+	<H4 class="h">Quicksave / Quickload</H4>
+	<P>本文の内容を一時的に保存することができます。保存できる文字数は使っているブラウザによって異なりますが、日本語を普通に使っている場合だと、InternetExplorerでは数万文字、それ以外では一千文字程度になると思われます。長い文章を投稿する場合は、時々Quicksaveするようにすると、もし送信に失敗したり、ブラウザが急に落ちてしまった時でも、本文の内容が失われずにすみます。同時に保存できるのは一つだけです。<TEXTAREA id="body" style="display:none"></TEXTAREA></P>
+	<P><BUTTON class="buttonLoadQuicksave" title="Quicksaveしたデータを削除します" onclick="alert(removeBodyData('MireilleQuicksave'));return false" onkeypress="alert(removeBodyData('MireilleQuicksave'));return false">一時保存したデータを削除</BUTTON></P>
+
+	</DIV>
+	
+	<DIV class="section">
+	<H4 class="h">Autosave</H4>
+	<P>本文の内容を自動的に一時保存します。一時保存した内容を読み出すには、投稿フォームのALoadボタンを押してください。いちいち自分でQuicksaveするのが面倒、という人にはとっても便利〜かもしれません。保存可能な文字数など、制限事項はQuicksaveに準じます。ただし、Quicksaveとは別領域に保存しているので、Autosaveによって、Quicksaveした内容が上書きされる、ということはありません。</P>
+	<P>この機能についてセキュリティの面から何らかの見解を持つ方の意見を募集しています。</P>
+	<P><BUTTON class="buttonLoadAutosave" title="Autosaveしたデータを削除します" onclick="alert(removeBodyData('MireilleAutosave'));return false" onkeypress="alert(removeBodyData('MireilleAutosave'));return false">自動保存したデータを削除</BUTTON></P>
+
 	</DIV>
 </DIV>
 
@@ -189,9 +204,6 @@ $4: data
 }
 #クッキー関連
 {
-	my$ascii='[\x0A\x0D\x20-\x7E]'; # 1バイト EUC-JP文字改-\x09
-	my$twoBytes='(?:[\x8E\xA1-\xFE][\xA1-\xFE])'; # 2バイト EUC-JP文字
-	my$threeBytes='(?:\x8F[\xA1-\xFE][\xA1-\xFE])'; # 3バイト EUC-JP文字
 	my$cookie='';
 	my$decoded='';
 	for(split('; ',$ENV{'HTTP_COOKIE'})){
@@ -258,6 +270,57 @@ function resetCookie(e){
 	var date=new Date();
 	cookiedata.value="expire%09"+parseInt(date.getTime()/1000);
 }
+
+
+/*========================================================*/
+// Remove Body Data
+function removeBodyData(key){
+	if(!bodyObj)return false;
+	if(document.cookie.match(/(^|; )MirBody=([^;]+)/))
+		document.cookie='MirBody=; expires=Thu, 01-Jan-1970 00:00:00; ';
+	document.cookie=key+'=; expires=Thu, 01-Jan-1970 00:00:00; ';
+	if(bodyObj.addBehavior){
+		//bahavior版（IE依存）
+		if(!bodyObj.getAttribute(key))bodyObj.addBehavior('#default#userData');
+		var flag=0;
+		var expires=new Date();
+		expires.setMonth(expires.getMonth()-1);
+		
+		bodyObj.load('MireilleQuicksave');
+		if(bodyObj.getAttribute('MireilleQuicksave')!=null){
+			bodyObj.expires=expires.toUTCString();
+			bodyObj.save('MireilleQuicksave');
+			flag+=1;
+		}
+		
+		bodyObj.load('MireilleAutosave');
+		if(bodyObj.getAttribute('MireilleAutosave')!=null){
+			bodyObj.expires=expires.toUTCString();
+			bodyObj.save('MireilleAutosave');
+			flag+=2;
+		}
+		
+		bodyObj.load('MireilleBody');
+		bodyObj.removeAttribute('MireilleBody');
+		bodyObj.removeAttribute(key);
+		expires.setMonth(expires.getMonth()+2);
+		bodyObj.expires=expires.toUTCString();
+		bodyObj.save('MireilleBody');
+		
+		if(flag&1)bodyObj.load('MireilleQuicksave');
+		if(flag&2)bodyObj.load('MireilleAutosave');
+	}
+	if(key=='MireilleQuicksave'){
+		return'一時保存されていた本文データを削除しました。';
+	}else if(key=='MireilleAutosave'){
+		return'自動保存されていた本文データを削除しました。';
+	}else{
+		return'rbd: Something Wicked happened!';
+	}
+	return true;
+}
+
+var bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
 //-->
 </SCRIPT>
 		<P>「クッキー書き換え」によって、Mireille用のクッキーを書き換えることができます。<BR>
@@ -347,6 +410,10 @@ function resetCookie(e){
 	<DT><KBD>Alt+C</KBD></DT><DD>「色」にカーソルが移ります。</DD>
 	<DT><KBD>Alt+P</KBD></DT><DD>「パスワード」にカーソルが移ります。</DD>
 	<DT><KBD>Alt+M</KBD></DT><DD>「コマンド」にカーソルが移ります。</DD>
+	
+	<DT><KBD>Alt+,</KBD></DT><DD>Quicksaveします。</DD>
+	<DT><KBD>Alt+.</KBD></DT><DD>Quickloadします。</DD>
+	<DT><KBD>Alt+/</KBD></DT><DD>Autosaveした内容を読み出します。</DD>
 	
 	<DT><KBD>Alt+S</KBD></DT><DD>フォームの内容を送信します。</DD>
 </DL>
