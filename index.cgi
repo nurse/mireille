@@ -13,7 +13,7 @@ require 5.005;
 #use vars qw(%CF %IC);
 
 #-------------------------------------------------
-# 稼動させる前に確認すること
+# 稼動させる前に確認するもの
 
 #サイトの名前
 $CF{'name'}='Airemix';
@@ -43,13 +43,15 @@ $CF{'gzip'}='gzip';
 $ENV{'TZ'}='JST-9';
 
 #-------------------------------------------------
-# 必要に応じて変更
+# 必要に応じて変更するもの
 
 #管理者パスワード（全ての記事を編集・削除できます 25文字以上推奨）
 $CF{'admps'}='';
+#特殊署名リスト（「パスワード 表示署名 パスワード 表示署名 ・・・」）
+$CF{'signatureSpecial'}='mir *MIREILLE* airemix *Airemix*';
 #使用を許可するタグ（半角スペース区切り）
 $CF{'tags'}='ACRONYM CODE DEL DFN EM Q SMALL STRONG RUBY RB RB RT RP SPAN';
-#強調する記号と対応するCSSのクラス（半角スペース区切りで「記号 クラス 記号・・・」）
+#強調する記号と対応するCSSのクラス（「記号 クラス 記号 クラス ・・・」）
 $CF{'strong'}=' // s2f2f /(/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)/ s2f2f /((?:^|[\x09\x20]+)(?:\/\/|#|＃).*)/ s2f2f /^((?:>|&#62;|&gt;|&#x3E;).*)/ s8184 ＞ s8184 § s8198 ◇ s819e ◆ s819e ▼ s819e □ s81a0 ■ s81a0 ※ s81a6 = s8198 == s819e === s81a0';
 #NGワード（半角スペース区切り）
 $CF{'ngWords'}='';
@@ -69,7 +71,7 @@ $CF{'logmax'}='100';
 $CF{'maxChilds'}='100';
 #一スレッドあたりの最大表示子記事数を制限する
 $CF{'maxChildsShown'}='10';
-#検索できる項目（"項目のname 選択字の名前 "をくりかえす）
+#検索できる項目（「項目のname 表示名 項目のname 表示名 ・・・」）
 $CF{'sekitm'}='ALL 全て name 名前 email E-mail home ホーム subject 題名 body 本文';
 #親記事の項目(+color +email +home +icon +ra +hua +cmd +subject)
 $CF{'prtitm'}='+color +email +home +icon +ra +hua +cmd +subject';
