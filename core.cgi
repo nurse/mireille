@@ -253,18 +253,19 @@ C<($IN{'i'}&&$IN{'j'}ne 0)>
 
 sub writeArticle{
     
-    {
-	open(ENV,'>>'."$CF{'log'}env.log")||die"Can't write log(0.cgi)[$?:$!]";
-	flock(ENV,2);
-	my $log = '';
-	for(qw/REMOTE_ADDR REMOTE_HOST HTTP_USER_AGENT HTTP_CLIENT_IP HTTP_FORWARDED HTTP_SP_HOST HTTP_FORWARDED HTTP_X_FORWARDED_FOR HTTP_FROM HTTP_HOST HTTP_VIA HTTP_REFERER HTTP_X_LOCKING REQUEST_METHOD QUERY_STRING/){
-	    $ENV{$_} or next;
-	    $log .= qq{$_ => "$ENV{$_}", };
-	}
-	$log .= "\n";
-	print ENV $log;
-	close ENV;
-    }
+#    {
+#	open(ENV,'>>'."$CF{'log'}env.log")||die"Can't write log(0.cgi)[$?:$!]";
+#	flock(ENV,2);
+#	my $log = '';
+#	for(qw/REMOTE_ADDR REMOTE_HOST HTTP_USER_AGENT HTTP_CLIENT_IP HTTP_FORWARDED HTTP_SP_HOST HTTP_FORWARDED HTTP_X_FORWARDED_FOR HTTP_FROM HTTP_HOST HTTP_VIA HTTP_REFERER HTTP_X_LOCKING REQUEST_METHOD QUERY_STRING/){
+#	    $ENV{$_} or next;
+#	    $log .= qq{$_ => "$ENV{$_}", };
+#	}
+#	$log .= "\n";
+#	print ENV $log;
+#	close ENV;
+#    }
+    unlink "$CF{'log'}env.log";
 
     'POST'eq$ENV{'REQUEST_METHOD'} or die 'wa: Something Wicked happend!';
     'Mozilla/4.0 (compatible; MSIE 4.01; Windows 95)'eq$ENV{'HTTP_USER_AGENT'} and die 'wa: Something Wicked happend!';
