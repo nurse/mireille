@@ -73,16 +73,33 @@ $CF{'pgfoot'}=&getPageFooter;
 
 #-----------------------------
 # 投稿フォームで使うJavaScript
-$CF{'jsWritingForms'}=<<"_CONFIG_";
+$CF{'jsWritingForms'}=sprintf(<<'_CONFIG_',$CF{'icon'},$CF{'absoluteIcon'}?1:0+$CF{'relativeIcon'}?2:0);
 <SCRIPT type="text/javascript" defer>
 <!--
+var iconDirectory='%s';
+var iconSetting=%d;
+_CONFIG_
+
+$CF{'jsWritingForms'}.=<<'_CONFIG_';
 var isLoaded;
 var autosaveId;
 var bodyObj;
-var iconDirectory='$CF{'icon'}';
-var iconSetting=@{[$CF{'absoluteIcon'}?1:0]}+@{[$CF{'relativeIcon'}?1:0]}*2;
-_CONFIG_
-$CF{'jsWritingForms'}.=<<'_CONFIG_';
+
+
+/*========================================================*/
+// initialization
+sub initialization(){
+	bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
+	bodyObj.addBehavior('#default#userData');
+	if(!bodyObj.getAttribute('MireilleBody'))bodyObj.load('MireilleBody');
+	if(bodyObj.value&&bodyObj.getAttribute('MireilleAutosave'))status=removeBodyData('MireilleAutosave');
+	oldData=bodyObj.value;
+	isLoaded=true;
+	if(!autosaveId)autosaveId=setTimeout(autosaveBodyData,60000);
+	return true;
+}
+
+
 /*========================================================*/
 // Change Icon Preview
 function changePreviewIcon(){
@@ -318,15 +335,6 @@ function removeBodyData(key){
 }
 
 
-/*========================================================*/
-// initialization
-bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
-bodyObj.addBehavior('#default#userData');
-if(!bodyObj.getAttribute('MireilleBody'))bodyObj.load('MireilleBody');
-if(bodyObj.value&&bodyObj.getAttribute('MireilleAutosave'))status=removeBodyData('MireilleAutosave');
-oldData=bodyObj.value;
-isLoaded=true;
-if(!autosaveId)autosaveId=setTimeout(autosaveBodyData,60000);
 -->
 </SCRIPT>
 _CONFIG_
@@ -1062,6 +1070,7 @@ _HTML_
 }
 package main;
 
+$CF{'_HiraganaLetterA'}->{'Style'}='あ';
 #requireにstyle.cgiのRevisionを返す
 ($CF{'Style'}=qq$Revision$)=~/(\d+(?:\.\d+)*)/o;
 $CF{'StyleRevision'}=$1;
