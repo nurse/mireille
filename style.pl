@@ -242,6 +242,7 @@ _HTML_
 #-----------------------------
 # 注意書き（TOPページのメニューの下に表示されます）
 $CF{'note'}=<<"_CONFIG_";
+<DIV class="center">
 <TABLE align="center" class="note" summary="注意書き"><TR><TD><UL class="note">
 <LI>投稿された記事の著作権は管理者の管理下におかれます。</LI>
 <LI>未読記事は投稿日時が赤く表示されます。</LI>
@@ -249,7 +250,7 @@ $CF{'note'}=<<"_CONFIG_";
 <LI>記事ナンバーをクリックすると、その記事の修正画面になります。</LI>
 <LI>その他、機能の詳細についてはヘルプをご覧ください。</LI>
 </UL></TD></TR></TABLE>
-
+</DIV>
 _CONFIG_
 
 #-----------------------------
@@ -267,7 +268,7 @@ $CF{'wrtfm'}=<<'_CONFIG_';
 <THEAD><TR><TH colspan="3" class="caption"><A name="Form"></A>$DT{'caption'}</TH></TR></THEAD>
 
 <TBODY>
-<TR title="subJect&#10;記事の題名を入力します&#10;最高全角100文字までです">
+<TR title="subJect&#10;記事の題名を入力します&#10;最高半角70文字までです">
 <TH class="item">
 <LABEL accesskey="j" for="subject">■題名(<SPAN class="ak">J</SPAN>)：</LABEL>
 </TH>
@@ -278,12 +279,12 @@ $CF{'wrtfm'}=<<'_CONFIG_';
 <LABEL accesskey="i" for="icon">■ <A href="index.cgi?icct" title="アイコン見本&#10;新しい窓を開きます" target="_blank">アイコン</A>（<KBD class="ak">Ｉ</KBD>）■</LABEL>
 </TH>
 </TR>
-<TR title="Name&#10;名前を入力します（必須）&#10;最高全角50文字までです">
+<TR title="Name&#10;名前を入力します（必須）&#10;最高半角40文字までです">
 <TH class="item">
 <LABEL accesskey="n" for="name">■名前(<SPAN class="ak">N</SPAN>)：</LABEL>
 </TH>
 <TD class="input">
-<INPUT type="text" name="name" id="name" maxlength="50" value="$DT{'name'}">
+<INPUT type="text" name="name" id="name" maxlength="40" value="$DT{'name'}">
 <LABEL accesskey="k" for="cook" title="cooKie&#10;クッキー保存のON/OFF">Coo<SPAN class="ak">k</SPAN>ie
 <INPUT name="cook" id="cook" type="checkbox" checked></LABEL>
 </TD>
@@ -373,8 +374,10 @@ $CF{'resfm'}=<<'_CONFIG_';
 </TR></TBODY>
 
 <TBODY>
-<TR title="subJect&#10;記事の題名を入力します&#10;最高全角100文字までです">
-<TH class="item"><LABEL accesskey="j" for="subject">■題名(<SPAN class="ak">J</SPAN>)：</LABEL></TH>
+<TR title="subJect&#10;記事の題名を入力します&#10;最高半角70文字までです">
+<TH class="item">
+<LABEL accesskey="j" for="subject">■題名(<SPAN class="ak">J</SPAN>)：</LABEL>
+</TH>
 <TD class="input">
 <INPUT type="text" name="subject" id="subject" maxlength="70" value="$DT{'subject'}">
 </TD>
@@ -382,12 +385,12 @@ $CF{'resfm'}=<<'_CONFIG_';
 <LABEL accesskey="i" for="icon">■ <A href="index.cgi?icct" title="アイコン見本&#10;新しい窓を開きます" target="_blank">アイコン</A>（<KBD class="ak">Ｉ</KBD>）■</LABEL>
 </TH>
 </TR>
-<TR title="Name&#10;名前を入力します（必須）&#10;最高全角50文字までです">
+<TR title="Name&#10;名前を入力します（必須）&#10;最高半角40文字までです">
 <TH class="item">
 <LABEL accesskey="n" for="name">■名前(<SPAN class="ak">N</SPAN>)：</LABEL>
 </TH>
 <TD class="input">
-<INPUT type="text" name="name" id="name" maxlength="50" value="$DT{'name'}">
+<INPUT type="text" name="name" id="name" maxlength="40" value="$DT{'name'}">
 <LABEL accesskey="k" for="cook" title="cooKie&#10;クッキー保存のON/OFF">Coo<SPAN class="ak">k</SPAN>ie
 <INPUT name="cook" id="cook" type="checkbox" checked></LABEL>
 </TD>
@@ -478,28 +481,26 @@ sub artprt{
 $	この記事の情報
 =cut
 	#記事情報を受け取って
-	my%DT=(new=>'',%{shift()},(shift()=~/([^\t]*)=\t([^\t]*);\t/go));
+	my%DT=(%{shift()},(shift()=~/([^\t]*)=\t([^\t]*);\t/go),
+	_Name=>'',_Home=>'',_Date=>'',_Icon=>'',_Signature=>'',_New=>'');
 	#削除されたら知らせて
 	'del'eq$DT{'Mir12'}&&($DT{'body'}='Mireille: [この記事は削除されました]');
 	#記事ナビ
 	ArtNavi->addThreadHead(\%DT);
 	ArtNavi->addArticle(\%DT,($DT{'time'}>$CK{'time'}));
 	#記事項目の調整をして
-	$DT{'email'}&&($DT{'name'}=qq(<A href="mailto:$DT{'email'}">$DT{'name'}</A>));
-	$DT{'home'}&&=qq(<A href="$DT{'home'}" target="_top">【HOME】</A>);
-	$DT{'date'}=&date($DT{'time'}); #UNIX秒から日付に
-	$DT{'-iconTag'}=&getIconTag(\%DT)||'&nbsp;';
-	
-	#署名
-	$DT{'name'}.=&getSignatureView(\%DT)if$CF{'signature'}&&$DT{'signature'};
-	
-	#未読記事に印
-	$DT{'time'}>$CK{'time'}&&($DT{'date'}=qq(<SPAN class="new">$DT{'date'}</SPAN>));
-	$DT{'time'}>$^T-$CF{'newnc'}&&($DT{'new'}=$CF{'new'});
+	$DT{'_Name'}=sprintf '<SPAN class="name">%s</SPAN>'
+	,$DT{'email'}?qq(<A href="mailto:$DT{'email'}">$DT{'name'}</A>):$DT{'name'};
+	$DT{'_Home'}=qq(<SPAN class="home"><A href="$DT{'home'}" target="_top">【HOME】</A></SPAN>)if$DT{'home'};
+	$DT{'_Date'}=sprintf$DT{'time'}>$CK{'time'}?'<SPAN class="new">%s</SPAN>':'%s',&date($DT{'time'});
+	$DT{'_Icon'}=&getIconTag(\%DT)||'&nbsp;';
+	$DT{'_Signature'}=sprintf qq(<SPAN class="signature">[&nbsp;%s&nbsp;]</SPAN>)
+	,&getSignatureView(\%DT)if$CF{'signature'}&&$DT{'signature'};
+	$DT{'_New'}=$CF{'new'}if$DT{'time'}>$^T-$CF{'newnc'};
 	#いよいよ出力だよ
 	print<<"_HTML_";
-<DIV class="thread" title="$DT{'i'}番スレッド">
-<TABLE cellspacing="0" class="subject" summary="$DT{'i'}番スレッド"><TR>
+<DIV class="thread" title="$DT{'i'}番スレッド" width="99%">
+<TABLE border="0" cellspacing="0" class="subject" summary="$DT{'i'}番スレッド" width="100%"><TR>
 <TH class="subject"><H2 class="subject"><A name="art$DT{'i'}" id="art$DT{'i'}" title="$DT{'i'}番スレッド">$DT{'subject'}</A></H2></TH>
 <TD class="arrow">
 <A name="nav_n$DT{'ak'}" href="#nav_n@{[$DT{'ak'}-1]}" title="上のスレッドへ">▲</A>
@@ -508,17 +509,16 @@ $	この記事の情報
 </TD>
 </TR></TABLE>
 
-<TABLE cellspacing="0" class="parent" summary="Article$DT{'i'}-0" title="$DT{'i'}-0">
+<TABLE border="0" cellspacing="0" class="parent" summary="Article$DT{'i'}-0" title="$DT{'i'}-0" width="100%">
 <COL class="number"><COL class="name"><COL class="date">
 <TR class="info">
 	<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" class="number" href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【No.$DT{'i'}】</A></TH>
-	<TD class="name">$DT{'new'} <SPAN class="name">$DT{'name'}</SPAN>
-	<SPAN class="home">$DT{'home'}</SPAN></TD>
-	<TD class="date"><SPAN class="date">$DT{'date'}</SPAN>
+	<TD class="name">$DT{'_New'} $DT{'_Name'} $DT{'_Home'}</TD>
+	<TD class="date"><SPAN class="date">$DT{'_Date'}</SPAN>
 	<SPAN class="revise" title="$DT{'i'}番スレッドの親記事を修正"><A
 	 href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【修正】</A></SPAN></TD>
 </TR>
-<TR><TD class="icon">$DT{'-iconTag'}</TD>
+<TR><TD class="icon">$DT{'_Signature'} $DT{'_Icon'}</TD>
 	<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD></TR>
 </TABLE>
 
@@ -535,26 +535,23 @@ sub artchd{
 $	この記事の情報
 =cut
 	#記事情報を受け取って
-	my%DT=(new=>'',%{shift()},(shift()=~/([^\t]*)=\t([^\t]*);\t/go));
-
+	my%DT=(%{shift()},(shift()=~/([^\t]*)=\t([^\t]*);\t/go),
+	_Name=>'',_Home=>'',_Date=>'',_Icon=>'',_Signature=>'',_New=>'');
 	#削除されてるときはここの前に飛ばしちゃうの
 	#記事ナビ
 	ArtNavi->addArticle(\%DT,($DT{'time'}>$CK{'time'}));
 	#記事項目の調整をして
-	$DT{'email'}&&($DT{'name'}=qq(<A href="mailto:$DT{'email'}">$DT{'name'}</A>));
-	$DT{'home'}&&=qq(<A href="$DT{'home'}" target="_top">【HOME】</A>);
-	$DT{'date'}=&date($DT{'time'}); #UNIX秒から日付に
-	$DT{'-iconTag'}=&getIconTag(\%DT)||'&nbsp;';
-	
-	#署名
-	$DT{'name'}.=&getSignatureView(\%DT)if$CF{'signature'}&&$DT{'signature'};
-	
-	#未読記事に印
-	$DT{'time'}>$CK{'time'}&&($DT{'date'}=qq(<SPAN class="new">$DT{'date'}</SPAN>));
-	$DT{'time'}>$^T-$CF{'newnc'}&&($DT{'new'}=$CF{'new'});
+	$DT{'_Name'}=sprintf '<SPAN class="name">%s</SPAN>'
+	,$DT{'email'}?qq(<A href="mailto:$DT{'email'}">$DT{'name'}</A>):$DT{'name'};
+	$DT{'_Home'}=qq(<SPAN class="home"><A href="$DT{'home'}" target="_top">【HOME】</A></SPAN>)if$DT{'home'};
+	$DT{'_Date'}=sprintf$DT{'time'}>$CK{'time'}?'<SPAN class="new">%s</SPAN>':'%s',&date($DT{'time'});
+	$DT{'_Icon'}=&getIconTag(\%DT)||'&nbsp;';
+	$DT{'_Signature'}=sprintf qq(<SPAN class="signature">[&nbsp;%s&nbsp;]</SPAN>)
+	,&getSignatureView(\%DT)if$CF{'signature'}&&$DT{'signature'};
+	$DT{'_New'}=$CF{'new'}if$DT{'time'}>$^T-$CF{'newnc'};
 	#いよいよ出力だよ
 	print<<"_HTML_";
-<TABLE cellspacing="0" class="child" summary="Article$DT{'i'}-$DT{'j'}" title="$DT{'i'}-$DT{'j'}">
+<TABLE border="0" cellspacing="0" class="child" summary="Article$DT{'i'}-$DT{'j'}" title="$DT{'i'}-$DT{'j'}" width="100%">
 <COL class="space"><COL class="number"><COL class="name"><COL class="date">
 _HTML_
 
@@ -568,13 +565,12 @@ _HTML_
 	print<<"_HTML_";
 <TR class="info"><TH class="space" rowspan="2">&nbsp;</TH>
 	<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" class="number" href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【Re:$DT{'j'}】</A></TH>
-	<TD class="name">$DT{'new'} <SPAN class="name">$DT{'name'}</SPAN>
-	<SPAN class="home">$DT{'home'}</SPAN></TD>
-	<TD class="date"><SPAN class="date">$DT{'date'}</SPAN>
+	<TD class="name">$DT{'_New'} $DT{'_Name'} $DT{'_Home'}</TD>
+	<TD class="date"><SPAN class="date">$DT{'_Date'}</SPAN>
 	<SPAN class="revise" title="$DT{'i'}番スレッドの子記事$DT{'j'}を修正"
 	><A href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【修正】</A></SPAN></TD>
 </TR>
-<TR><TD class="icon">$DT{'-iconTag'}</TD>
+<TR><TD class="icon">$DT{'_Signature'} $DT{'_Icon'}</TD>
 	<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD></TR>
 </TABLE>
 
@@ -830,11 +826,12 @@ _HTML_
 	sub ArtNavi::addThreadHead{
 		my$class=shift;
 		my%DT=%{shift()};
+		my$subject=&::getTruncated($DT{'subject'},45);
 		$ArtNaviBody.=<<"_HTML_";
 <DIV class="navithre">
 <DIV class="navisubj">
 <A href="#nav_r$DT{'i'}" title="返信"><STRONG>$DT{'i'}</STRONG></A>:
-<A href="#art$DT{'i'}">$DT{'subject'}</A>
+<A href="#art$DT{'i'}">$subject</A>
 </DIV>
 <DIV class="navinums">
 _HTML_
