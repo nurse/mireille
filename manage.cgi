@@ -9,25 +9,162 @@
 # Scripted by NARUSE,Yui.
 #------------------------------------------------------------------------------#
 # $cvsid = q$Id$;
-require 5.004;
+require 5.005;
 use strict;
-use vars qw(%AT %CF %IN %IC @file @zer2);
+use vars qw(%AT %CF %IN %IC);
 $|=1;
 
 
-# Header without G-ZIP etc.
-print<<'_HTML_';
-Content-type: text/html; charset=euc-jp
-Content-Language: ja-JP
+#------------------------------------------------------------------------------#
+#-------------------------------------------------
+# Mireille内のHTMLデザイン
 
+#-----------------------------
+# MireileのHEADタグの中身
+$CF{'head'}=<<"_CONFIG_";
+<META http-equiv="Content-type" content="text/html; charset=euc-jp">
+<META http-equiv="Content-Script-Type" content="text/javascript">
+<META http-equiv="Content-Style-Type" content="text/css">
+<META http-equiv="MSThemeCompatible" content="yes">
+<LINK rel="Start" href="$CF{'home'}">
+<LINK rel="Index" href="index.cgi">
+<LINK rel="Help" href="index.cgi?help">
+<LINK rel="Stylesheet" type="text/css" href="$CF{'style'}">
+<TITLE>$CF{'title'}</TITLE>
+_CONFIG_
+
+#-----------------------------
+# Mireile Menu
+$CF{'menu'}=<<"_CONFIG_";
+<TABLE align="center" border="1" cellspacing="3" class="menu" summary="MireilleMenu"><TR>
+<TD class="menu"><A href="index.cgi?new#Form">新規投稿</A></TD>
+<TD class="menu"><A href="index.cgi">更新</A></TD>
+<TD class="menu"><A href="index.cgi?rvs">修正</A></TD>
+<TD class="menu"><A href="index.cgi?del">削除</A></TD>
+<TD class="menu"><A href="index.cgi?icct">アイコン</A></TD>
+<TD class="menu"><A href="index.cgi?seek">検索</A></TD>
+<TD class="menu"><A href="index.cgi?help">ヘルプ</A></TD>
+<TD class="menu"><A href="$CF{'home'}" title="$CF{'name'}">ホーム</A></TD>
+</TR></TABLE>
+_CONFIG_
+
+#-----------------------------
+# Page Header
+$CF{'pghead'}=<<"_CONFIG_";
+<TABLE align="center" border="0" cellspacing="0" class="head" summary="PageHeader" width="90%"><TR>
+<TH width="100%"><H1 class="head" align="left">$CF{'pgtitle'}</H1></TH>
+<TD nowrap>■■■■■■■</TD>
+</TR></TABLE>
+_CONFIG_
+
+#-----------------------------
+# Page Footer
+sub getPageFooter{
+	return<<"_HTML_";
+<DIV class="center"><TABLE align="center" border="0" cellspacing="0" class="head" summary="PageFooter" width="90%"><TR>
+<TD nowrap>■■■■■■■</TD>
+<TH width="100%"><H1 class="head" align="right"><A href="@{[
+	$_[0]?qq($CF{'home'}">BACK to HOME):qq(manage.cgi?jump=index.cgi">BACK to INDEX)
+]}</A></H1></TH>
+</TR></TABLE></DIV>
 _HTML_
+}
+$CF{'pgfoot'}=&getPageFooter;
 
-=pod TEST
-&icong;
-exit;
-=pod
-=cut
+#-----------------------------
+# フォーム用JavaScript
+$CF{'form_jscript'}=<<'_CONFIG_';
+<SCRIPT type="text/javascript" defer>
+<!--
+// Save/Load BodyData from Cookie
+function saveBodyCk(){
+	var bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
+	if(!bodyObj)return false;
+	if(confirm("新しい本文を保存すると、古い本文データは消えてしまいます\nそれでも保存しちゃってよいですか？")){
+		var backup='';
+		if(document.cookie.match(/(^|; )MirBody=([^;]+)/))backup=unescape(RegExp.$2);
+		if(bodyObj.value.length){
+			document.cookie='MirBody='+escape(bodyObj.value)+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';
+		}else{
+			document.cookie='MirBody=; expires=Thu, 01-Jan-1970 00:00:00; ';
+			alert('一時保存されていた本文データを削除しましたょ');
+			return;
+		}
+		if(!document.cookie.match(/(^|; )MirBody=([^;]+)/)){
+			//3850byte程度でサイズ制限がかかる。
+			document.cookie='MirBody='+backup+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';//終わりの日
+			alert("save失敗\nサイズオーバーかも。");
+			return false;
+		}
+		alert("今の本文データを一時保存しましたょ\nあくまで“一時保存”だから過信しないでねっ");
+	}
+}
+function loadBodyCk(){
+	var bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
+	if(!bodyObj)return false;
+	if(!confirm('Cookieから本文データをロードしますよ？？'))return;
+	if(!document.cookie.match(/(^|; )MirBody=([^;]+)/)){
+		alert('load失敗');
+		return false;
+	}
+	bodyObj.value=unescape(RegExp.$2);
+}
 
+
+// InternetExplorer with ConditionalCompilation
+/*@cc_on
+if(document.getElementsByTagName){
+	var tags=document.getElementsByTagName('INPUT');
+	for(var i in tags){
+		if('button'==tags[i].type||'button'==tags[i].className){
+			tags[i].className='button';
+			tags[i].onfocus=function()		{this.className='buttonover'};
+			tags[i].onmouseover=function()	{this.className='buttonover'};
+			tags[i].onblur=function()		{this.className='button'};
+			tags[i].onmouseout=function()	{this.className='button'};
+		}else if('submit'==tags[i].type){
+			tags[i].className='submit';
+			tags[i].onfocus=function()		{this.className='submitover'};
+			tags[i].onmouseover=function()	{this.className='submitover'};
+			tags[i].onblur=function()		{this.className='submit'};
+			tags[i].onmouseout=function()	{this.className='submit'};
+		}else if('reset'==tags[i].type){
+			tags[i].className='reset';
+			tags[i].onfocus=function()		{this.className='resetover'};
+			tags[i].onmouseover=function()	{this.className='resetover'};
+			tags[i].onblur=function()		{this.className='reset'};
+			tags[i].onmouseout=function()	{this.className='reset'};
+		}else if('text'==tags[i].type||'password'==tags[i].type){
+			tags[i].className='blur';
+			tags[i].onfocus=function()	{this.className='focus';};
+			tags[i].onblur=function()	{this.className='blur';};
+		}
+	}
+	tags=document.getElementsByTagName('TEXTAREA');
+	for(var i in tags){
+		tags[i].className='blur';
+		tags[i].onfocus=function(){this.className='focus';};
+		tags[i].onblur=function(){this.className='blur';};
+	}
+}
+// @*/
+-->
+</SCRIPT>
+_CONFIG_
+
+
+#-----------------------------
+# フッターの生成
+sub getFooter{
+	my$AiremixCopy=<<"_HTML_";
+<DIV class="AiremixCopy"><SMALL>- $CF{'Design'} -</SMALL><BR>
+- <A href="http://www.airemix.com/" target="_top" title="Airemix - Mireille -">Airemix Mireille</A>
+<VAR title="times:@{[times]}">$CF{'Version'}</VAR> -</DIV>
+_HTML_
+	return$CF{'menu'}.&getPageFooter(defined$IN{'read'}).$AiremixCopy
+	.$CF{'bodyFoot'}.$CF{'form_jscript'}."</BODY>\n</HTML>\n";
+}
+#------------------------------------------------------------------------------#
 
 #管理CGIのパスワード
 $AT{'pass'}='';
@@ -99,8 +236,8 @@ sub getParam{
 		$DT{$i}=$j;
 	}
 	# Password Check
-	($DT{'mode'})||(return undef);
-	($DT{'pass'}eq$AT{'pass'})||(&menu('Passwordが一致しません'));
+	$DT{'mode'}||return undef;
+	$DT{'pass'}eq$AT{'pass'}||&menu('Passwordが一致しません');
 	$IN{'pass'}=($DT{'pass'}=~/(.+)/o)?"$1":'';
 	$IN{'mode'}=$1 if($DT{'mode'}=~/(\w+)/o);
 	$IN{'phase'}=$1 if($DT{'phase'}=~/(\d+)/o);
@@ -155,8 +292,8 @@ sub getParam{
 sub menu{
 	my$status=@_?shift():'';
 	my$pass=defined$IN{'pass'}?$IN{'pass'}:'';
-	print<<"ASDF";
-$AT{'head'}<H2 class="mode" style="margin:1em auto">[ $status ]</H2>
+	print&getManageHeader.<<"ASDF".&getManageFooter;
+<H2 class="mode" style="margin:1em auto">[ $status ]</H2>
 <FORM accept-charset="euc-jp" name="menu" method="post" action="$AT{'manage'}">
 <FIELDSET style="text-align:left;padding:0.5em;margin:auto;width:15em">
 <LEGEND>Mode</LEGEND>
@@ -200,7 +337,6 @@ index.cgi編集(<SPAN class="ak">C</SPAN>)</LABEL>
 <INPUT name="pass" id="pass" type="password" size="12" value="$pass"></LABEL></P>
 <P><INPUT type="submit" accesskey="s" class="submit" value="OK">
 <INPUT type="reset" class="reset" value="キャンセル"></P>
-@{[&getFooter]}
 ASDF
 	exit;
 }
@@ -288,7 +424,7 @@ sub icong{
 				$j=0;
 			}
 		}
-		print$AT{'head'};
+		print&getManageHeader;
 		print<<"_HTML_";
 <SCRIPT type="text/javascript">
 var presentTable=null;
@@ -317,7 +453,7 @@ _HTML_
 <INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
 </FORM>
 _HTML_
-		print&getFooter;
+		print&getManageFooter;
 		exit;
 	}else{
 		my@events;
@@ -328,7 +464,7 @@ _HTML_
 		my@tmp=@events;undef@events;
 		for(@tmp){'HASH'eq ref$_&& push(@events,$_)}
 		
-		print$AT{'head'};
+		print&getManageHeader;
 		print"<PRE>".generateEalis3qw(@events)."</PRE>";
 		print<<"_HTML_";
 <FORM accept-charset="euc-jp" name="iconedit" method="post" action="$AT{'manage'}">
@@ -336,7 +472,7 @@ _HTML_
 <INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
 </FORM>
 _HTML_
-		print&getFooter;
+		print&getManageFooter;
 		exit;
 	}
 	exit;
@@ -414,7 +550,7 @@ value:$4: 命令の引数
 =item OPTION要素
 
  /^\s*<OPTION (.*)value=(["'])(.+?)\2([^>]*)>([^<]*)(<\/OPTION>)?$/io
- <TD><IMG $1src="$CF{'iconDir'}$3" alt="$5"$4><BR>$5</TD>\n
+ <TD><IMG $1src="$CF{'iconDir'}$3" title="$5"$4><BR>$5</TD>\n
  イベント：一つのアイコンを発見
 
 =cut
@@ -479,8 +615,7 @@ sub icont{
 		close(RD);
 		$icon=~s/\t/\ \ /go;
 		$icon=~s/[\x0D\x0A]*$//o;
-		print<<"ASDF";
-$AT{'head'}
+		print&getManageHeader.<<"ASDF".&getManageFooter;
 <H2 class="mode">アイコンリスト編集モード</H2>
 <FORM accept-charset="euc-jp" name="iconedit" method="post" action="$AT{'manage'}">
 <P><TEXTAREA name="icon" cols="100" rows="15">$icon</TEXTAREA></P>
@@ -489,7 +624,6 @@ $AT{'head'}
 <INPUT name="mode" type="hidden" value="icont">
 <INPUT name="pass" type="hidden" value="$IN{'pass'}">
 <INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
-@{[&getFooter]}
 ASDF
 	exit;
 	}else{#アイコンリスト書き込み Tag
@@ -520,8 +654,7 @@ sub icons{
 	&loadcfg;
 	unless($IN{'icon'}){
 		#アイコンリストSharp編集画面
-		print<<"ASDF";
-$AT{'head'}
+		print&getManageHeader.<<"ASDF";
 <H2 class="mode">アイコンリスト編集モード</H2>
 <FORM accept-charset="euc-jp" name="iconedit" method="post" action="$AT{'manage'}">
 <P><TEXTAREA name="icon" cols="100" rows="15">
@@ -555,16 +688,14 @@ ASDF
 			}
 		}
 		
-		print<<"ASDF";
+		print<<"ASDF".&getManageFooter;
 </TEXTAREA></P>
 <P><LABEL accesskey="r" for="renew">アイコン見本更新(<SPAN class="ak">R</SPAN>):
 <INPUT name="renew" id="renew" type="checkbox" value="renew" checked></LABEL></P>
 <INPUT name="mode" type="hidden" value="icons">
 <INPUT name="pass" type="hidden" value="$IN{'pass'}">
 <INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
-@{[&getFooter]}
 ASDF
-		
 		exit;
 	}else{
 		#アイコンリスト書き込み
@@ -622,13 +753,13 @@ ASDF
 #-------------------------------------------------
 # アイコン見本更新
 sub iconsmp{
-	&loadcfg('index','style');
+	&loadcfg;
 
 =item
 
 OPTION
  ^\s*<OPTION (.*)value=(["'])(.+?)\2([^>]*)>([^<]*)(</OPTION>)?$
- <TD><IMG $1src="$CF{'icon'}$2" alt=\"$1\"$3><BR>$1</TD>
+ <TD><IMG $1src="$CF{'icon'}$2" title=\"$1\"$3><BR>$1</TD>
 
 #OPTGOUP
  ^<OPTGROUP (.*)label=(["'])(.+?)\2(.*)>$
@@ -657,10 +788,10 @@ OPTION
 			if(!$j){
 				#others
 				push(@others,(@others%$AT{'x'}?'':"</TR>\n<TR>\n")
-				.qq(<TD><IMG $1src="$CF{'icon'}$3" alt="$5"$4><BR>$5</TD>\n));
+				.qq(<TD><IMG $1src="$CF{'icon'}$3" title="$5"$4><BR>$5</TD>\n));
 				next;
 			}
-			$table.=qq(<TD><IMG $1src="$CF{'icon'}$3" alt="$5"$4><BR>$5</TD>\n);
+			$table.=qq(<TD><IMG $1src="$CF{'icon'}$3" title="$5"$4><BR>$5</TD>\n);
 			if($j<$AT{'x'}){
 				#グループ内1-5桁
 				$j++;
@@ -777,9 +908,10 @@ $CF{'menu'}
 <H2 class="mode">アイコン見本</H2>\n$CF{'iched'}
 @icon
 $CF{'icfot'}
-$CF{'pgfoot'}
-<DIV class="AiremixCopy">- <A href="http://www.airemix.com/" target="_blank"
- title="Airemix - Mireille -">Airemix Mireille</A> <VAR>$CF{'Manage'}</VAR> -</DIV>
+@{[&getPageFooter]}
+<DIV class="AiremixCopy">
+- <A href="http://www.airemix.com/" target="_top" title="Airemix - Mireille -">Airemix Mireille</A>
+<VAR title="times:@{[times]}">$CF{'Manage'}</VAR> -</DIV>
 </BODY>
 </HTML>
 _HTML_
@@ -831,8 +963,8 @@ my@required=(
 ,'prtwrt'	=>'新規投稿フォームをIndexに表示','0 表示しない 1 表示する'
 ,'mailnotify'=>'新規/返信 があったときに指定アドレスにメールする','0 使わない 1 使う'
 ,'readOnly'	=>'掲示板を閲覧専用にする','0 読み書きOK 1 閲覧専用'
-,'use304'	=>'更新がないときに「304 Not Modified」を渡すか否か'
-,'useLastModified'=>'常に「Last-Modified」を渡すか否か'
+,'use304'	=>'更新がないときに「304 Not Modified」を渡すか否か','0 渡さない 1 渡す'
+,'useLastModified'=>'常に「Last-Modified」を渡すか否か','0 渡さない 1 渡す'
 );
 		my@design=(
  'colorList'=>'色リスト'
@@ -850,17 +982,16 @@ my@required=(
 このまま実行すれば、configを上書きして設定しなおせます</P>
 _HTML_
 		}
-		for(%CF){
-			$CF{"$_"}=~s/\t/&nbsp;&nbsp;&nbsp;&nbsp;/go;
-			$CF{"$_"}=~s/&/&#38;/go;
-			$CF{"$_"}=~s/"/&#34;/go;
-			$CF{"$_"}=~s/'/&#39;/go;
-			$CF{"$_"}=~s/</&#60;/go;
-			$CF{"$_"}=~s/>/&#62;/go;
+		my%config=%CF;
+		for(%config){
+			$config{"$_"}=~s/\t/&nbsp;&nbsp;&nbsp;&nbsp;/go;
+			$config{"$_"}=~s/&/&#38;/go;
+			$config{"$_"}=~s/"/&#34;/go;
+			$config{"$_"}=~s/'/&#39;/go;
+			$config{"$_"}=~s/</&#60;/go;
+			$config{"$_"}=~s/>/&#62;/go;
 		}
-		print<<"ASDF";
-$AT{'head'}
-
+		print&getManageHeader.<<"ASDF";
 <H2 class="mode">index.cgi編集モード</H2>
 $message
 <FORM accept-charset="euc-jp" name="cssedit" method="post" action="$AT{'manage'}">
@@ -876,7 +1007,7 @@ ASDF
 			print<<"ASDF";
 <TR>
 <TH class="item">$required[$i+1]：</TH>
-<TD><INPUT name="$required[$i]" type="text" style="ime-mode:inactive;width:200px" value="$CF{"$required[$i]"}"></TD>
+<TD><INPUT name="$required[$i]" type="text" style="ime-mode:inactive;width:200px" value="$config{"$required[$i]"}"></TD>
 </TR>
 ASDF
 		}
@@ -896,7 +1027,7 @@ ASDF
 			print<<"ASDF";
 <TR>
 <TH class="item">$implied[$i+1]：</TH>
-<TD><INPUT name="$implied[$i]" type="text" style="ime-mode:inactive;width:200px" value="$CF{"$implied[$i]"}"></TD>
+<TD><INPUT name="$implied[$i]" type="text" style="ime-mode:inactive;width:200px" value="$config{"$implied[$i]"}"></TD>
 </TR>
 ASDF
 		}
@@ -912,7 +1043,7 @@ ASDF
 			my$name=$select[$i+2];
 			my@label=split(/ /o,$select[$i+2]);
 			for(my$j=0;$j<$#label;$j+=2){
-				if($label[$j]eq$CF{$select[$i]}){
+				if($label[$j]eq$config{$select[$i]}){
 					print<<"ASDF";
 <OPTION value="$label[$j]" selected="selected">$label[$j+1]</OPTION>
 ASDF
@@ -944,7 +1075,7 @@ ASDF
 </TR>
 <TR>
 ASDF
-		$i=~s/(value=\"$CF{'exicon'}\")/$1 checked="checked"/o;
+		$i=~s/(value=\"$config{'exicon'}\")/$1 checked="checked"/o;
 		print$i;
 		my@IC=keys%IC;
 		for(0..($#IC+5)){
@@ -967,16 +1098,15 @@ ASDF
 		for($i=0;$i<$#design;$i+=2){
 			print<<"ASDF";
 <TR><TH class="item" colspan="2">$design[$i+1]：</TH></TR>
-<TR><TD colspan="2"><TEXTAREA name="$design[$i]" cols="130" rows="7" style="ime-mode:inactive;width:800px">$CF{$design[$i]}</TEXTAREA></TD></TR>
+<TR><TD colspan="2"><TEXTAREA name="$design[$i]" cols="130" rows="7" style="ime-mode:inactive;width:800px">$config{$design[$i]}</TEXTAREA></TD></TR>
 ASDF
 		}
-		print<<"ASDF";
+		print<<"ASDF".&getManageFooter;
 </TABLE>
 <P>
 <INPUT name="mode" type="hidden" value="config">
 <INPUT name="pass" type="hidden" value="$IN{'pass'}">
 <INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
-@{[&getFooter]}
 ASDF
 	}else{
 		for(keys%IN){
@@ -1000,7 +1130,7 @@ ASDF
 # "This file is written in euc-jp, CRLF." 空
 # Scripted by NARUSE,Yui.
 #------------------------------------------------------------------------------#
-require 5.004;
+require 5.005;
 use strict;
 use vars qw(\%CF \%IC);
 \$|=1;
@@ -1088,7 +1218,7 @@ BEGIN{
 		$CF{'program'}=__FILE__;
 		$SIG{'__DIE__'}=sub{
 			if($_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/){return}
-			print"Content-Language: ja-JP\nContent-type: text/plain; charset=euc-jp\n"
+			print"Content-Language: ja-JP\nContent-type: text/plain; charset=euc-jp\nX-Moe: Mireille\n"
 			."\n\n<PRE>\t:: Mireille ::\n   * Error Screen 1.4 (o__)o// *\n\n";
 			print"ERROR: $_[0]\n"if@_;
 			print join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(Index Style Core Exte))
@@ -1103,14 +1233,16 @@ BEGIN{
 			exit;
 		};
 	}
-	# Revision Number
+	# Version
 ASDF
-		$config.=<<"ASDF";
-	\$CF{'Index'}=qq\$$CF{'Manage'}\$;
+		$config.=q(	$CF{'Index'}=q$)."$CF{'Manage'}".'$;'.<<'ASDF';
+
+	$CF{'Index'}=~/(\d+((?:\.\d+)*))/o;
+	$CF{'IndexRevision'}=$1;
 	getlogin||umask(0); #nobody権限で作ったファイルをユーザが消せるように
 }
 
-1;
+$CF{'IndexRevision'};
 __END__
 ASDF
 		open(WR,'+>>index.cgi')||die"Can't write index.cgi[$!]";
@@ -1129,8 +1261,7 @@ ASDF
 # CSSの編集
 sub css{
 	unless($IN{'file'}){
-		print<<"ASDF";
-$AT{'head'}
+		print&getManageHeader.<<"ASDF".&getManageFooter;
 <H2 class="mode">スタイルシートファイル選択</H2>
 <FORM accept-charset="euc-jp" name="cssedit" method="post" action="$AT{'manage'}">
 <P>CSSファイル名<INPUT name="file" type="text" style="ime-mode:disabled" value="$IN{'file'}">（拡張子は入力しない）<BR>
@@ -1140,7 +1271,6 @@ $AT{'head'}
 <INPUT name="mode" type="hidden" value="css">
 <INPUT name="pass" type="hidden" value="$IN{'pass'}">
 <INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
-@{[&getFooter]}
 ASDF
 	}elsif(!$IN{'css'}){
 		open(RD,"<$IN{'file'}.css")||die"Can't read css($IN{'file'}.css)[$!]";
@@ -1159,8 +1289,7 @@ ASDF
 		$css=~s/</&#60;/go;
 		$css=~s/>/&#62;/go;
 		
-		print<<"ASDF";
-$AT{'head'}
+		print&getManageHeader.<<"ASDF".&getManageFooter;
 <H2 class="mode">スタイルシート編集モード</H2>
 <FORM accept-charset="euc-jp" name="cssedit" method="post" action="$AT{'manage'}">
 <P>CSSファイル名:$IN{'file'}.css<INPUT name="file" type="hidden" value="$IN{'file'}"><P>
@@ -1170,7 +1299,6 @@ $AT{'head'}
 <INPUT name="mode" type="hidden" value="css">
 <INPUT name="pass" type="hidden" value="$IN{'pass'}">
 <INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
-@{[&getFooter]}
 ASDF
 	}else{
 		$IN{'css'}=~s/(\n)*$/\n/o;
@@ -1194,8 +1322,7 @@ ASDF
 sub log{
 	unless($IN{'type'}){
 		#ログ管理初期メニュー
-		print<<"ASDF";
-$AT{'head'}
+		print&getManageHeader.<<"ASDF".&getManageFooter;
 <H2 class="mode">ログ管理モード</H2>
 <FORM accept-charset="euc-jp" name="logedit" method="post" action="$AT{'manage'}">
 
@@ -1241,12 +1368,10 @@ $AT{'head'}
 <INPUT name="pass" type="hidden" value="$IN{'pass'}">
 <INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
 </FORM>
-@{[&getFooter]}
 ASDF
 	}elsif($IN{'type'}=~/^\d$/){
 		#ログ管理第一段階
-		print<<"_HTML_";
-$AT{'head'}
+		print&getManageHeader.<<"_HTML_";
 <H2 class="mode">ログ管理モード</H2>
 <FORM accept-charset="euc-jp" name="logedit" method="post" action="$AT{'manage'}">
 _HTML_
@@ -1298,7 +1423,7 @@ ASDF
 			exit;
 		}
 		
-		print<<"ASDF";
+		print<<"ASDF".&getManageFooter;
 <BR>
 <P>
 <INPUT name="mode" type="hidden" value="log">
@@ -1308,7 +1433,6 @@ ASDF
 <P><INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
 </FORM>
 <P><A href="$AT{'manage'}" title="管理">間違えたので最初からやり直す</A></P>
-@{[&getFooter]}
 ASDF
 	}elsif($IN{'type'}=~/^\w$/){
 		&loadcfg;
@@ -1394,8 +1518,7 @@ ASDF
 # 0.cgi（記事情報管理ファイル）の回復
 sub zero{
 	unless($IN{'recover'}){
-		print<<"ASDF";
-$AT{'head'}
+		print&getManageHeader.<<"ASDF".&getManageFooter;
 <H2 class="mode">記事情報ファイル回復モード</H2>
 <FORM accept-charset="euc-jp" name="zero" method="post" action="$AT{'manage'}">
 <P>記事情報ファイルをリカバリすると、既存の情報は失われます<BR>
@@ -1405,7 +1528,6 @@ $AT{'head'}
 <P><LABEL accesskey="r" for="recover">回復する
 <INPUT name="recover" id="recover" type="checkbox" value="1"></LABEL></P>
 <P><INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
-@{[&getFooter]}
 ASDF
 		exit;
 	}else{
@@ -1437,8 +1559,7 @@ ASDF
 # 管理CGI自体の管理
 sub manage{
 	unless($IN{'manage'}){
-		print<<"ASDF";
-$AT{'head'}
+		print&getManageHeader.<<"ASDF".&getManageFooter;
 <H2 class="mode">管理CGIの管理</H2>
 <FORM accept-charset="euc-jp" name="zero" method="post" action="$AT{'manage'}">
 
@@ -1458,7 +1579,6 @@ $AT{'head'}
 <INPUT name="mode" type="hidden" value="manage">
 <INPUT name="pass" type="hidden" value="$IN{'pass'}"></P>
 <P><INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
-@{[&getFooter]}
 ASDF
 		exit;
 	}else{
@@ -1475,19 +1595,17 @@ ASDF
 }
 
 
+
+#------------------------------------------------------------------------------#
+# Sub Routins
+#
+# main直下のサブルーチン群の補助
+
 #-------------------------------------------------
 # config読み込み
 #
 sub loadcfg{
-	my%cfg;
-	for(@_){$cfg{$_}=1;}
-	if($cfg{'index'}&&$cfg{'style'}){
-		(require 'index.cgi')&&(require 'style.pl');
-	}elsif($cfg{'style'}){
-		require 'style.pl';
-	}else{
-		require 'index.cgi';
-	}
+	require 'index.cgi';
 }
 
 #-------------------------------------------------
@@ -1501,21 +1619,37 @@ sub logfiles{
 	return@file;
 }
 
-#-------------------------------------------------
-# フッターの生成
-#
-sub getFooter{
-	return<<"_HTML_";
-<DIV class="center"><TABLE align="center" border="0" cellspacing="0" class="head" summary="Footer" width="90%"><TR>
-<TD nowrap>■■■■■■■</TD>
-<TH width="100%"><H1 class="head" align="right"><A href="index.cgi">BACK to INDEX</A></H1></TH>
-</TR></TABLE></DIV>
+#-----------------------------
+# ヘッダーの生成
+sub getManageHeader{
+	return<<"_HTML_";# Header without G-ZIP etc.
+Content-type: text/html; charset=euc-jp
+Content-Language: ja-JP
 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"-->
+<HTML lang="ja-JP">
+<HEAD>
+$CF{'head'}</HEAD>
+
+<BODY>
+
+<DIV class="center"><TABLE align="center" border="0" cellspacing="0" class="head" summary="Header" width="90%"><TR>
+<TH width="100%"><H1 class="head">Mireille Administrative Tools</H1></TH>
+<TD nowrap>■■■■■■■</TD>
+</TR></TABLE></DIV>
+_HTML_
+}
+
+#-----------------------------
+# フッターの生成
+sub getManageFooter{
+	my$AiremixCopy=<<"_HTML_";
 <DIV class="AiremixCopy">- <A href="http://www.airemix.com/" target="_blank" title="Airemix - Mireille -">Airemix Mireille</A>
 <VAR title="times:@{[times]}">$CF{'Manage'}</VAR> -</DIV>
-</BODY>
-</HTML>
 _HTML_
+	return&getPageFooter(defined$IN{'read'}).$AiremixCopy
+	.$CF{'form_jscript'}."</BODY>\n</HTML>\n";
 }
 
 
@@ -1584,30 +1718,19 @@ BEGIN{
 	}
 	# Revision Number
 	$CF{'Manage'}=q$Revision$;
-	$CF{'style'} = 'style.css';
 
 	__FILE__=~/([^\/\\:]+)$/o;
 	$AT{'manage'}=$1;
-	$AT{'head'}=<<"_HTML_";
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<!--DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"-->
-<HTML lang="ja-JP">
-<HEAD>
-<META http-equiv="Content-type" content="text/html; charset=euc-jp">
-<META http-equiv="Content-Script-Type" content="text/javascript">
-<META http-equiv="Content-Style-Type" content="text/css">
-<META http-equiv="MSThemeCompatible" content="yes">
-<LINK rel="stylesheet" href="$CF{'style'}" media="screen" type="text/css">
-<TITLE>Mireille Administrative Tools</TITLE>
-</HEAD>
 
-<BODY>
-
-<DIV class="center"><TABLE align="center" border="0" cellspacing="0" class="head" summary="Header" width="90%"><TR>
-<TH width="100%"><H1 class="head">Mireille Administrative Tools</H1></TH>
-<TD nowrap>■■■■■■■</TD>
-</TR></TABLE></DIV>
-_HTML_
+	#-------------------------------------------------
+	# Mireille内のHTMLデザイン
+	$CF{'title'}='Mireille Administrative Tools';
+	$CF{'pgtitle'}='Mireille Administrative Tools';
+	$CF{'style'}='style.css';
+	$CF{'home'}='';
+	$CF{'name'}='';
+	$CF{'bodyHead'}='';
+	$CF{'bodyFoot'}='';
 }
 
 1;
