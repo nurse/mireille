@@ -425,7 +425,7 @@ var bodyObj=document.all?document.all('body'):document.getElementById?document.g
 <DD>ツッコミメインなHTML解説サイト、にわたしは見えました。「HTML 4.01 のみを、純粋に学問的な興味から研究」しているそうです。HTMLの構成に際して参考にしました。</DD>
 <DT>jcode.pl &lt;<a href="http://www.srekcah.org/jcode/">http://www.srekcah.org/jcode/</A>&gt;</DT>
 <DD>漢字コード変換用のライブラリです。Mireille本体では横着しているので使っていません。管理CGIでは一部を切り出して使っています。</DD>
-<DT>KNET-WEB &lt;<a href="http://www.kent-web.com/">http://www.kent-web.com/</A>&gt;</DT>
+<DT>KENT-WEB &lt;<a href="http://www.kent-web.com/">http://www.kent-web.com/</A>&gt;</DT>
 <DD>なにはともあれ日本のCGI/Perl界に与えた影響は少なくはないはずです。私個人では特にYYBOARDとYYCHATにはお世話になりました。きわめてとっつき易いCGIが多いです。</DD>
 <DT>Perlメモ &lt;<a href="http://www.din.or.jp/~ohzaki/perl.htm">http://www.din.or.jp/~ohzaki/perl.htm</A>&gt;</DT>
 <DD>URI自動リンク機能をつけるに際し参考に・・・むしろ丸写しです。Perlの正規表現に関してとても有用な情報があります。</DD>
