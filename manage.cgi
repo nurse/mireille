@@ -269,6 +269,7 @@ sub getParam{
 		$IN{'push'}=($DT{'push'}=~/(\d)/o)?$1:'';
 		$IN{'lock'}=($DT{'lock'}=~/([1-9]\d*)/o)?$1:0;
 		$IN{'type'}=$1 if($DT{'type'}=~/(\w)/o);
+		$IN{'see'}=($DT{'see'}=~/([1-9]\d*)/o)?$1:0;
 		$IN{'lockType'}=($DT{'lockType'}=~/(\w+(?:\s+\w+)*)/o)?$1:'';
 		return%IN;
 	}elsif('zero'eq$DT{'mode'}){#Zero
@@ -1081,11 +1082,21 @@ sub log{
 <FORM accept-charset="$CF{'encoding'}" name="logedit" method="post" action="$AT{'manage'}">
 
 <FIELDSET style="padding:0.5em;width:60%">
+<LEGEND>スレッドファイルの閲覧</LEGEND>
+<DIV style="text-align:left">
+<P><LABEL for="seeThread"><INPUT name="type" id="seeThread" type="radio" value="5" accesskey="m" checked
+>スレッドを閲覧する(<SPAN class="ak">M</SPAN>)</LABEL> ---
+第<INPUT name="see" type="text" size="4" style="ime-mode:disabled" value="">番スレッドを閲覧する。</P>
+<P>素のログを閲覧します。</P>
+</DIV>
+</FIELDSET>
+
+<FIELDSET style="padding:0.5em;width:60%">
 <LEGEND>スレッドのロック</LEGEND>
 <DIV style="text-align:left">
-<P><LABEL for="threadLock"><INPUT name="type" id="threadLock" type="radio" value="4" accesskey="l" checked
+<P><LABEL for="threadLock"><INPUT name="type" id="threadLock" type="radio" value="4" accesskey="l"
 >スレッドをロックする(<SPAN class="ak">L</SPAN>)</LABEL> ---
-第<INPUT name="lock" type="text" size="3" style="ime-mode:disabled" value="">番スレッドをロックする。</P>
+第<INPUT name="lock" type="text" size="4" style="ime-mode:disabled" value="">番スレッドをロックする。</P>
 <FIELDSET style="padding:0.5em;width:60%">
 <LEGEND>オプション</LEGEND>
 <LABEL for="revise"><INPUT name="lockType" id="revise" type="checkbox" value="revise">記事修正もロックする</LABEL>
@@ -1111,15 +1122,15 @@ sub log{
 <LEGEND>削除するファイルの指定</LEGEND>
 
 <P style="text-align:left"><INPUT name="type" type="radio" value="1" accesskey="y"
->スレッド番号<INPUT name="str" type="text" size="3" style="ime-mode:disabled" value=""
->から<INPUT name="end" type="text" size="3" style="ime-mode:disabled" value=""
+>スレッド番号<INPUT name="str" type="text" size="4" style="ime-mode:disabled" value=""
+>から<INPUT name="end" type="text" size="4" style="ime-mode:disabled" value=""
 >まで削除する(<SPAN class="ak">Y</SPAN>)<BR>
 前の□に何も入れなかった場合は、1〜□を削除し、<BR>
 後の□に何も入れなかった場合は、□から最新を残してそれより昔のものをを削除します<BR>
 かなり危険なコマンドでもあるので、必ず実行前にバックアップをとるようにしましょう</P>
 
 <P style="text-align:left"><INPUT name="type" type="radio" value="2" accesskey="y"
->最新から<INPUT name="save" type="text" size="3" style="ime-mode:disabled" value=""
+>最新から<INPUT name="save" type="text" size="4" style="ime-mode:disabled" value=""
 >個残して、それ以外を削除する(<SPAN class="ak">Y</SPAN>)<BR>
 ここでいう「最新」とはスレッド番号の最も大きい物、のことです<BR>
 必ず実行前にバックアップをとるようにしましょう</P>
@@ -1159,11 +1170,38 @@ ASDF
 		exit;
 	}elsif($IN{'type'}=~/^\d$/){
 		#ログ管理第一段階
-		if($IN{'type'}==4){
+		if($IN{'type'}==5){
+			#スレッドの閲覧
+			if($IN{'see'}){
+				my$log;
+				local*FILE;
+				open(FILE,'<'."$CF{'log'}$IN{'see'}.cgi")
+				||die"Can't read log($IN{'see'}.cgi)[$?:$!]";
+				eval{flock(FILE,1)};
+				read(FILE,$log,-s"$CF{'log'}$IN{'see'}.cgi");
+				close(FILE);
+				$log=~s/</&lt;/go;
+				$log=~s/>/&gt;/go;
+				print&getManageHeader.<<"ASDF";
+<H2 class="heading2">スレッド閲覧</H2>
+<FORM accept-charset="$CF{'encoding'}" name="logedit" method="post" action="$AT{'manage'}">
+<P>第$IN{'see'}番のスレッドの内容を表示します<P>
+<DIV><TEXTAREA cols="120" rows="15">$log</TEXTAREA></DIV>
+<P><INPUT name="see" type="text" size="4" style="ime-mode:disabled" value="">番スレッドを閲覧する。</P>
+<P><INPUT name="type" type="hidden" value="5">
+<INPUT name="mode" type="hidden" value="log">
+<INPUT name="pass" type="hidden" value="$IN{'pass'}">
+<INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
+<P><A href="$AT{'manage'}" title="管理">最初に戻る</A></P>
+ASDF
+			print&getManageFooter;
+			exit;
+			}
+		}elsif($IN{'type'}==4){
 			#スレッドのロック
 			if($IN{'lock'}){
 				open(FILE,'+>>'."$CF{'log'}$IN{'lock'}.cgi")
-				||die"Can't read/write log($IN{'lock'};.cgi)[$?:$!]";
+				||die"Can't read/write log($IN{'lock'}.cgi)[$?:$!]";
 				eval{flock(FILE,2)};
 				seek(FILE,0,0);
 				my@log=map{/^([^\x0D\x0A]*)/o}<FILE>;
@@ -1207,8 +1245,8 @@ _HTML_
 				}
 				print<<"_HTML_";
 <P>本当に、$deleteを@{[('gzip'eq$IN{'del'})?'GZIP':('unlink'eq$IN{'del'})?'ファイル削除':'ファイル名変更']}で削除してよろしいですか？
-<INPUT name="str" type="hidden" size="3" value="$IN{'str'}" readonly>
-<INPUT name="end" type="hidden" size="3" value="$IN{'end'}" readonly>
+<INPUT name="str" type="hidden" size="4" value="$IN{'str'}" readonly>
+<INPUT name="end" type="hidden" size="4" value="$IN{'end'}" readonly>
 <INPUT name="type" type="hidden" value="a">
 <INPUT name="del" type="hidden" value="$IN{'del'}">
 </P>
@@ -1220,7 +1258,7 @@ _HTML_
 			my@file=&logfiles;
 			my$i=$#file-$IN{'save'}+1;
 			print<<"ASDF";
-<P>本当に、最新から<INPUT name="save" type="text" size="3" value="$IN{'save'}" readonly>個残して@{[
+<P>本当に、最新から<INPUT name="save" type="text" size="4" value="$IN{'save'}" readonly>個残して@{[
 ('gzip'eq$IN{'del'})?'GZIP':('unlink'eq$IN{'del'})?'ファイル削除':'ファイル名変更']}で削除してよろしいですか？<BR>
 スレッド番号$file[$#file]から$file[$IN{'save'}]までの、$i件を削除します
 <INPUT name="type" type="hidden" value="b">
@@ -1238,6 +1276,12 @@ ASDF
 			#スレッドロック
 			print<<"_HTML_";
 <P>ロックするスレッド番号が入力されていません<BR>
+戻って指定しなおしてください</P>
+_HTML_
+		}elsif($IN{'type'}==5){
+			#スレッドロック
+			print<<"_HTML_";
+<P>閲覧するスレッド番号が入力されていません<BR>
 戻って指定しなおしてください</P>
 _HTML_
 		}else{
