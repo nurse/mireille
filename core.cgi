@@ -31,7 +31,7 @@ sub main{
 	#ログファイルちゃんとある？
 	defined$CF{'log'}||die q($CF{'log'} is Undefined);
 	unless(-e"$CF{'log'}0.cgi"){
-		-e"$CF{'log'}0.pl"&&die"旧形式0.plが残っています 不具合の兆し？";
+		-e"$CF{'log'}0.pl"&&die'旧形式0.plが残っています 不具合の兆し？';
 		!-e"$CF{'log'}"&&!mkdir("$CF{'log'}",0777)&&die"Can't read/write/create LogDir($CF{'log'})[$?:$!]";
 		open(ZERO,'+>>'."$CF{'log'}0.cgi")||die"Can't write log(0.cgi)[$?:$!]";
 		eval{flock(ZERO,2)};
@@ -54,7 +54,7 @@ sub main{
 		#記事書き込み
 		defined$IN{'body'}&&&writeArticle;
 		#返信
-		$IN{'i'}&&&res;
+		$IN{'i'}&&&showResponseMode;
 		#新規書き込み
 		defined$IN{'j'}&&(&showHeader,&getCookie,&prtfrm,(print&getFooter),exit);
 		#記事修正リストor実行
@@ -86,33 +86,25 @@ sub main{
 #
 sub showCover{
 	#-----------------------------
-	#Cookie取得＆書き込み
-	&getCookie?&setCookie(\%CK):($CK{'time'}=$^T-$CF{'newnc'});
-
-	#-----------------------------
-	# HTTP,HTML,PAGEヘッダーを表示
-	&showHeader;
-
-	#-----------------------------
-	#新規投稿フォームを表示する（設定による）
-	$CF{'prtwrt'}&&&prtfrm;
-	print$CF{'note'};
-	#記事ナビボタン
-	&artnavi('button');
-
-	#-----------------------------
 	#ページ処理
 	&logfiles($CF{'sort'});
-	!@file&&push(@file,0);
-	if($IN{'read'}){
-		my$page=1;my$thread=1;
+	!@file&&$file[$#file-1]&&push(@file,0);
+	if(!$IN{'read'}){
+	}elsif($IN{'read'}<$file[$#file-1]){
+		#古すぎる記事
+		$IN{'page'}=int(($#file-1)/$CF{'page'})+1;
+	}elsif($file[0]<$IN{'read'}){
+		#未来の記事
+		$IN{'page'}=1;
+	}else{
+		my$thread=$CF{'page'};
 		for(@file){
-			$_==$IN{'read'}&&($IN{'page'}=$page,last);
-			++$thread>$CF{'page'}|| next;
-			$page++;$thread=1;
+			$_==$IN{'read'}&&last;
+			++$thread;
 		}
+		$IN{'page'}=int($thread/$CF{'page'});
 	}
-
+	
 	#-----------------------------
 	#記事情報
 	my%NEW;
@@ -126,31 +118,40 @@ sub showCover{
 		# 20 : 未読記事のあるスレッドがある時に表示するスレッド数の上限
 		$unread='<P>未読記事のあるスレッド[ '.($#view>20?"@view[0..20] ..":"@view[0..$#view]")." ]</P>";
 	}
-
-	#-----------------------------
-	#ページ選択TABLEを表示
-	my$pgslct=&pgslct($#file,$CF{'page'});
-
+	
 	#-----------------------------
 	#このページのスレッド
 	my$this='';
-	@view=splice(@file,($IN{'page'}-1)*$CF{'page'},$CF{'page'});
+	@view=splice(@{[@file]},($IN{'page'}-1)*$CF{'page'},$CF{'page'});
 	$#view&&!$view[$#view]&&pop@view;
 	for(0..$#view){
 		$this.='<A href="#art'.$view[$_].'" title="Alt+'.($_+1).'">'
 			.($NEW{"$view[$_]"}?qq(<SPAN class="new">$view[$_]</SPAN>):$view[$_]).'</A> ';
 	}
-
+	
+	#-----------------------------
+	#ページ選択TABLEを表示
+	my$pageSelector=&pageSelector($#file,$CF{'page'});
+	
+	#-----------------------------
+	#Cookie取得＆書き込み
+	&getCookie?&setCookie(\%CK):($CK{'time'}=$^T-$CF{'newnc'});
+	
+	#-----------------------------
+	# HTTP,HTML,PAGEヘッダーを表示
+	&showHeader;
+	
+	#-----------------------------
+	#新規投稿フォームを表示する（設定による）
+	$CF{'prtwrt'}&&&prtfrm;
+	print$CF{'note'};
+	#記事ナビボタン
+	&artnavi('button');
+	
 	#-----------------------------
 	#記事情報表示上
-	print<<"_HTML_";
-<DIV class="artinfo">
-$unread
-$pgslct
-<P class="artinfo">このページのスレッド<BR>\n[ $this]<BR>
-<A name="nav_n0" href="#nav_s1" title="下のスレッドへ" accesskey="0">▼</A></P>
-</DIV>
-_HTML_
+	print&getArticoleInfomationA(unread=>$unread,pageSelector=>$pageSelector,this=>$this);
+	
 	#-----------------------------
 	#記事表示
 	if(0 ne$view[0]){
@@ -167,19 +168,12 @@ _HTML_
 	}
 	#-----------------------------
 	#記事情報表示下
-	print<<"_HTML_";
-<DIV class="artinfo">
-<P class="artinfo"><A name="nav_s@{[$#view+2]}" href="#nav_n@{[$#view+1]}" title="上のスレッドへ" accesskey="&#@{[$#view+50]};">▲</A><BR>
-このページのスレッド<BR>\n[ $this]</P>
-
-$pgslct
-</DIV>
-_HTML_
-
+	print&getArticoleInfomationB(unread=>$unread,pageSelector=>$pageSelector,view=>$#view,this=>$this);
+	
 	#-----------------------------
 	#記事ナビ
 	&artnavi;
-
+	
 	#-----------------------------
 	#フッタ
 	print&getFooter;
@@ -567,7 +561,7 @@ _HTML_
 	eval{flock(ZERO,2)};
 	seek(ZERO,0,0);
 	my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
-	index($zero[0],"Mir12=\t")+1||die"ZEROのログ形式がMir12型以外です";
+	index($zero[0],"Mir12=\t")+1||die'ZEROのログ形式がMir12型以外です';
 	%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
 	my@zer1=split(/\s+/o,$zero[1]);
 	@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
@@ -834,13 +828,16 @@ _HTML_
 #-------------------------------------------------
 # 記事返信
 #
-sub res{
+sub showResponseMode{
 	&getCookie;
 	&showHeader;
-	print qq(<H2 class="heading2">- 記事返信モード -</H2>\n)
-	.qq(<DIV id="threadBox">\n)
-	.qq(<H3 class="heading3">このスレッドの今までの内容</H3>\n);
-	print"This thread$IN{'i'} is deleted."if&showArticle(i=>$IN{'i'},ak=>1,res=>1)eq'del';
+	print<<'_HTML_';
+<H2 class="heading2">- 記事返信モード -</H2>
+<DIV id="threadBox">
+<H3 class="heading3">このスレッドの今までの内容</H3>
+_HTML_
+	my%status=&showArticle(i=>$IN{'i'},ak=>1,res=>1);
+	print"This thread$IN{'i'} is deleted."if$status{'-isDeleted'};
 	print<<'_HTML_';
 </DIV>
 <P id="paragraphThreadBox">
@@ -897,7 +894,7 @@ var inp=document.getElementById('inpDivHeight');
 _HTML_
 	$CK{'i'}=$IN{'i'};
 	$CK{'ak'}=1;
-	&chdfrm;
+	&chdfrm if$status{'-isAvailable'};
 	print&getFooter;
 	exit;
 }
@@ -936,12 +933,12 @@ _HTML_
 	}
 	#ログ処理
 	&logfiles('number');
-	my$pgslct=&pgslct($#file,$CF{'delpg'},$mode);
+	my$pageSelector=&pageSelector($#file,$CF{'delpg'},$mode);
 	my@thisPage=@file;
 	@thisPage=splice(@thisPage,($IN{'page'}-1)*$CF{'delpg'},$CF{'delpg'});
 	$thisPage[$#thisPage]==0&&pop@thisPage;
 	print<<"_HTML_";
-<DIV class="center">$pgslct</DIV>
+<DIV class="center">$pageSelector</DIV>
 
 <FORM id="List" method="post" action="index.cgi">
 <DIV class="center"><TABLE border="1" cellspacing="0" class="list" summary="List" width="80%">
@@ -1003,7 +1000,7 @@ _HTML_
 		close(RD);
 	}
 	print"</TABLE></DIV></FORM>\n";
-	print qq(<DIV class="center">$pgslct</DIV>);
+	print qq(<DIV class="center">$pageSelector</DIV>);
 	print&getFooter;
 	exit;
 }
@@ -1295,7 +1292,7 @@ sub locate{
 $ 飛ぶ先のURL（絶対でも相対でも）
 =cut
 	my$i=$_[0];
-	$i||die"'Stay here.'";
+	$i||die'"Stay here."';
 	if(!index($i,'http:')){
 	}elsif($i){
 		$i=sprintf('http://%s%s/',$ENV{'SERVER_NAME'},
@@ -1431,8 +1428,8 @@ sub getParam{
 		#bodyを除いた必須項目の処理
 		if($DT{'i'}&&$DT{'i'}=~/([1-9]\d*)/o){
 			$IN{'i'}=$1;
-			if(defined$DT{'j'}&&$DT{'j'}=~/(0$|[1-9]\d*)/o){
-				#修正[親子]記事
+			if(defined$DT{'j'}&&$DT{'j'}=~/^(0|[1-9]\d*)/o){
+				#修正{親|子}記事
 				$IN{'j'}=$1;
 				unless($DT{'oldps'}){
 				}elsif($DT{'oldps'}eq$CF{'admps'}){
@@ -1688,7 +1685,7 @@ sub getLastpost{
 		eval{flock(ZERO,1)};
 		my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
 		close(ZERO);
-		$zero[0]&&index($zero[0],"Mir12=\t")+1or die"ZEROのログ形式がMir12型以外です";
+		$zero[0]&&index($zero[0],"Mir12=\t")+1or die'ZEROのログ形式がMir12型以外です';
 		%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
 		@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
 	}
@@ -1737,7 +1734,7 @@ $ 記事スレッドファイルリストの順番(date|number)
 #-------------------------------------------------
 # ページ選択TABLE
 #
-sub pgslct{
+sub pageSelector{
 =item 引数
 $ 全部で何スレッドあるの？
 $ 1ページあたりのスレッド数
@@ -1746,55 +1743,49 @@ $ モードの保持(rvs,del)
 =cut
 	my$thds=shift();
 	my$page=shift();
-	my$mode=$_[0]?"$_[0];page=":'page=';
+	my$mode=$_[0]?"$_[0];page":'page';
 	my@key=map{qq( accesskey="$_")}('0','!','&#34;','#','$','%','&#38;','&#39;','(',')');#1-9ページのAccessKey
-
+	
 	#page表示調節
 	my$max=20; #全部で20ページは直接飛べる
 	my$half=int($max/2);
 	my$str=0; #$strページ目から
 	my$end=0; #$endページ目まで連続して直接飛べるように表示
-	my$pags=int(($#file-1)/$page)+1;
-	$IN{'page'}=$pags if$IN{'page'}>$pags;
-
+	my$pags=int(($thds-1)/$page)+1;
+	
 	#どこからどこまで
 	if($pags<=$max){
 		$str=1;
 		$end=$pags;
-	}elsif($IN{'page'}-$half<1){
+	}elsif($IN{'page'}-$half<=1){
 		#1-10
 		$str=1;
-		$end=$pags;
+		$end=$pags-$max;
 	}elsif($IN{'page'}+$half>=$pags){
 		#(max-10)-max
 		$str=$pags-$max+1;
 		$end=$pags;
 	}else{
 		$str=$IN{'page'}-$half+1;
-		$end=$IN{'page'}+$half;
+		$end=$IN{'page'}+$half-1;
 	}
-
+	
 	#配列へ
-	my@page=map{$_==$IN{'page'}?qq(<STRONG class="pgsl">$_</STRONG>)
-	:qq(<A href="index.cgi?$mode$_").($key[$_]?$key[$_]:'').">$_</A>\n"}($str..$end);
-
+	my@page=map{$_==$IN{'page'}?qq(<STRONG class="current">$_</STRONG>)
+	:sprintf'<A href="index.cgi?%s=%d"%s>%d</A>',$mode,$_,$key[$_]?$key[$_]:'',$_}$str..$end;
+	
 	#最先と最後
-	$str!=1&&unshift(@page,qq(<A accesskey="&#60;" href="index.cgi?${mode}1">1</A>&#60;&#60;));
-	$end!=$pags&&push(@page,qq(&#62;&#62;<A accesskey="&#62;" href="index.cgi?$mode$pags">$pags</A>));
-
+	unshift(@page,qq(<A accesskey="&#60;" href="index.cgi?$mode=1">1</A> ..))		if$str!=1;
+	push(@page,qq(.. <A accesskey="&#62;" href="index.cgi?$mode=$pags">$pags</A>))	if$end!=$pags;
+	
+	#following / preceding
+	my$following=$IN{'page'}==$str?
+		'[最新]':sprintf'<A accesskey="," href="index.cgi?%s=%d">&#60; 後の</A>',$mode,$IN{'page'}-1;
+	my$preceding=$IN{'page'}==$end?
+		'[最古]':sprintf'<A accesskey="." href="index.cgi?%s=%d">昔の &#62;</A>',$mode,$IN{'page'}+1;
+	
 	#いざ出力
-	return<<"_HTML_";
-<TABLE align="center" cellspacing="0" class="pgsl" summary="PageSelect" border="1">
-<COL style="width:3.5em">
-<COL>
-<COL style="width:3.5em">
-<TR>
-<TD>@{[$IN{'page'}==1?'[最新]':qq(<A accesskey="," href="index.cgi?$mode).($IN{'page'}-1).'">&#60; 後の</A>']}</TD>
-<TD>[ @page ]</TD>
-<TD>@{[$pags-$IN{'page'}?qq(<A accesskey="." href="index.cgi?$mode).($IN{'page'}+1).'">昔の &#62;</A>':'[最古]']}</TD>
-</TR>
-</TABLE>
-_HTML_
+	return &getPageSelectorSkin($following,join("\n",@page),$preceding,$str,$end,$pags,$mode);
 }
 
 
@@ -1810,6 +1801,9 @@ sub showArticle{
 	$DT{'j'}=-1;
 	$DT{'-maxChildsShown'}=-1if!defined$DT{'-maxChildsShown'};
 	$DT{'-unreads'}||=1;
+	$DT{'-isLocked'}=0;
+	
+	-e"$CF{'log'}$DT{'i'}.cgi"||return -isDeleted=>1;
 	
 	open(RD,'<'."$CF{'log'}$DT{'i'}.cgi")||die"Can't read log($DT{'i'}.cgi)[$?:$!]";
 	eval{flock(RD,1)};
@@ -1822,28 +1816,27 @@ sub showArticle{
 	#readモードの時の補正
 	$horizon=0if$IN{'read'}&&$IN{'read'}==$DT{'i'};
 	
-	my$isLocked=0;
 	for(@articles){
 		unless(++$DT{'j'}){
 			#親記事
 			$DT{'-unreads'}=&artprt(\%DT,$_);
 			print<<"_HTML_"if$horizon>0;
-<P class="note" style="text-align:center;width:80%">子記事数が多いため、最新の$maxChildsShown件のみ表示します。
+<P class="overflowMessage">子記事数が多いため、最新の$maxChildsShown件のみ表示します。
 それ以前の記事は<A href="index.cgi?res=$DT{'i'}">返信モード</A>で見ることができます。</P>
 _HTML_
 		}else{
 			#子記事
 			$DT{'j'}>$horizon||next;
 			index($_,"Mir12=\tdel")+1&&next;
-			index($_,"Mir12=\tLocked")+1&&++$isLocked&&last;
+			index($_,"Mir12=\tLocked")+1&&++$DT{'-isLocked'}&&last;
 			$DT{'-unreads'}=&artchd(\%DT,$_);
 		}
 	}
-	$DT{'j'}<0&&return;#記事がないならフッタを表示せず返す
+	$DT{'-isOverflowed'}=$CF{'maxChilds'}&&$DT{'j'}>=$CF{'maxChilds'}?1:0;
+	$DT{'-isAvailable'}=not$DT{'-isLocked'}+$DT{'-isOverflowed'};
 	#記事フッタ
-	$DT{'-isLocked'}=$isLocked;
 	&artfot(\%DT);
-	return$DT{'-unreads'};
+	return wantarray?map{$_,$DT{$_}}grep{m/^-/o}keys%DT:$DT{'-unreads'};
 }
 
 
@@ -2580,7 +2573,8 @@ $ RFC1123形式の日付
 	}
 	# そのエンコードで正当な文字列を取得
 	sub getValidString{shift;
-		return$_[0]&&$_[0]=~/($char+)/?$1:'';
+		@_||die'Not enough arguments for MirString::getValidString';
+		return shift=~/($char+)/?$1:'';
 	}
 	# そのエンコードで正当な文字を表す正規表現を取得
 	sub getCharRegexp{shift;
