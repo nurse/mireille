@@ -110,39 +110,39 @@ sub getParam{
 		}
 		return%IN;
 	}elsif('icont'eq$DT{'mode'}){
-		$IN{'icon'}=($DT{'icon'}=~/(.+)/os)?"$1":undef;
-		$IN{'renew'}=($DT{'renew'}=~/(.)/o)?'1':undef;
+		$IN{'icon'}=$1 if($DT{'icon'}=~/(.+)/os);
+		$IN{'renew'}=1 if($DT{'renew'}=~/(.)/o);
 		return%IN;
 	}elsif('icons'eq$DT{'mode'}){
-		$IN{'icon'}=($DT{'icon'}=~/(.+)/os)?"$1":undef;
-		$IN{'renew'}=($DT{'renew'}=~/(.)/o)?'1':undef;
+		$IN{'icon'}=$1 if($DT{'icon'}=~/(.+)/os);
+		$IN{'renew'}=1 if($DT{'renew'}=~/(.)/o);
 		return%IN;
 	}elsif('iconsmp'eq$DT{'mode'}){
 		return%IN;
 	}elsif('config'eq$DT{'mode'}){
 		while(my($i,$j)=each%DT){
-			$IN{"$i"}=($j=~/(.*)/os)?"$1":undef;
+			$IN{"$i"}=$1 if($j=~/(.*)/os);
 		}
 		return%IN;
 	}elsif('css'eq$DT{'mode'}){
-		$IN{'css'}=($DT{'css'}=~/(.+)/os)?"$1":undef;
-		$IN{'file'}=($DT{'file'}=~/(\w+)/o)?"$1":undef;
-		$IN{'code'}=($DT{'code'}=~/(\w+)/o)?"$1":undef;
+		$IN{'css'}=$1 if($DT{'css'}=~/(.+)/os);
+		$IN{'file'}=$1 if($DT{'file'}=~/(\w+)/o);
+		$IN{'code'}=$1 if($DT{'code'}=~/(\w+)/o);
 		return%IN;
 	}elsif('log'eq$DT{'mode'}){#LOG
 		$IN{'str'}=($DT{'str'}=~/(\d+)/o)?$1:0;
 		$IN{'end'}=($DT{'end'}=~/(\d+)/o)?$1:0;
-		$IN{'del'}=($DT{'del'}=~/(\w)/o)?"$1":undef;
+		$IN{'del'}=$1 if($DT{'del'}=~/(\w)/o);
 		$IN{'save'}=($DT{'save'}=~/(\d+)/o)?$1:0;
 		$IN{'push'}=($DT{'push'}=~/(\d)/o)?"$1":'';
-		$IN{'type'}=($DT{'type'}=~/(\w)/o)?"$1":undef;
+		$IN{'type'}=$1 if($DT{'type'}=~/(\w)/o);
 		return%IN;
 	}elsif('zero'eq$DT{'mode'}){#Zero
-		$IN{'recover'}=($DT{'recover'}=~/(.)/o)?'1':undef;
+		$IN{'recover'}=1 if($DT{'recover'}=~/(.)/o);
 		return%IN;
 	}elsif('manage'eq$DT{'mode'}){#Manage
-		$IN{'manage'}=($DT{'manage'}=~/(\w+)/o)?$1:undef;
-		$IN{'filename'}=($DT{'filename'}=~/([^\\\/:*?"<>|]+)/o)?$1:undef;
+		$IN{'manage'}=$1 if($DT{'manage'}=~/(\w+)/o);
+		$IN{'filename'}=$1 if($DT{'filename'}=~/([^\\\/:*?"<>|]+)/o);
 		return%IN;
 	}
 	print"<PRE>something wicked happend!\n";
@@ -836,6 +836,8 @@ my@required=(
 );
 		my@design=(
  'colorList'=>'色リスト'
+,'bodyHead'	=>'HTML-BODYのヘッダー（ページ最上部のバナー広告はここに）'
+,'bodyFoot'	=>'HTML-BODYのフッター（ページ最下部のバナー広告はここに）'
 ,'iched'	=>'アイコンリストのヘッダー'
 ,'icfot'	=>'アイコンリストのフッター'
 );
@@ -849,7 +851,7 @@ my@required=(
 _HTML_
 		}
 		for(%CF){
-			$CF{"$_"}=~s/\t/\ \ /go;
+			$CF{"$_"}=~s/\t/&nbsp;&nbsp;&nbsp;&nbsp;/go;
 			$CF{"$_"}=~s/&/&#38;/go;
 			$CF{"$_"}=~s/"/&#34;/go;
 			$CF{"$_"}=~s/'/&#39;/go;
@@ -978,7 +980,8 @@ ASDF
 ASDF
 	}else{
 		for(keys%IN){
-			$IN{"$_"}=~s/(\n)*$//;
+			$IN{"$_"}=~s/(\n)*$//o;
+			$IN{"$_"}=~s/'/\\'/go;
 			$IN{"$_"}=~s/^_CONFIG_$/(_CONFIG_)/gmo;
 		}
 		
