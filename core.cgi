@@ -1951,13 +1951,15 @@ my@crc32;
 sub getCRC32{
 =item 引数
 $ CRC32をとりたい文字列
+;
+$ 32bitの10進数が欲しい時に真を。
 =cut
-	@crc32=map{my$a=$_;$a=$a&1?($a>>1&0x7fffffff)^0xedb88320:$a>>1&0x7fffffff for 0..7;$a}0..255if!@crc32;
+	@crc32=map{my$a=$_;$a=$a&1?($a>>1&0x7fffffff)^0xedb88320:$a>>1&0x7fffffff for 0..7;$a}0..255unless@crc32;
 	my$word=shift;
 	my$r=0xffffffff;
 	$r=$r>>8&0xffffff^$crc32[$r&255^$_]for unpack"C*",$word;
 	$r^=0xffffffff;
-	return sprintf("%08X",$r);
+	return shift()?$r:sprintf("%08X",$r);
 }
 
 
@@ -1966,29 +1968,53 @@ $ CRC32をとりたい文字列
 #
 sub getSignature{
 	my$word=shift;
-	my$salt;
-	for(0,1){
-		my$c=chop$word;
-		my$n=ord$c;
-		$n-=76while$n>122;
-		$n+=47if$n<47;
-		$salt.=$c eq$n?$c:chr$n;
+	my$signature;
+	if($CF{'signatureSpecial'}&&$CF{'signatureSpecial'}=~/(?:^|\s+)\Q$word\E\s+(\S+)/o){
+		$signature='!'.$1;
+	}else{
+		my$salt;
+		for(0,1){
+			my$c=chop$word;
+			my$n=ord$c;
+			$n-=76while$n>122;
+			$n+=47if$n<47;
+			$salt.=$c eq$n?$c:chr$n;
+		}
+		$signature=&getCRC32(substr(crypt(&getCRC32($word),$salt),2));
 	}
-	return&getCRC32(substr(crypt(&getCRC32($word),$salt),2));
+	return$signature;
 }
 
 
 #-------------------------------------------------
-# 署名の生成2
+# 署名の生成（表示時）
 #
-my$saltForSignature2;
-sub getSignature2{
-	if(!$saltForSignature2){
-		scalar\%Z0=~/(0x[\w]+)/o;
-		srand($zer2[$#zer2]^$zer2[$#zer2-1]^hex($1));
-		$saltForSignature2=chr(47+rand 76).chr(47+rand 76);
+my$signatureBaseView;
+my%signatureCacheView;
+sub getSignatureView{
+	my$data=shift;
+	my$signature;
+	if($data->{signature}=~/!(.+)/o){
+		#特殊署名
+		$signature=$1;
+	}elsif($signatureCacheView{$data->{signature}.' '.$data->{name}}){
+		#キャッシュ
+		$signature=$signatureCacheView{$data->{signature}.' '.$data->{name}};
+	}else{
+		unless($signatureBaseView){
+			$signatureBaseView=$zer2[$#zer2]^($zer2[$#zer2]>>1);
+			scalar\%Z0=~/(0x[\d]+)/o;
+			$signatureBaseView^=$1;
+			scalar\@zer2=~/(0x[\d]+)/o;
+			$signatureBaseView^=$1;
+			$signatureBaseView^=$1;
+		}
+		srand($signatureBaseView^&getCRC32($data->{name},1));
+		my$saltForSignatureView=chr(47+rand 76).chr(47+rand 76);
+		$signature=substr(crypt($data->{signature},$saltForSignatureView),2);
+		$signatureCacheView{$data->{signature}.' '.$data->{name}}=$signature;
 	}
-	return '<span class="signature">['.substr(crypt(shift,$saltForSignature2),2).']</span>';
+	return qq(<span class="signature">[ $signature ]</span>);
 }
 
 
