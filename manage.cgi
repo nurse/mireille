@@ -695,6 +695,8 @@ sub config{
 		,maxChildren			=>'一スレッドあたりの最大子記事数を制限する'
 		,maxChildrenShown		=>'一スレッドあたりの最大表示子記事数を制限する'
 		,MaxSize			=>'読み込む最大サイズ'
+		,'AttackAverage'		=> '連続書き込み対策の閾件数'
+		,'AttackInterval'		=> '連続書き込み対策の閾時間'
 		,Attach				=>'ファイルを添付可能にする'
 		,'AttachMaxSize'		=>'添付可能な最大ファイルサイズ'
 		,'AttachParentLength'		=>'親記事に添付できるファイル数'
@@ -750,14 +752,32 @@ _HTML_
 	    $config{"$_"}=~s/</&#60;/go;
 	    $config{"$_"}=~s/>/&#62;/go;
 	}
-	$config{'newnc'}='86400'			if '' eq $config{'newnc'};
-	$config{'newuc'}='600'				if '' eq $config{'newuc'};
-	$config{'new'}='<SPAN class="new">New!</SPAN>'	if '' eq $config{'new'};
-	$config{'page'}='5'				if '' eq $config{'page'};
-	$config{'delpg'}='20'				if '' eq $config{'delpg'};
-	$config{'logmax'}='200'				if '' eq $config{'logmax'};
-	$config{'maxChildren'}='100'			if '' eq $config{'maxChildren'};
-	$config{'maxChildrenShown'}='10'		if '' eq $config{'maxChildrenShown'};
+	
+	my %default = (
+		       'newnc'			=> '86400'
+		       ,'newuc'			=> '600'
+		       ,'new'			=> '<SPAN class	=> "new">New!</SPAN>'
+		       ,'page'			=> '5'
+		       ,'delpg'			=> '20'
+		       ,'logmax'		=> '200'
+		       ,'maxChildren'		=> '100'
+		       ,'maxChildrenShown'	=> '10'
+		       ,'AttackAverage'		=> '10'
+		       ,'AttackInterval'	=> '3600'
+		       ,'Attach'		=> '0'
+		       ,'AttachMaxSize'		=> '300000'
+		       ,'AttachParentLength'	=> '3'
+		       ,'AttachChildLength'	=> '3'
+		       ,'AttachDir'		=> './attach/'
+		       ,'AttachThumbnail'	=> '0'
+		       ,'AttachThumbnailDir'	=> './attach/thumbnail/'
+		       ,'AttachThumbnailWidth'	=> '100'
+		       ,'AttachThumbnailHeight'	=> '100'
+		      );
+	for(keys %default){
+	    !exists $config{$_} || !defined $config{$_} || $config{$_} eq '' or next;
+	    $config{$_} = $default{$_}
+	}
 	
 	print&getManageHeader.<<"ASDF";
 <H2 class="heading2">index.cgi編集モード</H2>
