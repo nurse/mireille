@@ -10,8 +10,8 @@
 #------------------------------------------------------------------------------#
 # $cvsid = q$Id$;
 require 5.005;
-use strict;
-use vars qw(%CF %IC %IN %CK);
+#use strict;
+#use vars qw(%CF %IC %IN %CK);
 my(%Z0,@zer2,@file);
 
 =pod core.cgi¤òÃ±ÂÎµ¯Æ°¤µ¤»¤ë¤È¡¢location¤ÇÄ·¤Ð¤»¤ëCGI¤Ë
@@ -137,7 +137,7 @@ sub showCover{
 	$#view&&!$view[$#view]&&pop@view;
 	for(0..$#view){
 		$this.='<A href="#art'.$view[$_].'" title="Alt+'.($_+1).'">'
-		.($NEW{"$view[$_]"}?qq(<SPAN class="new">$view[$_]</SPAN>):$view[$_]).'</A> ';
+			.($NEW{"$view[$_]"}?qq(<SPAN class="new">$view[$_]</SPAN>):$view[$_]).'</A> ';
 	}
 
 	#-----------------------------
@@ -158,7 +158,7 @@ _HTML_
 		my$unreads=1;
 		for(0..$#view){
 			$unreads+=&showArticle(i=>$view[$_],ak=>($_+1)
-			,-maxChildsShown=>$CF{'maxChildsShown'},-unreads=>$unreads);
+								,-maxChildsShown=>$CF{'maxChildsShown'},-unreads=>$unreads);
 		}
 	}else{
 		#log0¤Î¤ß ¤Ä¤Þ¤êÀßÃÖÄ¾¸å¤Î¤È¤­
@@ -230,11 +230,11 @@ sub writeArticle{
 		if($CF{'admps'}and$IN{'pass'}eq$CF{'admps'}||$IN{'oldps'}eq$CF{'admps'}){
 			$lockedBy='Admin';
 		}elsif($isLocked&&'ThreadBuilder'ne$lockedBy){
-			die '°ìÈÌ¥æ¡¼¥¶¡¼¤Ï¤³¤Î¥¹¥ì¥Ã¥É¤Î¥í¥Ã¥¯¤ò²ò½ü¤Ç¤­¤Þ¤»¤ó¡£';
+			die'°ìÈÌ¥æ¡¼¥¶¡¼¤Ï¤³¤Î¥¹¥ì¥Ã¥É¤Î¥í¥Ã¥¯¤ò²ò½ü¤Ç¤­¤Þ¤»¤ó¡£';
 		}else{
 			#¿Æµ­»ö¤Î¥Ñ¥¹¥ï¡¼¥É
 			my%DT=$log[0]=~/([^\t]*)=\t([^\t]*);\t/go;
-			&mircrypt($DT{'time'},$IN{'pass'},$DT{'pass'})||die '¤¢¤Ê¤¿¤Ï¤³¤Î¥¹¥ì¥Ã¥É¤ò¥í¥Ã¥¯¤Ç¤­¤Þ¤»¤ó¡£';
+			&mircrypt($DT{'time'},$IN{'pass'},$DT{'pass'})||die'¤¢¤Ê¤¿¤Ï¤³¤Î¥¹¥ì¥Ã¥É¤ò¥í¥Ã¥¯¤Ç¤­¤Þ¤»¤ó¡£';
 			$lockedBy='ThreadBuilder';
 		}
 		
@@ -252,7 +252,7 @@ sub writeArticle{
 		#¥í¥Ã¥¯
 		if($isLocked){
 			#¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤ë»þ¤Ï²ò½ü¢ªpop
-			index(pop@log,"Mir12=\tLocked")+1||die 'Mireille¤Î¥¹¥ì¥Ã¥É¥í¥Ã¥¯µ¡Ç½¤Ë¥Ð¥°¤¬¤¢¤ê¤Þ¤¹¡£';
+			index(pop@log,"Mir12=\tLocked")+1||die'Mireille¤Î¥¹¥ì¥Ã¥É¥í¥Ã¥¯µ¡Ç½¤Ë¥Ð¥°¤¬¤¢¤ê¤Þ¤¹¡£';
 		}else{
 			#¤µ¤ì¤Æ¤¤¤Ê¤¤»þ¤Ï¥í¥Ã¥¯¤¹¤ë¢ªpush
 			push(@log,"Mir12=\tLocked:$option;\t");
@@ -347,10 +347,10 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 
 	my@settings=qw(icon iconlist absoluteIcon relativeIcon signature);
 	my@writeSettings=qw(usetag notag noautolink noartno nostrong);
-#	my@oneTimeCommands=qw(dnew znew renew lockArticle lockThread);
+	my@oneTimeCommands=qw(dnew znew renew lockArticle lockThread);
 	
 	$IN{'cmd'}=join(';',map{"$_=$EX{$_}"}grep{$EX{$_}}@settings);
-	defined$EX{$_}&&($EX{$_}=1)for@writeSettings;
+	defined$EX{$_}&&!$EX{$_}&&($EX{$_}=1)for@writeSettings,@oneTimeCommands;
 	$IN{'cmd'}.=join(';',grep{$EX{$_}}@writeSettings);
 	
 	#ÀìÍÑ¥¢¥¤¥³¥óµ¡Ç½¡£index.cgi¤ÇÀßÄê¤¹¤ë¡£
@@ -397,7 +397,7 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 <H2 class="heading2">- Write Error -</H2>
 <P>@{[join('¤È',map{qq(<SPAN style="color:#f00">$_</SPAN>)}@error)]}¤ò¤Á¤ã¤ó¤ÈÆþÎÏ¤·¤Æ¤¯¤À¤µ¤¤</P>
 _HTML_
-			printf '<P>%s</P>',join '<BR>',@message if@message;
+			printf'<P>%s</P>',join'<BR>',@message if@message;
 			%CK=%IN;
 			&rvsij;
 			print&getFooter;
@@ -703,7 +703,7 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 		#MailNotify
 		if($CF{'mailnotify'}){
 			#¿·µ¬/ÊÖ¿®¤¬¤¢¤Ã¤¿¾ì¹ç¤Ï¥á¡¼¥ë¤òÁ÷¤ë
-			require 'notify.pl';
+			require'notify.pl';
 			&mailnotify(%IN);
 		}
 		
@@ -714,8 +714,8 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 		eval{flock(RW,2)};
 		seek(RW,0,0);
 		my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
-		$#log<$IN{'j'}&&die 'Something Wicked happend!(j¤¬Âç¤­¤¹¤®)';
-		$log[$IN{'j'}]||die 'Something Wicked happend!(½¤Àµ¤Ç¤Ê¤¤j)';
+		$#log<$IN{'j'}&&die'Something Wicked happend!(j¤¬Âç¤­¤¹¤®)';
+		$log[$IN{'j'}]||die'Something Wicked happend!(½¤Àµ¤Ç¤Ê¤¤j)';
 		my%DT=$log[$IN{'j'}]=~/([^\t]*)=\t([^\t]*);\t/go;
 		
 		#PasswordCheck
@@ -1287,7 +1287,7 @@ _HTML_
 		$IN{$_}=~s/<BR>/\n/go;
 		printf"<TR><TH>%s</TH><TD><XMP>%s</XMP></TD>\n",$_,$IN{$_};
 	}
-	print '</TABLE>';
+	print'</TABLE>';
 	print&getFooter;
 	exit;
 }
@@ -1317,7 +1317,7 @@ Location: $i
 Content-Language: ja-JP
 Content-type: text/html; charset=euc-jp
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN"> 
+<DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <HTML>
 <HEAD>
 <META http-equiv="Refresh" content="0;URL=$i">
@@ -1493,7 +1493,7 @@ sub getParam{
 				}elsif('home'eq$_){
 					$IN{'home'}=($DT{'home'}=~/($http_URL_regex)/o)?$1:'';
 				}elsif('icon'eq$_){
-					$IN{'icon'}=($DT{'icon'}=~/([\w\.\~\-\%\/]+)/o)?$1:'';
+					$IN{'icon'}=($DT{'icon'}=~/(.+)/o)?$1:'';
 				}elsif('cmd'eq$_){
 					$IN{'cmd'}=$1 if$DT{'cmd'}=~/(.+)/o;
 				}elsif('subject'eq$_){
@@ -1557,7 +1557,7 @@ sub getParam{
 		return($IN{'home'}=1);
 	}elsif(defined$DT{'compact'}){
 		#·ÈÂÓÃ¼Ëö¥â¡¼¥É
-		require 'compact.cgi';
+		require'compact.cgi';
 		exit;
 	}elsif($DT{'read'}){
 		#¥í¥°ÆÉ¤ß
@@ -1617,14 +1617,13 @@ sub showHeader{
 % ½ÐÎÏ¤¹¤ëHTML¤Î¥ª¥×¥·¥ç¥ó
 =cut
 
-	my$lastModified=(stat("$CF{'log'}0.cgi"))[9];
+	my$lastModified;
 	if($CF{'use304'}&&$ENV{'HTTP_IF_MODIFIED_SINCE'}){
 		my$client=(&parse_rfc1123($ENV{'HTTP_IF_MODIFIED_SINCE'}))[0];
-		my$server=0;
-		if($client&&(&parse_rfc1123($lastModified))[0]<=$client){
+		my$server=(stat("$CF{'log'}0.cgi"))[9];
+		if($client&&$server<=$client){
 			print<<"_HTML_";
 Status: 304 Not Modified
-Connection: keep-alive
 Date: @{[&datef($^T,'rfc1123')]}
 Content-Language: ja-JP
 Content-type: text/html; charset=euc-jp
@@ -1632,15 +1631,18 @@ Content-type: text/html; charset=euc-jp
 _HTML_
 			exit;
 		}
+		$lastModified=&datef($server,'rfc1123');
+	}else{
+		$lastModified=&datef((stat("$CF{'log'}0.cgi"))[9],'rfc1123');
 	}
-	$lastModified=&datef($lastModified,'rfc1123');
 	my%DT=@_;
 	
 	#-----------------------------
 	#½àÈ÷
 	
 	#Header
-	if(!defined$CF{'head'}){
+	if($DT{'head'}){
+	}elsif(!defined$CF{'head'}){
 		$DT{'head'}=<<"_HTML_";
 <META http-equiv="Content-type" content="text/html; charset=euc-jp">
 <META http-equiv="Content-Script-Type" content="text/javascript">
@@ -1652,7 +1654,7 @@ _HTML_
 <LINK rel="Stylesheet" type="text/css" href="$CF{'style'}">
 <TITLE>$CF{'title'}</TITLE>
 _HTML_
-	}elsif(!defined$DT{'head'}){
+	}else{
 		$DT{'head'}=$CF{'head'};
 	}
 	
@@ -1669,7 +1671,6 @@ _HTML_
 			@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
 		}
 		my$date=&date($Z0{'time'});
-		#exp.
 		my$dateNow="Date:\t\t".&datef($^T,'dateTime')
 		."\nLast-Modified:\t".&datef((stat("$CF{'log'}0.cgi"))[9],'dateTime');
 		$DT{'skyline'}=<<"_HTML_";
@@ -1681,15 +1682,15 @@ _HTML_
 	#HTML½ñ¤­½Ð¤·
 	print<<"_HTML_";
 Status: 200 OK
-Connection: keep-alive
+Cache-Control: private
 Date: @{[&datef($^T,'rfc1123')]}
 Content-Language: ja-JP
 Content-type: text/html; charset=euc-jp
 _HTML_
-	print"Last-Modified: $lastModified\n"if$CF{'useLastModified'};#exp.
+	print"Last-Modified: $lastModified\n"if$CF{'useLastModified'};
 	#GZIP Switch
 	my$status=qq(<META http-equiv="Last-Modified" content="$lastModified">\n);
-	$status.=join ''
+	$status.=join''
 	,map{qq(<META http-equiv="Set-Cookie" content="$_">\n)}split("\n",$CF{'-setCookie'})if$CF{'-setCookie'};
 	
 	$CF{'conenc'}="|$CF{'gzip'} -cfq9"if!defined$CF{'conenc'}||'|gzip -cfq9'eq$CF{'conenc'}and$CF{'gzip'};
@@ -1732,7 +1733,7 @@ _HTML_
 				exit;
 			}
 			#GZIP°µ½ÌÅ¾Á÷¤ò¤«¤±¤é¤ì¤ë¤È¤­¤Ï¤«¤±¤ë
-			print ' 'x 2048if$ENV{'HTTP_USER_AGENT'}&&index($ENV{'HTTP_USER_AGENT'},'MSIE')+1; #IE¤Î¥Ð¥°ÂÐºö
+			print' 'x 2048if$ENV{'HTTP_USER_AGENT'}&&index($ENV{'HTTP_USER_AGENT'},'MSIE')+1; #IE¤Î¥Ð¥°ÂÐºö
 			$status.="<!-- gzip enable -->";
 		}
 	}else{
@@ -1741,7 +1742,7 @@ _HTML_
 	}
 	print<<"_HTML_";
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<!--DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"-->
+<!--DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"-->
 <HTML lang="ja-JP">
 <HEAD>
 $DT{'head'}
