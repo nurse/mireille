@@ -1390,7 +1390,7 @@ $IC{'hoe'}='moe.png'; #乃絵</CODE></PRE>
 <DIV class="section">
 <H4 class="h">文字はまったく表示されずただ画面が真っ白になったり、広告と共に化けた文字が表示される場合</H4>
 <P>たいてい、GZIP圧縮転送機能と無料サーバーによくある強制広告挿入機構のコンボが原因でしょう。<BR>
-対策としては、index.cgiのどこかに <CODE>undef$ENV{'HTTP_ACCEPT_ENCODING'};</CODE> という行を追加して下さい。</P>
+対策としては、index.cgiの <CODE>$CF{'conenc'}='|gzip -cfq9';</CODE> を <CODE>$CF{'conenc'}='';</CODE> と変えて下さい。</P>
 </DIV>
 
 <DIV class="section">
