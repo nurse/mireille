@@ -29,6 +29,20 @@ if($CF{'program'}eq __FILE__){
 # MAIN SWITCH
 #
 sub main{
+	#Encoding Checker
+	my$message='The encoding of "%s" is not "%s" but "%s"!';
+	for(keys%{$CF{'_HiraganaLetterA'}}){
+		my$file=$_;
+		my$chr=ord$CF{'_HiraganaLetterA'}->{$_};
+		my%enc=(130=>'shift_jis',164=>'euc-jp',27 =>'iso-2022-jp',227=>'utf-8',254=>'utf-16');
+		if($enc{$chr}){
+			lc$CF{'encoding'}eq$enc{$chr}or die sprintf($message,$file,$CF{'encoding'},$enc{$chr});
+		}elsif($chr==12354){
+			#Perl Nativeなのは、何やってるのかわからないからスルーする
+		}else{
+			#非日本語エンコーディングを使っているのかもしれないからスルーする
+		}
+	}
 	#ログファイルちゃんとある？
 	defined$CF{'log'}||die q($CF{'log'} is Undefined);
 	unless(-e"$CF{'log'}0.cgi"){
@@ -2686,6 +2700,7 @@ BEGIN{
 			exit;
 		};
 	}
+	$CF{'_HiraganaLetterA'}->{'Core'}='あ';
 	# Version
 	$CF{'Version'}=join('.',q$Mireille: 1_2_11 $=~/\d+[a-z]?/go);
 	($CF{'Core'}=q$Revision$)=~/(\d+((?:\.\d+)*))/o;
