@@ -9,11 +9,9 @@
 # Scripted by NARUSE,Yui.
 #------------------------------------------------------------------------------#
 # $cvsid = q$Id$;
-#require 5.005;
+require 5.005;
 #use strict;
 #use vars qw(%AT %CF %IN %IC);
-$|=1;
-
 
 #------------------------------------------------------------------------------#
 #-------------------------------------------------
@@ -64,7 +62,7 @@ sub getPageFooter{
 <DIV class="center"><TABLE align="center" border="0" cellspacing="0" class="head" summary="PageFooter" width="90%"><TR>
 <TD nowrap>■■■■■■■</TD>
 <TH width="100%"><H1 class="head" align="right"><A href="@{[
-	$_[0]?qq($CF{'home'}">BACK to HOME):qq(manage.cgi?jump=index.cgi">BACK to INDEX)
+	$_[0]?"$CF{'home'}\">BACK to HOME":"index.cgi\">BACK to INDEX"
 ]}</A></H1></TH>
 </TR></TABLE></DIV>
 _HTML_
@@ -72,45 +70,10 @@ _HTML_
 $CF{'pgfoot'}=&getPageFooter;
 
 #-----------------------------
-# フォーム用JavaScript
-$CF{'form_jscript'}=<<'_CONFIG_';
-<SCRIPT type="text/javascript" defer>
+# フォーム用属性セレクタ代替JScript
+$CF{'jscript_AtSe'}=<<'_CONFIG_';
+<SCRIPT type="text/JScript" defer>
 <!--
-// Save/Load BodyData from Cookie
-function saveBodyCk(){
-	var bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
-	if(!bodyObj)return false;
-	if(confirm("新しい本文を保存すると、古い本文データは消えてしまいます\nそれでも保存しちゃってよいですか？")){
-		var backup='';
-		if(document.cookie.match(/(^|; )MirBody=([^;]+)/))backup=unescape(RegExp.$2);
-		if(bodyObj.value.length){
-			document.cookie='MirBody='+escape(bodyObj.value)+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';
-		}else{
-			document.cookie='MirBody=; expires=Thu, 01-Jan-1970 00:00:00; ';
-			alert('一時保存されていた本文データを削除しましたょ');
-			return;
-		}
-		if(!document.cookie.match(/(^|; )MirBody=([^;]+)/)){
-			//3850byte程度でサイズ制限がかかる。
-			document.cookie='MirBody='+backup+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';//終わりの日
-			alert("save失敗\nサイズオーバーかも。");
-			return false;
-		}
-		alert("今の本文データを一時保存しましたょ\nあくまで“一時保存”だから過信しないでねっ");
-	}
-}
-function loadBodyCk(){
-	var bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
-	if(!bodyObj)return false;
-	if(!confirm('Cookieから本文データをロードしますよ？？'))return;
-	if(!document.cookie.match(/(^|; )MirBody=([^;]+)/)){
-		alert('load失敗');
-		return false;
-	}
-	bodyObj.value=unescape(RegExp.$2);
-}
-
-
 // InternetExplorer with ConditionalCompilation
 /*@cc_on
 if(document.getElementsByTagName){
@@ -162,7 +125,7 @@ sub getFooter{
 <VAR title="times:@{[times]}">$CF{'Version'}</VAR> -</DIV>
 _HTML_
 	return$CF{'menu'}.&getPageFooter(defined$IN{'read'}).$AiremixCopy
-	.$CF{'bodyFoot'}.$CF{'form_jscript'}."</BODY>\n</HTML>\n";
+	.$CF{'bodyFoot'}.$CF{'jscript_AtSe'}."</BODY>\n</HTML>\n";
 }
 #------------------------------------------------------------------------------#
 
@@ -264,12 +227,11 @@ sub getParam{
 	}elsif('css'eq$DT{'mode'}){
 		$IN{'css'}=$1 if($DT{'css'}=~/(.+)/os);
 		$IN{'file'}=$1 if($DT{'file'}=~/(\w+)/o);
-		$IN{'code'}=$1 if($DT{'code'}=~/(\w+)/o);
 		return%IN;
 	}elsif('log'eq$DT{'mode'}){#LOG
 		$IN{'str'}=($DT{'str'}=~/(\d+)/o)?$1:0;
 		$IN{'end'}=($DT{'end'}=~/(\d+)/o)?$1:0;
-		$IN{'del'}=$1 if($DT{'del'}=~/(\w)/o);
+		$IN{'del'}=$1 if($DT{'del'}=~/(\w+)/o);
 		$IN{'save'}=($DT{'save'}=~/(\d+)/o)?$1:0;
 		$IN{'push'}=($DT{'push'}=~/(\d)/o)?"$1":'';
 		$IN{'type'}=$1 if($DT{'type'}=~/(\w)/o);
@@ -298,7 +260,7 @@ sub menu{
 <FIELDSET style="text-align:left;padding:0.5em;margin:auto;width:15em">
 <LEGEND>Mode</LEGEND>
 <LABEL accesskey="y" for="icont">
-<INPUT name="mode" class="radio" id="icont" type="radio" value="icont">
+<INPUT name="mode" class="radio" id="icont" type="radio" value="icont" checked>
 Iconリスト編集（タグ）(<SPAN class="ak">Y</SPAN>)</LABEL>
 <BR>
 <LABEL accesskey="u" for="icons">
@@ -306,8 +268,8 @@ Iconリスト編集（タグ）(<SPAN class="ak">Y</SPAN>)</LABEL>
 Iconリスト編集(Sharp）(<SPAN class="ak">U</SPAN>)</LABEL>
 <BR>
 <LABEL accesskey="i" for="iconsmp">
-<INPUT name="mode" class="radio" id="iconsmp" type="radio" value="iconsmp" checked>
-<SPAN class="ak">I</SPAN>con見本を更新</LABEL>
+<INPUT name="mode" class="radio" id="iconsmp" type="radio" value="iconsmp">
+<DEL title="iconctlg.cgiを使うので、もはや無用"><SPAN class="ak">I</SPAN>con見本を更新</DEL></LABEL>
 <BR>
 <LABEL accesskey="c" for="config">
 <INPUT name="mode" class="radio" id="config" type="radio" value="config">
@@ -343,7 +305,7 @@ ASDF
 sub icont{
 	&loadcfg;
 	unless($IN{'icon'}){#アイコンリスト編集
-		open(RD,"<$CF{'icls'}")||die"Can't read iconlist($CF{'icls'})[$!]";
+		open(RD,'<'."$CF{'icls'}")||die"Can't read iconlist($CF{'icls'})[$?:$!]";
 		eval{flock(RD,1)};
 		my$icon;
 		read(RD,$icon,-s$CF{'icls'});
@@ -366,7 +328,7 @@ ASDF
 		$IN{'icon'}=~tr/\n//s;
 		$IN{'icon'}=~s/(\n)*$/\n/;
 
-		open(WR,"+>>$CF{'icls'}")||die"Can't write iconlist($CF{'icls'})[$!]";
+		open(WR,'+>>'."$CF{'icls'}")||die"Can't write iconlist($CF{'icls'})[$?:$!]";
 		eval{flock(WR,2)};
 		truncate(WR,0);
 		seek(WR,0,0);
@@ -395,7 +357,7 @@ sub icons{
 <P><TEXTAREA name="icon" cols="100" rows="15">
 ASDF
 		
-		open(RD,"<$CF{'icls'}")||die"Can't read iconlist($CF{'icls'})[$!]";
+		open(RD,'<'."$CF{'icls'}")||die"Can't read iconlist($CF{'icls'})[$?:$!]";
 		eval{flock(RD,1)};
 		my@icon=<RD>;
 		close(RD);
@@ -450,7 +412,7 @@ ASDF
 ^\s*([^#])\s*#\s*(.*)$
 =cut
 		
-		open(WR,"+>>$CF{'icls'}")||die"Can't write iconlist($CF{'icls'})[$!]";
+		open(WR,'+>>'."$CF{'icls'}")||die"Can't write iconlist($CF{'icls'})[$?:$!]";
 		eval{flock(WR,2)};
 		truncate(WR,0);
 		seek(WR,0,0);
@@ -507,7 +469,7 @@ OPTION
 
 =cut
 
-	open(RD,"<$CF{'icls'}")||die"Can't read iconlist($CF{'icls'})[$!]";
+	open(RD,'<'."$CF{'icls'}")||die"Can't read iconlist($CF{'icls'})[$?:$!]";
 	eval{flock(RD,1)};
 	
 	my$j=0;
@@ -619,7 +581,7 @@ _HTML_
 	}
 	undef$table;
 	
-	open(WR,'+>>icon.html')||die"Can't write iconsample(icon.html)[$!]";
+	open(WR,'+>>'.'icon.html')||die"Can't write iconsample(icon.html)[$?:$!]";
 	eval{flock(WR,2)};
 	truncate(WR,0);
 	seek(WR,0,0);
@@ -663,12 +625,12 @@ my@required=(
 ,'home'		=>'サイトトップページのURL'
 ,'title'	=>'この掲示板のタイトル（TITLE要素）'
 ,'pgtitle'	=>'この掲示板のタイトル（ページのヘッダーで表示）'
-,'icls'		=>'アイコンリスト'
-,'style'	=>'スタイルシート'
 ,'icon'		=>'アイコンのディレクトリ'
+,'icls'		=>'アイコンリスト'
 ,'icct'		=>'アイコンカタログCGI'
-,'help'		=>'ヘルプファイル'
+,'style'	=>'スタイルシート'
 ,'navjs'	=>'記事ナビJavaScript'
+,'help'		=>'ヘルプファイル'
 ,'log'		=>'ログディレクトリ'
 ,'gzip'		=>'gzipの場所'
 );
@@ -850,7 +812,7 @@ ASDF
 			$IN{"$_"}=~s/^_CONFIG_$/(_CONFIG_)/gmo;
 		}
 		
-		open(RD,"<$AT{'manage'}")||die"Can't read manage($AT{'manage'})[$!]";
+		open(RD,'<'."$AT{'manage'}")||die"Can't read manage($AT{'manage'})[$?:$!]";
 		eval{flock(RD,1)};
 		my$config=<RD>;
 		close(RD);
@@ -865,10 +827,9 @@ ASDF
 # "This file is written in euc-jp, CRLF." 空
 # Scripted by NARUSE,Yui.
 #------------------------------------------------------------------------------#
-#require 5.005;
+require 5.005;
 #use strict;
 #use vars qw(\%CF \%IC);
-\$|=1;
 
 #-------------------------------------------------
 # 稼動させる前に確認すること
@@ -971,8 +932,8 @@ BEGIN{
 	}
 	# Version
 ASDF
-		$config.=q(	$CF{'Index'}=q$)."$CF{'Manage'}".'$;'.<<'ASDF';
-
+		$config.=q(	$CF{'Index'}=q$)."$CF{'Manage'}".<<'ASDF';
+$;
 	$CF{'Index'}=~/(\d+((?:\.\d+)*))/o;
 	$CF{'IndexRevision'}=$1;
 }
@@ -980,7 +941,7 @@ ASDF
 1;
 __END__
 ASDF
-		open(WR,'+>>index.cgi')||die"Can't write index.cgi[$!]";
+		open(WR,'+>>'.'index.cgi')||die"Can't write index.cgi[$?:$!]";
 		eval{flock(WR,2)};
 		truncate(WR,0);
 		seek(WR,0,0);
@@ -1008,15 +969,13 @@ sub css{
 <INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
 ASDF
 	}elsif(!$IN{'css'}){
-		open(RD,"<$IN{'file'}.css")||die"Can't read css($IN{'file'}.css)[$!]";
+		open(RD,'<'."$IN{'file'}.css")||die"Can't read css($IN{'file'}.css)[$?:$!]";
 		eval{flock(RD,1)};
 		my$css=join('',<RD>);
 		close(RD);
 		
+		$css=sjis2euc($css)if($css=~/^\@charset\s*["']Shift_JIS/io);
 		study$css;
-		$css=~/\@charset\s*[\"\']([\-\w]*)[\"\']/io;
-		$IN{'code'}=$1;
-		($IN{'code'}=~/Shift_JIS/io)&&($css=sjis2euc($css));
 		$css=~s/\t/\ \ /go;
 		$css=~s/&/&#38;/go;
 		$css=~s/"/&#34;/go;
@@ -1030,17 +989,14 @@ ASDF
 <P>CSSファイル名:$IN{'file'}.css<INPUT name="file" type="hidden" value="$IN{'file'}"><P>
 <P><TEXTAREA name="css" cols="100" rows="15">$css</TEXTAREA><P>
 <P>
-<INPUT name="code" type="hidden" value="$IN{'code'}">
 <INPUT name="mode" type="hidden" value="css">
 <INPUT name="pass" type="hidden" value="$IN{'pass'}">
 <INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
 ASDF
 	}else{
-		$IN{'css'}=~s/(\n)*$/\n/o;
-		if($IN{'code'}=~/Shift_JIS/i){
-			$IN{'css'}=euc2sjis($IN{'css'});
-		}
-		open(WR,"+>>$IN{'file'}\.css")||die"Can't write css($IN{'file'}.css)[$!]";
+		$IN{'css'}=~s/(?:\n)*$/\n/o;
+		$IN{'css'}=euc2sjis($IN{'css'})if($IN{'css'}=~/^\@charset\s*["']Shift_JIS/io);
+		open(WR,'+>>'."$IN{'file'}\.css")||die"Can't write css($IN{'file'}.css)[$?:$!]";
 		eval{flock(WR,2)};
 		truncate(WR,0);
 		seek(WR,0,0);
@@ -1055,9 +1011,10 @@ ASDF
 #-------------------------------------------------
 # ログ管理
 sub log{
+	&loadcfg;
 	unless($IN{'type'}){
 		#ログ管理初期メニュー
-		print&getManageHeader.<<"ASDF".&getManageFooter;
+		print&getManageHeader.<<"ASDF";
 <H2 class="mode">ログ管理モード</H2>
 <FORM accept-charset="euc-jp" name="logedit" method="post" action="$AT{'manage'}">
 
@@ -1091,8 +1048,20 @@ sub log{
 
 <FIELDSET style="padding:0.5em;width:50%">
 <LEGEND accesskey="c">削除方式</LEGEND>
+ASDF
+		if($CF{'gzip'}){
+			print<<'ASDF';
+<LABEL for="gzip">GZIP：<INPUT name="del" id="gzip" type="radio" value="gzip" checked></LABEL>
+<LABEL for="rename">ファイル名変更：<INPUT name="del" id="rename" type="radio" value="rename"></LABEL>
+<LABEL for="unlink">ファイル削除：<INPUT name="del" id="unlink" type="radio" value="unlink"></LABEL>
+ASDF
+		}else{
+			print<<'ASDF';
 <LABEL for="rename">ファイル名変更：<INPUT name="del" id="rename" type="radio" value="rename" checked></LABEL>
 <LABEL for="unlink">ファイル削除：<INPUT name="del" id="unlink" type="radio" value="unlink"></LABEL>
+ASDF
+		}
+		print<<"ASDF";
 </FIELDSET>
 
 <P><LABEL for="push"><INPUT id="push" name="push" type="checkbox" value="1">スレッド番号をつめる</LABEL>
@@ -1104,6 +1073,8 @@ sub log{
 <INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
 </FORM>
 ASDF
+		print&getManageFooter;
+		exit;
 	}elsif($IN{'type'}=~/^\d$/){
 		#ログ管理第一段階
 		print&getManageHeader.<<"_HTML_";
@@ -1127,26 +1098,27 @@ _HTML_
 					$delete="$IN{'str'}から最新まで";
 				}
 				print<<"_HTML_";
-<P>本当に、$deleteを@{[('unlink'eq$IN{'del'})?'ファイル削除':'ファイル名変更']}で削除してよろしいですか？
+<P>本当に、$deleteを@{[('gzip'eq$IN{'del'})?'GZIP':('unlink'eq$IN{'del'})?'ファイル削除':'ファイル名変更']}で削除してよろしいですか？
 <INPUT name="str" type="hidden" size="3" value="$IN{'str'}" readonly>
 <INPUT name="end" type="hidden" size="3" value="$IN{'end'}" readonly>
 <INPUT name="type" type="hidden" value="a">
 <INPUT name="del" type="hidden" value="$IN{'del'}">
 </P>
+<P>ログ詰め: @{[$IN{'push'}?'する':'しない']}</P>
 _HTML_
 			}
 		}elsif($IN{'type'}==2){
 			#1〜(最新-□)型指定
-			&loadcfg;
 			my@file=&logfiles;
 			my$i=$#file-$IN{'save'}+1;
 			print<<"ASDF";
-<P>本当に、最新から<INPUT name="save" type="text" size="3" value="$IN{'save'}" readonly
->個残して@{[('unlink'eq$IN{'del'})?'ファイル削除':'ファイル名変更']}で削除してよろしいですか？<BR>
+<P>本当に、最新から<INPUT name="save" type="text" size="3" value="$IN{'save'}" readonly>個残して@{[
+('gzip'eq$IN{'del'})?'GZIP':('unlink'eq$IN{'del'})?'ファイル削除':'ファイル名変更']}で削除してよろしいですか？<BR>
 スレッド番号$file[$#file]から$file[$IN{'save'}]までの、$i件を削除します
 <INPUT name="type" type="hidden" value="b">
 <INPUT name="del" type="hidden" value="$IN{'del'}">
 </P>
+<P>ログ詰め: @{[$IN{'push'}?'する':'しない']}</P>
 ASDF
 		}elsif($IN{'type'}==3){
 				#バックアップ削除
@@ -1155,7 +1127,7 @@ ASDF
 <INPUT name="type" type="hidden" value="c">
 ASDF
 		}else{
-			exit;
+			die"ログ管理第一段階にてありえないtype($IN{'type'})に遭遇";
 		}
 		
 		print<<"ASDF".&getManageFooter;
@@ -1164,90 +1136,151 @@ ASDF
 <INPUT name="mode" type="hidden" value="log">
 <INPUT name="pass" type="hidden" value="$IN{'pass'}">
 <INPUT name="push" type="hidden" value="$IN{'push'}">
-ログ詰め: @{[$IN{'push'}?'する':'しない']}</P>
-<P><INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
+<INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
 </FORM>
 <P><A href="$AT{'manage'}" title="管理">間違えたので最初からやり直す</A></P>
 ASDF
+		exit;
 	}elsif($IN{'type'}=~/^\w$/){
+		#ログ管理第ニ段階
 		&loadcfg;
 		if('c'eq$IN{'type'}){
+			#バックアップファイルの一掃
 			my$file=unlink<$CF{'log'}*.bak>;
-			$file.=unlink<$CF{'log'}*.bak.cgi>;
-			$file.=unlink<$CF{'log'}*.bak.pl>;
-			$file.=unlink<$CF{'log'}*.gz>;
-			$file.=unlink<$CF{'log'}*.gz.cgi>;
-			$file.=unlink<$CF{'log'}*.bz2.cgi>;
+			$file+=unlink<$CF{'log'}*.bak.cgi>;
+			$file+=unlink<$CF{'log'}*.bak.pl>;
+			$file+=unlink<$CF{'log'}*.gz>;
+			$file+=unlink<$CF{'log'}*.gz.cgi>;
+			$file+=unlink<$CF{'log'}*.bz2.cgi>;
 			&menu("$file個のバックアップファイルを削除しました");
 		}
 		my@file=&logfiles;#(4,3,2,1)
-		if($IN{'type'}eq'a'){
+		if('a'eq$IN{'type'}){
 			if($IN{'str'}&&$IN{'end'}){
 			}elsif(!$IN{'str'}){
 				$IN{'str'}=1;
 			}elsif(!$IN{'end'}){
 				$IN{'end'}=$file[0];
 			}
-		}elsif($IN{'type'}eq'b'){
+		}elsif('b'eq$IN{'type'}){
 			$IN{'str'}=$file[$#file];
 			$IN{'end'}=$file[$IN{'save'}];
 		}else{
-			exit;
-		}
-
-		my$file=0;
-		if('unlink'eq$IN{'del'}){
-			for($IN{'str'}..$IN{'end'}){
-				(unlink"$CF{'log'}$_.cgi")||(next);
-				$file++;
-			}
-		}else{
-			for($IN{'str'}..$IN{'end'}){
-				(rename("$CF{'log'}$_.cgi","$CF{'log'}$_.bak.cgi"))||(next);
-				$file++;
-			}
+			die"ログ管理第ニ段階にてありえないtype($IN{'type'})に遭遇";
 		}
 		
+		#スレッドを削除
+		my$file=&delThread($IN{'del'},$IN{'str'}..$IN{'end'});
+		
+		
 		if($IN{'push'}){
-			open(ZERO,"+>>$CF{'log'}0.cgi")||die"Can't write log(0.cgi)[$!]";
+			open(ZERO,'+>>'."$CF{'log'}0.cgi")||die"Can't write log(0.cgi)[$?:$!]";
 			eval{flock(ZERO,2)};
-			truncate(ZERO,0);
 			seek(ZERO,0,0);
-			my@zero=();
-			while(<ZERO>){
-				chomp$_;push(@zero,$_);
-			}
-			my@zer0=split("\t",$zero[0]);
-			my@zer1=split(/ /,$zero[1]);
-			my@zer2=split(/ /,$zero[2]);
+			my@zero=map{m/(.*)/o}<ZERO>;
+			my@zer2=split(/ /o,$zero[2]);
 			my@zerC=();
-			my$zerD='';
+			my@zerD=();
+			
 			my$i=1;
-			for(@file){
-				rename("$CF{'log'}$_.cgi","$CF{'log'}$i.cgi")||die"Can't rename log($_.cgi->$i)[$!]";
-				$zerC["$i"]=$zer2["$_"];
-				$zerD.="$_=$i;";
+			for(reverse@file){
+				-e"$CF{'log'}$_.cgi"||next;#既に削除しちゃったファイル
+				rename("$CF{'log'}$_.cgi","$CF{'log'}$i.cgi")||die"Can't rename log($_.cgi->$i.cgi)[$?:$!]";
+				$zerC[$i]=$zer2[$_-$zer2[0]];
+				push(@zerD,"$_=>$i");
 				$i++;
 			}
 			$zerC[0]=0;
-			chop$zerD;#最後の' '削り
 			
 			truncate(ZERO,0);
 			seek(ZERO,0,0);
-			print ZERO "@zer0\n";
-			print ZERO "@zer1\n";
-			print ZERO "@zerC\n";
-			print ZERO "$zerD\n";#ファイル名変更のログ
+			print ZERO
+				"$zero[0]\n"
+				."\n"		#
+				."@zerC\n"	#最終更新日時
+				."@zerD\n";	#ファイル名変更のログ
 			close(ZERO);
 			
-			&menu("ログ$IN{'str'}〜$IN{'end'}のファイル$file個を削除完了<BR>ログ詰め成功");
+			&menu("ログ$IN{'str'}〜$IN{'end'}のファイル$file個を削除完了＆ログ詰め成功");
+		}else{
+			&menu("ログ$IN{'str'}〜$IN{'end'}のファイル$file個を削除完了");
 		}
-		
-		&menu("ログ$IN{'str'}〜$IN{'end'}のファイル$file個を削除完了");
+	}else{
+		die"ログ管理で迷子1";
 	}
-	
+	die"ログ管理で迷子2";
 	exit;
 }
+
+
+#-------------------------------------------------
+# 記事スレッドファイル削除
+#
+sub delThread{
+=item 引数
+$ 削除方式
+@ 削除するファイルの記事スレッド番号のリスト
+=cut
+	my($type,@del)=@_;
+	my$file=0;
+	if('gzip'eq$type&&$CF{'gzip'}){
+		#GZIP圧縮
+		for(@del){
+			`$CF{'gzip'} -fq9 "$CF{'log'}$_.cgi"`;
+			($?==0)||die"$?:Can't use gzip($CF{'gzip'}) oldlog($_.cgi)[$?:$!]";
+			$file++;
+		}
+	}elsif('unlink'eq$type){
+		#削除
+		for(@del){
+			unlink"$CF{'log'}$_.cgi"||die"Can't delete oldlog($_.cgi)[$?:$!]";
+			$file++;
+		}
+	}elsif('rename'eq$type){
+		#ファイル名変更
+		for(@del){
+			if(-e"$CF{'log'}$_.bak.cgi"){
+				#しょうがないから古いのは削除しちゃう
+				unlink"$CF{'log'}$_.bak.cgi"||die"Can't unlink old-old log($CF{'log'}$_.bak.cgi)[$?:$!]";
+			}
+			rename("$CF{'log'}$_.cgi","$CF{'log'}$_.bak.cgi")||die"Can't rename oldlog($_.cgi)[$?:$!]";
+			$file++;
+		}
+	}elsif($type=~/!(.*)/o){
+		#特殊
+		for(@del){
+			`$1 "$CF{'log'}$_.cgi"`;
+			$?==0||die"$?:Invalid delete type($1) oldlog($_.cgi)[$?:$!]";
+			$file++;
+		}
+	}else{
+		die"Invalid delete type:'$type'";
+	}
+	
+	#非拡張子cgiのファイルを拡張子cgiにする
+	opendir(DIR,$CF{'log'})||die"Can't read directory($CF{'log'})[$?:$!]";
+	for(readdir(DIR)){
+		$_=~/^\d+(\.gz)?\.cgi$/io&& next;
+		$_=~/^(\d+)(?:\.(?:cgi|bak|(gz)))+$/io|| next;
+		if($2){
+			#既にgzipされているもの
+			rename("$CF{'log'}$_","$CF{'log'}$1.gz.cgi")||die"Can't rename oldfile($_)[$?:$!]";
+		}elsif('gzip'eq$type){
+			#gzipされてないもの->.gz.cgi
+			`$CF{'gzip'} -fq9 "$CF{'log'}$_"`;
+			$?==0||die"$?:Can't use gzip($CF{'gzip'}) oldfile($_)[$?:$!]";
+			rename("$CF{'log'}$_.gz","$CF{'log'}$1.gz.cgi")||die"Can't rename oldfile($_)[$?:$!]";
+			next;
+		}else{
+			#.bak->.bak.cgi
+			$_=~/^\d+\.bak\.cgi$/io&& next;
+			rename("$CF{'log'}$_","$CF{'log'}$1.bak.cgi")||die"Can't rename oldfile($_)[$?:$!]";
+		}
+	}
+	closedir(DIR);
+	return($file);
+}
+
 
 #-------------------------------------------------
 # 0.cgi（記事情報管理ファイル）の回復
@@ -1274,7 +1307,7 @@ ASDF
 		}
 		unshift(@zer2,$file[$#file]-1);
 		
-		open(ZERO,"+>>$CF{'log'}0.cgi")||die"Can't write log(0.cgi)[$!]";
+		open(ZERO,'+>>'."$CF{'log'}0.cgi")||die"Can't write log(0.cgi)[$?:$!]";
 		eval{flock(ZERO,2)};
 		truncate(ZERO,0);
 		seek(ZERO,0,0);
@@ -1348,8 +1381,8 @@ sub loadcfg{
 #
 sub logfiles{
 	$CF{'Index'}||&loadcfg;
-	opendir(DIR,$CF{'log'})||die"Can't read directory($CF{'log'})[$!]";
-	my@file=sort{$b<=>$a}map{m/^(?!0)(\d+)\.cgi$/o}readdir(DIR);
+	opendir(DIR,$CF{'log'})||die"Can't read directory($CF{'log'})[$?:$!]";
+	my@file=sort{$b<=>$a}map{m/^([1-9]\d*)\.cgi$/o}readdir(DIR);
 	closedir(DIR);
 	return@file;
 }
@@ -1384,7 +1417,7 @@ sub getManageFooter{
 <VAR title="times:@{[times]}">$CF{'Manage'}</VAR> -</DIV>
 _HTML_
 	return&getPageFooter(defined$IN{'read'}).$AiremixCopy
-	.$CF{'form_jscript'}."</BODY>\n</HTML>\n";
+	.$CF{'jscript_AtSe'}."</BODY>\n</HTML>\n";
 }
 
 
