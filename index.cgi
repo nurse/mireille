@@ -130,7 +130,7 @@ $CF{'relativeIcon'}='1';
 #専用アイコン機能 (ON 1 OFF 0)
 $CF{'exicon'}='0';
 #専用アイコン列挙
-#$IC{'PASSWOFILE'}='FILENAME'; #NAME
+#$IC{'PASSWORD'}='FILENAME'; #NAME
 #$IC{'hae'}='mae.png'; #苗
 #$IC{'hie'}='mie.png'; #贄
 #$IC{'hue'}='mue.png'; #鵺
