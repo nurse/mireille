@@ -50,7 +50,9 @@ $CF{'admps'}='';
 #使用を許可するタグ（半角スペース区切り）
 $CF{'tags'}='ACRONYM CODE DEL DFN EM Q SMALL STRONG RUBY RB RB RT RP SPAN';
 #強調する記号と対応するCSSのクラス（半角スペース区切りで「記号 クラス 記号・・・」）
-$CF{'strong'}=' // s2f2f /(/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)/ s2f2f /((?:^|[\x09\x20]+)(?:\/\/|#|＃).*)/ s2f2f /^((?:>|&#62;|&gt;|&#x3E;).*)/ s8184 ＞ s8184 ◇ s819e ◆ s819e □ s81a0 ■ s81a0 ※ s81a6 = s819e == s819e === s81a0';
+$CF{'strong'}=' // s2f2f /(/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)/ s2f2f /((?:^|[\x09\x20]+)(?:\/\/|#|＃).*)/ s2f2f /^((?:>|&#62;|&gt;|&#x3E;).*)/ s8184 ＞ s8184 § s8198 ◇ s819e ◆ s819e ▼ s819e □ s81a0 ■ s81a0 ※ s81a6 = s8198 == s819e === s81a0';
+#NGワード（半角スペース区切り）
+$CF{'ngWords'}='';
 #投稿後*****秒以内の記事にNewマークをつける
 $CF{'newnc'}='86400';
 #読んだ記事でも???秒間は「未読」状態を維持する
@@ -97,8 +99,12 @@ $CF{'readOnly'}='0';
 $CF{'use304'}='0';
 #常に「Last-Modified」を渡すか否か (0 渡さない 1 渡す)
 $CF{'useLastModified'}='0';
-#ファイル名指定アイコンのコマンド名
-$CF{'exicfi'}='iconfile';
+#署名を表示するか否か (0 表示しない 1 表示する)
+$CF{'signature'}='1';
+#絶対指定アイコン (0 使わない 1 使う)
+$CF{'absoluteIcon'}='1';
+#相対指定アイコン (0 使わない 1 使う)
+$CF{'relativeIcon'}='1';
 #専用アイコン機能 (ON 1 OFF 0)
 $CF{'exicon'}='0';
 #専用アイコン列挙
@@ -301,7 +307,7 @@ BEGIN{
 		$CF{'program'}=__FILE__;
 		$SIG{'__DIE__'}=sub{
 			if($_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/){return}
-			print"Content-Language: ja-JP\nContent-type: text/plain; charset=euc-jp\nX-Moe: Mireille\n"
+			print"Status: 200 OK\nContent-Language: ja-JP\nContent-type: text/plain; charset=euc-jp"
 			."\n\n<PRE>\t:: Mireille ::\n   * Error Screen 1.4 (o__)o// *\n\n";
 			print"ERROR: $_[0]\n"if@_;
 			print join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(Index Style Core Exte))
