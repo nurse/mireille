@@ -3005,7 +3005,7 @@ sub delThread{
 	    ($?==0)||die"$?:Can't use gzip($CF{'gzip'}) oldlog($_.cgi)[$?:$!]";
 	    $file++;
 	}
-    }elsif('unlink'eq$type){
+    }elsif('unlink'eq$type&&'gzip'eq$type){
 	#ºï½ü
 	for(@del){
 	    $_||next;
@@ -3222,6 +3222,8 @@ sub makeThumbnail{
     
     my $image = new Image::Magick;
     $image->Read($orig);
+    $image->get('format') or return;
+    
     my ($width, $height) = $image->Get('width', 'height');
     my $scale = 1;
     $scale = $CF{'AttachThumbnailWidth'} / $width if $width > $CF{'AttachThumbnailWidth'};
@@ -3262,7 +3264,7 @@ sub removeAttachedFile{
 	    -f"$CF{$key}/$_" or next;
 	    /(\w+)/o;
 	    $1 eq $hash or next;
-	    unlink "$CF{$key}/$_" or die"Can't unlink($CF{$key}/$_)";
+	    unlink "$CF{$key}/$_" or die"Can't unlink($CF{$key}/$_)[$!:$@]";
 	}
 	closedir(DIR);
     }
