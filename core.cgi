@@ -399,16 +399,24 @@ Perl¥â¥¸¥å¡¼¥ë¤ÎImage::size¤òÍÑ¤¤¤ë¤³¤È¤Ë¤è¤Ã¤Æ¡¢¥µ¥¤¥ºÀ©¸Â¤ò¤«¤±¤ë¤³¤È¤¬½ÐÍè¤ë¤
 		.q{\])(?:\.(?:[^(\040)<>@,;:".\\\\\[\]\00-\037\x80-\xff]+(?![^(\040)<>@,}
 		.q{;:".\\\\\[\]\00-\037\x80-\xff])|\[(?:[^\\\\\x80-\xff\n\015\[\]]|\\\\[}
 		.q{^\x80-\xff])*\]))+};
-		
-			$str=~s{(?<!["'])($http_URL_regex|$ftp_URL_regex|($mail_regex))(?!["'])}
-			{<A class="autolink" href="@{[$2?'mailto:':'']}$1" target="_blank">$1<\x2fA>}go;
+			#¼Â²ÔÆ°Éô¡¢¤Á¤ç¤Ã¤ÁÅ¬Åö¡£¡£
+			while($str=~m{(?<!["'])($http_URL_regex|$ftp_URL_regex|($mail_regex))(?!["']|[^<>]*</A>)}o){
+				$str=~s{(?<!["'])($http_URL_regex|$ftp_URL_regex|($mail_regex))(?!["'])}
+				{
+					my$content=$1;
+					my$href=$2?'mailto:':'';
+					my$tmp=$content=~s/(&#?\w+;.*)$//o?$1:'';
+					$href.=$content;
+					qq(<A class="autolink" href="$href" target="_blank">$content</A>$tmp);
+				}ego;
+			}
 		}else{
 			#Command:nolink
 		}
 		
 		#µ­»öÈÖ¹æ¥ê¥ó¥¯¡Ö>>No.12-6¡×
 		if($CF{'noartno'}||!$EX{'noartno'}){
-			$str=~s{(\04\04No\.(\d+)(\-\d+)?)}{<A class="autolink" href="index.cgi?read=$2#art$2$3">$1</A>}go;
+			$str=~s{(\04\04No\.(\d+)(-\d+)?)}{<A class="autolink" href="index.cgi?read=$2#art$2$3">$1</A>}go;
 		}
 		
 		$str=~s/&(#?\w+;)?/$1?"&$1":'&#38;'/ego;
@@ -421,7 +429,6 @@ Perl¥â¥¸¥å¡¼¥ë¤ÎImage::size¤òÍÑ¤¤¤ë¤³¤È¤Ë¤è¤Ã¤Æ¡¢¥µ¥¤¥ºÀ©¸Â¤ò¤«¤±¤ë¤³¤È¤¬½ÐÍè¤ë¤
 	$IN{'body'}=~s/\t/&nbsp;&nbsp;&nbsp;&nbsp;/go;
 	$IN{'body'}=~s/\n+$//o;
 	$IN{'body'}=~s/\n/<BR>/go;
-	
 	
 	#-----------------------------
 	#$IN{'cook'}¤¬ON¤Ê¤éCookie¤Î½ñ¤­¹þ¤ß
@@ -991,7 +998,7 @@ sub showArtSeek{
 				my$i=$_;
 				my$j=0;
 				while($thread=~m/$item=\t[^\t]*$eucpre($seek)$eucpost[^\t]*;\t/go){
-					$j=@{[substr($thread,0,pos$thread)=~/[\x0A\x0D]+/go]};
+					$j=substr($thread,0,pos$thread)=~tr/\n//;
 					$result.=qq(<A href="index.cgi?read=$i#art$i-$j">No.$i-$j</A>\n);
 				}
 			}
@@ -1496,7 +1503,7 @@ _HTML_
 #		}elsif($ENV{'SERVER_SOFTWARE'}&& index($ENV{'SERVER_SOFTWARE'},'mod_gzip')>-1){
 #			print"\n";
 #			$status.="<!-- did't use gzip because this server is using mod_gzip -->";
-#memo.cgi¤À¤Èmod_gzip¤·¤Æ¤¯¤ì¤Ê¤¤¤Ã¤Ý¤¤
+#memo. cgi¤À¤Èmod_gzip¤·¤Æ¤¯¤ì¤Ê¤¤¤Ã¤Ý¤¤
 		}else{
 			print"Content-encoding: gzip\n\n";
 			if(!open(STDOUT,$CF{'conenc'})){
@@ -1532,6 +1539,7 @@ $status
 </HEAD>
 
 <BODY>
+$CF{'bodyHead'}
 $DT{'skyline'}
 $CF{'pghead'}
 $CF{'menu'}
@@ -1989,7 +1997,7 @@ BEGIN{
 	}
 	# Version
 	$CF{'Core'}=q$Revision$;
-	$CF{'Version'}=join('.',q$Mireille: 1_2_5a $=~/(\d+[a-z]?)/go);
+	$CF{'Version'}=join('.',q$Mireille: 1_2_5 $=~/(\d+[a-z]?)/go);
 	$CF{'Version'}.=".$1"if q$State$=~/Exp/o&&$CF{'Core'}=~/(?:\d+.)+(\d+)/;
 }
 
