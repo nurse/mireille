@@ -28,7 +28,7 @@ if($CF{'program'}eq __FILE__){
 #
 sub main{
 	#¥í¥°¥Õ¥¡¥¤¥ë¤Á¤ã¤ó¤È¤¢¤ë¡©
-	defined$CF{'log'}||die"\$CF{'log'} is Undefined";
+	defined$CF{'log'}||die q($CF{'log'} is Undefined);
 	unless(-e"$CF{'log'}0.cgi"){
 		-e"$CF{'log'}0.pl"&&die"µì·Á¼°0.pl¤¬»Ä¤Ã¤Æ¤¤¤Þ¤¹ ÉÔ¶ñ¹ç¤ÎÃû¤·¡©";
 		!-e"$CF{'log'}"&&!mkdir("$CF{'log'}",0777)&&die"Can't read/write/create LogDir($CF{'log'})[$?:$!]";
@@ -95,7 +95,7 @@ sub showIndex{
 	#-----------------------------
 	#¿·µ¬Åê¹Æ¥Õ¥©¡¼¥à¤òÉ½¼¨¤¹¤ë¡ÊÀßÄê¤Ë¤è¤ë¡Ë
 	$CF{'prtwrt'}&&&prtfrm;
-	print"$CF{'note'}";
+	print$CF{'note'};
 	#µ­»ö¥Ê¥Ó¥Ü¥¿¥ó
 	&artnavi('button');
 
@@ -208,20 +208,22 @@ sub writeArticle{
 		$IN{'body'}||push(@error,'ËÜÊ¸');
 		$IN{'pass'}||($CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'})
 		or push(@error,'¥Ñ¥¹¥ï¡¼¥É')&&push(@message,'¥Ñ¥¹¥ï¡¼¥É¤Ï8Ê¸»ú°Ê¾å¡¢128Ê¸»ú°Ê²¼¤Ç¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó¡£');
-		if($CF{'ngWords'}){
-			for($CF{'ngWords'}=~/(\S+)/go){
-				if(index($IN{'body'},$_)+1){
-					push(@error,'ËÜÊ¸');
-				}elsif($IN{'subject'}&&index($IN{'subject'},$_)+1){
-					push(@error,'ÂêÌ¾');
-				}elsif(index($IN{'name'},$_)+1){
-					push(@error,'Ì¾Á°');
-				}else{
-					next;
+		if($CF{'ngWords'}&&!@error){
+			my$eucpre=qr{(?<!\x8F)};
+			my$eucpost=qr{(?=(?:[\xA1-\xFE][\xA1-\xFE])*(?:[\x00-\x7F\x8E\x8F]|\z))};
+			my%item=(body=>'ËÜÊ¸',subject=>'ÂêÌ¾',name=>'Ì¾Á°');
+			for(keys%item){
+				my$item=$IN{$_};
+				my$err=$item{$_};
+				study$item;
+				for($CF{'ngWords'}=~/\S+/go){
+					$item=~/$eucpre$_$eucpost/||next;
+					push(@error,$err);
+					last;
 				}
-				push(@message,'Something Wicked happend!(ÉÔÀµ¤ÊÊ¸»úÎó)');
-				last;
+				@error&&last;
 			}
+			push(@message,'Something Wicked happend!(ÉÔÀµ¤ÊÊ¸»úÎó)')if@error;
 		}
 		if(@error){
 			&showHeader;
@@ -348,11 +350,15 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 		seek(RW,0,0);
 		my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
 		
+		my$isLocking=0;
 		#¸¢¸Â¤ò¥Á¥§¥Ã¥¯
-		unless($CF{'admps'}&&$IN{'pass'}eq$CF{'admps'}
-				or$CF{'lockPassword'}&&$IN{'pass'}eq$CF{'lockPassword'}){
+		unless($CF{'admps'}and$IN{'pass'}eq$CF{'admps'}||$IN{'oldps'}eq$CF{'admps'}
+			or$CF{'lockPassword'}and$IN{'pass'}eq$CF{'lockPassword'}||$IN{'oldps'}eq$CF{'lockPassword'}){
+			#¿Æµ­»ö¤Î¥Ñ¥¹¥ï¡¼¥É¡©
 			my%DT=$log[0]=~/([^\t]*)=\t([^\t]*);\t/go;
-			die '¤¢¤Ê¤¿¤Ï¤³¤Î¥¹¥ì¥Ã¥É¤ò¥í¥Ã¥¯¤Ç¤­¤Þ¤»¤ó¡£'unless&mircrypt($DT{'time'},$IN{'pass'},$DT{'pass'});
+			&mircrypt($DT{'time'},$IN{'pass'},$DT{'pass'})||&mircrypt($DT{'time'},$IN{'oldps'},$DT{'pass'})
+			||die '¤¢¤Ê¤¿¤Ï¤³¤Î¥¹¥ì¥Ã¥É¤ò¥í¥Ã¥¯¤Ç¤­¤Þ¤»¤ó¡£';
+			++$isLocking;
 		}
 		
 		#¥í¥Ã¥¯¥ª¥×¥·¥ç¥ó
@@ -364,8 +370,14 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 		}else{
 			$option=join" ",grep{index($EX{'lockThread'}," $_ ")+1}@options;
 		}
-		my$isLocking=0;
-		index($log[$#log],"Mir12=\tLocked")+1?pop@log:++$isLocking&&push(@log,"Mir12=\tLocked:$option;\t");
+		if(index($log[$#log],"Mir12=\tLocked")<0){
+			push(@log,"Mir12=\tLocked:$option;\t");
+			++$isLocking;
+		}elsif(!$isLocking){
+			pop@log;
+		}else{
+			die '¤¢¤Ê¤¿¤Ï¤³¤Î¥¹¥ì¥Ã¥É¤ò¥í¥Ã¥¯¤Ç¤­¤Þ¤»¤ó¡£';
+		}
 		truncate(RW,0);
 		seek(RW,0,0);
 		print RW map{"$_\n"}@log;
@@ -1046,8 +1058,7 @@ sub rvsArticle{
 		
 		#Cookie¤Ë¤¢¤ë¡©
 		&getCookie;
-		$IN{'pass'}=$CK{'pass'};
-		$IN{'oldps'}=$CK{'pass'};
+		$IN{'oldps'}=$IN{'pass'}=$CK{'pass'};
 		#-----------------------------
 		unless(&mircrypt($DT{'time'},$IN{'pass'},$DT{'pass'})){
 			#Ìµ¤¤¤Ê¤éÆþÎÏ¤·¤Æ
@@ -1405,8 +1416,8 @@ sub getParam{
 	}
 	
 	#°ú¿ô¤Î±øÀ÷½üµî
-	$IN{'ra'}=($ENV{'REMOTE_ADDR'}&&$ENV{'REMOTE_ADDR'}=~/([\d\:\.]{2,56})/o)?"$1":'';
-	$IN{'hua'}=($ENV{'HTTP_USER_AGENT'}&&$ENV{'HTTP_USER_AGENT'}=~/($eucchar+)/o)?"$1":'';
+	$IN{'ra'}=($ENV{'REMOTE_ADDR'}&&$ENV{'REMOTE_ADDR'}=~/([\d\:\.]{2,56})/o)?$1:'';
+	$IN{'hua'}=($ENV{'HTTP_USER_AGENT'}&&$ENV{'HTTP_USER_AGENT'}=~/($eucchar+)/o)?$1:'';
 	$IN{'hua'}=~tr/\x09\x0A\x0D/\x20\x20\x20/;
 	if(defined$DT{'body'}){
 		#µ­»ö½ñ¤­¹þ¤ß
@@ -1468,7 +1479,7 @@ sub getParam{
 
 =cut
 
-		$IN{'name'}=substr($DT{'name'},0,200);
+		$IN{'name'}=&getTruncated($DT{'name'},40);
 		$IN{'cook'}=($DT{'cook'}=~/(.)/o)?'on':'';
 		unless($DT{'pass'}){
 		}elsif($DT{'pass'}eq$CF{'admps'}){
@@ -1480,22 +1491,22 @@ sub getParam{
 		{ #¥Õ¥©¡¼¥à¤ÎÆâÍÆ½èÍý
 			for($CF{$IN{'_ArticleType'}&1?'chditm':'prtitm'}=~/\b([a-z\d]+)\b/go){
 				if('color'eq$_){
-					$IN{'color'}=($DT{'color'}=~/([\#\w\(\)\,]{1,20})/o)?"$1":'';
+					$IN{'color'}=($DT{'color'}=~/([\#\w\(\)\,]{1,20})/o)?$1:'';
 				}elsif('email'eq$_){
-					$IN{'email'}=($DT{'email'}=~/($mail_regex)/o)?"$1":'';
+					$IN{'email'}=($DT{'email'}=~/($mail_regex)/o)?$1:'';
 					$IN{'email'}=~s/\@/&#64;/;
 				}elsif('home'eq$_){
-					$IN{'home'}=($DT{'home'}=~/($http_URL_regex)/o)?"$1":'';
+					$IN{'home'}=($DT{'home'}=~/($http_URL_regex)/o)?$1:'';
 				}elsif('icon'eq$_){
-					$IN{'icon'}=($DT{'icon'}=~/([\w\.\~\-\%\/]+)/o)?"$1":'';
+					$IN{'icon'}=($DT{'icon'}=~/([\w\.\~\-\%\/]+)/o)?$1:'';
 				}elsif('cmd'eq$_){
 					$IN{'cmd'}=$1 if$DT{'cmd'}=~/(.+)/o;
 				}elsif('subject'eq$_){
-					$IN{'subject'}=&getTruncated($DT{'subject'}?$DT{'subject'}:$DT{'body'},80);
+					$IN{'subject'}=&getTruncated($DT{'subject'}?$DT{'subject'}:$DT{'body'},70);
 				}elsif('ra'eq$_||'hua'eq$_){
 					next;
 				}else{
-					$IN{"$_"}=($DT{"$_"}=~/(.+)/o)?"$1":'';
+					$IN{"$_"}=($DT{"$_"}=~/(.+)/o)?$1:'';
 				}
 			}
 		}
@@ -1512,9 +1523,9 @@ sub getParam{
 		$IN{'_isEditing'}=1;
 	}elsif(defined$DT{'seek'}){
 		#¸¡º÷
-		$IN{'seek'}=($DT{'seek'}=~/(.+)/o)?"$1":'';
+		$IN{'seek'}=($DT{'seek'}=~/(.+)/o)?$1:'';
 		my%SK=split(/\s+/o,$CF{'sekitm'});
-		$DT{'item'}=($DT{'item'}=~/(.+)/o)?"$1":'';
+		$DT{'item'}=($DT{'item'}=~/(.+)/o)?$1:'';
 		$IN{'item'}=($SK{$DT{'item'}})?$DT{'item'}:'ALL';
 		$IN{'every'}=($DT{'every'}=~/([ij])/o)?$1:'i';
 	}elsif(defined$DT{'del'}){
@@ -1524,9 +1535,9 @@ sub getParam{
 		}elsif($DT{'pass'}eq$CF{'admps'}){
 			$IN{'pass'}=$CF{'admps'};
 		}elsif($DT{'pass'}=~/(.{8,128})/o){
-			$IN{'pass'}="$1";
+			$IN{'pass'}=$1;
 		}
-		$IN{'del'}=($DT{'del'}=~/(\d+\-\d+(\-\d)?)/o)?"$1":'';
+		$IN{'del'}=($DT{'del'}=~/([1-9]\d*\-\d+(?:\-\d)?)/o)?$1:'';
 		$IN{'_isEditing'}=1;
 	}elsif(defined$DT{'rvs'}){
 		#µ­»ö½¤Àµ¥ê¥¹¥Èor¼Â¹Ô
@@ -1535,9 +1546,9 @@ sub getParam{
 		}elsif($DT{'pass'}eq$CF{'admps'}){
 			$IN{'pass'}=$CF{'admps'};
 		}elsif($DT{'pass'}=~/(.{8,128})/o){
-			$IN{'pass'}="$1";
+			$IN{'pass'}=$1;
 		}
-		$IN{'rvs'}=($DT{'rvs'}=~/(\d+\-\d+)/o)?"$1":'';
+		$IN{'rvs'}=($DT{'rvs'}=~/([1-9]\d*\-\d+)/o)?$1:'';
 		$IN{'_isEditing'}=1;
 	}elsif(defined$DT{'icct'}){
 		#¥¢¥¤¥³¥ó¥«¥¿¥í¥°
@@ -1594,7 +1605,7 @@ $ Ê¸»ú¿ôÀ©¸Â
 		#1byteÊ¸»ú¤Ï2byteÊ¸»ú¤ÎÈ¾Ê¬¤ÎÄ¹¤µ¤À¤«¤é¡¢É½¼¨»þ¤ÎÄ¹¤µ¤ò¤½¤í¤¨¤ë°Ù¡¢
 		#Ê¸»ú¿ô¤Ç¤Ê¤¯byte¿ô¤ÇÀÚ¤ë
 		#3byteEUCÊ¸»ú¤Ï¤Û¤Ü»È¤ï¤Ê¤¤¤Î¤Ç¹ÍÎ¸³°
-		substr($str,0,$length)=~/($eucchar*)/o;
+		substr($str,0,$length-3)=~/($eucchar*)/o;
 		$str="$1...";
 	}
 	return$str;
@@ -1881,15 +1892,15 @@ sub showArticle{
 <P class="note" style="text-align:center;width:80%">»Òµ­»ö¿ô¤¬Â¿¤¤¤¿¤á¡¢ºÇ¿·¤Î$maxChildsShown·ï¤Î¤ßÉ½¼¨¤·¤Þ¤¹¡£
 ¤½¤ì°ÊÁ°¤Îµ­»ö¤Ï<A href="index.cgi?res=$DT{'i'}">ÊÖ¿®¥â¡¼¥É</A>¤Ç¸«¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹¡£</P>
 _HTML_
-			next;
 		}else{
 			#»Òµ­»ö
 			$DT{'j'}>$horizon||next;
-			/^Mir12=\tLocked/o&&++$isLocked&&last;
-			/^Mir12=\tdel;\t/o||&artchd(\%DT,$_);
+			index($_,"Mir12=\tdel")+1&&next;
+			index($_,"Mir12=\tLocked")+1&&++$isLocked&&last;
+			&artchd(\%DT,$_);
 		}
 	}
-	$DT{'j'}>-1||return;#µ­»ö¤¬¤Ê¤¤¤Ê¤é¥Õ¥Ã¥¿¤òÉ½¼¨¤»¤ºÊÖ¤¹
+	$DT{'j'}<0&&return;#µ­»ö¤¬¤Ê¤¤¤Ê¤é¥Õ¥Ã¥¿¤òÉ½¼¨¤»¤ºÊÖ¤¹
 	#µ­»ö¥Õ¥Ã¥¿
 	$DT{'-isLocked'}=$isLocked;
 	&artfot(\%DT);
@@ -2116,7 +2127,7 @@ sub getSignatureView{
 		$signature=substr(crypt($data->{signature},$saltForSignatureView),2);
 		$signatureCacheView{$data->{signature}.' '.$data->{name}}=$signature;
 	}
-	return qq(<span class="signature">[ $signature ]</span>);
+	return$signature;
 }
 
 
@@ -2590,7 +2601,7 @@ BEGIN{
 		};
 	}
 	# Version
-	$CF{'Version'}=join('.',q$Mireille: 1_2_9 $=~/(\d+[a-z]?)/go);
+	$CF{'Version'}=join('.',q$Mireille: 1_2_9 $=~/\d+[a-z]?/go);
 	($CF{'Core'}=q$Revision$)=~/(\d+((?:\.\d+)*))/o;
 	$CF{'CoreRevision'}=$1;
 	$CF{'Version'}.=$2.'¦Â' if index(q$State$,'Exp')+1;
