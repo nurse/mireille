@@ -313,11 +313,11 @@ sub icont{
 		$icon=~s/\t/\ \ /go;
 		$icon=~s/[\x0D\x0A]*$//o;
 		print&getManageHeader.<<"ASDF".&getManageFooter;
-<H2 class="mode">アイコンリスト編集モード</H2>
+<H2 class="mode">アイコンリスト編集モード（タグ）</H2>
 <FORM accept-charset="euc-jp" name="iconedit" method="post" action="$AT{'manage'}">
 <P><TEXTAREA name="icon" cols="100" rows="15">$icon</TEXTAREA></P>
-<P><LABEL accesskey="r" for="renew">アイコン見本更新(<SPAN class="ak">R</SPAN>):
-<INPUT name="renew" id="renew" type="checkbox" value="renew" checked></LABEL></P>
+<P></DEL><LABEL accesskey="r" for="renew">アイコン見本更新(<SPAN class="ak">R</SPAN>):
+<INPUT name="renew" id="renew" type="checkbox" value="renew"></LABEL></DEL></P>
 <INPUT name="mode" type="hidden" value="icont">
 <INPUT name="pass" type="hidden" value="$IN{'pass'}">
 <INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
@@ -336,10 +336,10 @@ ASDF
 		close(WR);
 
 		unless($IN{'renew'}){
-			&menu('アイコンリスト書き込み完了');
+			&menu('アイコンリスト（タグ）書き込み完了');
 		}else{
 			&iconsmp;
-			&menu('アイコンリスト・見本書き込み完了');
+			&menu('アイコンリスト（タグ）・見本書き込み完了');
 		}
 	}
 	exit;
@@ -352,7 +352,7 @@ sub icons{
 	unless($IN{'icon'}){
 		#アイコンリストSharp編集画面
 		print&getManageHeader.<<"ASDF";
-<H2 class="mode">アイコンリスト編集モード</H2>
+<H2 class="mode">アイコンリスト編集モード（＃）</H2>
 <FORM accept-charset="euc-jp" name="iconedit" method="post" action="$AT{'manage'}">
 <P><TEXTAREA name="icon" cols="100" rows="15">
 ASDF
@@ -387,8 +387,8 @@ ASDF
 		
 		print<<"ASDF".&getManageFooter;
 </TEXTAREA></P>
-<P><LABEL accesskey="r" for="renew">アイコン見本更新(<SPAN class="ak">R</SPAN>):
-<INPUT name="renew" id="renew" type="checkbox" value="renew" checked></LABEL></P>
+<P><DEL><LABEL accesskey="r" for="renew">アイコン見本更新(<SPAN class="ak">R</SPAN>):
+<INPUT name="renew" id="renew" type="checkbox" value="renew"></LABEL></DEL></P>
 <INPUT name="mode" type="hidden" value="icons">
 <INPUT name="pass" type="hidden" value="$IN{'pass'}">
 <INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
@@ -418,30 +418,30 @@ ASDF
 		seek(WR,0,0);
 		my$optg=0;
 		for(@icon){
-			if($_=~/^\s*\#\s*(.*)$/o){
+			if(/^\s*<!/o){
+			}elsif(/^\s*\#\s*(.*)$/o){
 				#アイコングループ
 				($optg==1)&&(print WR "</OPTGROUP>\n");
 				($1)||($optg=0,next);
 				print WR qq[<OPTGROUP label="$1">\n];
 				$optg=1;
 				next;
-			}elsif($_=~/^\s*([^#]+(?:#\d+)?)\s*\#\s*(.+)$/o){
+			}elsif(/^\s*([^#]+(?:#\d+)?)\s*\#\s*(.+)$/o){
 				#アイコン項目
 				($optg==1)&&(print WR "\ \ ");
 				print WR qq[<OPTION value="$1">$2</OPTION>\n];
 				next;
-			}else{
-				print WR "$_\n";
 			}
+			print WR "$_\n";
 		}
 		($optg==1)&&(print WR "</OPTGROUP>\n");
 		close(WR);
 		
 		unless($IN{'renew'}){
-			&menu('アイコンリスト書き込み完了');
+			&menu('アイコンリスト（＃）書き込み完了');
 		}else{
 			&iconsmp;
-			&menu('アイコンリスト・見本書き込み完了');
+			&menu('アイコンリスト（＃）・見本書き込み完了');
 		}
 		exit;
 	}
@@ -613,8 +613,9 @@ $CF{'icfot'}
 </HTML>
 _HTML_
 	close(WR);
-
-	&menu("アイコン見本更新完了");
+	
+	'iconsmp'eq$IN{'mode'}&&&menu("アイコン見本更新完了");
+	return;
 }
 
 #-------------------------------------------------
@@ -917,7 +918,7 @@ BEGIN{
 		$CF{'program'}=__FILE__;
 		$SIG{'__DIE__'}=sub{
 			if($_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/){return}
-			print"Content-Language: ja-JP\nContent-type: text/plain; charset=euc-jp\nX-Moe: Mireille\n"
+			print"Status: 200 OK\nContent-Language: ja-JP\nContent-type: text/plain; charset=euc-jp"
 			."\n\n<PRE>\t:: Mireille ::\n   * Error Screen 1.4 (o__)o// *\n\n";
 			print"ERROR: $_[0]\n"if@_;
 			print join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(Index Style Core Exte))
@@ -1394,8 +1395,8 @@ sub logfiles{
 # ヘッダーの生成
 sub getManageHeader{
 	return<<"_HTML_";# Header without G-ZIP etc.
-Content-type: text/html; charset=euc-jp
 Content-Language: ja-JP
+Content-type: text/html; charset=euc-jp
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <!--DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"-->
@@ -1472,7 +1473,7 @@ BEGIN{
 		$CF{'program'}=__FILE__;
 		$SIG{'__DIE__'}=sub{
 			if($_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/){return}
-			print"Content-Language: ja-JP\nContent-type: text/plain; charset=euc-jp\n"
+			print"Status: 200 OK\nContent-Language: ja-JP\nContent-type: text/plain; charset=euc-jp"
 			."\n\n<PRE>\t:: Mireille ::\n   * Error Screen 1.4 (o__)o// *\n\n";
 			print"ERROR: $_[0]\n"if@_;
 			print join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(Manage Index Style Core Exte))
