@@ -36,9 +36,9 @@ sub main{
 		DIR:{
 			-e"$CF{'log'}"&& last DIR;
 			mkdir("$CF{'log'}",0777)&& last DIR;
-			die"Can't read/write/create LogDir($CF{'log'})[$!]";
+			die"Can't read/write/create LogDir($CF{'log'})[$?:$!]";
 		}
-		open(ZERO,'+>>'."$CF{'log'}0.cgi")||die"Can't write log(0.cgi)[$!]";
+		open(ZERO,'+>>'."$CF{'log'}0.cgi")||die"Can't write log(0.cgi)[$?:$!]";
 		eval{flock(ZERO,2)};
 		if(!-s"$CF{'log'}0.cgi"){
 			print ZERO "Mir12=\t0-0;\tsubject=\tWelcome to Mireille;\tname=\tMireilleSystem;\ttime=\t$^T;\t"
@@ -163,11 +163,11 @@ _HTML_
 		#既に稼動中のとき
 		#Threads Body
 		for(0..$#view){
-			&showArticle('i'=>$view[$_],'ak'=>($_+1));
+			&showArticle(i=>$view[$_],ak=>($_+1),maxChildsShown=>$CF{'maxChildsShown'});
 		}
 	}else{
 		#log0のみ つまり設置直後のとき
-		&showArticle('i'=>0,'ak'=>1);
+		&showArticle(i=>0,ak=>1);
 	}
 	#-----------------------------
 	#記事情報表示下
@@ -486,11 +486,11 @@ _HTML_
 	
 	#-----------------------------
 	#書き込みデータ準備
-	open(ZERO,'+>>'."$CF{'log'}0.cgi")||die"Can't read/write log(0.cgi)[$!]";
+	open(ZERO,'+>>'."$CF{'log'}0.cgi")||die"Can't read/write log(0.cgi)[$?:$!]";
 	eval{flock(ZERO,2)};
 	seek(ZERO,0,0);
 	my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
-	index($zero[0],"Mir12=\t")&&die"ログ形式がMir12型以外です($zero[0])";
+	index($zero[0],"Mir12=\t")&& die"ZEROのログ形式がMir12型以外です($zero[0])";
 	%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
 	my@zer1=split(/\s+/o,$zero[1]);
 	@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
@@ -530,7 +530,7 @@ _HTML_
 該当記事を確認して、同一内容でない場合は、下のフォームで少し修正してから投稿してみてください。</P>
 <TABLE align="center" border="0" cellspacing="0" summary="BackMenu">
 <COL span="2" width="150">
-<TR><TD><FORM action="index.cgi?read=$IN{'i'}#art$IN{'i'}-$IN{'j'}" method="get">
+<TR><TD><FORM action="index.cgi?read=$1#art$1-$2" method="get">
 <INPUT type="submit" class="button" accesskey="q" value="掲示板に戻る(Q)">
 </FORM></TD>
 <TD><FORM action="$CF{'home'}" method="get">
@@ -587,7 +587,7 @@ $file[$CF{'logmax'}-2] は削除された後に残った記事スレッドのうち、
 				$zer2[0]=$file[$CF{'logmax'}-2]-1;
 			}
 			$IN{'i'}=$file[0]+1;
-			open(WR,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't write log($IN{'i'})[$!]";
+			open(WR,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't write log($IN{'i'})[$?:$!]";
 			eval{flock(WR,2)};
 			truncate(WR,0);
 			seek(WR,0,0);
@@ -597,7 +597,7 @@ $file[$CF{'logmax'}-2] は削除された後に残った記事スレッドのうち、
 		}else{
 			#-----------------------------
 			#返信書き込み
-			open(RW,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$!]";
+			open(RW,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$?:$!]";
 			eval{flock(RW,2)};
 			seek(RW,0,0);
 			my$line;
@@ -631,7 +631,7 @@ $file[$CF{'logmax'}-2] は削除された後に残った記事スレッドのうち、
 	}else{
 		#-----------------------------
 		#修正書き込み
-		open(RW,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$!]";
+		open(RW,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$?:$!]";
 		eval{flock(RW,2)};
 		seek(RW,0,0);
 		my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
@@ -729,11 +729,33 @@ _HTML_
 sub res{
 	&getCookie;
 	&showHeader;
-	print qq(<H2 class="mode">- 記事返信モード -</H2>\n);
-	print q(<DIV style="border:dashed 1px #333;height:400px;overflow:auto;width:99%">)
-	.q(<H3>このスレッドの今までの内容</H3>);
-	print"This thread$IN{'i'} is deleted."if"del"eq&showArticle('i'=>$IN{'i'},'ak'=>1,'res'=>1);
-	print q(</DIV>);
+	print qq(<H2 class="mode">- 記事返信モード -</H2>\n)
+	.qq(<DIV id="thread$IN{'i'}_div" style="border:dashed 1px #333;height:400px;overflow:auto;width:99%">\n)
+	.qq(<H3>このスレッドの今までの内容</H3>\n);
+	print"This thread$IN{'i'} is deleted."if"del"eq&showArticle(i=>$IN{'i'},ak=>1,res=>1);
+	print<<"_HTML_";
+</DIV>
+<P style="margin-right:10%;text-align:right"><INPUT type="button" class="button" onclick="switchDivBorder(this);return false" value="枠を広げる"></P>
+<SCRIPT type="text/javascript">
+<!--
+function switchDivBorder(self){
+	if(!document.getElementById)return false;
+	var div=document.getElementById('thread$IN{'i'}_div');
+	if(!div.style||!div.style.overflow){
+		return false;
+	}else if(div.style.overflow=='auto'){
+		self.value='枠を狭める';
+		div.style.height='auto';
+		div.style.overflow='visible';
+	}else{
+		self.value='枠を広げる';
+		div.style.height='400px';
+		div.style.overflow='auto';
+	}
+}
+-->
+</SCRIPT>
+_HTML_
 	$CK{'i'}=$IN{'i'};
 	$CK{'ak'}=1;
 	&chdfrm;
@@ -803,7 +825,7 @@ _HTML_
 		-e"$CF{'log'}$_.cgi"||next;
 		my$i=$_;
 		my$j=-1;
-		open(RD,'<'."$CF{'log'}$i.cgi")||die"Can't read log($i.cgi)[$!]";
+		open(RD,'<'."$CF{'log'}$i.cgi")||die"Can't read log($i.cgi)[$?:$!]";
 		eval{flock(RD,1)};
 #		print"<TR><TD colspan=\"6\"><HR></TD></TR>";
 		my$count="<A href=\"index.cgi?read=$i#art$i\">第$i号</A>";
@@ -846,7 +868,7 @@ _HTML_
 #
 sub rvsArticle{
 	($IN{'i'},$IN{'j'})=split('-',$IN{'rvs'});
-	open(RD,'<'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read log($IN{'i'}.cgi)[$!]";
+	open(RD,'<'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read log($IN{'i'}.cgi)[$?:$!]";
 	eval{flock(RD,1)};
 	my$i=0;
 	my%DT;
@@ -923,7 +945,7 @@ sub delArticle{
 	my$delEvenIfMarkMode=0;
 	
 	($IN{'i'},$IN{'j'},$IN{'type'})=split('-',$IN{'del'});
-	open(RW,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$!]";
+	open(RW,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$?:$!]";
 	eval{flock(RD,2)};
 	seek(RW,0,0);
 	my@log=<RW>;
@@ -946,7 +968,7 @@ _HTML_
 <LABEL for="mark">親記事の本文のみ削除<INPUT id="mark" name="del" type="radio" value="$IN{'del'}-1"></LABEL>
 <LABEL for="$CF{'delthr'}">記事スレッドを削除<INPUT id="$CF{'delthr'}" name="del" type="radio" value="$IN{'del'}-2"></LABEL>
 _HTML_
-				$i=~s/id="$CF{'delthr'}"/id="$CF{'delthr'}" checked="checked"/o;
+				$i=~s/(yid="$CF{'delthr'}")/$1 checked/o;
 				print<<"_HTML_";
 $i
 </FIELDSET>
@@ -981,7 +1003,8 @@ _HTML_
 	}
 	close(RW);
 	#親記事削除
-	&showRvsMenu("第$IN{'i'}番スレッドを削除しました。(".&delThread($CF{'delthr'},$IN{'i'}).")");
+	&delThread($CF{'delthr'},$IN{'i'});
+	&showRvsMenu("第$IN{'i'}番スレッドを削除しました。($CF{'delthr'})");
 	exit;
 }
 
@@ -1014,7 +1037,7 @@ sub showArtSeek{
 			#スレッドごと検索
 			for(@file){
 				$_||last;
-				open(RD,'<'."$CF{'log'}$_.cgi")||die"Can't read log($_.cgi)[$!]";
+				open(RD,'<'."$CF{'log'}$_.cgi")||die"Can't read log($_.cgi)[$?:$!]";
 				eval{flock(RD,1)};
 				my$thread;
 				read(RD,$thread,-s"$CF{'log'}$_.cgi");
@@ -1027,7 +1050,7 @@ sub showArtSeek{
 			#記事ごと検索
 			for(@file){
 				$_||last;
-				open(RD,'<'."$CF{'log'}$_.cgi")||die"Can't read log($_.cgi)[$!]";
+				open(RD,'<'."$CF{'log'}$_.cgi")||die"Can't read log($_.cgi)[$?:$!]";
 				eval{flock(RD,1)};
 				my$thread;
 				read(RD,$thread,-s"$CF{'log'}$_.cgi");
@@ -1058,7 +1081,7 @@ _HTML_
 <TD><SELECT name="item" id="item">
 _HTML_
 	my$select=join('',map{qq(<OPTION value="$_">$SK{$_}</OPTION>)}($CF{'sekitm'}=~/(\w+) \S+/go));
-	$select=~s/(value="$IN{'item'}")/$1 selected="selected"/io;
+	$select=~s/(value="$IN{'item'}")/$1 selected/io;
 	print<<"_HTML_";
 $select</SELECT>
 </TD>
@@ -1074,7 +1097,7 @@ _HTML_
 	my%DT=qw(i スレッドごと j 各記事ごと);
 	$select=join('',map{qq(<LABEL accesskey="$_" for="every$_"><INPUT type="radio" name="every" id="every$_")
 	.qq( value="$_">$DT{$_}(<SPAN class="ak">\u$_</SPAN>)</LABEL>\n)}('i','j'));
-	$select=~s/(value="$IN{'every'}")/$1 checked="checked"/io;
+	$select=~s/(value="$IN{'every'}")/$1 checked/io;
 	print<<"_HTML_";
 $select
 </TD>
@@ -1130,12 +1153,8 @@ sub locate{
 $ 飛ぶ先のURL（絶対でも相対でも）
 =cut
 	my$i=$_[0];
-	($i)||(die"'Stay here.'");
+	$i||die"'Stay here.'";
 	if(index($i,'http:')==0){
-	}elsif($i=~/\?/o){
-		$i=sprintf('http://%s%s/',$ENV{'SERVER_NAME'},
-		substr($ENV{'SCRIPT_NAME'},0,rindex($ENV{'SCRIPT_NAME'},'/')));
-		$i.=sprintf('%s?%s',$_[0]);
 	}elsif($i){
 		$i=sprintf('http://%s%s/',$ENV{'SERVER_NAME'},
 		substr($ENV{'SCRIPT_NAME'},0,rindex($ENV{'SCRIPT_NAME'},'/')));
@@ -1495,11 +1514,11 @@ _HTML_
 	unless(defined$DT{'skyline'}){
 		#LastPost
 		unless(%Z0){
-			open(ZERO,'<'."$CF{'log'}0.cgi")||die"Can't read log(0.cgi)[$!]";
+			open(ZERO,'<'."$CF{'log'}0.cgi")||die"Can't read log(0.cgi)[$?:$!]";
 			eval{flock(ZERO,1)};
 			my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
 			close(ZERO);
-			(!$zero[0]||index($zero[0],"Mir12=\t")!=0)&& die"ログ形式がMir12型以外です($zero[0])";
+			(!$zero[0]||index($zero[0],"Mir12=\t")!=0)&& die"ZEROのログ形式がMir12型以外です($zero[0])";
 			%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
 			@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
 		}
@@ -1608,7 +1627,7 @@ $ 記事スレッドファイルリストの順番(date|number)
 =cut
 
 	undef@file;
-	opendir(DIR,$CF{'log'})||die"Can't read directory($CF{'log'})[$!]";
+	opendir(DIR,$CF{'log'})||die"Can't read directory($CF{'log'})[$?:$!]";
 	if('date'eq$_[0]){
 		#日付順 'date'
 		@file=map{$_->[0]+$zer2[0]}sort{$b->[1]<=>$a->[1]or$b->[0]<=>$a->[0]}
@@ -1697,16 +1716,30 @@ sub showArticle{
 	#このスレッド共通の情報
 	my%DT=@_;
 	$DT{'j'}=-1;
+	$DT{'maxChildsShown'}=-1if!defined$DT{'maxChildsShown'};
 	
-	open(RD,'<'."$CF{'log'}$DT{'i'}.cgi")||die"Can't read log($DT{'i'}.cgi)[$!]";
+	open(RD,'<'."$CF{'log'}$DT{'i'}.cgi")||die"Can't read log($DT{'i'}.cgi)[$?:$!]";
 	eval{flock(RD,1)};
-	while(<RD>){
-		#親記事
-		++$DT{'j'}||(&artprt(\%DT,$_),next);
-		#子記事
-		/^Mir12=\tdel;\t/o||&artchd(\%DT,$_);
-	}
+	my@articles=<RD>;
 	close(RD);
+	
+	my$maxChildsShown=$DT{'maxChildsShown'}>-1?int(abs($DT{'maxChildsShown'})):$#articles;
+	my$horizon=$#articles-$maxChildsShown;
+	for(@articles){
+		unless(++$DT{'j'}){
+			#親記事
+			&artprt(\%DT,$_);
+			print<<"_HTML_"if$horizon>0;
+<P class="note" style="text-align:center;width:80%">子記事数が多いため、最新の$maxChildsShown件のみ表示します。
+それ以前の記事は<A href="index.cgi?res=$DT{'i'}">返信モード</A>で見ることができます。</P>
+_HTML_
+			next;
+		}else{
+			#子記事
+			$horizon<$DT{'j'}||next;
+			/^Mir12=\tdel;\t/o||&artchd(\%DT,$_);
+		}
+	}
 	$DT{'j'}>-1||return;#記事がないならフッタを表示せず返す
 	#記事フッタ
 	&artfot(\%DT);
@@ -1876,55 +1909,41 @@ $ 削除方式
 @ 削除するファイルの記事スレッド番号のリスト
 =cut
 	my($type,@del)=@_;
+	my$file=0;
 	if('gzip'eq$type&&$CF{'gzip'}){
 		#GZIP圧縮
 		for(@del){
 			`$CF{'gzip'} -fq9 "$CF{'log'}$_.cgi"`;
-			($?==0)||die"$?:Can't use gzip($CF{'gzip'}) oldlog($_.cgi)[$!]";
+			($?==0)||die"$?:Can't use gzip($CF{'gzip'}) oldlog($_.cgi)[$?:$!]";
+			$file++;
 		}
 	}elsif('unlink'eq$type){
 		#削除
 		for(@del){
-			unlink"$CF{'log'}$_.cgi"||die"Can't delete oldlog($_.cgi)[$!]";
+			unlink"$CF{'log'}$_.cgi"||die"Can't delete oldlog($_.cgi)[$?:$!]";
+			$file++;
 		}
 	}elsif('rename'eq$type){
 		#ファイル名変更
 		for(@del){
-			-e"$CF{'log'}$_.bak.cgi"||die"Can't delete old-oldlog, before renaming($_.bak.cgi)[$!]";
-			rename("$CF{'log'}$_.cgi","$CF{'log'}$_.bak.cgi")||die"Can't rename oldlog($_.cgi)[$!]";
+			if(-e"$CF{'log'}$_.bak.cgi"){
+				#しょうがないから古いのは削除しちゃう
+				unlink"$CF{'log'}$_.bak.cgi"||die"Can't unlink old-old log($CF{'log'}$_.bak.cgi)[$?:$!]";
+			}
+			rename("$CF{'log'}$_.cgi","$CF{'log'}$_.bak.cgi")||die"Can't rename oldlog($_.cgi)[$?:$!]";
+			$file++;
 		}
 	}elsif($type=~/!(.*)/o){
 		#特殊
 		for(@del){
 			`$1 "$CF{'log'}$_.cgi"`;
-			$?==0||die"$?:Invalid delete type($1) oldlog($_.cgi)[$!]";
+			$?==0||die"$?:Invalid delete type($1) oldlog($_.cgi)[$?:$!]";
+			$file++;
 		}
 	}else{
 		die"Invalid delete type:'$type'";
 	}
-	
-	#非拡張子cgiのファイルを拡張子cgiにする
-	opendir(DIR,$CF{'log'})||die"Can't read directory($CF{'log'})[$!]";
-	for(readdir(DIR)){
-		$_=~/^\d+(\.gz)?\.cgi$/io&& next;
-		$_=~/^(\d+)(?:\.(?:cgi|bak|(gz)))+$/io|| next;
-		if($2){
-			#既にgzipされているもの
-			rename("$CF{'log'}$_","$CF{'log'}$1.gz.cgi")||die"Can't rename oldfile($_)[$!]";
-		}elsif('gzip'eq$type){
-			#gzipされてないもの->.gz.cgi
-			`$CF{'gzip'} -fq9 "$CF{'log'}$_"`;
-			$?==0||die"$?:Can't use gzip($CF{'gzip'}) oldfile($_)[$!]";
-			rename("$CF{'log'}$_.gz","$CF{'log'}$1.gz.cgi")||die"Can't rename oldfile($_)[$!]";
-			next;
-		}else{
-			#.bak->.bak.cgi
-			$_=~/^\d+\.bak\.cgi$/io&& next;
-			rename("$CF{'log'}$_","$CF{'log'}$1.bak.cgi")||die"Can't rename oldfile($_)[$!]";
-		}
-	}
-	closedir(DIR);
-	return($type);
+	return($file);
 }
 
 
@@ -2042,7 +2061,7 @@ BEGIN{
 		};
 	}
 	# Version
-	$CF{'Version'}=join('.',q$Mireille: 1_2_7 $=~/(\d+[a-z]?)/go);
+	$CF{'Version'}=join('.',q$Mireille: 1_2_8 $=~/(\d+[a-z]?)/go);
 	($CF{'Core'}=q$Revision$)=~/(\d+((?:\.\d+)*))/o;
 	$CF{'CoreRevision'}=$1;
 	$CF{'Version'}.=$2.'β' if-1<index(q$State$,'Exp');
