@@ -61,10 +61,9 @@ _HTML_
 #-----------------------------
 # MireileのHEADタグの中身
 $CF{'head'}=<<"_CONFIG_";
-<META http-equiv="Content-type" content="text/html; charset=euc-jp">
+<META http-equiv="Content-type" content="text/html; charset=$CF{'encoding'}">
 <META http-equiv="Content-Script-Type" content="text/javascript">
 <META http-equiv="Content-Style-Type" content="text/css">
-<META http-equiv="MSThemeCompatible" content="yes">
 <LINK rel="Start" href="$CF{'home'}">
 <LINK rel="Index" href="index.cgi">
 <LINK rel="Help" href="index.cgi?help">
@@ -292,7 +291,7 @@ sub menu{
 	my$pass=defined$IN{'pass'}?$IN{'pass'}:'';
 	print&getManageHeader.<<"ASDF".&getManageFooter;
 <H2 class="heading2" style="margin:1em auto">[ $status ]</H2>
-<FORM accept-charset="euc-jp" name="menu" method="post" action="$AT{'manage'}">
+<FORM accept-charset="$CF{'encoding'}" name="menu" method="post" action="$AT{'manage'}">
 <FIELDSET style="text-align:left;padding:0.5em;margin:auto;width:15em">
 <LEGEND>Mode</LEGEND>
 <LABEL accesskey="y" for="icont">
@@ -341,16 +340,16 @@ ASDF
 sub icont{
 	&loadcfg;
 	unless($IN{'icon'}){#アイコンリスト編集
-		open(RD,'<'."$CF{'icls'}")||die"Can't read iconlist($CF{'icls'})[$?:$!]";
-		eval{flock(RD,1)};
+		open(FILE,'<'."$CF{'icls'}")||die"Can't read iconlist($CF{'icls'})[$?:$!]";
+		eval{flock(FILE,1)};
 		my$icon;
-		read(RD,$icon,-s$CF{'icls'});
-		close(RD);
+		read(FILE,$icon,-s$CF{'icls'});
+		close(FILE);
 		$icon=~s/\t/\ \ /go;
 		$icon=~s/[\x0D\x0A]*$//o;
 		print&getManageHeader.<<"ASDF".&getManageFooter;
 <H2 class="heading2">アイコンリスト編集モード（タグ）</H2>
-<FORM accept-charset="euc-jp" name="iconedit" method="post" action="$AT{'manage'}">
+<FORM accept-charset="$CF{'encoding'}" name="iconedit" method="post" action="$AT{'manage'}">
 <P><TEXTAREA name="icon" cols="120" rows="15">$icon</TEXTAREA></P>
 <P></DEL><LABEL accesskey="r" for="renew">アイコン見本更新(<SPAN class="ak">R</SPAN>):
 <INPUT name="renew" id="renew" type="checkbox" value="renew"></LABEL></DEL></P>
@@ -364,12 +363,12 @@ ASDF
 		$IN{'icon'}=~tr/\n//s;
 		$IN{'icon'}=~s/(\n)*$/\n/;
 
-		open(WR,'+>>'."$CF{'icls'}")||die"Can't write iconlist($CF{'icls'})[$?:$!]";
-		eval{flock(WR,2)};
-		truncate(WR,0);
-		seek(WR,0,0);
-		print WR $IN{'icon'};
-		close(WR);
+		open(FILE,'+>>'."$CF{'icls'}")||die"Can't write iconlist($CF{'icls'})[$?:$!]";
+		eval{flock(FILE,2)};
+		truncate(FILE,0);
+		seek(FILE,0,0);
+		print FILE $IN{'icon'};
+		close(FILE);
 
 		unless($IN{'renew'}){
 			&menu('アイコンリスト（タグ）書き込み完了');
@@ -389,14 +388,14 @@ sub icons{
 		#アイコンリストSharp編集画面
 		print&getManageHeader.<<"ASDF";
 <H2 class="heading2">アイコンリスト編集モード（＃）</H2>
-<FORM accept-charset="euc-jp" name="iconedit" method="post" action="$AT{'manage'}">
+<FORM accept-charset="$CF{'encoding'}" name="iconedit" method="post" action="$AT{'manage'}">
 <P><TEXTAREA name="icon" cols="120" rows="15">
 ASDF
 		
-		open(RD,'<'."$CF{'icls'}")||die"Can't read iconlist($CF{'icls'})[$?:$!]";
-		eval{flock(RD,1)};
-		my@icon=<RD>;
-		close(RD);
+		open(FILE,'<'."$CF{'icls'}")||die"Can't read iconlist($CF{'icls'})[$?:$!]";
+		eval{flock(FILE,1)};
+		my@icon=<FILE>;
+		close(FILE);
 		
 		my$optg=0;
 		
@@ -448,30 +447,30 @@ ASDF
 ^\s*([^#])\s*#\s*(.*)$
 =cut
 		
-		open(WR,'+>>'."$CF{'icls'}")||die"Can't write iconlist($CF{'icls'})[$?:$!]";
-		eval{flock(WR,2)};
-		truncate(WR,0);
-		seek(WR,0,0);
+		open(FILE,'+>>'."$CF{'icls'}")||die"Can't write iconlist($CF{'icls'})[$?:$!]";
+		eval{flock(FILE,2)};
+		truncate(FILE,0);
+		seek(FILE,0,0);
 		my$optg=0;
 		for(@icon){
 			if(/^\s*<!/o){
 			}elsif(/^\s*\#\s*(.*)$/o){
 				#アイコングループ
-				($optg==1)&&(print WR "</OPTGROUP>\n");
+				($optg==1)&&(print FILE "</OPTGROUP>\n");
 				($1)||($optg=0,next);
-				print WR qq[<OPTGROUP label="$1">\n];
+				print FILE qq[<OPTGROUP label="$1">\n];
 				$optg=1;
 				next;
 			}elsif(/^\s*([^#]+(?:#\d+)?)\s*\#\s*(.+)$/o){
 				#アイコン項目
-				($optg==1)&&(print WR "\ \ ");
-				print WR qq[<OPTION value="$1">$2</OPTION>\n];
+				($optg==1)&&(print FILE "\ \ ");
+				print FILE qq[<OPTION value="$1">$2</OPTION>\n];
 				next;
 			}
-			print WR "$_\n";
+			print FILE "$_\n";
 		}
-		($optg==1)&&(print WR "</OPTGROUP>\n");
-		close(WR);
+		($optg==1)&&(print FILE "</OPTGROUP>\n");
+		close(FILE);
 		
 		unless($IN{'renew'}){
 			&menu('アイコンリスト（＃）書き込み完了');
@@ -505,8 +504,10 @@ OPTION
 
 =cut
 
-	open(RD,'<'."$CF{'icls'}")||die"Can't read iconlist($CF{'icls'})[$?:$!]";
-	eval{flock(RD,1)};
+	open(FILE,'<'."$CF{'icls'}")||die"Can't read iconlist($CF{'icls'})[$?:$!]";
+	eval{flock(FILE,1)};
+	my@iconlist=<FILE>;
+	close(FILE);
 	
 	my$j=0;
 	my@others=();
@@ -515,7 +516,7 @@ OPTION
 	my@icon=();
 	my$table=''; #optgroup一つをこれに一時的に格納する
 	
-	for(<RD>){
+	for(@iconlist){
 		if($_=~m{^\s*<OPTION (.*)value=(["'])(.+?)\2([^>]*)>([^<]*)(</OPTION>)?$}io){
 			#アイコン
 			if(!$j){
@@ -598,9 +599,12 @@ $4:
 			next;
 		}
 	}
-	close(RD);
 	
-	($j)&&(print WR "</TR></TABLE>\n");
+	#閉じ忘れ
+	if($j){
+		$table.="</TR></TABLE>\n";
+		push(@icon,$table);
+	}
 	
 	#その他の処理
 	if($#others>-1){
@@ -617,19 +621,18 @@ _HTML_
 	}
 	undef$table;
 	
-	open(WR,'+>>'.'icon.html')||die"Can't write iconsample(icon.html)[$?:$!]";
-	eval{flock(WR,2)};
-	truncate(WR,0);
-	seek(WR,0,0);
-	print WR <<"_HTML_";
+	open(FILE,'+>>'.'icon.html')||die"Can't write iconsample(icon.html)[$?:$!]";
+	eval{flock(FILE,2)};
+	truncate(FILE,0);
+	seek(FILE,0,0);
+	print FILE <<"_HTML_";
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <!--DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"-->
 <HTML lang="ja-JP">
 <HEAD>
-<META http-equiv="Content-type" content="text/html; charset=euc-jp">
+<META http-equiv="Content-type" content="text/html; charset=$CF{'encoding'}">
 <META http-equiv="Content-Script-Type" content="text/javascript">
 <META http-equiv="Content-Style-Type" content="text/css">
-<META http-equiv="MSThemeCompatible" content="yes">
 <LINK rel="stylesheet" type="text/css" href="$CF{'style'}" media="screen" title="DefaultStyle">
 <LINK rel="start" href="$CF{'home'}">
 <LINK rel="index" href="index.cgi">
@@ -648,7 +651,7 @@ $CF{'icfot'}
 </BODY>
 </HTML>
 _HTML_
-	close(WR);
+	close(FILE);
 	
 	'iconsmp'eq$IN{'mode'}&&&menu("アイコン見本更新完了");
 	return;
@@ -734,7 +737,7 @@ _HTML_
 		print&getManageHeader.<<"ASDF";
 <H2 class="heading2">index.cgi編集モード</H2>
 $message
-<FORM accept-charset="euc-jp" name="cssedit" method="post" action="$AT{'manage'}">
+<FORM accept-charset="$CF{'encoding'}" name="cssedit" method="post" action="$AT{'manage'}">
 <TABLE class="section">
 <COL style="text-align:left;width:600px"><COL style="text-align:left;width:200px">
 
@@ -863,10 +866,10 @@ ASDF
 			$IN{"$_"}=~s/^_CONFIG_$/(_CONFIG_)/gmo;
 		}
 		
-		open(RD,'<'."$AT{'manage'}")||die"Can't read manage($AT{'manage'})[$?:$!]";
-		eval{flock(RD,1)};
-		my$config=<RD>;
-		close(RD);
+		open(FILE,'<'."$AT{'manage'}")||die"Can't read manage($AT{'manage'})[$?:$!]";
+		eval{flock(FILE,1)};
+		my$config=<FILE>;
+		close(FILE);
 
 		$config.=<<"ASDF";
 
@@ -875,7 +878,7 @@ ASDF
 # - Mireille Index File -
 #
 # \$$CF{'Manage'}\$
-# "This file is written in euc-jp, CRLF." 空
+# "This file is written in $CF{'encoding'}, CRLF." 空
 # Scripted by NARUSE,Yui.
 #------------------------------------------------------------------------------#
 require 5.005;
@@ -917,7 +920,7 @@ ASDF
 #専用アイコン機能 (ON 1 OFF 0)
 \$CF{'exicon'}=\'$IN{'exicon'}\';
 #専用アイコン列挙
-#\$IC{'PASSWORD'}='FILENAME'; #NAME
+#\$IC{'PASSWOFILE'}='FILENAME'; #NAME
 #\$IC{'hae'}='mae.png'; #苗
 #\$IC{'hie'}='mie.png'; #贄
 #\$IC{'hue'}='mue.png'; #鵺
@@ -946,7 +949,7 @@ _CONFIG_
 
 ASDF
 		}
-		$config.=<<'ASDF';
+		$config.=sprintf<<'ASDF',$CF{'encoding'},$CF{'Manage'};
 #-------------------------------------------------
 # 実行 or 読み込み？
 
@@ -960,30 +963,39 @@ if($CF{'program'}eq __FILE__){
 #-------------------------------------------------
 # 初期設定
 BEGIN{
-	# Mireille Error Screen 1.4
-	unless(%CF){
+	$CF{'index'}=$1 if!$CF{'index'}&&__FILE__=~/[^\\\/:]+$/o;
+	$CF{'encoding'}='%s';
+	# Mireille Error Screen 1.2.2
+	unless($CF{'program'}){
 		$CF{'program'}=__FILE__;
-		$SIG{'__DIE__'}=sub{
-			$_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/&&return;
-			print"Status: 200 OK\nContent-Language: ja-JP\nContent-type: text/plain; charset=euc-jp"
-			."\n\n<PRE>\t:: Mireille ::\n   * Error Screen 1.4 (o__)o// *\n\n";
-			print"ERROR: $_[0]\n"if@_;
-			print join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(Index Style Core Exte))
-			."\n".join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(log icon icls style));
-			print"\n".join('',map{"$$_[0]\t: $$_[1]\n"}
-			([PerlVer=>$]],[PerlPath=>$^X],[BaseTime=>$^T],[OSName=>$^O],[FileName=>$0],[__FILE__=>__FILE__]))
-			."\n\t= = = ENV = = =\n".join('',map{sprintf"%-20.20s : %s\n",$_,$ENV{$_}}grep{$ENV{"$_"}}
-			qw(CONTENT_LENGTH QUERY_STRING REQUEST_METHOD
-			SERVER_NAME HTTP_HOST SCRIPT_NAME OS SERVER_SOFTWARE PROCESSOR_IDENTIFIER))
-			."\n+#      Airemix Mireille     #+\n+#  http://www.airemix.com/  #+";
+		$SIG{'__DIE__'}=$ENV{'REQUEST_METHOD'}?sub{
+			index($_[0],'flock')+1 and index($_[0],'unimplemented')+1 and return;
+			print "Status: 200 OK\nContent-Language: ja-JP\nContent-type: text/html; charset=$CF{'encoding'}\n\n"
+				. "<HTML>\n<HEAD>\n"
+				.qq(<META http-equiv="Content-type" content="text/html; charset=$CF{'encoding'}">\n)
+				. "<TITLE>Mireille Error Screen 1.2.2</TITLE>\n"
+				. "</HEAD>\n<BODY>\n\n<PRE>\t:: Mireille ::\n   * Error Screen 1.2.2 (o__)o// *\n\n";
+			print "ERROR: $_[0]\n"if@_;
+			printf"%%-20.20s : %%s\n",$_,$CF{$_} for grep{$CF{$_}}qw(Index Style Core Exte);
+			print "\n";
+			printf"%%-20.20s : %%s\n",$_,$CF{$_} for grep{$CF{$_}}qw(index log icon icls style);
+			print "\n";
+			printf"%%-20.20s : %%s\n",$$_[0],$$_[1]
+				for([PerlVer=>$]],[PerlPath=>$^X],[BaseTime=>$^T],[OSName=>$^O],[FileName=>$0],[__FILE__=>__FILE__]);
+			print "\n = = = ENVIRONMENTAL VARIABLE = = =\n";
+			printf"%%-20.20s : %%s\n",$_,$ENV{$_} for grep{$ENV{$_}}
+		qw(CONTENT_LENGTH QUERY_STRING REQUEST_METHOD SERVER_NAME HTTP_HOST SCRIPT_NAME OS SERVER_SOFTWARE);
+			print "\n+#      Airemix Mireille     #+\n+#  http://www.airemix.com/  #+\n</PRE>\n</BODY>\n</HTML>\n";
+			exit;
+		}:sub{
+			index($_[0],'flock')+1 and index($_[0],'unimplemented')+1 and return;
+			print@_?"ERROR: $_[0]":'ERROR';
 			exit;
 		};
 	}
-	$CF{'_HiraganaLetterA'}->{'Index'}='あ';
+	$CF{'_HiraganaLetterA'}->{'Index'}||='あ';
 	# Version
-ASDF
-		$config.=q(	$CF{'Index'}=q$)."$CF{'Manage'}".<<'ASDF';
-$;
+	$CF{'Index'}=q$%s$;
 	$CF{'Index'}=~/(\d+((?:\.\d+)*))/o;
 	$CF{'IndexRevision'}=$1;
 }
@@ -991,12 +1003,12 @@ $;
 1;
 __END__
 ASDF
-		open(WR,'+>>'.'index.cgi')||die"Can't write index.cgi[$?:$!]";
-		eval{flock(WR,2)};
-		truncate(WR,0);
-		seek(WR,0,0);
-		print WR $config;
-		close(WR);
+		open(FILE,'+>>'.'index.cgi')||die"Can't write index.cgi[$?:$!]";
+		eval{flock(FILE,2)};
+		truncate(FILE,0);
+		seek(FILE,0,0);
+		print FILE $config;
+		close(FILE);
 		
 		&menu('index.cgiに書き込み完了');
 	}
@@ -1009,7 +1021,7 @@ sub css{
 	unless($IN{'file'}){
 		print&getManageHeader.<<"ASDF".&getManageFooter;
 <H2 class="heading2">スタイルシートファイル選択</H2>
-<FORM accept-charset="euc-jp" name="cssedit" method="post" action="$AT{'manage'}">
+<FORM accept-charset="$CF{'encoding'}" name="cssedit" method="post" action="$AT{'manage'}">
 <P>CSSファイル名<INPUT name="file" type="text" style="ime-mode:disabled" value="$IN{'file'}">（拡張子は入力しない）<BR>
 例：$CF{'style'}なら、styleとだけ入力する<BR>
 万が一のセキュリティ確保のためですので、あしからず</P>
@@ -1019,10 +1031,10 @@ sub css{
 <INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
 ASDF
 	}elsif(!$IN{'css'}){
-		open(RD,'<'."$IN{'file'}.css")||die"Can't read css($IN{'file'}.css)[$?:$!]";
-		eval{flock(RD,1)};
-		my$css=join('',<RD>);
-		close(RD);
+		open(FILE,'<'."$IN{'file'}.css")||die"Can't read css($IN{'file'}.css)[$?:$!]";
+		eval{flock(FILE,1)};
+		my$css=join('',<FILE>);
+		close(FILE);
 		
 		$css=sjis2euc($css)if($css=~/^\@charset\s*["']Shift_JIS/io);
 		study$css;
@@ -1035,7 +1047,7 @@ ASDF
 		
 		print&getManageHeader.<<"ASDF".&getManageFooter;
 <H2 class="heading2">スタイルシート編集モード</H2>
-<FORM accept-charset="euc-jp" name="cssedit" method="post" action="$AT{'manage'}">
+<FORM accept-charset="$CF{'encoding'}" name="cssedit" method="post" action="$AT{'manage'}">
 <P>CSSファイル名:$IN{'file'}.css<INPUT name="file" type="hidden" value="$IN{'file'}"><P>
 <P><TEXTAREA name="css" cols="120" rows="15">$css</TEXTAREA><P>
 <P>
@@ -1046,12 +1058,12 @@ ASDF
 	}else{
 		$IN{'css'}=~s/(?:\n)*$/\n/o;
 		$IN{'css'}=euc2sjis($IN{'css'})if($IN{'css'}=~/^\@charset\s*["']Shift_JIS/io);
-		open(WR,'+>>'."$IN{'file'}\.css")||die"Can't write css($IN{'file'}.css)[$?:$!]";
-		eval{flock(WR,2)};
-		truncate(WR,0);
-		seek(WR,0,0);
-		print WR $IN{'css'};
-		close(WR);
+		open(FILE,'+>>'."$IN{'file'}\.css")||die"Can't write css($IN{'file'}.css)[$?:$!]";
+		eval{flock(FILE,2)};
+		truncate(FILE,0);
+		seek(FILE,0,0);
+		print FILE $IN{'css'};
+		close(FILE);
 		
 		&menu('css書き込み完了');
 	}
@@ -1066,7 +1078,7 @@ sub log{
 		#ログ管理初期メニュー
 		print&getManageHeader.<<"ASDF";
 <H2 class="heading2">ログ管理モード</H2>
-<FORM accept-charset="euc-jp" name="logedit" method="post" action="$AT{'manage'}">
+<FORM accept-charset="$CF{'encoding'}" name="logedit" method="post" action="$AT{'manage'}">
 
 <FIELDSET style="padding:0.5em;width:60%">
 <LEGEND>スレッドのロック</LEGEND>
@@ -1150,23 +1162,23 @@ ASDF
 		if($IN{'type'}==4){
 			#スレッドのロック
 			if($IN{'lock'}){
-				open(RW,'+>>'."$CF{'log'}$IN{'lock'}.cgi")
+				open(FILE,'+>>'."$CF{'log'}$IN{'lock'}.cgi")
 				||die"Can't read/write log($IN{'lock'};.cgi)[$?:$!]";
-				eval{flock(RW,2)};
-				seek(RW,0,0);
-				my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
+				eval{flock(FILE,2)};
+				seek(FILE,0,0);
+				my@log=map{/^([^\x0D\x0A]*)/o}<FILE>;
 				
 				my$flag=0;
-				if(index($log[$#log],"Mir12=\tLocked")+1){
+				if(!index($log[$#log],"Mir12=\tLocked")){
 					pop@log;
 				}else{
 					push(@log,"Mir12=\tLocked:$IN{'lockType'};\t");
 					++$flag;
 				}
-				truncate(RW,0);
-				seek(RW,0,0);
-				print RW map{"$_\n"}@log;
-				close(RW);
+				truncate(FILE,0);
+				seek(FILE,0,0);
+				print FILE map{"$_\n"}@log;
+				close(FILE);
 				
 				&menu(sprintf"第$IN{'lock'}番スレッドのロック%s成功",$flag?'':'解除');
 			}
@@ -1175,7 +1187,7 @@ ASDF
 		#スレッドロック以外と、スレッドロックのエラー
 		print&getManageHeader.<<"_HTML_";
 <H2 class="heading2">ログ管理モード</H2>
-<FORM accept-charset="euc-jp" name="logedit" method="post" action="$AT{'manage'}">
+<FORM accept-charset="$CF{'encoding'}" name="logedit" method="post" action="$AT{'manage'}">
 _HTML_
 		if($IN{'type'}==1){
 			#□〜□型指定
@@ -1279,7 +1291,7 @@ ASDF
 			open(ZERO,'+>>'."$CF{'log'}0.cgi")||die"Can't write log(0.cgi)[$?:$!]";
 			eval{flock(ZERO,2)};
 			seek(ZERO,0,0);
-			my@zero=map{m/(.*)/o}<ZERO>;
+			my@zero=map{/(.*)/o}<ZERO>;
 			my@zer2=split(/ /o,$zero[2]);
 			my@zerC=(0);
 			my@zerD=();
@@ -1389,7 +1401,7 @@ sub zero{
 	unless($IN{'recover'}){
 		print&getManageHeader.<<"ASDF".&getManageFooter;
 <H2 class="heading2">記事情報ファイル回復モード</H2>
-<FORM accept-charset="euc-jp" name="zero" method="post" action="$AT{'manage'}">
+<FORM accept-charset="$CF{'encoding'}" name="zero" method="post" action="$AT{'manage'}">
 <P>記事情報ファイルをリカバリすると、既存の情報は失われます<BR>
 それでもよろしいですか？
 <INPUT name="mode" type="hidden" value="zero">
@@ -1430,7 +1442,7 @@ sub manage{
 	unless($IN{'manage'}){
 		print&getManageHeader.<<"ASDF".&getManageFooter;
 <H2 class="heading2">管理CGIの管理</H2>
-<FORM accept-charset="euc-jp" name="zero" method="post" action="$AT{'manage'}">
+<FORM accept-charset="$CF{'encoding'}" name="zero" method="post" action="$AT{'manage'}">
 
 <FIELDSET style="padding:0.5em;width:25em;text-align:left">
 <LEGEND accesskey="m">やること(<SPAN class="ak">M</SPAN>)</LEGEND>
@@ -1483,7 +1495,7 @@ sub loadcfg{
 sub logfiles{
 	$CF{'Index'}||&loadcfg;
 	opendir(DIR,$CF{'log'})||die"Can't read directory($CF{'log'})[$?:$!]";
-	my@file=sort{$b<=>$a}map{m/^([1-9]\d*)\.cgi$/o}readdir(DIR);
+	my@file=sort{$b<=>$a}map{/^([1-9]\d*)\.cgi$/o}readdir(DIR);
 	closedir(DIR);
 	return@file;
 }
@@ -1493,7 +1505,7 @@ sub logfiles{
 sub getManageHeader{
 	return<<"_HTML_";# Header without G-ZIP etc.
 Content-Language: ja-JP
-Content-type: text/html; charset=euc-jp
+Content-type: text/html; charset=$CF{'encoding'}
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <!--DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"-->
@@ -1527,37 +1539,41 @@ _HTML_
 # Copyright (c) 1992-2000 Kazumasa Utashiro <utashiro@iij.ad.jp>
 #  ftp://ftp.iij.ad.jp/pub/IIJ/dist/utashiro/perl/
 sub sjis2euc{
-	my$s=$_[0];
-	$s=~s<([\x81-\x9f\xe0-\xfc][\x40-\x7e\x80-\xfc]|[\xa1-\xdf])>
-	[
-		my($c1,$c2)=unpack('CC',$1);
-		if(0xa1<=$c1&&$c1<=0xdf){
-			$c2=$c1;$c1=0x8e;
-		}elsif(0x9f<=$c2){
-			$c1=$c1*2-($c1>=0xe0?0xe0:0x60);$c2+=2;
+	my$s=shift;
+	$s=~s{([\x81-\x9f\xe0-\xfc][\x40-\x7e\x80-\xfc])|([\xa1-\xdf])}
+	{
+		if($2){
+			"\x8e$2";
 		}else{
-			$c1=$c1*2-($c1>=0xe0?0xe1:0x61);$c2+=0x60+($c2<0x7f);
+			my($c1,$c2)=unpack('CC',$1);
+			if(0x9f<=$c2){
+				$c1=$c1*2-($c1>=0xe0?0xe0:0x60);$c2+=2;
+			}else{
+				$c1=$c1*2-($c1>=0xe0?0xe1:0x61);$c2+=0x60+($c2<0x7f);
+			}
+			pack('CC',$c1,$c2);
 		}
-		pack('CC',$c1,$c2);
-	]ego;
+	}ego;
 	return$s;
 }
 
 sub euc2sjis{
-	my$s=$_[0];
-	$s=~s<([\xa1-\xfe]{2}|\x8e[\xa1-\xdf]|\x8f[\xa1-\xfe]{2})>
-	[
-		my($c1,$c2)=unpack('CC',$1);
-		if($c1==0x8e){#SS2
-			substr($1,1,1);
-		}elsif($c1==0x8f){#SS3
+	my$s=shift;
+	$s=~s{([\xa1-\xfe]{2})|\x8e([\xa1-\xdf])|\x8f[\xa1-\xfe]{2}}
+	{
+		if($1){
+			my($c1,$c2)=unpack('CC',$1);
+			if($c1 % 2){
+				pack('CC',($c1>>1)+($c1<0xdf?0x31:0x71),$c2-0x60-($c2<0xe0));
+			}else{
+				pack('CC',($c1>>1)+($c1<0xdf?0x30:0x70),$c2-2);
+			}
+		}elsif($2){#SS2
+			$2;
+		}else{#SS3
 			"\x81\xac";
-		}elsif($c1 % 2){
-			pack('CC',($c1>>1)+($c1<0xdf?0x31:0x71),$c2-0x60-($c2<0xe0));
-		}else{
-			pack('CC',($c1>>1)+($c1<0xdf?0x30:0x70),$c2-2);
 		}
-	]ego;
+	}ego;
 	return$s;
 }
 
@@ -1565,22 +1581,32 @@ sub euc2sjis{
 # BEGIN
 
 BEGIN{
-	# Mireille Error Screen 1.2.1
-	unless(%CF){
+	$CF{'encoding'}||='euc-jp';
+	# Mireille Error Screen 1.2.2
+	unless($CF{'program'}){
 		$CF{'program'}=__FILE__;
-		$SIG{'__DIE__'}=sub{
-			$_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/&&return;
-			print"Status: 200 OK\nContent-Language: ja-JP\nContent-type: text/plain; charset=euc-jp"
-			."\n\n<PRE>\t:: Mireille ::\n   * Error Screen 1.2.1 (o__)o// *\n\n";
-			print"ERROR: $_[0]\n"if@_;
-			print join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(Manage Index Style Core Exte))
-			."\n".join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(log icon icls style));
-			print"\n".join('',map{"$$_[0]\t: $$_[1]\n"}
-			([PerlVer=>$]],[PerlPath=>$^X],[BaseTime=>$^T],[OSName=>$^O],[FileName=>$0],[__FILE__=>__FILE__]))
-			."\n\t= = = ENV = = =\n".join('',map{sprintf"%-20.20s : %s\n",$_,$ENV{$_}}grep{$ENV{"$_"}}
-			qw(CONTENT_LENGTH QUERY_STRING REQUEST_METHOD
-			SERVER_NAME HTTP_HOST SCRIPT_NAME OS SERVER_SOFTWARE PROCESSOR_IDENTIFIER))
-			."\n+#      Airemix Mireille     #+\n+#  http://www.airemix.com/  #+";
+		$SIG{'__DIE__'}=$ENV{'REQUEST_METHOD'}?sub{
+			index($_[0],'flock')+1 and index($_[0],'unimplemented')+1 and return;
+			print "Status: 200 OK\nContent-Language: ja-JP\nContent-type: text/html; charset=$CF{'encoding'}\n\n"
+				. "<HTML>\n<HEAD>\n"
+				.qq(<META http-equiv="Content-type" content="text/html; charset=$CF{'encoding'}">\n)
+				. "<TITLE>Mireille Error Screen 1.2.2</TITLE>\n"
+				. "</HEAD>\n<BODY>\n\n<PRE>\t:: Mireille ::\n   * Error Screen 1.2.2 (o__)o// *\n\n";
+			print "ERROR: $_[0]\n"if@_;
+			printf"%-20.20s : %s\n",$_,$CF{$_} for grep{$CF{$_}}qw(Index Style Core Exte);
+			print "\n";
+			printf"%-20.20s : %s\n",$_,$CF{$_} for grep{$CF{$_}}qw(index log icon icls style);
+			print "\n";
+			printf"%-20.20s : %s\n",$$_[0],$$_[1]
+				for([PerlVer=>$]],[PerlPath=>$^X],[BaseTime=>$^T],[OSName=>$^O],[FileName=>$0],[__FILE__=>__FILE__]);
+			print "\n = = = ENVIRONMENTAL VARIABLE = = =\n";
+			printf"%-20.20s : %s\n",$_,$ENV{$_} for grep{$ENV{$_}}
+		qw(CONTENT_LENGTH QUERY_STRING REQUEST_METHOD SERVER_NAME HTTP_HOST SCRIPT_NAME OS SERVER_SOFTWARE);
+			print "\n+#      Airemix Mireille     #+\n+#  http://www.airemix.com/  #+\n</PRE>\n</BODY>\n</HTML>\n";
+			exit;
+		}:sub{
+			index($_[0],'flock')+1 and index($_[0],'unimplemented')+1 and return;
+			print@_?"ERROR: $_[0]":'ERROR';
 			exit;
 		};
 	}
