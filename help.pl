@@ -55,7 +55,7 @@ print<<'_HTML_';
 				ちなみに半角カタカナもたぶん使えます</LI>
 			<LI><H4 class="list">コマンド</H4>
 				現在は主に専用アイコンのパスワードを入れるのに使っています。<BR>
-				形式は&#34;icon=password&#34;となっています。<BR>
+				形式は&#34;<CODE>icon=<VAR>password</VAR></CODE>&#34;のようになっています。<BR>
 				専用アイコンが欲しい方は、管理人さんに交渉してみましょう。</LI>
 		</UL>
 	</LI>
@@ -77,8 +77,10 @@ _HTML_
 	my%ST=($CF{'strong'}=~/(\S+)\s+(\S+)/go);
 	my$line;my$regexp;
 	for(keys%ST){
-		if(m!^(/.+/)$!o){
+		if($ST{$_}=~m{^(/.+/)$}o){
 			$regexp.=qq(<STRONG style="color:#f77;font-weight:normal">$_</STRONG>, );
+		}elsif(m!^(/.+/)$!o){
+			$regexp.=qq(<STRONG class="$ST{$_}">$_</STRONG>, );
 		}else{
 			$line.=qq(<STRONG class="$ST{$_}">$_</STRONG>, );
 		}
@@ -86,13 +88,13 @@ _HTML_
 	chop$line;chop$line;
 	chop$regexp;chop$regexp;
 	if($line&&$regexp){
-		print"\t\t\t<LI>$line から始まる行と、<BR>正規表現 $regexp にマッチする文字列は強調表示されます</LI>\n";
+		print"\t\t\t<LI>$line で始まる行と、<BR>正規表現 $regexp にマッチする語句は強調表示されます</LI>\n";
 	}elsif($line){
-		print"\t\t\t<LI>$line から始まる行は強調表示されます</LI>\n";
+		print"\t\t\t<LI>$line で始まる行は強調表示されます</LI>\n";
 	}elsif($regexp){
-		print"\t\t\t<LI>正規表現 $regexp にマッチする文字列は強調表示されます</LI>\n";
+		print"\t\t\t<LI>正規表現 $regexp にマッチする語句は強調表示されます</LI>\n";
 	}else{
-		print"\t\t\t<LI>文字列は強調表示されません</LI>\n";
+		print"\t\t\t<LI>語句強調はOFFになっています</LI>\n";
 	}
 }
 #アイコン関連
