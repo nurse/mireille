@@ -89,6 +89,12 @@ function saveBodyCk(){
 	if(!bodyObj.value.length){
 		//valueが空
 		document.cookie='MirBody=; expires=Thu, 01-Jan-1970 00:00:00; ';
+		if(bodyObj.addBehavior){
+			//bahavior版（IE依存）
+			if(!bodyObj.getAttribute('MireilleBody'))bodyObj.addBehavior('#default#userData');
+			bodyObj.setAttribute('MireilleBody','');
+			bodyObj.save('MireilleBody');
+		}
 		alert('一時保存されていた本文データを削除しました');
 		return;
 	}else if(bodyObj.addBehavior){
@@ -218,32 +224,33 @@ $CF{'wrtfm'}=<<'_CONFIG_';
 <DIV class="center"><TABLE border="2" cellspacing="0" class="write" summary="MainForm">
 <COL span="3">
 <THEAD><TR><TH colspan="3" class="caption"><A name="Form"></A>$DT{'caption'}</TH></TR></THEAD>
+
 <TBODY>
-<TR title="subJect\n記事の題名を入力します\n最高全角100文字までです">
+<TR title="subJect&#10;記事の題名を入力します&#10;最高全角100文字までです">
 <TH class="item">
 <LABEL accesskey="j" for="subject">■題名(<SPAN class="ak">J</SPAN>)：</LABEL>
 </TH>
 <TD class="input">
 <INPUT type="text" name="subject" id="subject" maxlength="70" value="$DT{'subject'}">
 </TD>
-<TH class="item" title="Icon\nアイコンを選択します" style="text-align:center">
-<LABEL accesskey="i" for="icon">■ <A href="index.cgi?icct" title="アイコン見本\n新しい窓を開きます" target="_blank">アイコン</A>（<KBD class="ak">Ｉ</KBD>）■</LABEL>
+<TH class="item" title="Icon&#10;アイコンを選択します" style="text-align:center">
+<LABEL accesskey="i" for="icon">■ <A href="index.cgi?icct" title="アイコン見本&#10;新しい窓を開きます" target="_blank">アイコン</A>（<KBD class="ak">Ｉ</KBD>）■</LABEL>
 </TH>
 </TR>
-<TR title="Name\n名前を入力します（必須）\n最高全角50文字までです">
+<TR title="Name&#10;名前を入力します（必須）&#10;最高全角50文字までです">
 <TH class="item">
 <LABEL accesskey="n" for="name">■名前(<SPAN class="ak">N</SPAN>)：</LABEL>
 </TH>
 <TD class="input">
 <INPUT type="text" name="name" id="name" maxlength="50" value="$DT{'name'}">
-<LABEL accesskey="k" for="cook" title="cooKie\nクッキー保存のON/OFF">Coo<SPAN class="ak">k</SPAN>ie
+<LABEL accesskey="k" for="cook" title="cooKie&#10;クッキー保存のON/OFF">Coo<SPAN class="ak">k</SPAN>ie
 <INPUT name="cook" id="cook" type="checkbox" checked></LABEL>
 </TD>
 <TD rowspan="4" style="margin:0;text-align:center;vertical-align:middle" title="Icon Preview">
 <IMG name="Preview" id="Preview" src="$CF{'icon'}$DT{'icon'}" alt="" title="$DT{'icon'}">
 </TD>
 </TR>
-<TR title="e-maiL\nメールアドレスを入力します">
+<TR title="e-maiL&#10;メールアドレスを入力します">
 <TH class="item">
 <LABEL accesskey="l" for="email">■E-mail(<SPAN class="ak">L</SPAN>)：</LABEL>
 </TH>
@@ -251,7 +258,7 @@ $CF{'wrtfm'}=<<'_CONFIG_';
 <INPUT type="text" name="email" id="email" maxlength="100" value="$DT{'email'}">
 </TD>
 </TR>
-<TR title="hOme\n自分のサイトのURLを入力します">
+<TR title="hOme&#10;自分のサイトのURLを入力します">
 <TH class="item">
 <LABEL accesskey="o" for="home">■ホーム(<SPAN class="ak">O</SPAN>)：</LABEL>
 </TH>
@@ -259,14 +266,14 @@ $CF{'wrtfm'}=<<'_CONFIG_';
 <INPUT type="text" name="home" id="home" maxlength="80" value="$DT{'home'}">
 </TD>
 </TR>
-<TR title="Password\n削除/修正時に使用するパスワードを入力します（必須）\n最高半角24文字までです">
+<TR title="Password&#10;削除/修正時に使用するパスワードを入力します（必須）&#10;最高半角24文字までです">
 <TH class="item">
 <LABEL accesskey="p" for="pass">■パスワード(<SPAN class="ak">P</SPAN>)：</LABEL>
 </TH>
 <TD class="input">
 <INPUT type="password" name="pass" id="pass" maxlength="24" value="$DT{'pass'}">
 　
-<SPAN title="Color\n本文の色を入力します">
+<SPAN title="Color&#10;本文の色を入力します">
 <SPAN class="item">
 <LABEL accesskey="c" for="color">■色(<SPAN class="ak">C</SPAN>)：</LABEL>
 </SPAN>
@@ -276,26 +283,28 @@ $CF{'wrtfm'}=<<'_CONFIG_';
 </SPAN>
 </TD>
 </TR>
-<TR title="coMmand\n専用アイコンを始めとする拡張命令を使う場合に使用します">
+<TR title="coMmand&#10;専用アイコンを始めとする拡張命令を使う場合に使用します">
 <TH class="item">
 <LABEL accesskey="m" for="cmd">■コマンド(<SPAN class="ak">M</SPAN>)：</LABEL>
 </TH>
 <TD class="input">
 <INPUT type="text" name="cmd" id="cmd" value="$DT{'cmd'}">
 </TD>
-<TD class="input" title="Icon\nアイコンを選択します">
+<TD class="input" title="Icon&#10;アイコンを選択します">
 @{[&iptico($DT{'icon'})]}
 </TD>
 </TR>
 </TBODY>
 
-<TBODY title="Body\n記事の本文を入力します\n全角約10000文字までです\n使用できるタグはヘルプを参照してください">
+<TBODY title="Body&#10;記事の本文を入力します&#10;全角約10000文字までです&#10;使用できるタグはヘルプを参照してください">
 <TR><TH class="item" colspan="3" style="text-align:center"><LABEL accesskey="b"
  for="body">■ 本文(<SPAN class="ak">B</SPAN>) ■</LABEL></TH></TR>
-<TR><TD colspan="3" style="text-align:center"><TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD>
+<TR><TD colspan="3" style="text-align:center">
+<TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD>
 </TR></TBODY>
 
-<TBODY><TR title="Submit\n記事を投稿します"><TD colspan="3" class="foot">
+<TBODY><TR title="Submit&#10;記事を投稿します">
+<TD colspan="3" class="foot">
 <INPUT type="submit" class="submit" accesskey="s" value="投稿する">
 <!-- <INPUT type="reset" class="reset" value="リセット"> -->
 <INPUT type="button" class="button" accesskey="," value="一時保存," onclick="saveBodyCk()" onkeypress="saveBodyCk()">
@@ -315,37 +324,37 @@ $CF{'resfm'}=<<'_CONFIG_';
 <COL span="3">
 <THEAD><TR><TH colspan="3" class="caption"><A name="Form"></A>$DT{'caption'}</TH></TR></THEAD>
 
-<TBODY title="Body\n記事の本文を入力します\n全角約10000文字までです\n使用できるタグはヘルプを参照してください">
+<TBODY title="Body&#10;記事の本文を入力します&#10;全角約10000文字までです&#10;使用できるタグはヘルプを参照してください">
 <TR><TH class="item" colspan="3" style="text-align:center"><LABEL accesskey="b"
  for="body">■ 本文(<SPAN class="ak">B</SPAN>) ■</LABEL></TH></TR>
-<TR><TD colspan="3" style="text-align:center"><TEXTAREA name="body" id="body" cols="80" rows="8"
->$DT{'body'}</TEXTAREA></TD>
+<TR><TD colspan="3" style="text-align:center">
+<TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD>
 </TR></TBODY>
 
 <TBODY>
-<TR title="subJect\n記事の題名を入力します\n最高全角100文字までです">
+<TR title="subJect&#10;記事の題名を入力します&#10;最高全角100文字までです">
 <TH class="item"><LABEL accesskey="j" for="subject">■題名(<SPAN class="ak">J</SPAN>)：</LABEL></TH>
 <TD class="input">
 <INPUT type="text" name="subject" id="subject" maxlength="70" value="$DT{'subject'}">
 </TD>
-<TH class="item" title="Icon\nアイコンを選択します" style="text-align:center">
-<LABEL accesskey="i" for="icon">■ <A href="index.cgi?icct" title="アイコン見本\n新しい窓を開きます" target="_blank">アイコン</A>（<KBD class="ak">Ｉ</KBD>）■</LABEL>
+<TH class="item" title="Icon&#10;アイコンを選択します" style="text-align:center">
+<LABEL accesskey="i" for="icon">■ <A href="index.cgi?icct" title="アイコン見本&#10;新しい窓を開きます" target="_blank">アイコン</A>（<KBD class="ak">Ｉ</KBD>）■</LABEL>
 </TH>
 </TR>
-<TR title="Name\n名前を入力します（必須）\n最高全角50文字までです">
+<TR title="Name&#10;名前を入力します（必須）&#10;最高全角50文字までです">
 <TH class="item">
 <LABEL accesskey="n" for="name">■名前(<SPAN class="ak">N</SPAN>)：</LABEL>
 </TH>
 <TD class="input">
 <INPUT type="text" name="name" id="name" maxlength="50" value="$DT{'name'}">
-<LABEL accesskey="k" for="cook" title="cooKie\nクッキー保存のON/OFF">Coo<SPAN class="ak">k</SPAN>ie
+<LABEL accesskey="k" for="cook" title="cooKie&#10;クッキー保存のON/OFF">Coo<SPAN class="ak">k</SPAN>ie
 <INPUT name="cook" id="cook" type="checkbox" checked></LABEL>
 </TD>
 <TD rowspan="4" style="margin:0;text-align:center;vertical-align:middle" title="Icon Preview">
 <IMG name="Preview" id="Preview" src="$CF{'icon'}$DT{'icon'}" alt="" title="$DT{'icon'}">
 </TD>
 </TR>
-<TR title="e-maiL\nメールアドレスを入力します">
+<TR title="e-maiL&#10;メールアドレスを入力します">
 <TH class="item">
 <LABEL accesskey="l" for="email">■E-mail(<SPAN class="ak">L</SPAN>)：</LABEL>
 </TH>
@@ -353,7 +362,7 @@ $CF{'resfm'}=<<'_CONFIG_';
 <INPUT type="text" name="email" id="email" maxlength="100" value="$DT{'email'}">
 </TD>
 </TR>
-<TR title="hOme\n自分のサイトのURLを入力します">
+<TR title="hOme&#10;自分のサイトのURLを入力します">
 <TH class="item">
 <LABEL accesskey="o" for="home">■ホーム(<SPAN class="ak">O</SPAN>)：</LABEL>
 </TH>
@@ -361,14 +370,14 @@ $CF{'resfm'}=<<'_CONFIG_';
 <INPUT type="text" name="home" id="home" maxlength="80" value="$DT{'home'}">
 </TD>
 </TR>
-<TR title="Password\n削除/修正時に使用するパスワードを入力します（必須）\n最高半角24文字までです">
+<TR title="Password&#10;削除/修正時に使用するパスワードを入力します（必須）&#10;最高半角24文字までです">
 <TH class="item">
 <LABEL accesskey="p" for="pass">■パスワード(<SPAN class="ak">P</SPAN>)：</LABEL>
 </TH>
 <TD class="input">
 <INPUT type="password" name="pass" id="pass" maxlength="24" value="$DT{'pass'}">
 　
-<SPAN title="Color\n本文の色を入力します">
+<SPAN title="Color&#10;本文の色を入力します">
 <SPAN class="item">
 <LABEL accesskey="c" for="color">■色(<SPAN class="ak">C</SPAN>)：</LABEL>
 </SPAN>
@@ -378,20 +387,21 @@ $CF{'resfm'}=<<'_CONFIG_';
 </SPAN>
 </TD>
 </TR>
-<TR title="coMmand\n専用アイコンを始めとする拡張命令を使う場合に使用します">
+<TR title="coMmand&#10;専用アイコンを始めとする拡張命令を使う場合に使用します">
 <TH class="item">
 <LABEL accesskey="m" for="cmd">■コマンド(<SPAN class="ak">M</SPAN>)：</LABEL>
 </TH>
 <TD class="input">
 <INPUT type="text" name="cmd" id="cmd" value="$DT{'cmd'}">
 </TD>
-<TD class="input" title="Icon\nアイコンを選択します">
+<TD class="input" title="Icon&#10;アイコンを選択します">
 @{[&iptico($DT{'icon'})]}
 </TD>
 </TR>
 </TBODY>
 <TBODY>
-<TR title="Submit\n記事を投稿します"><TD colspan="3" class="foot">
+<TR title="Submit&#10;記事を投稿します">
+<TD colspan="3" class="foot">
 <INPUT type="submit" class="submit" accesskey="s" value="投稿する">
 <!-- <INPUT type="reset" class="reset" value="リセット"> -->
 <INPUT type="button" class="button" accesskey="," value="一時保存," onclick="saveBodyCk()" onkeypress="saveBodyCk()">
@@ -441,7 +451,7 @@ $	この記事の情報
 	#いよいよ出力だよ
 	print<<"_HTML_";
 <DIV class="thread" title="$DT{'i'}番スレッド">
-<TABLE class="subject" summary="$DT{'i'}番スレッド" width="100%"><TR>
+<TABLE cellspacing="0" class="subject" summary="$DT{'i'}番スレッド"><TR>
 <TH class="subject"><H2 class="subject"><A name="art$DT{'i'}" id="art$DT{'i'}" title="$DT{'i'}番スレッド">$DT{'subject'}</A></H2></TH>
 <TD class="arrow">
 <A name="nav_n$DT{'ak'}" href="#nav_n@{[$DT{'ak'}-1]}" title="上のスレッドへ">▲</A>
@@ -510,7 +520,8 @@ _HTML_
 	<SPAN class="revise" title="$DT{'i'}番スレッドの子記事$DT{'j'}を修正"
 	><A href=".?rvs=$DT{'i'}-$DT{'j'}">【修正】</A></SPAN></TD>
 </TR>
-<TR><TD class="icon"><IMG src="$CF{'icon'}$DT{'icon'}" alt="" title="$DT{'icon'}"></TD><TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD></TR>
+<TR><TD class="icon"><IMG src="$CF{'icon'}$DT{'icon'}" alt="" title="$DT{'icon'}"></TD>
+	<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD></TR>
 </TABLE>
 
 _HTML_
@@ -776,8 +787,7 @@ $ デフォルト指定にしたい色名
 	if('input'eq$CF{'colway'}){
 		return<<"_HTML_";
 <INPUT type="text" name="color" id="color" maxlength="20" style="ime-mode:disabled"
- title="Color\n本文の色を入力します\n（#0f0、#00ff00、rgb(0,255,0)、WebColor(greenとか)\nのどの形式でも使えます"
- value="$_[0]">
+ title="Color&#10;本文の色を入力します&#10;（#0f0、#00ff00、rgb(0,255,0)、WebColor(greenとか)&#10;のどの形式でも使えます" value="$_[0]">
 _HTML_
 	}else{
 		my$list=$CF{'colorList'}=~/\S/o?$CF{'colorList'}:<<"_HTML_";#1.2.5以下のindex.cgiとの互換性のため
