@@ -2,6 +2,7 @@
 # 'Mireille' Bulletin Board System
 # - Mireille Manpage -
 #
+# $Name$
 # $Revision$
 # "This file is written in shift_jis, CRLF." 空
 # http://www.airemix.com/
@@ -95,7 +96,8 @@ index.cgiの中の $CF{'conenc'}='|gzip -cfq9'; という所を $CF{'conenc'}=''; として
 
 #------------------------------------------------------------------------------#
 ◇Mireille History
-2002-11-00 Revision 1.2.3.9
+2002-11-15 Revision 1.2.4
+版付け規則を変更
 +core.cgi,style.pl
  一スレッドあたりの最大子記事数を制限する機能を実装
 +style.css

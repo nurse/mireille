@@ -1988,8 +1988,7 @@ BEGIN{
 	# Revision Number
 	$CF{'Core'}=q$Revision$;
 	$CF{'CoreName'}=q$Name$;
-	$CF{'Core'}=~/(?:\d+.)+(\d+)/o;
-	$CF{'Version'}='1.2.4';
+	$CF{'Version'}=join('.',($CF{'CoreName'}=~/(\d+)/go));
 }
 
 1;
