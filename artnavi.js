@@ -22,16 +22,17 @@ window.onload=artnavi;
 // 初期設定
 var ncX=0,ncY=0; //NaviClientX/Y:記事ナビのクライアント領域（ウィンドウ）上の座標
 var maW=300,miW=180; //最大化横幅、最小化横幅
-var deX=-maW,deY=50; //記事ナビのクライアント領域（ウィンドウ）上の初期座標
+var deX=-1,deY=50; //記事ナビのクライアント領域（ウィンドウ）上の初期座標
 var drag_obj; //D&D用オブジェクト
-var docele; //IE標準準拠モード時に、有効なscrollTop/scrollLeftプロパティを持つオブジェクトを入れる
+var scrollObj; //IE標準準拠モード時に、有効なscrollTop/scrollLeftプロパティを持つオブジェクトを入れる
 var naviwind,navibody;
 var emufixedid; //position:fixed仮想化IDの格納用
+var docmentObj; //clientWidthやclientHeightを取得するためのオブジェクト
 
 function artnavi(p){
 	//初期化
 	if(!window.opera&&document.all){
-		docele=(document.compatMode=="CSS1Compat")?document.documentElement:document.body;
+		scrollObj=document.compatMode&&document.compatMode=='CSS1Compat'?document.documentElement:document.body;
 		naviwind=document.all('naviwind');
 //		navititl=document.all('navititl');
 //		navibutt=document.all('navibutt');
@@ -49,18 +50,28 @@ function artnavi(p){
 //		navibutt=document.getElementById('navibutt');
 		navibody=document.getElementById('navibody');
 	}else return false;
+	docmentObj=
+		document.documentElement&&document.documentElement.clientHeight&&document.body.clientHeight
+		&&document.documentElement.clientHeight<document.body.clientHeight
+		?document.documentElement:document.body;
 	
-	if(p=='popup'||!document.cookie.match(/(^|; )ArtNavi=([^;]+)/))refresh('popup');
-	else{
+	if(p=='popup'||!document.cookie.match(/(^|; )ArtNavi=([^;]+)/)){
+		naviwind.style.width=maW+'px';
+		resetXY(1);
+		naviwind.style.display=navibody.style.display='block';
+		if(document.cookie.match(/(^|; )ArtNavi=([^;]+)/))setcookie();
+	}else{
 		//ページ間移動
 		var cook=unescape(RegExp.$2);
-		ncX=(cook.match(/\tncX=\t(\d+);\t/))?parseInt(RegExp.$1):0;
-		ncY=(cook.match(/\tncY=\t(\d+);\t/))?parseInt(RegExp.$1):0;
-		naviwind.style.display=(cook.match(/\tnaviwinddisplay=\t(\w+);\t/))?RegExp.$1:'block';
 		navibody.style.display=(cook.match(/\tnavibodydisplay=\t(\w+);\t/))?RegExp.$1:'block';
-		if(navibody.style.display=='none')naviwind.style.width=miW+'px';
-		naviwind.style.left=(docele?docele.scrollLeft:0)+ncX+'px';
-		naviwind.style.top =(docele?docele.scrollTop:0) +ncY+'px';
+		naviwind.style.width=(navibody.style.display=='none'?miW:maW)+'px';
+		ncX=(cook.match(/\tncX=\t(\d+);\t/))?parseInt(RegExp.$1):
+			(deX<0?docmentObj.clientWidth +deX+1-naviwind.offsetWidth :deX);
+		ncY=(cook.match(/\tncY=\t(\d+);\t/))?parseInt(RegExp.$1):
+			(deY<0?docmentObj.clientHeight+deY+1-naviwind.offsetHeight:deY);
+		naviwind.style.left=(scrollObj?scrollObj.scrollLeft:0)+ncX+'px';
+		naviwind.style.top =(scrollObj?scrollObj.scrollTop:0) +ncY+'px';
+		naviwind.style.display=(cook.match(/\tnaviwinddisplay=\t(\w+);\t/))?RegExp.$1:'block';
 	}
 	window.onresize=refresh;
 	return true;
@@ -71,24 +82,27 @@ function artnavi(p){
 // フレームサイズ変更のときは再描画
 function refresh(p){
 	if(p=='popup');
-	else if(ncX+naviwind.offsetWidth >document.body.clientWidth);
-	else if(ncY+naviwind.offsetHeight>document.body.clientlHeight);
+	else if(ncX>docmentObj.clientWidth -naviwind.offsetWidth );
+	else if(ncY>docmentObj.clientHeight-naviwind.offsetHeight);
 	else return false;
-	ncX=deX<0?document.body.clientWidth +deX-5+(navibody.style.display=='none'?maW-miW:0):deX;
-	ncY=deY<0?document.body.clientHeight+deY-5:deY;
-	if(docele){
-		naviwind.style.left=(docele.scrollLeft+ncX+naviwind.offsetWidth <document.body.scrollWidth ?
-			docele.scrollLeft+ncX:document.body.scrollWidth -naviwind.offsetWidth )+'px';
-		naviwind.style.top =(docele.scrollTop +ncY+naviwind.offsetHeight<document.body.scrollHeight?
-			docele.scrollTop +ncY:document.body.scrollHeight-naviwind.offsetHeight)+'px';
-	}else{
-		naviwind.style.left=(ncX+naviwind.offsetWidth <document.body.scrollWidth ?
-			ncX:document.body.scrollWidth -naviwind.offsetWidth )+'px';
-		naviwind.style.top =(ncY+naviwind.offsetHeight<document.body.scrollHeight?
-			ncY:document.body.scrollHeight-naviwind.offsetHeight)+'px';
-	}
-	naviwind.style.display='block';
+	resetXY();
 	if(document.cookie.match(/(^|; )ArtNavi=([^;]+)/))setcookie();
+	return true;
+}
+
+
+//--------------------------------------
+// 記事ナビを表示する座標を再設定
+function resetXY(){
+	ncX=deX<0?docmentObj.clientWidth +deX+1-naviwind.offsetWidth :deX;
+	ncY=deY<0?docmentObj.clientHeight+deY+1-naviwind.offsetHeight:deY;
+	if(scrollObj){
+		naviwind.style.left=scrollObj.scrollLeft+ncX+'px';
+		naviwind.style.top =scrollObj.scrollTop +ncY+'px';
+	}else{
+		naviwind.style.left=ncX+'px';
+		naviwind.style.top =ncY+'px';
+	}
 	return true;
 }
 
@@ -125,7 +139,7 @@ function view(e,id){
 		if(id=='naviwind'){
 		}else if(id=='navibody'){
 			ncX=ncX-(maW-miW);
-			naviwind.style.left=(docele?docele.scrollLeft:0)+ncX+'px';
+			naviwind.style.left=(scrollObj?scrollObj.scrollLeft:0)+ncX+'px';
 			naviwind.style.width=maW+'px';
 		}
 		viewobj.style.display='block';
@@ -135,7 +149,7 @@ function view(e,id){
 		}else if(id=='navibody'){
 			naviwind.style.width=miW+'px';
 			ncX=ncX+maW-miW;
-			naviwind.style.left=(docele?docele.scrollLeft:0)+ncX+'px';
+			naviwind.style.left=(scrollObj?scrollObj.scrollLeft:0)+ncX+'px';
 		}
 	}
 	setcookie();
@@ -153,7 +167,7 @@ function setcookie(){
 		+";\tnavibodydisplay=\t"+navibody.style.display
 		+";\t");
 	var expiresDate=new Date();
-	expiresDate.setTime(expiresDate.getTime()+60*60*24*7*1000);
+	expiresDate.setTime(expiresDate.getTime()+75*24*60*60); //人の噂も七十五日
 	data+="; expires="+expiresDate.toGMTString();
 	document.cookie="ArtNavi="+data;
 	return true;
@@ -189,8 +203,8 @@ function doDrag(e){
 }
 function endDrag(){
 	if(!drag_obj)return false;
-	ncX=parseInt(drag_obj.style.left)-(docele?docele.scrollLeft:0);
-	ncY=parseInt(drag_obj.style.top) -(docele?docele.scrollTop:0);
+	ncX=parseInt(drag_obj.style.left)-(scrollObj?scrollObj.scrollLeft:0);
+	ncY=parseInt(drag_obj.style.top) -(scrollObj?scrollObj.scrollTop:0);
 	drag_obj=null;
 	document.onmousemove=null;
 	document.onmouseup=null;
@@ -235,11 +249,13 @@ emufixedid=null;
 function emufixed(){
 	//画面に対して記事ナビを固定（position:fixed;を力技で）
 	if(emufixedid)clearTimeout(emufixedid);
-	if(docele){
-		naviwind.style.left=(docele.scrollLeft+ncX+naviwind.offsetWidth <document.body.scrollWidth ?
-			docele.scrollLeft+ncX:document.body.scrollWidth -naviwind.offsetWidth )+'px';
-		naviwind.style.top =(docele.scrollTop +ncY+naviwind.offsetHeight<document.body.scrollHeight?
-			docele.scrollTop +ncY:document.body.scrollHeight-naviwind.offsetHeight)+'px';
+	if(scrollObj){
+		if( ncX>docmentObj.scrollWidth -naviwind.offsetWidth -scrollObj.scrollLeft)
+			ncX=docmentObj.scrollWidth -naviwind.offsetWidth -scrollObj.scrollLeft;
+		if( ncY>docmentObj.scrollHeight-naviwind.offsetHeight-scrollObj.scrollTop )
+			ncY=docmentObj.scrollHeight-naviwind.offsetHeight-scrollObj.scrollTop ;
+		naviwind.style.left=scrollObj.scrollLeft+ncX+'px';
+		naviwind.style.top =scrollObj.scrollTop +ncY+'px';
 	}else return false;
 	emufixedid=null;
 	return true;
