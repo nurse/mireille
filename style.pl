@@ -77,7 +77,7 @@ $CF{'jsWritingForms'}=<<"_CONFIG_";
 <SCRIPT type="text/javascript" defer>
 <!--
 var iconDirectory='$CF{'icon'}';
-var iconSetting=@{[$CF{'absoluteIcon'}?1:0]}+@{[$CF{'relativeIcon'}?1:0]}*2
+var iconSetting=@{[$CF{'absoluteIcon'}?1:0]}+@{[$CF{'relativeIcon'}?1:0]}*2;
 _CONFIG_
 $CF{'jsWritingForms'}.=<<'_CONFIG_';
 /*========================================================*/
@@ -92,6 +92,7 @@ function changePreviewIcon(){
 		cmd =document.getElementById('cmd');
 	}else return false;
 	var preview=document.images['Preview'];
+	if(!preview)return false;
 	
 	if(!cmd||!cmd.value){
 		icon.disabled=false;
@@ -449,6 +450,8 @@ $CF{'resfm'}=<<'_CONFIG_';
 </TD></TR>
 </TBODY>
 </TABLE>
+</DIV>
+
 <DIV class="center"><TABLE class="note"><TR><TD><UL class="note">
 <LI>上に表示されているスレッド【No.$DT{'i'}】への返信を行います。</LI>
 <LI>本文以外ではタグは一切使用できません。</LI>
@@ -652,9 +655,9 @@ sub prtfrm{
 	my%DT=%CK;
 
 	#アイコンの初期設定
-	($CF{'prtitm'}=~/\bicon\b/o)&&(&iptico($DT{'icon'}));
+	&iptico($DT{'icon'})if$CF{'prtitm'}=~/\bicon\b/o;
 	#色の初期設定
-#	($CF{'prtitm'}=~/\bcolor\b/o)&&(&iptcol($DT{'color'}));
+#	&iptcol($DT{'color'})if$CF{'prtitm'}=~/\bcolor\b/o;
 
 =item この初期設定の意義
 
@@ -678,10 +681,10 @@ $DT{'icon'}が空だったら、もしくは存在しないアイコンだったらどうしましょう
 		$DT{'Sys'}.=qq(<INPUT name="oldps" type="hidden" value="$DT{'oldps'}">\n);
 	}else{
 		$DT{'caption'}='■ 新規送信フォーム ■';
-		$DT{'home'}||($DT{'home'}='http://');
+		$DT{'home'}='http://'unless$DT{'home'};
 		$DT{'Sys'}.=qq(<INPUT name="j" type="hidden" value="0">\n);
 	}
-	$DT{'Sys'}&&($wrtfm=~s/<INPUT/$DT{'Sys'}<INPUT/io);
+	$wrtfm=~s/<INPUT/$DT{'Sys'}<INPUT/io if$DT{'Sys'};
 	
 	print qq(<FORM accept-charset="euc-jp" id="artform" method="post" action="index.cgi">\n);
 	eval qq(print<<"_HTML_";\n$wrtfm\n_HTML_);
@@ -697,9 +700,9 @@ sub chdfrm{
 	my%DT=%CK;
 	
 	#アイコンの初期設定
-	($CF{'chditm'}=~/\bicon\b/o)&&(&iptico($DT{'icon'}));
+	&iptico($DT{'icon'})if$CF{'chditm'}=~/\bicon\b/o;
 	#色の初期設定
-#	($CF{'chditm'}=~/\bcolor\b/o)&&(&iptcol($DT{'color'}));
+#	&iptcol($DT{'color'})if$CF{'chditm'}=~/\bcolor\b/o;
 	
 	#デザイン読み込み
 	my$resfm=$CF{'resfm'};
@@ -713,10 +716,10 @@ sub chdfrm{
 	}else{
 		$DT{'caption'}='■ 返信フォーム ■';
 	}
-	$DT{'Sys'}&&($resfm=~s/<INPUT/$DT{'Sys'}<INPUT/io);
+	$resfm=~s/<INPUT/$DT{'Sys'}<INPUT/io if$DT{'Sys'};
 
 	#項目の初期設定
-	$DT{'home'}||($DT{'home'}='http://'); #http://だけ入れておく
+	$DT{'home'}='http://'unless$DT{'home'}; #http://だけ入れておく
 	#note01:Resは題名ないことも
 	if($CF{'chditm'}!~/\bsubject\b/o){
 		$DT{'subject'}='disabled';
@@ -763,12 +766,9 @@ $ 記事ナビのモード
 	return if defined$::CF{'artnavi'}&&!$::CF{'artnavi'};
 
 	#Netscape4は記事ナビ無し
-	if($::IN{'hua'}=~/^Mozilla\/4.*(?:;\s*|\()[UI](?:;|\))/){
-		$::CF{'artnavi'}=0;
-		return; #記事ナビを出力しない
-	}
+	return($::CF{'artnavi'}=0)if$::IN{'hua'}=~/^Mozilla\/4.*(?:;\s*|\()[UI](?:;|\))/;
 	
-	unless($_[0]){
+	unless(@_){
 		#記事ナビ本体
 		#------------------------------------------------------------------------------------
 		#ブラウザ判定
@@ -806,14 +806,13 @@ $ 記事ナビのモード
 <SCRIPT type="text/javascript" src="$::CF{'navjs'}" defer></SCRIPT>
 _HTML_
 		#------------------------------------------------------------------------------------
-		return;
 	}elsif('button'eq$_[0]){
 		print<<"_HTML_";
 <DIV><BUTTON onclick="setTimeout(&#34;artnavi('popup')&#34;,500);return false;" accesskey="n"
 onkeypress="setTimeout(&#34;artnavi('popup')&#34;,500);return false;">記事ナビ(<SPAN class="ak">N</SPAN>)</BUTTON></DIV>
 _HTML_
-		return;
 	}
+	return;
 }
 
 #-------------------------------------------------
