@@ -70,7 +70,7 @@ sub main{
 	#¥Û¡¼¥à
 	defined$IN{'home'}&&&locate($CF{'home'});
 	#µ­»öÉ½¼¨
-	&showIndex;
+	&showCover;
 	exit;
 }
 
@@ -81,9 +81,9 @@ sub main{
 # mainÄ¾²¼¤Î¥µ¥Ö¥ë¡¼¥Á¥ó·²
 
 #-------------------------------------------------
-# Index µ­»öÉ½¼¨
+# É½»æÉ½¼¨
 #
-sub showIndex{
+sub showCover{
 	#-----------------------------
 	#Cookie¼èÆÀ¡õ½ñ¤­¹þ¤ß
 	&getCookie?&setCookie(\%CK):($CK{'time'}=$^T-$CF{'newnc'});
@@ -394,7 +394,7 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 		if(@error){
 			&showHeader;
 			print<<"_HTML_";
-<H2 class="mode">- Write Error -</H2>
+<H2 class="heading2">- Write Error -</H2>
 <P>@{[join('¤È',map{qq(<SPAN style="color:#f00">$_</SPAN>)}@error)]}¤ò¤Á¤ã¤ó¤ÈÆþÎÏ¤·¤Æ¤¯¤À¤µ¤¤</P>
 _HTML_
 			printf '<P>%s</P>',join '<BR>',@message if@message;
@@ -455,9 +455,9 @@ _HTML_
 				}else{
 					$result.=$tag_tmp;
 				}
-				if($tag_tmp=~/^\03(XMP|PLAINTEXT|SCRIPT)(?![\dA-Za-z])/io){
-					$str=~/(.*?)(?:\03\/$1(?![\dA-Za-z])$tag_regex_|$)/gsi;
-					(my$tag_tmp=$1)=~tr/\01\02/"'/;
+				if($tag_tmp=~/^<(XMP|PLAINTEXT|SCRIPT)(?![\dA-Za-z])/io){
+					$str=~/(.*?)(?:<\/$1(?![\dA-Za-z])$tag_regex_|$)/gsi;
+					(my$tag_tmp=$1)=~tr/\01-\04/"'<>/;
 					$result.=$tag_tmp;
 				}
 			}
@@ -468,7 +468,7 @@ _HTML_
 		
 		#¸ì¶ç¶¯Ä´
 		if($CF{'strong'}&&!$EX{'nostrong'}){
-			my%ST=map{(my$str=$_)=~tr/"'<>&/\01-\05/;$str}($CF{'strong'}=~/(\S+)\s+(\S+)/go);
+			my%ST=map{(my$s=$_)=~tr/"'<>&/\01-\05/;$s}($CF{'strong'}=~/(\S+)\s+(\S+)/go);
 			if($CF{'strong'}=~/^ /o){
 				#³ÈÄ¥¸ì¶ç¶¯Ä´
 				for(sort{length$b<=>length$a}keys%ST){
@@ -531,38 +531,14 @@ _HTML_
 		.q{;:".\\\\\[\]\00-\037\x80-\xff])|\[(?:[^\\\\\x80-\xff\n\015\[\]]|\\\\[}
 		.q{^\x80-\xff])*\]))+};
 			#¼Â²ÔÆ°Éô
-			my$tag_regex_=q{[^"'<>]*(?:"[^"]*"[^"'<>]*|'[^']*'[^"'<>]*)*(?:>|(?=<)|$(?!\n))};
-			my$comment_tag_regex='<!(?:--[^-]*-(?:[^-]+-)*?-(?:[^>-]*(?:-[^>-]+)*?)??)*(?:>|$(?!\n)|--.*$)';
-			my$tag_regex=qq{$comment_tag_regex|<$tag_regex_};
-			my$text_regex=q{[^<]*};
-			my$result='';
-			my$skip=0;
-			my$pos=length$str;
-			while($str=~/($text_regex)($tag_regex)?/gso){
-				''eq$1&&!$2&&last;
-				$pos=pos$str;
-				my$text_tmp=$1;
-				my$tag_tmp=$2;
-				if($skip){
-					$result.=$text_tmp.$tag_tmp;
-					$skip=0 if$tag_tmp=~/^<\/[aA](?!\w)/o;
-				}else{
-					$text_tmp=~s{($http_URL_regex|$ftp_URL_regex|($mail_regex))}
-					{
-						my$href=$2?'mailto:':'';
-						my$text=$1;
-						($href.=$text)=~tr/"/\01/;
-						qq{<A class="autolink" href="$href" target="_blank">$text</A>}
-					}ego;
-					$result.=$text_tmp.$tag_tmp;
-					$skip=1 if$tag_tmp=~/^<[aA](?!\w)/o;
-					if($tag_tmp=~/^<(XMP|PLAINTEXT|SCRIPT)(?!\w)/i){
-						$str=~/(.*?(?:<\/$1(?!\w)$tag_regex_|$))/gis;
-						$result.=$1;
-					}
-				}
+			my$href_regex=qr{($http_URL_regex|$ftp_URL_regex|($mail_regex))};
+			my@isMail=('<A class="autolink" href="mailto:','<A class="autolink" href="');
+			$str=~s{((?:\G|>)[^<]*?)$href_regex}{$1$isMail[!$3]$2" target="_blank">$2</A>}go;
+			if($str=~/<(?:XMP|PLAINTEXT|SCRIPT)(?![0-9A-Za-z])/io){
+				#XMP/PLAINTEXT/SCRIPT¥¿¥°¤¬¤¢¤ë¤È¤­
+				$str=~s{(<(XMP|PLAINTEXT|SCRIPT)(?![0-9A-Za-z]).*?(?:<\/$2\s*>|$))}
+				{(my$element=$1)=~s/<A class="autolink"[^>]+>(.*?)<\/A>/$1/gos;$element}egios;
 			}
-			$str=$result.substr($str,$pos);
 		}else{
 			#Command:nolink
 		}
@@ -626,7 +602,7 @@ _HTML_
 			or length$IN{'j'}&&$zero[1]=~/(\d+):$crcOfThisArticle:($IN{'j'})/){
 			&showHeader;
 			print<<"_HTML_";
-<H2 class="mode">- Â¿½ÅÅê¹Æ¡© -</H2>
+<H2 class="heading2">- Â¿½ÅÅê¹Æ¡© -</H2>
 <DIV class="center">
 <P style="margin:0.6em">º£Åê¹Æ¤µ¤ì¤¿µ­»ö¤ÎÆâÍÆ¤Ï<A href="index.cgi?read=$1#art$1-$2" title="³ºÅöµ­»ö¤ò³ÎÇ§¤¹¤ë">Âè$1ÈÖ¥¹¥ì¥Ã¥É¤Î$2ÈÖÌÜ</A>¤ÈÆ±°ìÆâÍÆ¤À¤È»×¤ï¤ì¤Þ¤¹<BR>
 ³ºÅöµ­»ö¤ò³ÎÇ§¤·¤Æ¡¢Æ±°ìÆâÍÆ¤Ç¤Ê¤¤¾ì¹ç¤Ï¡¢²¼¤Î¥Õ¥©¡¼¥à¤Ç¾¯¤·½¤Àµ¤·¤Æ¤«¤éÅê¹Æ¤·¤Æ¤ß¤Æ¤¯¤À¤µ¤¤¡£</P>
@@ -756,7 +732,7 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 			#UserPass¤Ë¤è¤ë
 			unless(&mircrypt($DT{'time'},$IN{'oldps'},$DT{'pass'})){
 				&showHeader;
-				print qq(<H2 class="mode">Password Error</H2>\n);
+				print qq(<H2 class="heading2">Password Error</H2>\n);
 				%CK=%IN;
 				&rvsij;
 				print&getFooter;
@@ -823,7 +799,7 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 	#½ñ¤­¹þ¤ßÀ®¸ù¡õ¡Ö¼«Í³¤Ë½¤Àµ¤ò¤É¤¦¤¾¡×
 	&showHeader;
 	print<<"_HTML_";
-<H2 class="mode">- ½ñ¤­¹þ¤ß´°Î» -</H2>
+<H2 class="heading2">- ½ñ¤­¹þ¤ß´°Î» -</H2>
 <DIV class="center">
 <P style="margin:0.6em">°Ê²¼¤ÎÆâÍÆ¤ÇÂè$IN{'i'}ÈÖ¥¹¥ì¥Ã¥É¤Î$IN{'j'}ÈÖÌÜ¤Ë½ñ¤­¹þ¤ß¤Þ¤·¤¿¡£<BR>
 ¤³¤ì¤Ç¤è¤±¤ì¤Ð¤½¤Î¤Þ¤ÞTOP¤ä·Ç¼¨ÈÄ¤ËÌá¤Ã¤Æ¤¯¤À¤µ¤¤¡£<BR>
@@ -855,9 +831,9 @@ _HTML_
 sub res{
 	&getCookie;
 	&showHeader;
-	print qq(<H2 class="mode">- µ­»öÊÖ¿®¥â¡¼¥É -</H2>\n)
+	print qq(<H2 class="heading2">- µ­»öÊÖ¿®¥â¡¼¥É -</H2>\n)
 	.qq(<DIV id="thread_div" style="border:dashed 1px #333;height:auto;overflow:visible;width:99%">\n)
-	.qq(<H3 class="mode">¤³¤Î¥¹¥ì¥Ã¥É¤Îº£¤Þ¤Ç¤ÎÆâÍÆ</H3>\n);
+	.qq(<H3 class="heading3">¤³¤Î¥¹¥ì¥Ã¥É¤Îº£¤Þ¤Ç¤ÎÆâÍÆ</H3>\n);
 	print"This thread$IN{'i'} is deleted."if"del"eq&showArticle(i=>$IN{'i'},ak=>1,res=>1);
 	print<<'_HTML_';
 </DIV>
@@ -935,14 +911,14 @@ $ Á°²ó¤Î½èÍý¤Î·ë²Ì
 	&showHeader;
 	my$mode='';
 	#¥â¡¼¥ÉÊ¬´ô
-	if(defined$IN{'rvs'}){$mode='rvs';print qq(<H2 class="mode">- µ­»ö½¤Àµ¥â¡¼¥É -</H2>\n);}
-	elsif(defined$IN{'del'}){$mode='del';print qq(<H2 class="mode">- µ­»öºï½ü¥â¡¼¥É -</H2>\n);}
-	else{print qq(<H2 class="mode">Something Wicked happend!(mode¤¬ÉÔÌÀ)</H2>).&getFooter;exit;}
-	#½èÍýÀ®¸ù-Index¤ËÌá¤ë
+	if(defined$IN{'rvs'}){$mode='rvs';print qq(<H2 class="heading2">- µ­»ö½¤Àµ¥â¡¼¥É -</H2>\n);}
+	elsif(defined$IN{'del'}){$mode='del';print qq(<H2 class="heading2">- µ­»öºï½ü¥â¡¼¥É -</H2>\n);}
+	else{print qq(<H2 class="heading2">Something Wicked happend!(mode¤¬ÉÔÌÀ)</H2>).&getFooter;exit;}
+	#½èÍýÀ®¸ù-Cover¤ËÌá¤ë
 	if($_[0]){
 		print<<"_HTML_";
 <DIV class="center">
-<H3 class="mode">$_[0]</H3>
+<H3 class="heading3">$_[0]</H3>
 <TABLE align="center" border="0" cellspacing="0" summary="BackMenu">
 <COL span="2" width="150">
 <TR><TD><FORM action="index.cgi?read=$IN{'i'}#art$IN{'i'}-$IN{'j'}" method="get">
@@ -965,7 +941,7 @@ _HTML_
 <DIV class="center">$pgslct</DIV>
 
 <FORM id="List" method="post" action="index.cgi">
-<DIV class="center"><TABLE border="1" cellspacing="0" class="list" summary="List" width="80%">
+<DIV class="center"><TABLE border="1" cellspacing="0" class="section" summary="List" width="80%">
 <COL style="width:5em">
 <COL style="width:17em">
 <COL>
@@ -1083,7 +1059,7 @@ sub rvsArticle{
 			#Ìµ¤¤¤Ê¤éÆþÎÏ¤·¤Æ
 			&showHeader;
 			print<<"_HTML_";
-<H2 class="mode">- Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Î¥Ñ¥¹¥ï¡¼¥ÉÇ§¾Ú -</H2>
+<H2 class="heading2">- Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Î¥Ñ¥¹¥ï¡¼¥ÉÇ§¾Ú -</H2>
 <FORM accept-charset="euc-jp" id="Revise" method="post" action="index.cgi">
 <TABLE cellspacing="2" summary="Revise" width="550">
 <COL width="50">
@@ -1106,7 +1082,7 @@ _HTML_
 	}
 	#Revise Main Routin
 	&showHeader;
-	print qq(<H2 class="mode">- Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Î½¤Àµ¥â¡¼¥É -</H2>\n);
+	print qq(<H2 class="heading2">- Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Î½¤Àµ¥â¡¼¥É -</H2>\n);
 	%CK=%DT;
 	@CK{qw(i j pass oldps)}=@IN{qw(i j pass oldps)};
 	&rvsij;
@@ -1133,7 +1109,7 @@ sub delArticle{
 				#ºï½ü¤¹¤ëÊýË¡Ìµ¤¤¤Ê¤éÆþÎÏ¤·¤Æ
 				&showHeader;
 				print<<"_HTML_";
-<H2 class="mode">- Âè$IN{'i'}ÈÖ¥¹¥ì¥Ã¥É¤Îºï½ü -</H2>
+<H2 class="heading2">- Âè$IN{'i'}ÈÖ¥¹¥ì¥Ã¥É¤Îºï½ü -</H2>
 <FORM accept-charset="euc-jp" id="Delete" method="post" action="index.cgi">
 <FIELDSET style="padding:0.5em;width:60%">
 <LEGEND>¥¹¥ì¥Ã¥É¤Îºï½üÊýË¡¤òÁª¤ó¤Ç¤¯¤À¤µ¤¤</LEGEND>
@@ -1184,7 +1160,7 @@ _HTML_
 #
 sub showArtSeek{
 	&showHeader;
-	print qq(<H2 class="mode">- ¸¡º÷¥â¡¼¥É -</H2>);
+	print qq(<H2 class="heading2">- ¸¡º÷¥â¡¼¥É -</H2>);
 	my%SK=split(/\s+/o,$CF{'sekitm'});
 	
 	if(length$IN{'seek'}){
@@ -1299,7 +1275,7 @@ sub showUserError{
 	my$message=shift();
 	&showHeader;
 	print<<"_HTML_";
-<H2 class="mode">- ¥¨¥é¡¼¤¬È¯À¸¤·¤Þ¤·¤¿ -</H2>
+<H2 class="heading2">- ¥¨¥é¡¼¤¬È¯À¸¤·¤Þ¤·¤¿ -</H2>
 <P>¤´ÉÔÊØ¤ò¤«¤±¤Æ¿½¤·Ìõ¤´¤¶¤¤¤Þ¤»¤ó<BR>
 <span class="warning">$message</span>¤¿¤á¡¢<BR>Àµ¾ï¤Ê½èÍý¤òÂ³¹Ô¤¹¤ë¤³¤È¤¬¤Ç¤­¤Þ¤»¤ó¤Ç¤·¤¿<BR>
 °Ê²¼¤ËÇ°¤Î¤¿¤áº£ÆþÎÏ¤µ¤ì¤¿¥Ç¡¼¥¿¤òÍåÎó¤·¤Æ¤ª¤­¤Þ¤¹<BR>
@@ -2177,16 +2153,14 @@ $ ¤É¤Î¤è¤¦¤Ê·Á¤ÇÊÖ¤¹¤«¤ÎÀßÄê
 
 	my$data=shift;
 	my$text=shift||'<IMG src="-!src!-" alt="" title="-!dir!-+-!file!-">';
-	my%DT=(dir=>$CF{'icon'},file=>'');
-	if($data->{'icon'}){
-		$DT{'file'}=$data->{'icon'};
-	}elsif($CF{'absoluteIcon'}&&$data->{'cmd'}=~/(?:^|;)absoluteIcon=([^;]*)/o){
+	my%DT=(dir=>$CF{'icon'},file=>$data->{'icon'});
+	if($CF{'absoluteIcon'}&&$data->{'cmd'}=~/(?:^|;)absoluteIcon=([^;]*)/o){
 		#ÀäÂÐ»ØÄê¥¢¥¤¥³¥ó
 		$DT{'dir'}='';
-		$DT{'file'}=$1;
+		$DT{'file'}||=$1;
 	}elsif($CF{'relativeIcon'}&&$data->{'cmd'}=~/(?:^|;)relativeIcon=([^;:.]*(?:\.[^;:.]+)*)/o){
 		#ÁêÂÐ»ØÄê¥¢¥¤¥³¥ó
-		$DT{'file'}=$1;
+		$DT{'file'}||=$1;
 	}
 	if($DT{'file'}){
 		$DT{'src'}=$DT{'dir'}.$DT{'file'};
@@ -2284,7 +2258,7 @@ $CF{'icls'}¤ÎºÇ½é¤Î°ìÊ¸»ú¤¬' '¡ÊÈ¾³Ñ¶õÇò¡Ë¤À¤Ã¤¿¾ì¹çÊ£¿ô¥ê¥¹¥È¥â¡¼¥É¤Ë¤Ê¤ê¤Þ¤¹
 		$_[0]=$2;
 	}
 	$_[0]=$CF{'icon'}.$_[0]unless$isAbsolute;
-	$isDisabled&&='disabled';
+	$isDisabled&&=' disabled';
 	$CF{'-CacheIconList'}=<<"_HTML_";
 <SELECT name="icon" id="icon" onchange="document.images['Preview'].src='$CF{'icon'}'+this.value;document.images['Preview'].title=this.value;"$opt$isDisabled>
 $iconlist</SELECT>
@@ -2627,7 +2601,7 @@ BEGIN{
 		};
 	}
 	# Version
-	$CF{'Version'}=join('.',q$Mireille: 1_2_9 $=~/\d+[a-z]?/go);
+	$CF{'Version'}=join('.',q$Mireille: 1_2_11 $=~/\d+[a-z]?/go);
 	($CF{'Core'}=q$Revision$)=~/(\d+((?:\.\d+)*))/o;
 	$CF{'CoreRevision'}=$1;
 	$CF{'Version'}.=$2.'¦Â' if index(q$State$,'Exp')+1;
