@@ -623,10 +623,10 @@ $file[$CF{'logmax'}-2] は削除された後に残った記事スレッドのうち、
 		#書き込み
 		$log[$IN{'j'}]=
 			"Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'newps'};\ttime=\t$DT{'time'};\tbody=\t$IN{'body'};\t"
-			.join('',map{"$_=\t$IN{$_};\t"}((!$IN{'j'}?$CF{'prtitm'}:$CF{'chditm'})=~/\b([a-z\d]+)\b/go))."\n";
+			.join('',map{"$_=\t$IN{$_};\t"}((!$IN{'j'}?$CF{'prtitm'}:$CF{'chditm'})=~/\b([a-z\d]+)\b/go));
 		truncate(RW,0);
 		seek(RW,0,0);
-		print RW @log;
+		print RW map{"$_\n"}@log;
 		close(RW);
 	}
 	
@@ -1987,9 +1987,8 @@ BEGIN{
 	}
 	# Version
 	$CF{'Core'}=q$Revision$;
-	$CF{'CoreName'}=q$Name$;
-	$CF{'Version'}=join('.',($CF{'CoreName'}=~/(\d+)/go));
-	$CF{'Version'}.=".$1"if q$Status: Exp $=~/Exp/o&&$CF{'Core'}=~/(?:\d+.)+(\d+)/;
+	$CF{'Version'}=join('.',q$Mireille: 1_2_5 $=~/(\d+)/go);
+	$CF{'Version'}.=".$1"if q$State$=~/Exp/o&&$CF{'Core'}=~/(?:\d+.)+(\d+)/;
 }
 
 1;
