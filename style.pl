@@ -311,6 +311,12 @@ if(document.getElementsByTagName){
 </SCRIPT>
 _CONFIG_
 
+#-----------------------------
+# ヘッダーの生成
+sub getHeader{
+	my%DT=@_;
+	return join"\n",$CF{'bodyHead'},($DT{'skyline'}||''),$CF{'pghead'},$CF{'menu'};
+}
 
 #-----------------------------
 # フッターの生成
@@ -341,7 +347,7 @@ _CONFIG_
 #-----------------------------
 # 新規投稿/編集フォーム
 $CF{'wrtfm'}=<<'_CONFIG_';
-<DIV class="center"><TABLE class="note"><TR><TD><UL class="note">
+<DIV class="center"><TABLE align="center" class="note"><TR><TD><UL class="note">
 <LI>本文以外ではタグは一切使用できません。</LI>
 <LI>HTTP, FTP, MAILアドレスのリンクは自動でつきます。</LI>
 <LI>一般的なブラウザではマウスカーソルを項目の上に置き、<BR>しばらく待つと簡単な説明が出てきます。</LI>
@@ -350,8 +356,8 @@ $CF{'wrtfm'}=<<'_CONFIG_';
 
 
 
-<DIV class="writingForm">
-<H2><A name="Form">$DT{'caption'}</A></H2>
+<DIV id="writingForm" class="box">
+<H2 class="h"><A name="Form">$DT{'caption'}</A></H2>
 
 
 <TABLE class="inputOthers">
@@ -402,20 +408,21 @@ $CF{'wrtfm'}=<<'_CONFIG_';
 
 
 <TABLE class="inputBody">
-<CAPTION title="Body:記事の本文を入力します&#10;全角約10000文字までです&#10;使用できるタグはヘルプを参照"
-><LABEL accesskey="b" for="body">■ 本文(<SPAN class="ak">B</SPAN>) ■</LABEL></CAPTION>
-<TR><TD rowspan="6" class="bodyCell">
-<TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD>
-	<TD><INPUT type="button" accesskey="," class="buttonQuicksave"  title="本文データをQuickSaveします"
- value="Sv," onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()"></TD></TR>
-<TR><TD><INPUT type="button" accesskey="." class="buttonLoadQuicksave" title="Quicksaveしたデータを読み込みます"
- value="Ld." onclick="loadBodyData('MireilleQuicksave')" onkeypress="loadBodyData('MireilleQuicksave')"></TD></TR>
-<TR><TD>&nbsp;</TD></TR>
-<TR><TD><INPUT type="button" accesskey="/" class="buttonLoadAutosave" title="Autosaveしたデータを読み込みます"
- value="la/" onclick="loadBodyData('MireilleAutosave')" onkeypress="loadBodyData('MireilleAutosave')"></TD></TR>
-<TR><TD>&nbsp;</TD></TR>
-<TR><TD>&nbsp;</TD></TR>
+<TR><TD class="leftColumn">&nbsp;</TD>
+<TH class="item"
+ title="Body:記事の本文を入力します&#10;全角約10000文字までです&#10;使用できるタグはヘルプを参照"
+><LABEL accesskey="b" for="body">■ 本文(<SPAN class="ak">B</SPAN>) ■</LABEL></TH>
+<TD class="rightColumn">
+<INPUT type="button" accesskey="," class="buttonQuicksave"  title="本文データをQuickSaveします"
+ value="Save," onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()">
+<INPUT type="button" accesskey="." class="buttonLoadQuicksave" title="Quicksaveしたデータを読み込みます"
+ value="Load." onclick="loadBodyData('MireilleQuicksave')" onkeypress="loadBodyData('MireilleQuicksave')">
+<INPUT type="button" accesskey="/" class="buttonLoadAutosave" title="Autosaveしたデータを読み込みます"
+ value="Load/" onclick="loadBodyData('MireilleAutosave')" onkeypress="loadBodyData('MireilleAutosave')">
+</TD></TR>
+<TR><TD colspan="3"><TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD></TR>
 </TABLE>
+
 
 <P class="footer"><INPUT type="submit" class="submit" accesskey="s" value="投稿する">
 <!-- <INPUT type="reset" class="reset" value="リセット"> --></P>
@@ -434,24 +441,24 @@ $CF{'resfm'}=<<'_CONFIG_';
 
 
 
-<DIV class="writingForm">
-<H2><A name="Form">$DT{'caption'}</A></H2>
+<DIV id="writingForm" class="box">
+<H2 class="h"><A name="Form">$DT{'caption'}</A></H2>
 
 
 <TABLE class="inputBody">
-<CAPTION title="Body:記事の本文を入力します&#10;全角約10000文字までです&#10;使用できるタグはヘルプを参照"
-><LABEL accesskey="b" for="body">■ 本文(<SPAN class="ak">B</SPAN>) ■</LABEL></CAPTION>
-<TR><TD rowspan="6" class="bodyCell">
-<TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD>
-	<TD><INPUT type="button" accesskey="," class="buttonQuicksave"  title="本文データをQuickSaveします"
- value="Sv," onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()"></TD></TR>
-<TR><TD><INPUT type="button" accesskey="." class="buttonLoadQuicksave" title="Quicksaveしたデータを読み込みます"
- value="Ld." onclick="loadBodyData('MireilleQuicksave')" onkeypress="loadBodyData('MireilleQuicksave')"></TD></TR>
-<TR><TD>&nbsp;</TD></TR>
-<TR><TD><INPUT type="button" accesskey="/" class="buttonLoadAutosave" title="Autosaveしたデータを読み込みます"
- value="la/" onclick="loadBodyData('MireilleAutosave')" onkeypress="loadBodyData('MireilleAutosave')"></TD></TR>
-<TR><TD>&nbsp;</TD></TR>
-<TR><TD>&nbsp;</TD></TR>
+<TR><TD class="leftColumn">&nbsp;</TD>
+<TH class="item"
+ title="Body:記事の本文を入力します&#10;全角約10000文字までです&#10;使用できるタグはヘルプを参照"
+><LABEL accesskey="b" for="body">■ 本文(<SPAN class="ak">B</SPAN>) ■</LABEL></TH>
+<TD class="rightColumn">
+<INPUT type="button" accesskey="," class="buttonQuicksave"  title="本文データをQuickSaveします"
+ value="Save," onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()">
+<INPUT type="button" accesskey="." class="buttonLoadQuicksave" title="Quicksaveしたデータを読み込みます"
+ value="Load." onclick="loadBodyData('MireilleQuicksave')" onkeypress="loadBodyData('MireilleQuicksave')">
+<INPUT type="button" accesskey="/" class="buttonLoadAutosave" title="Autosaveしたデータを読み込みます"
+ value="Load/" onclick="loadBodyData('MireilleAutosave')" onkeypress="loadBodyData('MireilleAutosave')">
+</TD></TR>
+<TR><TD colspan="3"><TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD></TR>
 </TABLE>
 
 
@@ -545,21 +552,21 @@ $	この記事の情報
 	ArtNavi->addThreadHead(\%DT);
 	ArtNavi->addArticle(\%DT,($DT{'time'}>$CK{'time'}));
 	#記事項目の調整をして
-	$DT{'_Name'}=sprintf '<SPAN class="name">%s</SPAN>'
+	$DT{'_Name'}=sprintf'<SPAN class="name">%s</SPAN>'
 		,$DT{'email'}?qq(<A href="mailto:$DT{'email'}">$DT{'name'}</A>):$DT{'name'};
 	$DT{'_Home'}=qq(<SPAN class="home"><A href="$DT{'home'}" target="_top">【HOME】</A></SPAN>)if$DT{'home'};
 	$DT{'_Date'}=sprintf$DT{'time'}>$CK{'time'}?'<SPAN class="new">%s</SPAN>':'%s',&date($DT{'time'});
 	$DT{'_Icon'}=&getIconTag(\%DT)||'&nbsp;';
-	$DT{'_Signature'}=sprintf '<SPAN class="signature">[&nbsp;%s&nbsp;]</SPAN><BR>'
+	$DT{'_Signature'}=sprintf'<SPAN class="signature">[&nbsp;%s&nbsp;]</SPAN><BR>'
 		,&getSignatureView(\%DT)if$CF{'signature'}&&$DT{'signature'};
 	if($DT{'time'}>$^T-$CF{'newnc'}){
 		$DT{'_New'}=$CF{'new'};
-		$DT{'_tabUnread'}=sprintf ' tabindex="%d"',$DT{'-unreads'};
+		$DT{'_tabUnread'}=sprintf' tabindex="%d"',$DT{'-unreads'};
 		++$DT{'-unreads'};
 	}
 	#いよいよ出力だよ
 	print<<"_HTML_";
-<DIV class="thread" title="$DT{'i'}番スレッド" width="99%">
+<DIV class="thread" title="$DT{'i'}番スレッド" align="center" width="99%">
 <TABLE border="0" cellspacing="0" class="subject" summary="$DT{'i'}番スレッド" width="100%"><TR>
 <TH class="subject"><H2 class="subject"><A name="art$DT{'i'}" id="art$DT{'i'}" title="$DT{'i'}番スレッド">$DT{'subject'}</A></H2></TH>
 <TD class="arrow">
@@ -603,16 +610,16 @@ $	この記事の情報
 	#記事ナビ
 	ArtNavi->addArticle(\%DT,($DT{'time'}>$CK{'time'}));
 	#記事項目の調整をして
-	$DT{'_Name'}=sprintf '<SPAN class="name">%s</SPAN>'
+	$DT{'_Name'}=sprintf'<SPAN class="name">%s</SPAN>'
 		,$DT{'email'}?qq(<A href="mailto:$DT{'email'}">$DT{'name'}</A>):$DT{'name'};
 	$DT{'_Home'}=qq(<SPAN class="home"><A href="$DT{'home'}" target="_top">【HOME】</A></SPAN>)if$DT{'home'};
 	$DT{'_Date'}=sprintf$DT{'time'}>$CK{'time'}?'<SPAN class="new">%s</SPAN>':'%s',&date($DT{'time'});
 	$DT{'_Icon'}=&getIconTag(\%DT)||'&nbsp;';
-	$DT{'_Signature'}=sprintf '<SPAN class="signature">[&nbsp;%s&nbsp;]</SPAN><BR>'
+	$DT{'_Signature'}=sprintf'<SPAN class="signature">[&nbsp;%s&nbsp;]</SPAN><BR>'
 		,&getSignatureView(\%DT)if$CF{'signature'}&&$DT{'signature'};
 	if($DT{'time'}>$^T-$CF{'newnc'}){
 		$DT{'_New'}=$CF{'new'};
-		$DT{'_tabUnread'}=sprintf ' tabindex="%d"',$DT{'-unreads'};
+		$DT{'_tabUnread'}=sprintf' tabindex="%d"',$DT{'-unreads'};
 		++$DT{'-unreads'};
 	}
 	#いよいよ出力だよ
