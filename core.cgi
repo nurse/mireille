@@ -206,6 +206,50 @@ sub writeArticle{
 =cut
 
 	#-----------------------------
+	#¥¨¥é¡¼É½¼¨
+	my@error;
+	$IN{'name'}||push(@error,'Ì¾Á°');
+	$IN{'body'}||push(@error,'ËÜÊ¸');
+	$IN{'pass'}||($CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'})or push(@error,'¥Ñ¥¹¥ï¡¼¥É');
+	if($CF{'ngWords'}){index($IN{'body'},$_)<0||push(@error,'ËÜÊ¸')for(split(/\s+/o,$CF{'ngWords'}))}
+	if(@error){
+		&showHeader;
+		print<<"_HTML_";
+<H2 class="mode">- Write Error -</H2>
+<P>@{[join('¤È',map{qq(<SPAN style="color:#f00">$_</SPAN>)}@error)]}¤ò¤Á¤ã¤ó¤ÈÆþÎÏ¤·¤Æ¤¯¤À¤µ¤¤</P>
+_HTML_
+		%CK=%IN;
+		&rvsij;
+		print&getFooter;
+		exit;
+	}
+	
+	#-----------------------------
+	#ZERO¾ðÊó¤Î¼èÆÀ
+	open(ZERO,'+>>'."$CF{'log'}0.cgi")||die"Can't read/write log(0.cgi)[$?:$!]";
+	eval{flock(ZERO,2)};
+	seek(ZERO,0,0);
+	my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
+	index($zero[0],"Mir12=\t")&&die"ZERO¤Î¥í¥°·Á¼°¤¬Mir12·¿°Ê³°¤Ç¤¹($zero[0])";
+	%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
+	my@zer1=split(/\s+/o,$zero[1]);
+	@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
+	#-----------------------------
+	#@zer2¤Î¥¨¥é¡¼ÄûÀµ
+	for(@file){
+		$_>$zer2[0]||next; #´û¤Ë¸Å¤¯¤Ê¤Ã¤¿¤â¤Î
+		$zer2[$_-$zer2[0]]&&next; #Àµ¾ï
+		
+		#°Ê²¼°Û¾ï¤Ê¤â¤Î¤ÎÉüµì
+		$zer2[$_-$zer2[0]]=(stat("$CF{'log'}$_.cgi"))[9];
+	}
+	
+	#-----------------------------
+	#¸½ºß¤¢¤ë¥í¥°¤Î¥ê¥¹¥È¤ò¼èÆÀ
+	&logfiles('number');
+	$IN{'i'}=$file[0]+1if$IN{'i'}&&$IN{'i'}>$file[0]+1;
+	
+	#-----------------------------
 	#¥³¥Þ¥ó¥É¤È¤½¤ÎÄ´À°
 	my%EX;
 	for(split(/;/o,$IN{'cmd'})){
@@ -214,7 +258,7 @@ sub writeArticle{
 		defined$j||($j=1);
 		$EX{$i}=$j;
 	}
-	$IN{'cmd'}=~s/(?:^|;)(?:d|z|re)new(?:=[^;]*)?(?:;|$)//os; #new·Ï¤Ïcmd¤È¤·¤ÆÊÝÂ¸¤µ¤ì¤ë¤Èº¤¤ë
+	$IN{'cmd'}=~s/(?:^|;)(?:d|z|re)new(?:=[^;]*)?(?:;|$)//go; #new·Ï¤Ïcmd¤È¤·¤ÆÊÝÂ¸¤µ¤ì¤ë¤Èº¤¤ë
 
 =item ¥³¥Þ¥ó¥É¤Ç»È¤¨¤ë¤â¤Î
 
@@ -222,6 +266,8 @@ icon    : ÀìÍÑ¥¢¥¤¥³¥ó
 iconlist: (nolist|economy)
 absoluteIcon : ÀäÂÐ»ØÄê¥¢¥¤¥³¥ó
 relativeIcon : ÁêÂÐ»ØÄê¥¢¥¤¥³¥ó
+
+signature : ¡Ö½ðÌ¾¤Î¤â¤È¡×¤ò»ØÄê
 
 dnew : µ­»öÆü»þ¹¹¿·
 znew : ¥¹¥ì¥Ã¥ÉÆü»þ¹¹¿·
@@ -262,7 +308,6 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 	
 	#renew¤Ïdnew&&znew
 	$EX{'dnew'}=$EX{'znew'}=1if$EX{'renew'};
-	
 	
 	#-----------------------------
 	#ËÜÊ¸¤Î½èÍý
@@ -330,7 +375,7 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 			my%ST=map{(my$str=$_)=~tr/"'<>/\01-\04/;$str}($CF{'strong'}=~/(\S+)\s+(\S+)/go);
 			if($CF{'strong'}=~/^ /o){
 				#³ÈÄ¥¸ì¶ç¶¯Ä´
-				for(keys%ST){
+				for(sort{length$b<=>length$a}keys%ST){
 					if($_=~/^\/(.+)\/$/o){
 						my$regexp=$1;
 						($ST{$_}=~s/^\/(.+)\/$/$1/o)?($str=~s[$regexp][$ST{$_}]gm)
@@ -440,61 +485,12 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 		$IN{'body'}=$str;
 	}
 	$IN{'body'}=~s/\t/&nbsp;&nbsp;&nbsp;&nbsp;/go;
-	$IN{'body'}=~s/\n+$//o;
 	$IN{'body'}=~s/\n/<BR>/go;
 	
 	#-----------------------------
-	#$IN{'cook'}¤¬ON¤Ê¤éCookie¤Î½ñ¤­¹þ¤ß
-	COOKIE:{
-		$IN{'cook'}||last COOKIE;
-		$CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'}&&last COOKIE; #´ÉÍý¥Ñ¥¹¤Î»þ¤ÏCookieÊÝÂ¸¤·¤Ê¤¤
-		&getCookie;
-		&setCookie(\%IN);
-	}
-	
-	#-----------------------------
-	#¥¨¥é¡¼É½¼¨
-	my@error;
-	$IN{'name'}||push(@error,'Ì¾Á°');
-	$IN{'body'}||push(@error,'ËÜÊ¸');
-	$IN{'pass'}||($CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'})or push(@error,'¥Ñ¥¹¥ï¡¼¥É');
-	if(@error){
-		&showHeader;
-		print<<"_HTML_";
-<H2 class="mode">- Write Error -</H2>
-<P>@{[join('¤È',map{qq(<SPAN style="color:#f00">$_</SPAN>)}@error)]}¤ò¤Á¤ã¤ó¤ÈÆþÎÏ¤·¤Æ¤¯¤À¤µ¤¤</P>
-_HTML_
-		%CK=%IN;
-		&rvsij;
-		print&getFooter;
-		exit;
-	}
-	
-	#-----------------------------
-	#½ñ¤­¹þ¤ß¥Ç¡¼¥¿½àÈ÷
-	open(ZERO,'+>>'."$CF{'log'}0.cgi")||die"Can't read/write log(0.cgi)[$?:$!]";
-	eval{flock(ZERO,2)};
-	seek(ZERO,0,0);
-	my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
-	index($zero[0],"Mir12=\t")&&die"ZERO¤Î¥í¥°·Á¼°¤¬Mir12·¿°Ê³°¤Ç¤¹($zero[0])";
-	%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
-	my@zer1=split(/\s+/o,$zero[1]);
-	@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
-	
-	#-----------------------------
-	#¸½ºß¤¢¤ë¥í¥°¤Î¥ê¥¹¥È¤ò¼èÆÀ
-	&logfiles('number');
-	$IN{'i'}=$file[0]+1if$IN{'i'}&&$IN{'i'}>$file[0]+1;
-	
-	#-----------------------------
-	#@zer2¤Î¥¨¥é¡¼ÄûÀµ
-	for(@file){
-		$_>$zer2[0]||next; #´û¤Ë¸Å¤¯¤Ê¤Ã¤¿¤â¤Î
-		$zer2[$_-$zer2[0]]&&next; #Àµ¾ï
-		
-		#°Ê²¼°Û¾ï¤Ê¤â¤Î¤ÎÉüµì
-		$zer2[$_-$zer2[0]]=(stat("$CF{'log'}$_.cgi"))[9];
-	}
+	#½ñ¤­¹þ¤à¥Ç¡¼¥¿¤ÎÁ°½èÍý
+	my$crcOfThisArticle=&getCRC32($IN{'body'});
+	$IN{'signature'}=&getSignature($EX{'signature'}||$IN{'pass'});
 	
 	#-----------------------------
 	#½ñ¤­¹þ¤ß¤ÎÁ°½èÍý¤ò³ÈÄ¥¤·¤¿¤¤»þÍÑ
@@ -506,8 +502,8 @@ _HTML_
 		#¿·µ¬¡¦ÊÖ¿®½ñ¤­¹þ¤ß
 		$IN{'newps'}=&mircrypt($^T,$IN{'pass'});
 		$EX{'znew'}=1;
-		if($IN{'i'}&&$zero[1]=~/($IN{'i'}):$ENV{'CONTENT_LENGTH'}:([1-9]\d*)/
-			or length$IN{'j'}&&$zero[1]=~/(\d+):$ENV{'CONTENT_LENGTH'}:($IN{'j'})/){
+		if($IN{'i'}&&$zero[1]=~/($IN{'i'}):$crcOfThisArticle:([1-9]\d*)/
+			or length$IN{'j'}&&$zero[1]=~/(\d+):$crcOfThisArticle:($IN{'j'})/){
 			&showHeader;
 			print<<"_HTML_";
 <H2 class="mode">- Â¿½ÅÅê¹Æ¡© -</H2>
@@ -577,8 +573,9 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 			eval{flock(WR,2)};
 			truncate(WR,0);
 			seek(WR,0,0);
-			print WR "Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'newps'};\ttime=\t$^T;\tbody=\t$IN{'body'};\t"
-			.join('',map{"$_=\t$IN{$_};\t"}($CF{'prtitm'}=~/\+([a-z\d]+)\b/go))."\n";
+			print WR "Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'newps'};\ttime=\t$^T;\t"
+			."body=\t$IN{'body'};\tsignature=\t$IN{'signature'};\t"
+			.join('',map{"$_=\t$IN{$_};\t"}grep{defined$IN{$_}}($CF{'prtitm'}=~/\+([a-z\d]+)\b/go))."\n";
 			close(WR);
 		}else{
 			#-----------------------------
@@ -587,7 +584,11 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 			eval{flock(RW,2)};
 			seek(RW,0,0);
 			my$line;
-			while(<RW>){$line=$_;}
+			$line=$_ while<RW>;
+			
+			#¥¹¥ì¥Ã¥É¤Î¥í¥Ã¥¯
+			index($line,"Mir12=\tLocked")||&showUserError('¤³¤Î¥¹¥ì¥Ã¥É¤Ï¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤ë');
+			
 			$IN{'j'}=$.; #$.-1+1
 			seek(RW,0,2);
 			my$prefix='';
@@ -601,8 +602,9 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 				&showUserError('´û¤ËºÇÂç»Òµ­»ö¿ôÀ©¸Â¤ò±Û¤¨¤Æ¤¤¤ë');
 			}
 			print RW $prefix
-			."Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'newps'};\ttime=\t$^T;\tbody=\t$IN{'body'};\t"
-			.join('',map{"$_=\t$IN{$_};\t"}($CF{'chditm'}=~/\+([a-z\d]+)\b/go))."\n";
+			."Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'newps'};\ttime=\t$^T;\t"
+			."body=\t$IN{'body'};\tsignature=\t$IN{'signature'};\t"
+			.join('',map{"$_=\t$IN{$_};\t"}grep{defined$IN{$_}}($CF{'chditm'}=~/\+([a-z\d]+)\b/go))."\n";
 			close(RW);
 		}
 		
@@ -623,7 +625,9 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 		my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
 		$#log<$IN{'j'}&&die"Something Wicked happend!(j¤¬Âç¤­¤¹¤®)";
 		$log[$IN{'j'}]||die"Something Wicked happend!(½¤Àµ¤Ç¤Ê¤¤j)";
+		$log[$IN{'j'}]=~/Mir12=\t(?:del|Locked)/&&&showUserError("Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Ï½¤Àµ¤Ç¤­¤Ê¤¤");
 		my%DT=($log[$IN{'j'}]=~/([^\t]*)=\t([^\t]*);\t/go);
+		
 		#PasswordCheck
 		if($CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'}){
 			#MasterPass¤Ë¤è¤ë
@@ -654,8 +658,10 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 		}
 		#½ñ¤­¹þ¤ß
 		$log[$IN{'j'}]=
-			"Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'newps'};\ttime=\t$DT{'time'};\tbody=\t$IN{'body'};\t"
-			.join('',map{"$_=\t$IN{$_};\t"}((!$IN{'j'}?$CF{'prtitm'}:$CF{'chditm'})=~/\+([a-z\d]+)\b/go));
+			"Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'newps'};\ttime=\t$DT{'time'};\t"
+			."body=\t$IN{'body'};\tsignature=\t$IN{'signature'};\t"
+			.join('',map{"$_=\t$IN{$_};\t"}grep{defined$IN{$_}}
+			((!$IN{'j'}?$CF{'prtitm'}:$CF{'chditm'})=~/\+([a-z\d]+)\b/go));
 		truncate(RW,0);
 		seek(RW,0,0);
 		print RW map{"$_\n"}@log;
@@ -667,7 +673,7 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 		#¥í¥°´ÉÍý¥Õ¥¡¥¤¥ë¡¢0.cgi¤Ë½ñ¤­¹þ¤ß
 		#¿·µ¬¡¦ÊÖ¿®¤Î»þ¤Ë¤ÏÅê¹Æ¾ðÊó¤òÊÝÂ¸
 		$#zer1=2if$#zer1>2;
-		unshift(@zer1,"$IN{'i'}:$ENV{'CONTENT_LENGTH'}:$IN{'j'}");
+		unshift(@zer1,sprintf"%d:%s:%d",$IN{'i'},$crcOfThisArticle,$IN{'j'});
 		my$No=$IN{'i'}-$zer2[0];
 		$No>0||die"ZER2¤Î¥Ç¡¼¥¿¤¬ÉÔÀµ¤Ç¤¹ 'i':$IN{'i'},'zer2':$zer2[0]";
 		$zer2[$No]=$^T;
@@ -678,7 +684,16 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 			."\n@zer1\n@zer2\n";
 	}
 	close(ZERO); #¤³¤³¤Ç¤ä¤Ã¤È½ñ¤­¹þ¤ß½ªÎ»
-
+	
+	#-----------------------------
+	#$IN{'cook'}¤¬ON¤Ê¤éCookie¤Î½ñ¤­¹þ¤ß
+	COOKIE:{
+		$IN{'cook'}||last COOKIE;
+		$CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'}&&last COOKIE; #´ÉÍý¥Ñ¥¹¤Î»þ¤ÏCookieÊÝÂ¸¤·¤Ê¤¤
+		&getCookie;
+		&setCookie(\%IN);
+	}
+	
 	#-----------------------------
 	#½ñ¤­¹þ¤ßÀ®¸ù¡õ¡Ö¼«Í³¤Ë½¤Àµ¤ò¤É¤¦¤¾¡×
 	&showHeader;
@@ -852,6 +867,7 @@ _HTML_
 		#µ­»ö¤´¤È
 		while(<RD>){
 			$j++;
+			index($_,"Mir12=\tLocked")||last;
 			index($_,"Mir12=\tdel;\t")||next;
 			my%DT=($_=~/([^\t]*)=\t([^\t]*);\t/go);
 			$j&&($count="Res $j");
@@ -969,6 +985,7 @@ sub delArticle{
 	eval{flock(RD,2)};
 	seek(RW,0,0);
 	my@log=<RW>;
+	$log[$IN{'j'}]=~/Mir12=\t(?:del|Locked)/&&&showRvsMenu("Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Ïºï½ü¤Ç¤­¤Þ¤»¤ó¡£");
 	my%DT=($log[$IN{'j'}]=~/([^\t]*)=\t([^\t]*);\t/go);
 	#ºï½üÊ¬´ô
 	SWITCH:{
@@ -1035,7 +1052,7 @@ _HTML_
 sub showArtSeek{
 	&showHeader;
 	print qq(<H2 class="mode">- ¸¡º÷¥â¡¼¥É -</H2>);
-	my%SK=split(/ /o,$CF{'sekitm'});
+	my%SK=split(/\s+/o,$CF{'sekitm'});
 	
 	if(length$IN{'seek'}){
 		#-----------------------------
@@ -1226,7 +1243,7 @@ sub getParam{
 #Method¤¬HEAD¤Ê¤é¤ÐLastModifed¤ò½ÐÎÏ¤·¤Æ¡¢
 #ºÇ¸å¤ÎÅê¹Æ»þ¹ï¤òÃÎ¤é¤»¤ë
 		my$last=&datef((stat("$CF{'log'}0.cgi"))[9],'rfc1123');
-		print"Status: HTTP/1.1 200 OK\nLast-Modified: $last\n"
+		print"Status: 200 OK\nLast-Modified: $last\n"
 		."Content-Type: text/plain\n\nLast-Modified: $last";
 		exit;
 	}elsif('POST'eq$ENV{'REQUEST_METHOD'}){
@@ -1350,7 +1367,7 @@ sub getParam{
 		unless($DT{'pass'}){
 		}elsif($DT{'pass'}eq$CF{'admps'}){
 			$IN{'pass'}=$CF{'admps'};
-		}elsif($DT{'pass'}=~/(.{1,24})/o){
+		}elsif($DT{'pass'}=~/(.{8,128})/o){
 			$IN{'pass'}=$1;
 		}
 		
@@ -1376,8 +1393,8 @@ sub getParam{
 				}
 			}
 		}
-		#body¤Î½èÍý¤Ï&writeArticle¤Ç¹Ô¤¦
-		$IN{'body'}=$DT{'body'};
+		#body¤Î½èÍý¤Ï´ðËÜÅª¤Ë&writeArticle¤Ç¹Ô¤¦
+		$IN{'body'}=$DT{'body'}=~/(.*\S)/os?$1:'';
 		$IN{'isEditing'}=1;
 	}elsif(defined$DT{'new'}){
 		#¿·µ¬½ñ¤­¹þ¤ß
@@ -1390,7 +1407,7 @@ sub getParam{
 	}elsif(defined$DT{'seek'}){
 		#¸¡º÷
 		$IN{'seek'}=($DT{'seek'}=~/(.+)/o)?"$1":'';
-		my%SK=split(/ /o,$CF{'sekitm'});
+		my%SK=split(/\s+/o,$CF{'sekitm'});
 		$DT{'item'}=($DT{'item'}=~/(.+)/o)?"$1":'';
 		$IN{'item'}=($SK{$DT{'item'}})?$DT{'item'}:'ALL';
 		$IN{'every'}=($DT{'every'}=~/([ij])/o)?$1:'i';
@@ -1400,7 +1417,7 @@ sub getParam{
 		unless($DT{'pass'}){
 		}elsif($DT{'pass'}eq$CF{'admps'}){
 			$IN{'pass'}=$CF{'admps'};
-		}elsif($DT{'pass'}=~/(.{1,24})/o){
+		}elsif($DT{'pass'}=~/(.{8,128})/o){
 			$IN{'pass'}="$1";
 		}
 		$IN{'del'}=($DT{'del'}=~/(\d+\-\d+(\-\d)?)/o)?"$1":'';
@@ -1411,7 +1428,7 @@ sub getParam{
 		unless($DT{'pass'}){
 		}elsif($DT{'pass'}eq$CF{'admps'}){
 			$IN{'pass'}=$CF{'admps'};
-		}elsif($DT{'pass'}=~/(.{1,24})/o){
+		}elsif($DT{'pass'}=~/(.{8,128})/o){
 			$IN{'pass'}="$1";
 		}
 		$IN{'rvs'}=($DT{'rvs'}=~/(\d+\-\d+)/o)?"$1":'';
@@ -1562,7 +1579,7 @@ _HTML_
 	$status.=join ''
 	,map{qq(<META http-equiv="Set-Cookie" content="$_">\n)}split("\n",$CF{'-setCookie'})if$CF{'-setCookie'};
 	
-	(!defined$CF{'conenc'}||$CF{'conenc'}=='|gzip -cfq9')&&$CF{'gzip'}&&($CF{'conenc'}="|$CF{'gzip'} -cfq9");
+	$CF{'conenc'}="|$CF{'gzip'} -cfq9"if!defined$CF{'conenc'}||'|gzip -cfq9'eq$CF{'conenc'}and$CF{'gzip'};
 	if($CF{'conenc'}&&$ENV{'HTTP_ACCEPT_ENCODING'}&&(index($ENV{'HTTP_ACCEPT_ENCODING'},'gzip')>-1)or$CF{'forceGZIP'}){
 		#¾å¤ÎifÊ¸¤Çgzip·è¤áÂÇ¤Á¤·¤Æ¤¤¤ë¤Î¤Ï¡È»ÅÍÍ¡É
 		#gzip/compress°Ê³°¤ËÂÐ±þ¤·¤Æ¤ë¥Ö¥é¥¦¥¶¤Ïµ©¤Ê¤¿¤á¡¢²ÄÊÑ¤Ø¤Î¼ûÍ×¤¬¾¯¤Ê¤¤¤È»×¤ï¤ì¤ë¤¿¤á¤È
@@ -1570,6 +1587,8 @@ _HTML_
 		if(!$CF{'forceGZIP'}&&$ENV{'SERVER_NAME'}#¹­¹ðÂÐºö
 			and	index($ENV{'SERVER_NAME'},'tkcity.net')>-1
 			||	index($ENV{'SERVER_NAME'},'infoseek.co.jp')>-1
+			||	index($ENV{'SERVER_NAME'},'aaacafe.ne.jp')>-1
+			||	index($ENV{'SERVER_NAME'},'xrea.com')>-1
 			||	index($ENV{'SERVER_NAME'},'tok2.com')>-1
 			||	index($ENV{'SERVER_NAME'},'tripod')>-1
 			||	index($ENV{'SERVER_NAME'},'virtualave.net')>-1
@@ -1644,17 +1663,17 @@ $ µ­»ö¥¹¥ì¥Ã¥É¥Õ¥¡¥¤¥ë¥ê¥¹¥È¤Î½çÈÖ(date|number)
 
 	undef@file;
 	opendir(DIR,$CF{'log'})||die"Can't read directory($CF{'log'})[$?:$!]";
-	my@list=readdir(DIR);
+	my@list=grep{int$_}map{m/^(\d+)\.cgi$/o}readdir(DIR);
 	closedir(DIR);
 	if('date'eq$_[0]){
 		#ÆüÉÕ½ç 'date'
-		my@list=grep{$_>$zer2[0]}map{int}grep{m/^\d+\.cgi$/o}@list;
+		my@list=grep{$_>$zer2[0]}@list;
 		my@tmp=map{$zer2[$_-$zer2[0]]}@list;
 		@file=@list[sort{$tmp[$b]<=>$tmp[$a]or$list[$b]<=>$list[$a]}0..$#list];
 		push(@file,0);
 	}else{
 		#µ­»öÈÖ¹æ½ç 'number'
-		@file=sort{$b<=>$a}map{int}grep{m/^\d+\.cgi$/}@list;
+		@file=sort{$b<=>$a}@list;
 	}
 	return@file;
 }
@@ -1747,6 +1766,7 @@ sub showArticle{
 	#read¥â¡¼¥É¤Î»þ¤ÎÊäÀµ
 	$horizon=0if$IN{'read'}&&$IN{'read'}==$DT{'i'};
 	
+	my$isLocked=0;
 	for(@articles){
 		unless(++$DT{'j'}){
 			#¿Æµ­»ö
@@ -1759,11 +1779,13 @@ _HTML_
 		}else{
 			#»Òµ­»ö
 			$DT{'j'}>$horizon||next;
+			/^Mir12=\tLocked/o&&++$isLocked&&last;
 			/^Mir12=\tdel;\t/o||&artchd(\%DT,$_);
 		}
 	}
 	$DT{'j'}>-1||return;#µ­»ö¤¬¤Ê¤¤¤Ê¤é¥Õ¥Ã¥¿¤òÉ½¼¨¤»¤ºÊÖ¤¹
 	#µ­»ö¥Õ¥Ã¥¿
+	$DT{'-isLocked'}=$isLocked;
 	&artfot(\%DT);
 }
 
@@ -1912,13 +1934,61 @@ $ °Å¹æ²½¤¹¤ëÊ¸»úÎó
 $ Èæ¤Ù¤ë¥Ñ¥¹¥ï¡¼¥É
 =cut
 	srand($_[0]);
-	my$seed=join('',('a'..'z','.',0..9,'/','A'..'Z')[rand(64),rand(64)]);
+	my$salt=join('',('a'..'z','.',0..9,'/','A'..'Z')[rand(64),rand(64)]);#¡Ö.¡×¤¬º®¤¶¤Ã¤Æ¤¤¤ë¤Î¤Ï¥Ð¥°
 	my$pass='';
 	for($_[1]=~/.{1,8}/go){
 		length$_||next;
-		$pass.=substr(crypt($_,$seed),2);
+		$pass.=substr(crypt($_,$salt),2);
 	}
 	return$_[2]?($_[2]eq$pass?1:undef):$pass;
+}
+
+
+# ------------------------------------------ #
+# getCRC32
+# based on 2000/06/26 crc32.pl 1.1.0 digiz
+my@crc32;
+sub getCRC32{
+=item °ú¿ô
+$ CRC32¤ò¤È¤ê¤¿¤¤Ê¸»úÎó
+=cut
+	@crc32=map{my$a=$_;$a=$a&1?($a>>1&0x7fffffff)^0xedb88320:$a>>1&0x7fffffff for 0..7;$a}0..255if!@crc32;
+	my$word=shift;
+	my$r=0xffffffff;
+	$r=$r>>8&0xffffff^$crc32[$r&255^$_]for unpack"C*",$word;
+	$r^=0xffffffff;
+	return sprintf("%08X",$r);
+}
+
+
+#-------------------------------------------------
+# ½ðÌ¾¤ÎÀ¸À®
+#
+sub getSignature{
+	my$word=shift;
+	my$salt;
+	for(0,1){
+		my$c=chop$word;
+		my$n=ord$c;
+		$n-=76while$n>122;
+		$n+=47if$n<47;
+		$salt.=$c eq$n?$c:chr$n;
+	}
+	return&getCRC32(substr(crypt(&getCRC32($word),$salt),2));
+}
+
+
+#-------------------------------------------------
+# ½ðÌ¾¤ÎÀ¸À®2
+#
+my$saltForSignature2;
+sub getSignature2{
+	if(!$saltForSignature2){
+		scalar\%Z0=~/(0x[\w]+)/o;
+		srand($zer2[$#zer2]^$zer2[$#zer2-1]^hex($1));
+		$saltForSignature2=chr(47+rand 76).chr(47+rand 76);
+	}
+	return '<span class="signature">['.substr(crypt(shift,$saltForSignature2),2).']</span>';
 }
 
 
@@ -2341,7 +2411,7 @@ $ RFC1123·Á¼°¤ÎÆüÉÕ
 =cut
 	my$date=shift();
 	my%month=qw(Jan 1 Feb 2 Mar 3 Apr 4 May 5 Jun 6 Jul 7 Aug 8 Sep 9 Oct 10 Nov 11 Dec 12);
-	my($day,$mon,$year,$hour,$min,$sec)=(split(/[ :]/o,$date))[1..6];
+	my($day,$mon,$year,$hour,$min,$sec)=(split(/[\s:]/o,$date))[1..6];
 	$mon=$month{$mon};
 	$mon||return 0;
 	my($_Y, $_M, $_D)=($year,$mon,$day+$hour/24+$mon/1440+$sec/86400);
@@ -2389,6 +2459,5 @@ BEGIN{
 	$CF{'CoreRevision'}=$1;
 	$CF{'Version'}.=$2.'¦Â' if-1<index(q$State$,'Exp');
 }
-
 1;
 __END__
