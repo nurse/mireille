@@ -102,6 +102,7 @@ sub showIndex{
 	#-----------------------------
 	#¥Ú¡¼¥¸½èÍý
 	&logfiles($CF{'sort'});
+	!@file&&push(@file,0);
 	if($IN{'read'}){
 		my$page=1;my$thread=1;
 		for(@file){
@@ -133,7 +134,7 @@ sub showIndex{
 	#¤³¤Î¥Ú¡¼¥¸¤Î¥¹¥ì¥Ã¥É
 	my$this='';
 	@view=splice(@file,($IN{'page'}-1)*$CF{'page'},$CF{'page'});
-	$#view!=0&&!$view[$#view]&&pop@view;
+	$#view&&!$view[$#view]&&pop@view;
 	for(0..$#view){
 		$this.='<A href="#art'.$view[$_].'" title="Alt+'.($_+1).'">'
 		.($NEW{"$view[$_]"}?qq(<SPAN class="new">$view[$_]</SPAN>):$view[$_]).'</A> ';
@@ -350,15 +351,18 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 		seek(RW,0,0);
 		my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
 		
-		my$isLocking=0;
+		my$isLocked=index($log[$#log],"Mir12=\tLocked")>-1;
+		my$lockedBy=$log[$#log]=~/Mir12=\tLocked:[^\t]* lockedBy=(\S+)/o?$1:'';
 		#¸¢¸Â¤ò¥Á¥§¥Ã¥¯
-		unless($CF{'admps'}and$IN{'pass'}eq$CF{'admps'}||$IN{'oldps'}eq$CF{'admps'}
-			or$CF{'lockPassword'}and$IN{'pass'}eq$CF{'lockPassword'}||$IN{'oldps'}eq$CF{'lockPassword'}){
-			#¿Æµ­»ö¤Î¥Ñ¥¹¥ï¡¼¥É¡©
+		if($CF{'admps'}and$IN{'pass'}eq$CF{'admps'}||$IN{'oldps'}eq$CF{'admps'}){
+			$lockedBy='Admin';
+		}elsif($isLocked&&'ThreadBuilder'ne$lockedBy){
+			die '°ìÈÌ¥æ¡¼¥¶¡¼¤Ï¤³¤Î¥¹¥ì¥Ã¥É¤Î¥í¥Ã¥¯¤ò²ò½ü¤Ç¤­¤Þ¤»¤ó¡£';
+		}else{
+			#¿Æµ­»ö¤Î¥Ñ¥¹¥ï¡¼¥É
 			my%DT=$log[0]=~/([^\t]*)=\t([^\t]*);\t/go;
-			&mircrypt($DT{'time'},$IN{'pass'},$DT{'pass'})||&mircrypt($DT{'time'},$IN{'oldps'},$DT{'pass'})
-			||die '¤¢¤Ê¤¿¤Ï¤³¤Î¥¹¥ì¥Ã¥É¤ò¥í¥Ã¥¯¤Ç¤­¤Þ¤»¤ó¡£';
-			++$isLocking;
+			&mircrypt($DT{'time'},$IN{'pass'},$DT{'pass'})||die '¤¢¤Ê¤¿¤Ï¤³¤Î¥¹¥ì¥Ã¥É¤ò¥í¥Ã¥¯¤Ç¤­¤Þ¤»¤ó¡£';
+			$lockedBy='ThreadBuilder';
 		}
 		
 		#¥í¥Ã¥¯¥ª¥×¥·¥ç¥ó
@@ -370,13 +374,11 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 		}else{
 			$option=join" ",grep{index($EX{'lockThread'}," $_ ")+1}@options;
 		}
-		if(index($log[$#log],"Mir12=\tLocked")<0){
+		$option.=" lockedBy=$lockedBy";
+		if($isLocked){
 			push(@log,"Mir12=\tLocked:$option;\t");
-			++$isLocking;
-		}elsif(!$isLocking){
-			pop@log;
 		}else{
-			die '¤¢¤Ê¤¿¤Ï¤³¤Î¥¹¥ì¥Ã¥É¤ò¥í¥Ã¥¯¤Ç¤­¤Þ¤»¤ó¡£';
+			pop@log;
 		}
 		truncate(RW,0);
 		seek(RW,0,0);
@@ -386,7 +388,7 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 		#½¤Àµ¥â¡¼¥É¤Ë°ÜÆ°
 		$IN{'page'}=1;
 		$IN{'rvs'}='';
-		&showRvsMenu(sprintf"Âè$IN{'i'}ÈÖ¥¹¥ì¥Ã¥É¤Î¥í¥Ã¥¯%sÀ®¸ù",$isLocking?'':'²ò½ü');
+		&showRvsMenu(sprintf"Âè$IN{'i'}ÈÖ¥¹¥ì¥Ã¥É¤Î¥í¥Ã¥¯%sÀ®¸ù",$isLocked?'²ò½ü':'');
 	}
 	
 	#-----------------------------
@@ -656,7 +658,7 @@ _HTML_
 $file[$#file-1] ¤Ï¤³¤Î»þºï½ü¤µ¤ì¤ëµ­»ö¤Î¤¦¤Á¤Çµ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤¬ºÇ¤â¾®¤µ¤¤¤â¤Î¤Î¡¢µ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤ò¡¢
 $file[$CF{'logmax'}-1] ¤Ïµ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤¬ºÇ¤âÂç¤­¤¤¤â¤Î¤Î¡¢µ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤ò¤¢¤é¤ï¤¹
 $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
-µ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤¬¾®¤µ¤Ê¤â¤Î¤Î¡¢µ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤ò¤¢¤é¤ï¤¹
+ºÇ¤âµ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤¬¾®¤µ¤Ê¤â¤Î¤Î¡¢µ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤ò¤¢¤é¤ï¤¹
 
 ¤è¤Ã¤Æ¡¢$file[$CF{'logmax'}-2]-$file[$#file-1] ¤Ï¤³¤Î»þºï½ü¤µ¤ì¤ë±ä¤Ùµ­»ö¿ô¤ò¤¢¤é¤ï¤¹
 #ÅÓÃæµ­»ö¥¹¥ì¥Ã¥É¤¬ºï½ü¤µ¤ì¤Æ¤¤¤ë¾ì¹ç¡¢¼ÂºÝ¤Ëºï½ü¤µ¤ì¤ëµ­»ö¥¹¥ì¥Ã¥É¿ô¤È¤Ï°Û¤Ê¤ë
@@ -1787,11 +1789,11 @@ $ µ­»ö¥¹¥ì¥Ã¥É¥Õ¥¡¥¤¥ë¥ê¥¹¥È¤Î½çÈÖ(date|number)
 		my@list=grep{$_>$zer2[0]}@list;
 		my@tmp=map{$zer2[$_-$zer2[0]]}@list;
 		@file=@list[sort{$tmp[$b]<=>$tmp[$a]or$list[$b]<=>$list[$a]}0..$#list];
-		push(@file,0);
 	}else{
 		#µ­»öÈÖ¹æ½ç 'number'
 		@file=sort{$b<=>$a}@list;
 	}
+	push(@file,0);
 	return@file;
 }
 
@@ -2453,6 +2455,7 @@ $ ºï½üÊý¼°
 	if('gzip'eq$type&&$CF{'gzip'}){
 		#GZIP°µ½Ì
 		for(@del){
+			$_||next;
 			`$CF{'gzip'} -fq9 "$CF{'log'}$_.cgi"`;
 			($?==0)||die"$?:Can't use gzip($CF{'gzip'}) oldlog($_.cgi)[$?:$!]";
 			$file++;
@@ -2460,12 +2463,14 @@ $ ºï½üÊý¼°
 	}elsif('unlink'eq$type){
 		#ºï½ü
 		for(@del){
+			$_||next;
 			unlink"$CF{'log'}$_.cgi"||die"Can't delete oldlog($_.cgi)[$?:$!]";
 			$file++;
 		}
 	}elsif('rename'eq$type){
 		#¥Õ¥¡¥¤¥ëÌ¾ÊÑ¹¹
 		for(@del){
+			$_||next;
 			if(-e"$CF{'log'}$_.bak.cgi"){
 				#¤·¤ç¤¦¤¬¤Ê¤¤¤«¤é¸Å¤¤¤Î¤Ïºï½ü¤·¤Á¤ã¤¦
 				unlink"$CF{'log'}$_.bak.cgi"||die"Can't unlink old-old log($CF{'log'}$_.bak.cgi)[$?:$!]";
@@ -2476,6 +2481,7 @@ $ ºï½üÊý¼°
 	}elsif($type=~/!(.*)/o){
 		#ÆÃ¼ì
 		for(@del){
+			$_||next;
 			`$1 "$CF{'log'}$_.cgi"`;
 			$?==0||die"$?:Invalid delete type($1) oldlog($_.cgi)[$?:$!]";
 			$file++;
