@@ -10,8 +10,8 @@
 #------------------------------------------------------------------------------#
 # $cvsid = q$Id$;
 require 5.005;
-#use strict;
-#use vars qw(%CF %IC %IN %CK);
+use strict;
+use vars qw(%CF %IC %IN %CK);
 my(%Z0,@zer2,@file);
 
 =pod core.cgi¤òÃ±ÂÎµ¯Æ°¤µ¤»¤ë¤È¡¢location¤ÇÄ·¤Ð¤»¤ëCGI¤Ë
@@ -46,7 +46,7 @@ sub main{
 	#¥â¡¼¥É¤´¤È¤Î¿¶¤êÊ¬¤±
 	&getParam;
 	
-	if($CF{'readOnly'}&&$IN{'isEditing'}){
+	if($CF{'readOnly'}&&$IN{'_isEditing'}){
 		#±ÜÍ÷ÀìÍÑ¥â¡¼¥É
 		&showUserError('¸½ºß¤³¤Î·Ç¼¨ÈÄ¤Ï±ÜÍ÷ÀìÍÑ¥â¡¼¥É¤ËÀßÄê¤µ¤ì¤Æ¤¤¤Þ¤¹');
 	}else{
@@ -210,9 +210,10 @@ sub writeArticle{
 		or push(@message,'¥Ñ¥¹¥ï¡¼¥É¤Ï8Ê¸»ú°Ê¾å¡¢128Ê¸»ú°Ê²¼¤Ç¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó¡£')&&push(@error,'¥Ñ¥¹¥ï¡¼¥É');
 		if($CF{'ngWords'}){
 			for($CF{'ngWords'}=~/(\S+)/go){
-				index($IN{'body'},$_)<0||last;
+				index($IN{'body'},$_)<0&&next;
 				push(@error,'ËÜÊ¸');
 				push(@message,'Something Wicked happend!(ÉÔÀµ¤ÊÊ¸»úÎó)');
+				last;
 			}
 		}
 		if(@error){
@@ -221,38 +222,13 @@ sub writeArticle{
 <H2 class="mode">- Write Error -</H2>
 <P>@{[join('¤È',map{qq(<SPAN style="color:#f00">$_</SPAN>)}@error)]}¤ò¤Á¤ã¤ó¤ÈÆþÎÏ¤·¤Æ¤¯¤À¤µ¤¤</P>
 _HTML_
-			printf '<P>%s</P>',join"<BR>",@message if@message;
+			printf '<P>%s</P>',join '<BR>',@message if@message;
 			%CK=%IN;
 			&rvsij;
 			print&getFooter;
 			exit;
 		}
 	}
-	
-	#-----------------------------
-	#ZERO¾ðÊó¤Î¼èÆÀ
-	open(ZERO,'+>>'."$CF{'log'}0.cgi")||die"Can't read/write log(0.cgi)[$?:$!]";
-	eval{flock(ZERO,2)};
-	seek(ZERO,0,0);
-	my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
-	index($zero[0],"Mir12=\t")&&die"ZERO¤Î¥í¥°·Á¼°¤¬Mir12·¿°Ê³°¤Ç¤¹($zero[0])";
-	%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
-	my@zer1=split(/\s+/o,$zero[1]);
-	@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
-	#-----------------------------
-	#@zer2¤Î¥¨¥é¡¼ÄûÀµ
-	for(@file){
-		$_>$zer2[0]||next; #´û¤Ë¸Å¤¯¤Ê¤Ã¤¿¤â¤Î
-		$zer2[$_-$zer2[0]]&&next; #Àµ¾ï
-		
-		#°Ê²¼°Û¾ï¤Ê¤â¤Î¤ÎÉüµì
-		$zer2[$_-$zer2[0]]=(stat("$CF{'log'}$_.cgi"))[9];
-	}
-	
-	#-----------------------------
-	#¸½ºß¤¢¤ë¥í¥°¤Î¥ê¥¹¥È¤ò¼èÆÀ
-	&logfiles('number');
-	$IN{'i'}=$file[0]+1if$IN{'i'}&&$IN{'i'}>$file[0]+1;
 	
 	#-----------------------------
 	#¥³¥Þ¥ó¥É¤È¤½¤ÎÄ´À°
@@ -284,7 +260,10 @@ noautolink:	URI¼«Æ°¥ê¥ó¥¯¤ò»È¤ï¤Ê¤¤
 noartno:	µ­»öÈÖ¹æ¥ê¥ó¥¯¤ò»È¤ï¤Ê¤¤
 nostrong:	¸ì¶ç¶¯Ä´¤ò»È¤ï¤Ê¤¤
 
-su: ´ÉÍý¥Ñ¥¹¥ï¡¼¥É¤òÆþ¤ì¤Æ¤ª¤¯¤È¡¢ÊÖ¿®¤Ç¤­¤Ê¤¤¥¹¥ì¥Ã¥É¤ËÊÖ¿®¤Ç¤­¤¿¤ê¤¹¤ë¡Ê¤è¤¦¤Ë¤Ê¤ëÍ½Äê¡Ë
+lockThread:	¥¹¥ì¥Ã¥É¤ò¥í¥Ã¥¯¤·¤Þ¤¹¡Ê´ÉÍý¥Ñ¥¹¥ï¡¼¥É¤¬É¬Í×¡Ë
+
+#Ì¤¼ÂÁõ
+su:	´ÉÍý¥Ñ¥¹¥ï¡¼¥É¤òÆþ¤ì¤Æ¤ª¤¯¤È¡¢ÊÖ¿®¤Ç¤­¤Ê¤¤¥¹¥ì¥Ã¥É¤ËÊÖ¿®¤Ç¤­¤¿¤ê¤¹¤ë¡Ê¤è¤¦¤Ë¤Ê¤ëÍ½Äê¡Ë
 
 "key=value;key=value"¤Î·Á¼°¤Ç¥³¥Þ¥ó¥ÉÍó¤ËÆþÎÏ¤¹¤ë
 keyµÚ¤Óvalue¤Ï[=;]¤ò´Þ¤ó¤Ç¤Ï¤Ê¤é¤Ê¤¤
@@ -313,6 +292,34 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 	
 	#renew¤Ïdnew&&znew
 	$EX{'dnew'}=$EX{'znew'}=1if$EX{'renew'};
+	
+	#-----------------------------
+	#¥¹¥ì¥Ã¥É¤Î¥í¥Ã¥¯
+	if($EX{'lockThread'}&&$IN{'i'}){
+		#¸¢¸Â¤ò¥Á¥§¥Ã¥¯
+		unless(1or$CF{'admps'}&&$IN{'pass'}eq$CF{'admps'}
+			or$CF{'lockPassword'}&&$IN{'pass'}eq$CF{'lockPassword'}){
+			die '¤¢¤Ê¤¿¤Ï¤³¤Î¥¹¥ì¥Ã¥É¤ò¥í¥Ã¥¯¤Ç¤­¤Þ¤»¤ó¡£';
+		}
+		open(RW,'+>>'."$CF{'log'}$IN{'i'}.cgi")
+		||die"Can't read/write log($IN{'i'};.cgi)[$?:$!]";
+		eval{flock(RW,2)};
+		seek(RW,0,0);
+		my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
+		
+		my$flag=0;
+		index($log[$#log],"Mir12=\tLocked")<0?++$flag&&push(@log,"Mir12=\tLocked;\t"):pop@log;
+		truncate(RW,0);
+		seek(RW,0,0);
+		print RW map{"$_\n"}@log;
+		close(RW);
+		
+		#½¤Àµ¥â¡¼¥É¤Ë°ÜÆ°
+		$IN{'page'}=1;
+		$IN{'rvs'}='';
+		$IN{'_isEditing'}=1;
+		&showRvsMenu(sprintf"Âè$IN{'i'}ÈÖ¥¹¥ì¥Ã¥É¤Î¥í¥Ã¥¯%sÀ®¸ù",$flag?'':'²ò½ü');
+	}
 	
 	#-----------------------------
 	#ËÜÊ¸¤Î½èÍý
@@ -381,7 +388,7 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 			if($CF{'strong'}=~/^ /o){
 				#³ÈÄ¥¸ì¶ç¶¯Ä´
 				for(sort{length$b<=>length$a}keys%ST){
-					if($_=~/^\/(.+)\/$/o){
+					if(/^\/(.+)\/$/o){
 						my$regexp=$1;
 						($ST{$_}=~s/^\/(.+)\/$/$1/o)?($str=~s[$regexp][$ST{$_}]gm)
 						:($str=~s[$regexp][<STRONG  clAss="$ST{$_}"  >$1</STRONG>]gm);
@@ -459,9 +466,9 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 					$text_tmp=~s{($http_URL_regex|$ftp_URL_regex|($mail_regex))}
 					{
 						my$href=$2?'mailto:':'';
-						my$org=$1;
-						($href.=$org)=~tr/"/\01/;
-						qq{<A class="autolink" href="$href" target="_blank">$org</A>}
+						my$text=$1;
+						($href.=$text)=~tr/"/\01/;
+						qq{<A class="autolink" href="$href" target="_blank">$text</A>}
 					}ego;
 					$result.=$text_tmp.$tag_tmp;
 					$skip=1 if$tag_tmp=~/^<[aA](?!\w)/;
@@ -495,7 +502,32 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 	#-----------------------------
 	#½ñ¤­¹þ¤à¥Ç¡¼¥¿¤ÎÁ°½èÍý
 	my$crcOfThisArticle=&getCRC32($IN{'body'});
-	$IN{'signature'}=&getSignature($EX{'signature'}||$IN{'pass'});
+	$IN{'_Signature'}=&getSignature($EX{'signature'}||$IN{'pass'},$EX{'signature'});
+	
+	#-----------------------------
+	#ZERO¾ðÊó¤Î¼èÆÀ
+	open(ZERO,'+>>'."$CF{'log'}0.cgi")||die"Can't read/write log(0.cgi)[$?:$!]";
+	eval{flock(ZERO,2)};
+	seek(ZERO,0,0);
+	my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
+	index($zero[0],"Mir12=\t")<0||die"ZERO¤Î¥í¥°·Á¼°¤¬Mir12·¿°Ê³°¤Ç¤¹($zero[0])";
+	%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
+	my@zer1=split(/\s+/o,$zero[1]);
+	@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
+	#-----------------------------
+	#@zer2¤Î¥¨¥é¡¼ÄûÀµ
+	for(@file){
+		$_>$zer2[0]||next; #´û¤Ë¸Å¤¯¤Ê¤Ã¤¿¤â¤Î
+		$zer2[$_-$zer2[0]]&&next; #Àµ¾ï
+		
+		#°Ê²¼°Û¾ï¤Ê¤â¤Î¤ÎÉüµì
+		$zer2[$_-$zer2[0]]=(stat("$CF{'log'}$_.cgi"))[9];
+	}
+	
+	#-----------------------------
+	#¸½ºß¤¢¤ë¥í¥°¤Î¥ê¥¹¥È¤ò¼èÆÀ
+	&logfiles('number');
+	$IN{'i'}=$file[0]+1if$IN{'i'}&&$IN{'i'}>$file[0]+1;
 	
 	#-----------------------------
 	#½ñ¤­¹þ¤ß¤ÎÁ°½èÍý¤ò³ÈÄ¥¤·¤¿¤¤»þÍÑ
@@ -503,9 +535,9 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 	
 	#-----------------------------
 	#¤¤¤è¤¤¤è
-	unless($IN{'ArtType'}&2){
+	unless($IN{'_ArticleType'}&2){
 		#¿·µ¬¡¦ÊÖ¿®½ñ¤­¹þ¤ß
-		$IN{'newps'}=&mircrypt($^T,$IN{'pass'});
+		$IN{'_NewPassword'}=&mircrypt($^T,$IN{'pass'});
 		$EX{'znew'}=1;
 		if($IN{'i'}&&$zero[1]=~/($IN{'i'}):$crcOfThisArticle:([1-9]\d*)/
 			or length$IN{'j'}&&$zero[1]=~/(\d+):$crcOfThisArticle:($IN{'j'})/){
@@ -530,7 +562,7 @@ _HTML_
 			&rvsij;
 			print&getFooter;
 			exit;
-		}elsif(!$IN{'ArtType'}){
+		}elsif(!$IN{'_ArticleType'}){
 			#-----------------------------
 			#¿·µ¬½ñ¤­¹þ¤ß
 			if($CF{'logmax'}>0&&@file>$CF{'logmax'}){
@@ -578,8 +610,8 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 			eval{flock(WR,2)};
 			truncate(WR,0);
 			seek(WR,0,0);
-			print WR "Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'newps'};\ttime=\t$^T;\t"
-			."body=\t$IN{'body'};\tsignature=\t$IN{'signature'};\t"
+			print WR "Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'_NewPassword'};\ttime=\t$^T;\t"
+			."body=\t$IN{'body'};\tsignature=\t$IN{'_Signature'};\t"
 			.join('',map{"$_=\t$IN{$_};\t"}grep{defined$IN{$_}}($CF{'prtitm'}=~/\+([a-z\d]+)\b/go))."\n";
 			close(WR);
 		}else{
@@ -607,8 +639,8 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 				&showUserError('´û¤ËºÇÂç»Òµ­»ö¿ôÀ©¸Â¤ò±Û¤¨¤Æ¤¤¤ë');
 			}
 			print RW $prefix
-			."Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'newps'};\ttime=\t$^T;\t"
-			."body=\t$IN{'body'};\tsignature=\t$IN{'signature'};\t"
+			."Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'_NewPassword'};\ttime=\t$^T;\t"
+			."body=\t$IN{'body'};\tsignature=\t$IN{'_Signature'};\t"
 			.join('',map{"$_=\t$IN{$_};\t"}grep{defined$IN{$_}}($CF{'chditm'}=~/\+([a-z\d]+)\b/go))."\n";
 			close(RW);
 		}
@@ -641,7 +673,7 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 				$IN{'oldps'}=$IN{'pass'};
 			}else{
 				#Pass¤½¤Î¤Þ¤Þ
-				$IN{'newps'}=$DT{'pass'};
+				$IN{'_NewPassword'}=$DT{'pass'};
 			}
 		}else{
 			#UserPass¤Ë¤è¤ë
@@ -656,15 +688,15 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 			#PassÊÑ¹¹
 			$IN{'oldps'}=$IN{'pass'};
 		}
-		unless($IN{'newps'}){
+		unless($IN{'_NewPassword'}){
 			#PassÊÑ¹¹¡¦Æü»þÊÑ¹¹
 			$EX{'dnew'}&&($DT{'time'}=$^T);
-			$IN{'newps'}=&mircrypt($DT{'time'},$IN{'pass'});
+			$IN{'_NewPassword'}=&mircrypt($DT{'time'},$IN{'pass'});
 		}
 		#½ñ¤­¹þ¤ß
 		$log[$IN{'j'}]=
-			"Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'newps'};\ttime=\t$DT{'time'};\t"
-			."body=\t$IN{'body'};\tsignature=\t$IN{'signature'};\t"
+			"Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'_NewPassword'};\ttime=\t$DT{'time'};\t"
+			."body=\t$IN{'body'};\tsignature=\t$IN{'_Signature'};\t"
 			.join('',map{"$_=\t$IN{$_};\t"}grep{defined$IN{$_}}
 			((!$IN{'j'}?$CF{'prtitm'}:$CF{'chditm'})=~/\+([a-z\d]+)\b/go));
 		truncate(RW,0);
@@ -842,19 +874,19 @@ _HTML_
 	#¥í¥°½èÍý
 	&logfiles('number');
 	my$pgslct=&pgslct($#file,$CF{'delpg'},$mode);
-	my@i=@file;
-	@i=splice(@i,($IN{'page'}-1)*$CF{'delpg'},$CF{'delpg'});
-	$i[$#i]==0&&pop@i;
+	my@thisPage=@file;
+	@thisPage=splice(@thisPage,($IN{'page'}-1)*$CF{'delpg'},$CF{'delpg'});
+	$thisPage[$#thisPage]==0&&pop@thisPage;
 	print<<"_HTML_";
 <DIV class="center">$pgslct</DIV>
 
 <FORM id="List" method="post" action="index.cgi">
 <DIV class="center"><TABLE border="1" cellspacing="0" class="list" summary="List" width="80%">
 <COL style="width:5em">
-<COL style="width:15em">
+<COL style="width:17em">
 <COL>
 <TR>
-<TD style="text-align:center">[$i[0]-$i[$#i]]</TD>
+<TD style="text-align:center">[$thisPage[0]-$thisPage[$#thisPage]]</TD>
 <TD><SPAN class="ak">P</SPAN>assword: <INPUT name="pass" type="text"
  accesskey="p" size="12" style="ime-mode:disabled" value="$CK{'pass'}"></TD>
 <TD>
@@ -864,7 +896,7 @@ _HTML_
 </TD></TR>
 _HTML_
 	#¥í¥°¥¹¥ì¥Ã¥É¤´¤È
-	for(@i){
+	for(@thisPage){
 		$_||next;
 		-e"$CF{'log'}$_.cgi"||next;
 		my$i=$_;
@@ -876,8 +908,16 @@ _HTML_
 		#µ­»ö¤´¤È
 		while(<RD>){
 			$j++;
-			index($_,"Mir12=\tLocked")||last;
 			index($_,"Mir12=\tdel;\t")||next;
+			unless(index($_,"Mir12=\tLocked")<0){
+				print<<"_HTML_";
+<TR class="child">
+<TH align="right">LOCKED</TH>
+<TD align="right" colspan="2">¤³¤Î¥¹¥ì¥Ã¥É¤Ï¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤Þ¤¹</TD>
+</TR>
+_HTML_
+				last;
+			}
 			my%DT=($_=~/([^\t]*)=\t([^\t]*);\t/go);
 			$j&&($count="Res $j");
 			my$No="$i-$j";
@@ -1183,7 +1223,10 @@ sub showUserError{
 <TABLE border="1" summary="¥æ¡¼¥¶¡¼ÆþÎÏÊÑ¿ô¤òÉ½¼¨¤·¤Æ¤ª¤¯">
 <CAPTION>º£¼õ¤±¼è¤Ã¤¿°ú¿ô</CAPTION>
 _HTML_
-	print map{"<TR><TH>$_</TH><TD><XMP>$IN{$_}</XMP></TD>\n"}keys%IN;
+	for(grep{m/^[^_]/o&&defined$IN{$_}&&length$IN{$_}}keys%IN){
+		$IN{$_}=~s/<BR>/\n/go;
+		printf"<TR><TH>%s</TH><TD><XMP>%s</XMP></TD>\n",$_,$IN{$_};
+	}
 	print '</TABLE>';
 	print&getFooter;
 	exit;
@@ -1351,15 +1394,15 @@ sub getParam{
 				}elsif($DT{'oldps'}=~/(.{1,24})/o){
 					$IN{'oldps'}=$1;
 				}
-				$IN{'ArtType'}=!$IN{'j'}?2:3;
+				$IN{'_ArticleType'}=!$IN{'j'}?2:3;
 			}else{
 				#¿·µ¬»Òµ­»ö
-				$IN{'ArtType'}=1;
+				$IN{'_ArticleType'}=1;
 			}
 		}else{
 			#¿·µ¬¿Æµ­»ö
 			$IN{'j'}=0;
-			$IN{'ArtType'}=0;
+			$IN{'_ArticleType'}=0;
 		}
 
 =item µ­»ö¼ïÊÌ
@@ -1381,7 +1424,7 @@ sub getParam{
 		}
 		
 		{ #¥Õ¥©¡¼¥à¤ÎÆâÍÆ½èÍý
-			for($CF{$IN{'ArtType'}&1?'chditm':'prtitm'}=~/\b([a-z\d]+)\b/go){
+			for($CF{$IN{'_ArticleType'}&1?'chditm':'prtitm'}=~/\b([a-z\d]+)\b/go){
 				if('color'eq$_){
 					$IN{'color'}=($DT{'color'}=~/([\#\w\(\)\,]{1,20})/o)?"$1":'';
 				}elsif('email'eq$_){
@@ -1404,15 +1447,15 @@ sub getParam{
 		}
 		#body¤Î½èÍý¤Ï´ðËÜÅª¤Ë&writeArticle¤Ç¹Ô¤¦
 		$IN{'body'}=$DT{'body'}=~/(.*\S)/os?$1:'';
-		$IN{'isEditing'}=1;
+		$IN{'_isEditing'}=1;
 	}elsif(defined$DT{'new'}){
 		#¿·µ¬½ñ¤­¹þ¤ß
 		$IN{'j'}=0;
-		$IN{'isEditing'}=1;
+		$IN{'_isEditing'}=1;
 	}elsif(defined$DT{'res'}){
 		#ÊÖ¿®½ñ¤­¹þ¤ß
 		$IN{'i'}=$1 if$DT{'res'}=~/([1-9]\d*)/o;
-		$IN{'isEditing'}=1;
+		$IN{'_isEditing'}=1;
 	}elsif(defined$DT{'seek'}){
 		#¸¡º÷
 		$IN{'seek'}=($DT{'seek'}=~/(.+)/o)?"$1":'';
@@ -1430,7 +1473,7 @@ sub getParam{
 			$IN{'pass'}="$1";
 		}
 		$IN{'del'}=($DT{'del'}=~/(\d+\-\d+(\-\d)?)/o)?"$1":'';
-		$IN{'isEditing'}=1;
+		$IN{'_isEditing'}=1;
 	}elsif(defined$DT{'rvs'}){
 		#µ­»ö½¤Àµ¥ê¥¹¥Èor¼Â¹Ô
 		$IN{'page'}=($DT{'page'}&&$DT{'page'}=~/([1-9]\d*)/o)?$1:1;
@@ -1441,7 +1484,7 @@ sub getParam{
 			$IN{'pass'}="$1";
 		}
 		$IN{'rvs'}=($DT{'rvs'}=~/(\d+\-\d+)/o)?"$1":'';
-		$IN{'isEditing'}=1;
+		$IN{'_isEditing'}=1;
 	}elsif(defined$DT{'icct'}){
 		#¥¢¥¤¥³¥ó¥«¥¿¥í¥°
 		$IN{'page'}=($DT{'page'}&&$DT{'page'}=~/([1-9]\d*)/o)?$1:1;
@@ -1977,8 +2020,9 @@ $ 32bit¤Î10¿Ê¿ô¤¬Íß¤·¤¤»þ¤Ë¿¿¤ò¡£
 #
 sub getSignature{
 	my$word=shift;
+	my$canUseSpecial=shift()&&$CF{'signatureSpecial'};
 	my$signature;
-	if($CF{'signatureSpecial'}&&$CF{'signatureSpecial'}=~/(?:^|\s+)\Q$word\E\s+(\S+)/o){
+	if($canUseSpecial&&$CF{'signatureSpecial'}=~/(?:^|\s+)\Q$word\E\s+(\S+)/o){
 		$signature='!'.$1;
 	}else{
 		my$salt='';
