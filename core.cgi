@@ -1513,18 +1513,21 @@ _HTML_
 	print"Last-Modified: $lastModified\n"if$CF{'useLastModified'};#exp.
 	#GZIP Switch
 	my$status=qq(<META http-equiv="Last-Modified" content=").$lastModified."\">\n";
+	$status.=join ''
+	,map{qq(<META http-equiv="Set-Cookie" content="$_">\n)}split("\n",$CF{'-setCookie'})if$CF{'-setCookie'};
+	
 	!defined$CF{'conenc'}&&$CF{'gzip'}&&($CF{'conenc'}="|$CF{'gzip'} -cfq9");
 	if($CF{'conenc'}&&$ENV{'HTTP_ACCEPT_ENCODING'}&&(index($ENV{'HTTP_ACCEPT_ENCODING'},'gzip')>-1)){
 		#上のif文でgzip決め打ちしているのは“仕様”
 		#gzip/compress以外に対応してるブラウザは稀なため、可変への需要が少ないと思われるためと
 		#$CF{'conenc'}を設定可能にしているのは、GZIP圧縮転送のON/OFF切り替えのため、だから
-		if( $ENV{'HTTP_SERVER_NAME'}#広告対策
-		and	index($ENV{'HTTP_SERVER_NAME'},'tkcity.net')>-1
-		||	index($ENV{'HTTP_SERVER_NAME'},'infoseek.co.jp')>-1
-		||	index($ENV{'HTTP_SERVER_NAME'},'tok2.com')>-1
-		||	index($ENV{'HTTP_SERVER_NAME'},'tripod')>-1
-		||	index($ENV{'HTTP_SERVER_NAME'},'virtualave.net')>-1
-		||	index($ENV{'HTTP_SERVER_NAME'},'hypermart.net')>-1
+		if( $ENV{'SERVER_NAME'}#広告対策
+		and	index($ENV{'SERVER_NAME'},'tkcity.net')>-1
+		||	index($ENV{'SERVER_NAME'},'infoseek.co.jp')>-1
+		||	index($ENV{'SERVER_NAME'},'tok2.com')>-1
+		||	index($ENV{'SERVER_NAME'},'tripod')>-1
+		||	index($ENV{'SERVER_NAME'},'virtualave.net')>-1
+		||	index($ENV{'SERVER_NAME'},'hypermart.net')>-1
 		){
 			print"\n";
 			$status.="<!-- can't use gzip on this server because of advertisements -->";
@@ -1749,21 +1752,28 @@ sub setCookie{
 		$CK{'time'}=$^T-$CF{'newnc'};
 	}
 	$DT{'lastModified'}=$^T;
+	my$expires=$^T+33554432; #33554432=2<<24; #33554432という数字に特に意味はない、ちなみに一年と少し
 	if($CF{'ckpath'}){
 		my$cook=join('',map{"\t$_\t$DT{$_}"}("time expire lastModified"=~/\b([a-z\d]+)\b/go));
 		$cook=~s/(\W)/'%'.unpack('H2',$1)/ego;
-		print"Set-Cookie: Mireille=$cook; expires=".&datef($^T+33554432,'cookie')."\n";
+		$CF{'-setCookie'}="Mireille=$cook; expires=".&datef($expires,'cookie');
 		$cook=join('',map{"\t$_\t$DT{$_}"}
 		("name pass lastModified $CF{'cokitm'}"=~/\b([a-z\d]+)\b/go));
 		$cook=~s/(\W)/'%'.unpack('H2',$1)/ego;
-		print"Set-Cookie: Mireille=$cook; expires=".&datef($^T+33554432,'cookie')."; $CF{'ckpath'}\n";
+		$CF{'-setCookie'}.="\nMireille=$cook; expires=".&datef($expires,'cookie')."; $CF{'ckpath'}";
 	}else{
 		my$cook=join('',map{"\t$_\t$DT{$_}"}
 		("name pass time expire lastModified $CF{'cokitm'}"=~/\b([a-z\d]+)\b/go));
 		$cook=~s/(\W)/'%'.unpack('H2',$1)/ego;
-		print"Set-Cookie: Mireille=$cook; expires=".&datef($^T+33554432,'cookie')."\n";
+		$CF{'-setCookie'}="Mireille=$cook; expires=".&datef($expires,'cookie');
 	}
-	#33554432=2<<24; #33554432という数字に特に意味はない、ちなみに一年と少し
+	$CF{'set_cookie_by_meta_tags'}=1if index($ENV{'SERVER_NAME'},'tok2.com')>-1&&!defined$CF{'set_cookie_by_meta_tags'};
+	if($CF{'set_cookie_by_meta_tags'}){
+		#tok2対策
+	}else{
+		print map{qq(Set-Cookie: $_\n)}split("\n",$CF{'-setCookie'});
+		undef($CF{'-setCookie'});
+	}
 }
 
 
