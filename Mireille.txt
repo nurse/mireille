@@ -4,7 +4,7 @@
 = Mireille - Bulletin Board System
 # - Mireille Manpage -
 #
-# $Mireille: 1_2_12 $
+# $Mireille: 1_2_13 $
 # $Revision$
 # "This file is written in shift_jis, CRLF." ‹ó
 # http://www.airemix.com/
@@ -63,6 +63,12 @@ index.cgi‚Ì’†‚Ì(({$CF{'conenc'}='|gzip -cfq9';}))‚Æ‚¢‚¤Š‚ğ(({$CF{'conenc'}='';}
 
 #------------------------------------------------------------------------------#
 == Coming soon...?/memo.
+:Mireille 1.3
+  ‚»‚ë‚»‚ëMireille‚à1.3‚É‚È‚è‚Ü‚·B
+  1.3‚ÌV‹@”\‚ÍA‚Ü‚¸ƒvƒ‰ƒOƒCƒ“‹@”\iƒ‚ƒWƒ…[ƒ‹‹@”\Hj‚Å‚·B
+  “–‰ƒvƒ‰ƒOƒCƒ“‚Æ‚µ‚Ä‚ÍA–{•¶‚ğRD‚Æ‚µ‚Ä‹Lq‚·‚é‚à‚ÌA‚Æ‚©‚É‚È‚é—\’èB
+  ƒXƒLƒ“‹@”\‚ª1.3‚É·‚è‚Ü‚ê‚é‚©‚Ç‚¤‚©‚Í–¢’è‚Å‚·B
+
 :suƒIƒvƒVƒ‡ƒ“
   ŠÇ—ÒƒpƒXƒ[ƒh‚ªuhoehoev‚Ì‚ÉA“ŠeƒRƒ}ƒ“ƒh—“‚Éu(({su=hoehoe;}))v‚Æ“ü‚ê‚Ä‚¨‚­‚ÆA
   ‚»‚êˆÈ~Cookie‚ÉŠÇ—Ò‚Å‚ ‚é‚±‚Æ‚ª•Û‘¶‚³‚êA‚¢‚¿‚¢‚¿ŠÇ—ÒƒpƒXƒ[ƒh‚ğ“ü‚ê‚È‚­‚Ä‚àA
@@ -102,6 +108,21 @@ index.cgi‚Ì’†‚Ì(({$CF{'conenc'}='|gzip -cfq9';}))‚Æ‚¢‚¤Š‚ğ(({$CF{'conenc'}='';}
 
 #------------------------------------------------------------------------------#
 == Mireille History
+=== 2003-09-13 Release 1.2.13
+index.cgi‚Í1.2.2.21ˆÈ~‚Å‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñB
+:core.cgi
+  * ˆê“xCookie‚ÉƒRƒ}ƒ“ƒh—“‚Ì“à—e‚ª•Û‘¶‚³‚ê‚é‚ÆAÁ‚¦‚È‚©‚Á‚½ƒoƒO‚ğC³
+  * ‚æ‚èƒ‰ƒCƒuƒ‰ƒŠ‚Æ‚µ‚Äg‚¢‚â‚·‚¢‚æ‚¤‚Éˆê•”‚ğ’²®
+  * Mireille Error Screen‚ğ1.2.2‚É
+  * @zer2‚ÌƒGƒ‰[’ù³‚ª“­‚¢‚Ä‚¢‚È‚©‚Á‚½‚Ì‚ğC³
+:index.cgi,manage.cgi
+  * $CF{'encoding'}‚ğ–{Ši“I‚Ég‚¤‚æ‚¤‚É
+  * Mireille Error Screen‚ğ1.2.2‚É
+  * ƒXƒŒƒbƒhƒtƒ@ƒCƒ‹‚Ì‰{——‹@”\‚ğ’Ç‰Á
+:help.pl
+  * document.all‚É‘Î‰‚µ‚½ƒuƒ‰ƒEƒU‚ÅAƒNƒbƒL[‚ÌC³‚ª‚Å‚«‚È‚©‚Á‚½ƒoƒO‚ğC³
+:Mireille.txt
+  * Mireille‚Ìd—l / –¢“Ç”»•Ê‹@\
 === 2003-07-25 Release 1.2.12
 :core.cgi
   * 0.cgi‚Ìî•ñ‚ğ‹L–”Ô†‡‚Ì‚Æ‚«“Ç‚İ‚ñ‚Å‚¢‚È‚©‚Á‚½‚Ì‚ğC³
@@ -403,7 +424,7 @@ Perl5.8+UTF-8‚É•Ï‚¦‚é‚©AƒXƒNƒŠƒvƒg©‘Ì‚ÍASCII‚É‚µ‚Ästyle‚ÍopenFile‚µ‚Ä‚Æ‚Á‚Ä‚­‚
 •’Ê‚É‚â‚é‚ÆƒAƒCƒRƒ“ƒŠƒXƒg‚ªd‰ß‚¬‚é‚Ì‚ÅA
 Cookie‚ª•Û‘¶‚³‚ê‚Ä‚¢‚é‚Ì‚İACookie‚Ìî•ñ‚ğg‚¤‚±‚Æ‚Å‚Å‚«‚éEEE‚©‚ÈB
 === NoIconStyleˆÈŠO‚ÌƒXƒ^ƒCƒ‹‚Ì”z•z
-Œ»İ‚ÌÂƒx[ƒXƒfƒUƒCƒ“‚Ì‘¼‚ÉAÔ‚â—Î‚âò‚È‚ÇH
+Œ»İ‚ÌÂƒx[ƒXƒfƒUƒCƒ“‚Ì‘¼‚ÉAÔ‚â—Î‚âò‚È‚ÇH©‚à‚¤ÀŒ»‚µ‚½
 ‚à‚Á‚Æ‘å•‚ÉƒfƒUƒCƒ“‚ğ•Ï‚¦‚½‚à‚ÌH
 ‚Ç‚È‚½‚©‰ü‘¢‚µ‚½‚à‚Ì‚ğŠñ‘¡‚µ‚Ä‚­‚¾‚³‚é‚ÆŠy‚È‚Ì‚Å‚·‚¯‚Çi‚§‚¡
 === RSS‘Î‰
@@ -425,7 +446,8 @@ Perl5.8‘Ò‚¿‚Å‚·‚ËB
 Storableƒ‚ƒWƒ…[ƒ‹‚È‚ñ‚©g‚¤‚Ì‚¢‚¢‚Å‚·‚ËB
 XMLƒf[ƒ^ƒx[ƒX‚Ü‚Åg‚¿‚á‚Á‚½‚ç‘f“G‚Å‚·‚ËB
 === ŠJ”­Œ¾Œê‚Ì•ÏX
-Ruby‚Æ‚©C#‚Æ‚©B
+Ruby‚Æ‚©C#‚Æ‚©H
+¨•Ï‚¦‚é‚Æ‚µ‚½‚çC#‚É‚Ù‚ÚŒˆ’èB
 
 
 #------------------------------------------------------------------------------#
@@ -834,6 +856,15 @@ Shift_JIS‚ÌƒGƒXƒP[ƒv–â‘è‚âAPerl©‘Ì‚Ì“ú–{Œê‘Î‰‚Ì•sŠ®‘S‚³‚ğ•â‚¤‚½‚ß‚Å‚·B
 “ú–{Œêˆ—‚ÉÛ‚µ‚Ä‚Ì•s‹ï‡‚ªo‚È‚¢‚æ‚¤‚É‚µ‚Ä‚¢‚Ü‚·B
 ‚½‚¾A‚±‚Ì‚Ü‚Ü‚¾‚Æ‘½‘Œê‰»‚Å‚«‚È‚¢‚Ì‚ÅA«—ˆ“I‚É‚ÍPerl5.8+Unicode‚ÉˆÚs‚µ‚½‚¢‚Ì‚Å‚·‚ªBBB
 
+=== –¢“Ç”»•Ê‹@\
+Cookie‚ÉAtime‚Æexpire‚ğ•Û‘¶‚·‚é‚±‚Æ‚Å”»’è‚µ‚Ä‚¢‚Ü‚·B
+
+Šî–{“I‚É‚Í$CK{'time'}‚æ‚èŒÃ‚¢‚à‚Ì‚ğ–¢“Ç‚¾‚Æ”»’è‚µ‚Ü‚·B
+‚±‚±‚Åƒ|ƒCƒ“ƒg‚Æ‚È‚é‚Ì‚ªA$CK{'time'}‚ÍŒ»İ‚Å‚Í‚È‚¢‚±‚ÆB
+$CK{'time'}‚Íˆê“xŒˆ’è‚µ‚½‚çA$CK{'expire'}‚Å¦‚³‚ê‚½‚Ü‚Å•Ï‚í‚è‚Ü‚¹‚ñB
+
+$CK{'expire'}‚ÍA$CK{'time'}‚ª•ÏX‚³‚ê‚½+$CF{'newuc'}A‚Å‚·B
+
 
 #------------------------------------------------------------------------------#
 == ƒƒ‚
@@ -1180,16 +1211,16 @@ suEXEC‚ª—LŒø‚É‚È‚Á‚Ä‚¢‚éApacheAsuEXEC‚ª–³Œø‚É‚È‚Á‚Ä‚¢‚éApacheA‚»‚µ‚Ä‚»‚Ì‘¼B
   * About Conditional Comments ((<URL:http://msdn.microsoft.com/workshop/author/dhtml/overview/ccomment_ovw.asp>))
 :CSS Enhancements in Internet Explorer 6
   ((<URL:http://msdn.microsoft.com/library/en-us/dnie60/html/cssenhancements.asp>))
-  :Keyword Values of the Font-size Property:
+  :Keyword Values of the Font-size Property
     With earlier versions of Internet Explorer, these values are not defined intuitively.
     The medium value is not the default normal font size; small is the default.
-  :TABLE Elements Inherit Text Properties:
+  :TABLE Elements Inherit Text Properties
     TABLE elements inherit the value of text properties from their parents.
     These properties include color, font-size, font-weight, font-style, font-variant, text-decoration,
     text-transform, letter-spacing, and line-height. With earlier versions of Internet Explorer,
     for all of the text properties of TABLE elements except the font-family property,
     set all text properties to the settings on the BODY element.
-  :Width and Height of Inline Elements:
+  :Width and Height of Inline Elements
     Inline elements such as SPAN, B, and I do not support width or height properties.
     If you want to set the width or height property of an inline element with standards-compliant mode switched on,
     you must set the display property of the element to inline-block.
@@ -1203,82 +1234,6 @@ suEXEC‚ª—LŒø‚É‚È‚Á‚Ä‚¢‚éApacheAsuEXEC‚ª–³Œø‚É‚È‚Á‚Ä‚¢‚éApacheA‚»‚µ‚Ä‚»‚Ì‘¼B
   DOM Level 3 Core WD2003-06-09‚ÉUserData‚ªæ‚è‚Ü‚ê‚Ä‚¢‚Ü‚µ‚½B
   ‚Ç‚Ì‚æ‚¤‚È‚à‚Ì‚É‚È‚é‚©‚ÍA‚Ü‚¾‚í‚©‚è‚Ü‚¹‚ñ‚ªAˆê‰Šo‘‚Æ‚µ‚ÄB
   ((<URL:http://www.w3.org/TR/2003/WD-DOM-Level-3-Core-20030609/core.html#DOMUserData>))
-
-
-#------------------------------------------------------------------------------#
-== •i¿“Á«(ISO/IEC9126)‚ÉŠî‚Ã‚­©ŒÈ•ªÍ
-=== 1 ‹@”\« Functionality
-:1.‡–Ú“I« Suitability
-  ŠÇ—CGIü‚è‚Å•s•K—v‚È‹@”\‚ª‘¶İ‚·‚é‰Â”\«‚ ‚è
-:2.³Šm« Accuracy
-  ‚¨‚¨‚Ş‚Ë’B¬‚Å‚«‚Ä‚¢‚é‚Æv‚í‚ê‚é
-:3.‘ŠŒİ‰^—p« Interoperability
-  ‚¨‚¨‚Ş‚Ë’B¬‚Å‚«‚Ä‚¢‚é‚Æv‚í‚ê‚é
-:4.ƒZƒLƒ…ƒŠƒeƒB Security
-  Mireille–{‘Ì‚ÍA‚¨‚¨‚Ş‚Ë’B¬‚Å‚«‚Ä‚¢‚é‚Æv‚í‚ê‚é
-  ŠÇ—CGI‚Í‘½­“ï‚ ‚è‚©
-:5.‹@”\«“K‡« Functional compliance
-  HTML4.01Strict - ˆê•”•s“KŠi
-  CSS 1or2       - ˆê•”•s“KŠi
-  “ú–{‘–@—¥     - –¢’²¸
-=== 2 M—Š« Reliability
-:6.¬n« Maturity
-  ‚Ü‚¾‚Ü‚¾æ’·‚µ
-:7.áŠQ‹–—e« Fault tolerance
-  ‚¨‚¨‚Ş‚Ë’B¬‚Å‚«‚Ä‚¢‚é‚Æv‚í‚ê‚é
-:8.‰ñ•œ« Recoverability
-  ‚¨‚¨‚Ş‚Ë’B¬‚Å‚«‚Ä‚¢‚é‚Æv‚í‚ê‚é
-:9.M—Š«“K‡« Reliability compliance
-  –¢’²¸
-=== 3 g—p« Usability
-:10.—‰ğ« Understandability
-  ¡‚ÌMireille.html‚Í‚Ü‚¾•s\•ª‚©‚ÈH
-:11.K“¾« Learnability
-  CGI‚ªg‚¦‚él‚È‚çg‚¦‚é‚Í‚¸
-:12.‰^—p« Oprability
-  CGIŒf¦”Â‚Éu‰^—pv‚Æ‚¢‚¤‚Ù‚Ç‘å‚°‚³‚È‚±‚Æ‚Í‚ ‚é‚Ì‚©‚È
-:13.‰õ“K« Attractiveness
-  ’B¬‚Å‚«‚Ä‚¢‚é‚Æv‚í‚ê‚éA‚±‚Ì•”•ªÅ—Dæ‚Å‚â‚Á‚Ä‚¢‚é‚í‚¯‚¾‚µ
-  ‚½‚¾AIE5orLater/N6/MozillaˆÈŠO‚¾‚Æ”÷–­
-:14.g—p«“K‡« Usability compliance
-  –¢’²¸
-=== 4 Œø—¦« Efficiency
-:15.ŠÔŒø—¦« Time behavior
-  FANTASiX‚³‚ñ‚ÌSylpheed‚É‚Í•‰‚¯‚é‚¯‚ÇEEE
-  ‚¨‚¨‚Ş‚Ë’B¬‚Å‚«‚Ä‚¢‚é‚Æv‚í‚ê‚é
-:16.‘Œ¹Œø—¦« Resource utilisation
-  CGI/Perl‚²‚Æ‚«‚Å‘Œ¹‰]XŒ¾‚¤‚Ì‚à‚æ‚­‚í‚©‚ç‚È‚¢‚¯‚ÇA
-  ‚¨‚¨‚Ş‚Ë’B¬‚Å‚«‚Ä‚¢‚é‚Æv‚í‚ê‚é
-:17.‘ŠŒø—¦«“K‡« Efficiency compliance
-  –¢’²¸
-=== 5 •Ûç« Maintainability
-:18.‰ğÍ« Analysability
-  ƒRƒƒ“ƒg‚Í‚½‚­‚³‚ñ‚Â‚¯‚Ä‚¢‚é‚Â‚à‚èB
-  ­‚È‚­‚Æ‚à¬£‚Í‰ğÍ‚Å‚«‚é
-  i‚¢‚í‚ä‚éu©•ª‚Å‚à“Ç‚ß‚È‚¢–¡‚í‚¢[‚«ƒXƒpƒQƒbƒeƒBv‚É‚Í‚È‚Á‚Ä‚¢‚È‚¢‚—j
-:19.•ÏX« Changeability
-  ƒXƒNƒŠƒvƒg‚Å‚·‚©‚ç‚»‚ê‚Í“–‘RA‰ğÍ‚Å‚«‚é‚í‚¯‚¾‚µ
-:20.ˆÀ’è« Stability
-  JavaScriptü‚è‚É“ï‚ ‚è
-  ‚Ş‚µ‚ëŒ»İisŒ`‚ÅMozilla‚ÍOpera‚ÍEEE
-  Perl5.6--5.0ŠÔ‚Å‚à‚½‚Ü‚É”­¶‚·‚é
-:21.Œ±« Testability
-  ‹C‡‚ª‚ ‚ê‚Îƒ[ƒJƒ‹‚Å
-:22.•Ûç«“K‡« Maintainability compliance
-  –¢’²¸
-=== 6 ˆÚA« Portability
-:23.ŠÂ‹«“K‡« Adaptability
-  Perl‚ª“®‚¯‚ÎMireille‚à“®‚­A‚Í‚¸iflock‚à‰ñ”ğ‚µ‚½‚µ
-:24.İ’u« Installability
-  ‚Ù‚Ç‚Ù‚ÇA‚©‚È
-  ƒp[ƒ~ƒbƒVƒ‡ƒ“ü‚è‚Íˆê“x‚Í‚Ü‚é‚Æ“DÀ‚É‚È‚é‚Ì‚¾
-:25.‹¤‘¶« Co-existence
-  Š®àøA‚Æ‚¢‚¤‚©CGI/Perl‚Å‹¤‘¶‚Å‚«‚È‚¢‚æ‚¤‚Éì‚é‚Ù‚¤‚ª“ï‚µ‚¢‚Æv‚í‚ê
-:26.’uŠ·« Replaceability
-  ”ŒƒƒOƒf[ƒ^‚ÌˆÚs‚àŠÜ‚ß‚½ÀÑ‚ ‚è
-  ƒƒOƒf[ƒ^‚ÌˆÚs‚ğl‚¦‚È‚¯‚ê‚Î”‘½ #”‘½EEEŒ©‰h’£‚Á‚Ä‚Ü‚·‚—
-:27.ˆÚA«“K‡« Portability compliance
-  –¢’²¸
 
 
 #------------------------------------------------------------------------------#
@@ -1312,11 +1267,6 @@ Mireille–{‘Ì‚Å‚Í‰¡’…‚µ‚Ä‚¢‚é‚Ì‚Åg‚Á‚Ä‚¢‚Ü‚¹‚ñB
 ŠÇ—CGI‚Å‚Íˆê•”‚ğØ‚èo‚µ‚Äg‚Á‚Ä‚¢‚Ü‚·B
 
 ((<URL:http://www.srekcah.org/jcode/>))
-=== Jcode.pm
-jcode.pl‚ÌŒãŒp‚ÅPerl5—pPerlModule‚Æ‚È‚Á‚Ä‚¢‚Ü‚·B
-jcode.pl‚Ì‹@”\‚ÉUnicode‚ğˆµ‚¤‹@”\‚ª’Ç‰Á‚³‚ê‚Ä‚¢‚Ü‚·B
-
-((<URL:http://openlab.ring.gr.jp/Jcode/index-j.html>))
 === KENT-WEB
 ‚È‚É‚Í‚Æ‚à‚ ‚ê“ú–{‚ÌCGI/PerlŠE‚É—^‚¦‚½‰e‹¿‚Í­‚È‚­‚Í‚È‚¢‚Í‚¸‚Å‚·B
 ‚í‚½‚µŒÂl‚Å‚Í“Á‚ÉYYBOARD,YYCHAT‚É‚Í‚¨¢˜b‚É‚È‚è‚Ü‚µ‚½B
@@ -1341,7 +1291,8 @@ HTML•”APerl•”‚Æ‚à‚ÉXƒŠƒtƒ@ƒŒƒ“ƒX‘ã‚í‚è‚É‚µ‚Ü‚µ‚½B
 === ”Ş‚Ì–ìŒ´
 LastPost‚Í‚±‚±‚Ìealis‚Ì^—‚Å‚·B
 ‚Ü‚½Rev:1.2.2‚Ì‹L–ƒiƒr‚Í_”T‚³‚ñ‚Ì‚à‚Ìƒx[ƒX‚Éì‚è‚Ü‚µ‚½B
-Å‹ß‚Å‚ÍPHP‚ÉˆÚ‚Á‚Ä‚ ‚é‚×‚«p‚Æ‚¢‚¤‚à‚Ì‚ğ–Íõ‚µ‚Ä‚¢‚ç‚Á‚µ‚á‚é‚æ‚¤‚Å‚·B
+¡‚ÍPerl‚©‚çPHP‚É—Í“_‚ğˆÚ‚µ‚½–Í—lB
+ƒƒL‚Í‚¶‚ß‚Ü‚µ‚½H
 
 ((<URL:http://kano.feena.jp/>))
 === SWORD AND COMMERCE
