@@ -1,0 +1,528 @@
+@charset "Shift_JIS";
+/* Mireille Style Sheet */
+/* Default Style Sheet for Mireille */
+/* "This file is written in shift_jis, CRLF." 空 */
+/* $Id$ */
+
+/* --------------------- 全体の標準スタイル --------------------- */
+/* 通常のリンク文字 */
+a:link{
+  color: #44f;
+  text-decoration: none;
+}
+a:visited{
+  color: #44f;
+  text-decoration: none;
+}
+a:hover{
+  color: #fa8;
+  text-decoration: underline;
+}
+a:active{
+  color: #f00;
+  text-decoration: underline;
+}
+/* 記事番号のリンク文字 */
+a.number:link{
+  color: #06e;
+  text-decoration: none;
+}
+a.number:visited{
+  color: #06e;
+  text-decoration: none;
+}
+a.number:hover{
+  color: #fa8;
+  text-decoration: underline;
+}
+a.number:active{
+  color: #f50;
+  text-decoration: underline;
+}
+/* 本文自動リンク機能のリンク文字 */
+a.user:link{
+  color: #44f;
+  text-decoration: none;
+}
+a.user:visited{
+  color: #a8f;
+  text-decoration: none;
+}
+a.user:hover{
+  color: #fa8;
+  text-decoration: underline;
+}
+a.user:active{
+  color: #f00;
+  text-decoration: underline;
+}
+
+body{
+  background-color: #fff;
+  color: #355;
+  font-size: 15px;
+  font-family: 'ＭＳ Ｐゴシック','MS UI Gothic',sans-serif;
+  margin: 0.2em 0em;
+  text-align: center;
+}
+form{
+  margin: 0em;
+}
+img{
+  border-style: none;
+}
+pre{
+  font-family: 'ＭＳ Ｐゴシック','MS UI Gothic',sans-serif;
+  font-size: 100%;
+  font-weight: normal;
+  margin: 0.2em;
+  text-align: left;
+}
+select{
+  color: #355;
+  background-color: #fff;
+  font-size: 90%;
+}
+optgroup{
+  font-size: 90%;
+}
+table{
+  background-color: #fff;
+  color: #355;
+  font-family: 'ＭＳ Ｐゴシック','MS UI Gothic',sans-serif;
+  font-size: 100%;
+  text-align: center;
+}
+th,td{
+  text-align: left;
+}
+textarea{
+  font-size: 100%;
+  font-family: 'ＭＳ Ｐゴシック','MS UI Gothic',sans-serif;
+}
+ol,ul{
+  margin-top: 0.5em;
+}
+
+
+/* --------------------- 全体に共通のクラス --------------------- */
+/* アクセスキー */
+.ak{
+  text-decoration: underline;
+}
+/* 新しい記事の日時 */
+.new{
+  color: #f00;
+}
+/* 標準的ボタン */
+input.button{
+  background-color: #eef;
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 2px;
+  cursor: hand;
+}
+/* 標準的ボタン（マウスが重なった時） */
+input.buttonover{
+  background-color: #cdf;
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 2px;
+  cursor: hand;
+}
+/* 確定ボタン（投稿/修正/削除） */
+input.submit{
+  background-color: #dde;
+  border-color: #355;
+  border-style: solid;
+  border-width: 2px;
+  color: #355;
+  cursor: hand;
+  width: 7em;
+}
+/* 確定ボタン（マウスが重なった時） */
+input.submitover{
+  background-color: #bbe;
+  border-color: #355;
+  border-style: solid;
+  border-width: 2px;
+  color: #355;
+  cursor: hand;
+  width: 7em;
+}
+/* 取消ボタン */
+input.reset{
+  background-color: #edd;
+  border-color: #355;
+  border-style: solid;
+  border-width: 2px;
+  color: #355;
+  cursor: hand;
+  width: 7em;
+}
+/* 取消ボタン（マウスが重なった時） */
+input.resetover{
+  background-color: #ebb;
+  border-color: #355;
+  border-style: solid;
+  border-width: 2px;
+  color: #355;
+  cursor: hand;
+  width: 7em;
+}
+/* フォームにフォーカスがある時 */
+.focus{
+  background-color: #dfd;
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 2px;
+  color: #355;
+  font-size: 100%;
+}
+/* フォームにフォーカスが無い時 */
+.blur{
+  background-color: #fff;
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 2px;
+  color: #355;
+  font-size: 100%;
+}
+/* LastPost */
+p.lastpost{
+  margin: 0 0.2em 0 0;
+  text-align: right;
+  text-decoration: underline;
+}
+p.lastpost a{
+  background-color: #cdf;
+  color: #05a;
+  font-size: 13px;
+}
+/* 強調（今見ているページ番号） */
+strong.pgsl{
+  font-size: 130%;
+}
+/* 著作権表示 */
+.AiremixCopy{
+  font: normal 100% sans-serif;
+  margin: 0.5em;
+  text-align: right;
+}
+
+
+/* --------------------- メニュー部 --------------------- */
+/* ページヘッダーテーブル */
+table.head{
+  background:#6ac;
+  color:#fff;
+  width:90%;
+}
+/* 最上位見出し($CF{'head'}にて) */
+h1.head{
+  font-family: 'Comic Sans MS','MS UI Gothic',sans-serif;
+  font-size: 19px;
+  font-weight: normal;
+  margin: 0em 0.5em;
+}
+/* 見出し（Mode表示で主に使用） */
+h2.mode{
+  background-color: #ace;
+  color: #fff;
+  font-family: 'Comic Sans MS','MS UI Gothic',sans-serif;
+  font-size: 17px;
+  font-weight: bold;
+  margin:1em auto;
+  padding: 0.3em;
+  text-align: center;
+  width: 80%;
+}
+/* メニュー */
+table.menu{
+  border-style: none;
+  margin: 2em auto;
+}
+td.menu{
+  background-color: #fff;
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 2px;
+  font-size: 14px;
+  padding: 5px;
+}
+/* ページ選択 */
+table.pgsl{
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 2px;
+  vertical-align: middle;
+  margin: 1em auto;
+  padding: 1px;
+}
+table.pgsl td{
+  padding: 1px;
+  vertical-align: middle;
+}
+
+/* 注意書き */
+div.note{
+  border:#6ac solid 5px;
+  margin:1em auto;
+  padding:0.3em;
+  text-align:left;
+}
+
+
+/* --------------------- 記事表示部 --------------------- */
+/* 記事スレッド */
+div.thread{
+  background-color: #fff;
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 5px;
+  margin: 2em auto;
+  padding: 3px;
+  width: 90%;
+}
+/* 親記事のタイトルテーブル */
+table.subject{
+  background-color: #6ac;
+  color: #fff;
+  margin: 0;
+  width: 100%;
+}
+/* 親記事のタイトルセル */
+th.subject{
+}
+/* 親記事のタイトル */
+h2.subject{
+  font-size: 21px;
+  font-weight: bold;
+  margin:0;
+  text-align: left;
+  margin: 1px 3px;
+}
+/* 記事スレッド移動の矢印 */
+td.arrow{
+  font-size: 20px;
+  text-align: right;
+}
+/* 親記事テーブル */
+table.parent{
+  background-color: #fff;
+  margin: 0.3em 0;
+  width: 100%;
+}
+/* 親記事の記事番号 */
+td.prtnum{
+  font-size: 15px;
+  text-align: center;
+  vertical-align: middle;
+  font-weight: bold;
+  width: 10%;
+}
+/* 子記事テーブル */
+table.child{
+  margin: 0.3em 0 0.3em 5%;
+  width: 95%;
+}
+/* 子記事のタイトルセル */
+th.childsubject{
+  background-color: #6ac;
+  color: #fff;
+}
+/* 子記事のタイトル */
+h3.childsubject{
+  font-size: 17px;
+  font-weight: bold;
+  text-align: left;
+  margin: 0px 3px;
+}
+/* 子記事の返信番号 */
+td.chdnum{
+  background-color: #fff;
+  font-size: 13px;
+  text-align: center;
+  vertical-align: middle;
+  width: 10%;
+}
+/* 投稿者情報欄 */
+td.info{
+  background-color: #ace;
+  color: #355;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 0.1em 0.5em;
+  text-align: left;
+  vertical-align: bottom;
+/*  width: 90%;*/
+}
+/* 投稿者名 */
+span.name{
+  font-size: 17px;
+  font-weight: bold;
+}
+/* HOME */
+span.home{
+  margin: 1em;
+}
+/* 投稿日時 */
+span.date{
+  margin: 0 1em;
+}
+/* 【修正】 */
+span.revise{
+}
+/* アイコン表示欄 */
+td.icon{
+  background-color: #fff;
+  text-align: center;
+  vertical-align: top;
+}
+/* 記事本文 */
+td.body{
+  background-color: #fff;
+  color: #355;
+  font-size: 15px;
+  padding-top: 0.3em;
+  padding-left: 0.5em;
+  text-align: left;
+  vertical-align: top;
+}
+/* 記事スレッドのフッタ欄 */
+h3.artfot{
+  background-color: #cdf;
+  color: #05a;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 3px 0 0 0;
+  text-align: right;
+  width: 100%;
+}
+
+
+/* --------------------- 投稿画面 --------------------- */
+/* 投稿フォームのテーブル */
+table.write{
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 2px;
+  font-size: 14px;
+  margin: 2em auto;
+}
+/* 投稿フォームのタイトル欄 */
+th.wrttle{
+  background-color: #6ac;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+}
+/* 項目名 */
+th.item{
+  background-color: #fff;
+  font-weight: normal;
+  text-align: left;
+}
+/* 入力欄セル位置 */
+td.input{
+  background-color: #fff;
+  text-align: left;
+}
+/* 投稿フォームのフッタ欄 */
+td.wrtfot{
+  background-color: #6ac;
+  text-align: center;
+}
+select#color{
+  color: #fff;
+}
+
+
+/* --------------------- 削除・修正モード --------------------- */
+table.list{
+  background-color: #fff;
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 4px;
+  margin: 2em auto;
+  width: 90%;
+}
+table.list td{
+  background-color: #fff;
+  border-color: #aaf;
+  border-style: solid;
+  border-width: 1px;
+}
+
+/* --------------------- アイコンリスト --------------------- */
+/* アイコングループのテーブル */
+table.icon{
+  background-color: #fff;
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 2px;
+  font-size: 14px;
+  margin: 1em auto;
+  padding: 3px;
+  text-align: center;
+}
+/* アイコングループの名前 */
+table.icon caption{
+  background-color: #6ac;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 0.2em;
+  text-align: left;
+}
+table.icon td{
+  text-align: center;
+}
+/* アイコングループのフッタ */
+table.icon th{
+  background-color: #cdf;
+  color: #05a;
+  font-size: 15px;
+  font-weight: bold;
+  padding: 0.2em;
+  text-align: right;
+}
+
+/* --------------------- ヘルプファイル --------------------- */
+/* ヘルプファイル等のスレッド */
+div.hthread{
+  background-color: #fff;
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 5px;
+  margin: 2em auto;
+  padding: 3px;
+  width: 90%;
+}
+/* リスト項目の大見出し */
+h2.ul{
+  background-color: #6ac;
+  color: #fff;
+  font-size: 21px;
+  font-weight: bold;
+  margin: 0;
+  padding: 0px 3px;
+  text-align: left;
+  width: 100%;
+}
+/* リスト項目の小見出し */
+h3.ul{
+  background-color: #cdf;
+  color: #05a;
+  font-size: 15px;
+  font-weight: normal;
+  margin: 0.3em auto 0em auto;
+  padding:1px;
+  position:relative;
+  bottom: 2px;
+  text-align: left;
+  vertical-align: middle;
+  width: 100%;
+}

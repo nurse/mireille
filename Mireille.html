@@ -1,0 +1,877 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="ja">
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=shift_jis">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="start" href="/">
+<link rel="index" href=".">
+<link rel="help" href="help.html">
+<link rev="made" href="mailto:naruse@airemix.site.ne.jp" title="Mireille">
+<!-- $Id$ -->
+<title>: The Intoroduction to Mireille :</title>
+<style type="text/css" media="screen">
+<!--
+/* --------------------- 全体のスタイル --------------------- */
+a:link{
+  color: #44f;
+  text-decoration: none;
+}
+a:visited{
+  color: #44f;
+  text-decoration: none;
+}
+a:hover{
+  color: #fa8;
+  text-decoration: underline;
+}
+a:active{
+  color: #f00;
+  text-decoration: underline;
+}
+a.number:link{
+  color: #06e;
+  text-decoration: none;
+}
+a.number:visited{
+  color: #06e;
+  text-decoration: none;
+}
+a.number:hover{
+  color: #fa8;
+  text-decoration: underline;
+}
+a.number:active{
+  color: #f50;
+  text-decoration: underline;
+}
+a.user:link{
+  color: #44f;
+  text-decoration: none;
+}
+a.user:visited{
+  color: #a8f;
+  text-decoration: none;
+}
+a.user:hover{
+  color: #fa8;
+  text-decoration: underline;
+}
+a.user:active{
+  color: #f00;
+  text-decoration: underline;
+}
+body{
+  background-color: #fff;
+  color: #355;
+  font-size: 15px;
+  font-family: 'ＭＳ Ｐゴシック','MS UI Gothic',sans-serif;
+  margin: 0.2em 0em;
+  text-align: center;
+}
+form{
+  margin: 0em;
+}
+/* 最上位見出し($CF{'head'}にて) */
+h1{
+  font-family: 'Comic Sans MS','MS UI Gothic',sans-serif;
+  font-size: 19px;
+  font-weight: normal;
+  margin: 0em;
+}
+/* 見出し（Mode表示で主に使用） */
+h2{
+  background-color: #ace;
+  color: #fff;
+  font-family: 'Comic Sans MS','MS UI Gothic',sans-serif;
+  font-size: 17px;
+  font-weight: normal;
+  margin: auto;
+  padding: 0.3em;
+  text-align: center;
+  width: 80%;
+}
+/* 見出し（記事の題名・アイコンのグループ名のベース） */
+h3{
+  background-color: #ace;
+  color: #fff;
+  font-size: 17px;
+  font-weight: bold;
+  margin: 0em auto 0.5em auto;
+  padding: 0.2em;
+  text-align: center;
+  width: 80%;
+}
+/* 見出し（記事のフッタ、説明のリスト項目の小見出しul.li.ul.h4など） */
+h4{
+  background-color: #cdf;
+  color: #05a;
+  font-size: 17px;
+  font-weight: normal;
+  margin: 0em;
+  padding: 0em;
+}
+img{
+  border-style: none;
+}
+pre{
+  font-family: 'ＭＳ Ｐゴシック','MS UI Gothic',sans-serif;
+  font-size: 100%;
+  font-weight: normal;
+  margin: 0.2em;
+  text-align: left;
+}
+/* アイコンセレクトのスタイル */
+select{
+  color: #355;
+  background-color: #fff;
+/*  border-color: #6ac;
+  border-style: solid;
+  border-width: 2px; */
+  font-size: 90%;
+}
+optgroup{
+  font-size: 90%;
+}
+/* 強調（現在のページ番号） */
+strong.pgsl{
+  font-size: 130%;
+}
+table{
+  background-color: #fff;
+  color: #355;
+  font-family: 'ＭＳ Ｐゴシック','MS UI Gothic',sans-serif;
+  font-size: 100%;
+  margin: 1em auto;
+  text-align: center;
+}
+th{
+  text-align: center;
+}
+textarea{
+  font-size: 100%;
+  font-family: 'ＭＳ Ｐゴシック','MS UI Gothic',sans-serif;
+}
+ol,ul{
+  margin-top: 0.5em;
+}
+
+/* --------------------- 全体に共通のクラス --------------------- */
+/* アクセスキー */
+.ak{
+  text-decoration: underline;
+}
+/* 新しい記事の日時 */
+.new{
+  color: #f00;
+}
+/* 標準的ボタンのスタイル */
+input.button{
+  background-color: #eef;
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 2px;
+  cursor: hand;
+}
+input.buttonover{
+  background-color: #cdf;
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 2px;
+  cursor: hand;
+}
+/* 確定ボタン（投稿/修正/削除） */
+input.submit{
+  background-color: #dde;
+  border-color: #355;
+  border-style: solid;
+  border-width: 2px;
+  color: #355;
+  cursor: hand;
+  width: 7em;
+}
+input.submitover{
+  background-color: #bbe;
+  border-color: #355;
+  border-style: solid;
+  border-width: 2px;
+  color: #355;
+  cursor: hand;
+  width: 7em;
+}
+/* 取消ボタン */
+input.reset{
+  background-color: #edd;
+  border-color: #355;
+  border-style: solid;
+  border-width: 2px;
+  color: #355;
+  cursor: hand;
+  width: 7em;
+}
+input.resetover{
+  background-color: #ebb;
+  border-color: #355;
+  border-style: solid;
+  border-width: 2px;
+  color: #355;
+  cursor: hand;
+  width: 7em;
+}
+/* フォームにフォーカスがある時 */
+.focus{
+  background-color: #dfd;
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 2px;
+  color: #355;
+  font-size: 100%;
+}
+/* フォームにフォーカスが無い時 */
+.blur{
+  background-color: #fff;
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 2px;
+  color: #355;
+  font-size: 100%;
+	}
+/* LastPostのスタイル */
+p.lastpost{
+  margin: 0 0.2em 0 0;
+  text-align: right;
+  text-decoration: underline;
+}
+p.lastpost a{
+  background-color: #cdf;
+  color: #05a;
+  font-size: 13px;
+}
+/* メニューのスタイル */
+table.menu{
+  border-style: none;
+  margin: 2em auto;
+}
+td.menu{
+  background-color: #fff;
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 2px;
+  font-size: 14px;
+  padding: 5px;
+}
+/* ページ選択のスタイル */
+table.pgsl{
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 2px;
+  vertical-align: middle;
+  margin: 1em auto;
+  padding: 1px;
+}
+table.pgsl td{
+  padding: 1px;
+  vertical-align: middle;
+}
+
+/* --------------------- 記事表示部のスタイル --------------------- */
+/* 記事スレッドのスタイル */
+div.thread{
+  background-color: #fff;
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 5px;
+  margin: 2em auto;
+  padding: 3px;
+  width: 90%;
+}
+/* 記事スレッドのタイトル */
+h3.title{
+  background-color: #6ac;
+  color: #fff;
+  font-size: 21px;
+  font-weight: bold;
+  margin: 0;
+  padding: 0px 3px;
+  text-align: left;
+  width: 100%;
+}
+/* 親記事テーブルのスタイル */
+table.parent{
+  background-color: #fff;
+  margin: 0.3em 0;
+  width: 100%;
+}
+/* 親記事の記事番号 */
+td.prtnum{
+  background-color: #fff;
+  font-size: 15px;
+  text-align: center;
+  vertical-align: middle;
+  font-weight: bold;
+  width: 10%;
+}
+/* 子記事テーブルのスタイル */
+table.child{
+  background-color: #fff;
+  margin: 0.3em 0 0.3em 5%;
+  width: 95%;
+}
+/* 子記事の返信番号 */
+td.chdnum{
+  background-color: #fff;
+  font-size: 13px;
+  text-align: center;
+  vertical-align: middle;
+  width: 10%;
+}
+/* 投稿者名 */
+span.name{
+  font-size: 17px;
+  font-weight: bold;
+}
+/* HOME */
+span.home{
+  margin: 1em;
+}
+/* 投稿日時 */
+span.date{
+  margin: 0 1em;
+}
+/* 【修正】 */
+span.revise{
+}
+/* 投稿者名・HOME・投稿日時の欄のスタイル */
+td.info{
+  background-color: #ace;
+  color: #355;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 0.1em 0.5em;
+  text-align: left;
+  vertical-align: bottom;
+/*  width: 90%;*/
+}
+/* アイコン表示欄のスタイル */
+td.icon{
+  background-color: #fff;
+  text-align: center;
+  vertical-align: top;
+}
+/* 記事本文のスタイル */
+td.message{
+  background-color: #fff;
+  color: #355;
+  font-size: 15px;
+  padding-top: 0.3em;
+  padding-left: 0.5em;
+  text-align: left;
+  vertical-align: top;
+}
+/* 記事スレッドのフッタ欄 */
+h4.artfot{
+  background-color: #cdf;
+  color: #05a;
+  font-size: 17px;
+  font-weight: normal;
+  margin: 0em;
+  padding: 0em;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 3px 0 0 0;
+  text-align: right;
+  width: 100%;
+}
+
+/* --------------------- 投稿画面のスタイル --------------------- */
+/* 投稿フォームのテーブルのスタイル */
+table.write{
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 2px;
+  font-size: 14px;
+  margin: 2em auto;
+}
+/* 投稿フォームのタイトル欄のスタイル */
+th.wrttle{
+  background-color: #6ac;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+}
+/* 項目名のスタイル */
+th.item{
+  background-color: #fff;
+  font-weight: normal;
+  text-align: left;
+}
+/* 入力欄セル位置のスタイル */
+td.input{
+  background-color: #fff;
+  text-align: left;
+}
+/* 投稿フォームのフッタ欄のスタイル */
+td.wrtfot{
+  background-color: #6ac;
+  text-align: center;
+}
+
+/* --------------------- 削除・修正モード --------------------- */
+table.list{
+  background-color: #fff;
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 4px;
+  margin: 2em auto;
+  width: 90%;
+}
+table.list td{
+  background-color: #fff;
+  border-color: #aaf;
+  border-style: solid;
+  border-width: 1px;
+}
+
+/* --------------------- アイコンリスト --------------------- */
+/* アイコングループのテーブル */
+table.icon{
+  background-color: #fff;
+  border-color: #6ac;
+  border-style: solid;
+  border-width: 2px;
+  font-size: 14px;
+  margin: 1em auto;
+  padding: 0px;
+  text-align: center;
+}
+/* アイコングループの名前 */
+table.icon caption{
+  background-color: #6ac;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+}
+h4.ol{
+  font-size: 15px;
+  font-weight: normal;
+  margin: 0.3em auto 0em auto;
+  padding:1px;
+  position:relative;
+  bottom: 3px;
+  text-align: left;
+  vertical-align: middle;
+  width: 100%
+}
+h3.ul{
+  font-size: 15px;
+  font-weight: normal;
+  margin: 0.3em auto 0em auto;
+  padding:1px;
+  position:relative;
+  bottom: 2px;
+  text-align: left;
+  vertical-align: middle;
+  width: 100%
+}
+th,td{
+  text-align: left;
+}
+ul.li{
+  margin-top: 0em;
+  margin-bottom: 0.1em;
+}
+-->
+</style>
+</head>
+
+<body>
+<p style="font-size:13px;margin:0 0.2em;text-align:right">
+<span style="background-color: #cdf;color:#05a">
+&nbsp;<a href="http://airemix.site.ne.jp/">Airemix</a>/<a href="http://airemix.site.ne.jp/HP_CGI/">HP_CGI</a>/<a href="http://airemix.site.ne.jp/HP_CGI/Mireille.html">Mireille</a>
+</span></p>
+
+<table cellspacing="3" style="background-color:#6ac;color:#fff;margin-top:0;width:90%;">
+<tr>
+<th><h1 style="text-align:left;margin-left:0.5em">'Mireille' Bulletin Board System</h1></td>
+<td style="font-size:15px;text-align:right;letter-spacing:1em">■■■■■■■</td>
+</tr>
+</table>
+
+<h2>: The Intoroduction to Mireille :</h2>
+
+<div class="thread" style="text-align:left">
+<h2 class="ul">◇Mireilleの特徴</h3>
+<ul>
+ <li><h3 class="ul">Mireilleとは</h4>
+  基本的には、レスアイコン掲示板です<br>
+  ちなみに、デザインがある程度変えられるので、アイコンを使わないようにすることも出来ます<br>
+  非レス型にも、ログ保存の形式上やらないほうがいいと思いますが、可能です</li>
+ <li><h3 class="ul">Mireilleとは</h4>
+  基本的には、レスアイコン掲示板です<br>
+  また、HTMLの知識があればCGI上からデザインをかなりの部分まで好みどおりにすることが可能で、<br>
+  色を変えるだけの場合のCSS編集から、記事部分の大幅デザイン変更まで可能です<br>
+  アイコンを使わなかったり、色を選べなくしたり、ということも出来るので自由度は高いほうです<br>
+  他にも重宝するであろう以下の機能を備えています</li>
+ <li><h3 class="ul">Mireilleの持つ機能（来客者から見た場合）</h4>
+  <ul class="li">
+   <li>親記事に子記事がぶら下がる、いわゆるレス式掲示板</li>
+   <li>一つ一つの投稿にアイコンをつけられます</li>
+   <li>来客者による記事の修正・削除機能</li>
+   <li>キーワードによるログ内全検索機能</li>
+   <li>投稿時のアイコンのプレビュー機能</li>
+   <li><a href="http://www.koizuka.jp/wwwd/">WWWD</a>や<a href="http://www.nakka.com/wwwc/">WWWC</a>のLastModified型更新チェックに対応</li>
+   <li>一番上に最後に投稿された内容の情報を一部表示</li>
+   <li>指定時間以内の投稿にNewマーク表示</li>
+   <li>クッキーを見て、未読と思われる記事の日付け色づけ</li>
+   <li>アクセスキーがそこそこ設定されている（初期デザインの場合）</li>
+   <li>そこそこHTML4.01Strictに準拠（初期デザインの場合）</li>
+   <li>そこそこCSS2に準拠（初期デザインの場合）</li>
+  </ul>
+ </li>
+ <li><h3 class="ul">Mireilleの持つ機能（管理者から見た場合）</h4>
+  <ul class="li">
+   <li>記事の並び順を変更可能（返信がつくとその記事を最初にしたりとか）</li>
+   <li>書き込みがあると指定メールアドレスにメールを送る<br>
+   （除外アドレス設定可能:管理人の書き込みは知らせないとか）</li>
+   <li>ログの最大数を決めて、それを超えたら、<br>
+   スレッドファイル削除かスレッドファイル名変更によって記事を削除できる</li>
+   <li>ログのバックアップがしやすい（1スレッド1ファイルなのでバックアップが比較的お手軽に可能）<br>
+   過去ログも、「ファイル名変更」なら拡張子.bakになったのものだけ回収すれば大丈夫です</li>
+   <li>そこそこ高機能な管理用CGIが付属している</li>
+   <li>CSS読み込み/編集機能（大きなTEXTAREA型）</li>
+   <li>設定ファイル編集機能（フォームに入力する感じなので簡単に出来ると思われます）<br>
+    HTMLの知識があれば、記事表示・投稿画面を始めとする部分のデザインが変更可能</li>
+   <li>アイコンリスト編集機能（大きなTEXTAREA型）</li>
+   <li>アイコンリストから、アイコン一覧のHTMLを生成</li>
+   <li>ログ削除・ログ詰め機能</li>
+   <li>管理人パスワードによる記事削除・編集機能</li>
+  </ul>
+ </li>
+ <li><h3 class="ul">Mireilleを使うにあたって～利用規定（2001-07-21版）</h4>
+  <ul class="li">
+   <li>このCGI/Perlスクリプトはリンクウェアです<br>
+    使用する場合はサイト内のそこそこ目立つところから<a href="http://airemix.site.ne.jp/" title="- Airemix -">Airemix</a>にリンクを張ってください<br>
+    通常は掲示板自体にリンクがついているので何もしなくていいわけですが（笑</li>
+   <li>商用利用は、<br>
+    レンタル掲示板を運用して利益を得ようと、再配布の過程で利益を得ようと自由です<br>
+    ちなみにこの場合も上記の「リンクウェア」の条件は適用されますのでｗ<br>
+    っとちなみに、利益の一部をくださるというのなら喜んで頂きます（ぉ</li>
+   <li>改造・再配布<br>
+    これもご自由にどうぞただ、原型が残っている間はリンクして欲しいですね<br>
+    原型が完全に消えても、「参考にしたところ」くらいにリンクしてくださるとうれしいです</li>
+   <li>いわゆる免責<br>
+    このスクリプトを使って不利益を被ってもわたしは知りません<br>
+    うちの掲示板に実行可能な形で依頼されればなんらかの助けはするかもしれませんが、<br>
+    基本的には何もしない、という形で覚悟してください</li>
+  </ul>
+ </li>
+</ul>
+</div>
+
+<div class="thread" style="text-align:left">
+<h2 class="ul">◇設置の説明書</h3>
+<div style="margin-top:0.5em;margin-left:1em;text-align:left;width:95%">
+この説明ファイルは、HTMLのみで構成されたサイトは作れる方、<br>
+とりあえず圧縮解凍、FTPによるアップロードは知っている人に書かれています<br>
+「ホームページって何？どうやって作るの？」という方は想定していません<br>
+そこまで範囲を広げると「CGIの設置説明」の域を越えてしまうので、ご了承ください<br>
+また、このCGIでは漢字コードにEUCを使用しているため、Windows標準のメモ帳では読めません<br>
+<a href="http://www2s.biglobe.ne.jp/~t-susumu/toclip/">TeraPad</a>、<a href="http://hidemaru.xaxon.co.jp/">秀丸エディタ</a>、<a href="http://sakura-editor.sourceforge.net/index-j.html">さくらエディタ</a>などのEUCも読めるエディタをお使いください<br>
+CGI自体を編集する場合に以上に上げたエディタに搭載されている、<br>
+「色づけ機能」を使うと効率が格段に上がるとおもいます</div>
+<ol>
+ <li><h4 class="ol">DLから解凍まで</h4>
+  まずダウンロードした圧縮ファイル（例えばMirei100.ZIP）を適当なフォルダ内に解凍します<br>
+  この時フォルダ内には
+  <table cellspacing="2" summary="LocalFolder" style="margin:0.5em auto 0.5em 1em">
+   <tr><th>log</th><td>ログ保存フォルダ</td></tr>
+   <tr><th>log/0.pl</th><td>ログ管理ファイル</td></tr>
+   <tr><th>index.cgi</th><td>CGI本体</td></tr>
+   <tr><th>config.pl</th><td>設定ファイル</td></tr>
+   <tr><th>icon.txt</th><td>アイコンリスト</td></tr>
+   <tr><th>icon.html</th><td>アイコンリスト</td></tr>
+   <tr><th>help.html</th><td>ヘルプ</td></tr>
+   <tr><th>style.css</th><td>スタイルシート</td></tr>
+   <tr><th>manage.cgi</th><td>管理CGI</td></tr>
+   <tr><th>Mireille.txt</th><td>MireilleのReadme</td></tr>
+   <tr><th>Mireille.html</th><td>説明書</td></tr>
+   <td colspan="2">その他</td>
+  </table>
+  となっているはずです</li>
+
+ <li><h4 class="ol">初期設定</h4>
+  まずindex.cgiを開いて一番最初の一行を設定します<br>
+  <code>#!/usr/local/bin/perl</code><br>
+  <code>#!/usr/bin/perl</code><br>
+  のどちらかで大部分は動くと思います<br>
+  （Biglobeでは「#!/usr/local/bin/perl5」です）<br>
+  次にconfig.plをエディタで開いて「稼動させる前に確認すること」を確認しておきましょう<br>
+  「GZIPのパス」はよくわからなければ空文字<br>
+  <code>$CF{'gzip'} = '';</code><br>
+  にしておくといいでしょう</li>
+
+ <li><h4 class="ol">FTPからアップロード</h4>
+  設置したいサーバーのディレクトリ（例えば<code>bbs/</code>）に<br>
+  <table cellspacing="2" summary="ServerDirectory" style="margin:0.5em auto 0.5em 1em">
+   <tr><th>パス</th>          <td>属性</td><td>用途</td></tr>
+   <tr><th>/bbs</th>          <td>755</td> <td>掲示板のディレクトリ</td></tr>
+   <tr><th>/bbs/log</th>      <td>755</td> <td>ログ保存ディレクトリ</td></tr>
+   <tr><th>/bbs/log/0.pl</th> <td>666</td> <td>ログ管理ファイル</td></tr>
+   <tr><th>/bbs/index.cgi</th><td>755</td> <td>CGI本体</td></tr>
+   <tr><th>/bbs/config.pl</th><td>666</td> <td>設定ファイル</td></tr>
+   <tr><th>/bbs/icon.txt</th> <td>666</td> <td>アイコンリスト</td></tr>
+   <tr><th>/bbs/icon.html</th><td>666</td> <td>アイコン一覧</td></tr>
+   <tr><th>/bbs/help.html</th><td>644</td> <td>ヘルプ</td></tr>
+   <tr><th>/bbs/style.css</th><td>666</td> <td>スタイルシート</td></tr>
+  </table>
+  のように設置します<br>
+  <br>
+  これでうまく動かない場合はディレクトリの属性を777にしてください<br>
+  プロバイダーやレンタルサーバー側から、CGIのパーミッションを○○にすること<br>
+  と言われている場合はそれに従ってください<br>
+  <br>
+  これで、おそらく、もう動作する状態になっているはずです<br>
+  最初は0.plの内容が表示されていますが、これは何か新しい書き込みがあると、<br>
+  自動的に表示されないようになるのでご安心を<br>
+  さっそく、テスト書き込みをして見ましょう<br>
+  <br>
+  テストがちゃんとできていれば、この掲示板を設置するのに必要なことは終わりです<br>
+  サイト本体からリンクをはって使用してください♪<br>
+  <br>
+  ちなみに以下は、よりMireilleを有効に使うためのCGI、Manage.cgiの説明です<br>
+  必須ではないので、設置したい人だけ設置しましょう</li>
+
+ <li><h4 class="ol">管理CGI設置</h4>
+  まずmanage.cgiを開いて、一行目を設定します<br>
+  その後21行目の$AM{'pass'}を設定してください<br>
+  設定したらFTPで以下のように設置します（実際はここ以外でも設定次第で変えられますが）<br>
+  <code>/bbs/manage.cgi 755 管理CGI</code><br>
+  使用法は表示にしたがってください<br>
+  わかりにくいところがあれば、言ってください<br>
+  表記を変えるなり、これに書き加えるなりします<br>
+  <strong style="color:#f00;font:bold 15px">警告！<br>
+  アップロードする際には、ファイルの名前を予測のつかない名前、<br>
+  （例えばou9w_eq6njl4q.cgiのような）に変更してからアップロードしてください<br>
+  このCGIは破壊的な機能も持っているので外部の人に場所を知られると危険です</strong><br>
+  ちなみに、ファイル名を変えると動かなくなるのではないか、と思う方もいるでしょうが、<br>
+  管理CGIはファイル名を変えても大丈夫なように作っているので、ご安心ください</li>
+</ol>
+</div>
+
+<div class="thread" style="text-align:left">
+<h2 class="ul">◇Mireilleの注意事項</h3>
+<ul>
+ <li><h3 class="ul">漢字コード</h4>
+  Mireilleは、このMireille.txtとそのほか一部のファイルを除いて全て、<br>
+  EUCという漢字コード書かれています<br>
+  そのため、メモ帳を筆頭とする、EUC非対応のエディタでは編集することが出来ません<br>
+  EUC対応のエディタをご使用ください以下は推奨するエディタです<br>
+  TeraPad
+  <a href="http://www2s.biglobe.ne.jp/~t-susumu/toclip/">http://www2s.biglobe.ne.jp/~t-susumu/toclip/</a><br>
+  秀丸エディタ
+  <a href="http://hidemaru.xaxon.co.jp/">http://hidemaru.xaxon.co.jp/</a><br>
+  さくらエディタ
+  <a href="http://sakura-editor.sourceforge.net/">http://sakura-editor.sourceforge.net/</a><br>
+  他にもEmEditorやWZEdiotrなどが対応しています<br>
+  特に本格的にやるならば、色分けをしてくれるエディタだと格段に、<br>
+  効率が上がり、かつミスも減ると思います<br>
+  <br>
+  ちなみになぜEUCを使っているかといいますと、<br>
+  たしかに多くの人はWindowsを使っているでしょうから、<br>
+  Windows標準のShift_JISを使ったほうがいいです<br>
+  わたしも本当はWindows上での利便性を考えればShift_JISを使いたいのですが、<br>
+  Shift_JISだと一部の漢字をCGI処理の中でうまく処理できないのです<br>
+  具体的には、「print"能";」というようなコマンドでエラーが出ます<br>
+  これはShift_JISでの「能」の16進文字コードが0x945cなため下の二桁が、<br>
+  0x5cである特殊文字「\」と被ってしまうからです<br>
+  このような文字は「能」「饅」など数十文字あり、<br>
+  回避策は何個かありますが、一番確実な回避策がEUCを使う、ということだったわけです<br>
+  EUCにはこのようなエラーを誘発する文字が、無いように作られていますから、<br>
+  大丈夫なわけです<br>
+  <br>
+  また全てをEUCに統一してしまうことで、漢字コード変換処理の省略、<br>
+  いわゆる半角カタカナを利用すると頻発する文字化けの防止、など楽にしています<br>
+  その意味では今流行の、世界中の全ての文字を一つに詰め込もうという無茶な規格、<br>
+  Unicodeでもいいのですが、まだエディタ側の対応を見ると時期尚早だと思いますので^^;;</li>
+ <li><h3 class="ul">アイコン</h4>
+  <ul class="li">
+   <li>アイコンの最大数<br>
+    理論上は無限になっています<br>
+    ただ、CGI処理の負荷やHTTP転送の負荷を考えると、<br>
+    ほどほどの数にしておいたほうがいいかもしれません<br>
+    わたしの側ではアイコン数800でそこそこのスピードで動作することを確認しています</li>
+   <li>アイコンリスト<br>
+    基本的にOPTGROUP要素とOPTION要素を同時使用することをお勧めします<br>
+    形式としては<pre>
+&lt;optgroup label=&quot;グループ１&quot;&gt;
+&ensp;&lt;option value=&quot;11.png&quot;&gt;アイコン1&lt;/option&gt;
+&ensp;&lt;option value=&quot;12.png&quot;&gt;アイコン2&lt;/option&gt;
+&lt;/optgroup&gt;
+&lt;optgroup label=&quot;グループ二&quot;&gt;
+&ensp;&lt;option value=&quot;21.png&quot;&gt;アイコン一&lt;/option&gt;
+&ensp;&lt;option value=&quot;22.png&quot;&gt;アイコン二&lt;/option&gt;
+&lt;/optgroup&gt;
+&lt;option value=&quot;1.png&quot;&gt;アイコン壱&lt;/option&gt;
+&lt;option value=&quot;2.png&quot;&gt;アイコン弐&lt;/option&gt;</pre>
+    このような形になります<br>
+    OPTGOUPタグ外のOPTIONは全体の末尾に存在しないといけません<br>
+    できればこうするよりも、OPTGROUPに属さないようなOPTIONも、<br>
+    グループ名を「その他」などにしてOPTROUPタグ内に入れてしまったほうがいいです<br>
+    ちなみにoptgroup要素はHTML4で新しく追加された要素で、<br>
+    InternetExplorer6,Netscape6,Mozilla0.8以降で対応を確認しています<br>
+    それ以外では無視されますが、見易さ・分類のしやすさをを考慮すると、<br>
+    今のうちからつけておいたほうがいいと思います<br>
+    入れ子にはHTML4の規格上できないようになっているようなのでご了承ください</li>
+   <li>専用アイコン<br>
+    管理CGIの「CONFIG設定」で設定できます<br>
+    または、<br>
+    <code>$CF{'cmic'}='1';</code><br>
+    としたうえで<br>
+    直接設定ファイルを編集しても設定可能です<br>
+    設定の形式は<pre>
+$IC{'hae'}='mae.png'; #苗
+$IC{'hie'}='mie.png'; #贄
+$IC{'hue'}='mue.png'; #鵺
+$IC{'hee'}='mee.png'; #姐
+$IC{'hoe'}='moe.png'; #乃絵</pre>
+    このようになっています<br>
+    実際に使う場合は「コマンド」欄を使用します<br>
+    上の例のように設定されているとすると、<br>
+    <div><label accesskey="d" for="cmd">■コマンド(<span class="ak">D</span>)：</label>
+    <input type="text" name="cmd" value="icon=hoe" id="cmd" accesskey="d" class="blur"
+    style="ime-mode:inactive;width:200px;" onFocus="this.className='focus'"
+    onBlur="this.className='blur'"></div>
+    このように入力すればアイコンに"moe.png"が設定されます<br>
+    注意：アイコンパスワードには"="、等号は使用できません<br>
+    なるべく[_a-fA-F0-9]の文字のみで構成されているほうがいいと思います</li>
+  </ul>
+ <li><h3 class="ul">意味の混同しやすい語の定義</h4>
+  <ul class="li">
+   <li><dfn>記事スレッド</dfn> Article Thread<br>
+    親記事と子記事を含めた一つのスレッド全体を指します<br>
+    「記事」とは別の意味で使っているので注意してください</li>
+   <li><dfn>親記事</dfn> ParentArticle<br>
+    返信番号0、新規投稿で投稿された記事のことです</li>
+   <li><dfn>子記事</dfn> ChildArticle, Response<br>
+    返信、RESと同じ意味です返信番号が1,2,3,・・のものです</li>
+   <li><dfn>記事</dfn> Article<br>
+    単独で「記事」といったら、前述の親記事または子記事ひとつづつのことです<br>
+    「投稿」という言葉を使ったりもしています</li>
+   <li><dfn>専用アイコン</dfn> ExclusiveIcon<br>
+    普通にSELECTで選べないアイコンのことです<br>
+    パスワードなどで利用できる人を制限、多くの場合個人に対し専用とするので、<br>
+    「専用アイコン」という語を用いています<br>
+    <samp>専用＝管理人専用</samp><br>
+    が必ずしも成り立つわけではありませんので、念のため<br>
+    PrivateでなくExclusiveを使っているのも必ずしも個人では無いからです</li>
+   <li><dfn>ログ</dfn><br>
+    漠然と、今までに投稿された記事の集合、という形で使っています<br>
+    「ログファイル」は「記事スレッドファイル」と同じ意味で、1.plや59.plのことです</li>
+   <li><dfn>フォルダ</dfn> Folder・<dfn>ディレクトリ</dfn> Directory<br>
+    フォルダはWindows用語、ディレクトリはUNIX用語です<br>
+    実際のあらわすものは同じ物です</li>
+   <li>とりあえずこのような感じでしょうか。<br>
+    他にも意味の明確でない語があったら言ってください</li>
+  </ul>
+ </li>
+</ul>
+</div>
+
+<div class="thread" style="text-align:left">
+<h2 class="ul">◇Mireilleの設置でつまづいたら</h3>
+<ul>
+ <li><h3 class="ul">文字化けする</h4>
+  書き込んだ内容はちゃんと表示されるのに、メニューとかが文字化けしている、<br>
+  またはその逆に、メニューとかはちゃんと表示されるのに、書き込んだ内容が文字化けしている、<br>
+  という場合は、CGIをエディタで編集する際にEUC以外の漢字コードで保存してしまっています<br>
+  一番多い原因は、エディタの設定で、「保存時に漢字コードをShift_JISにして保存する」<br>
+  というような意味の設定が ON になっていて、EUC以外の漢字コード（この場合はShift_JIS）で<br>
+  保存してしまっている。という場合が多いと思います<br>
+  <br>
+  この場合は前述のエディタの設定を「読み込んだときの漢字コードと同じもので保存する」<br>
+  というようにしたうえで、「漢字コードを指定して保存する」という項目を探し、<br>
+  EUCで保存しなおした上で、再度サーバーにアップロードすれば、文字化けが解消されていると思います<br>
+  これでも文字化けしている場合はAiremixの<a href="http://airemix.site.ne.jp/bbs/">掲示板</a>に書き込んでください<br>
+  できるだけ善処します<br>
+  <br>
+  ちなみに、TeraPadではこの問題に陥ることがあると思いますが、<br>
+  TeraPadで一つ一つのファイルを開いて、<br>
+  　表示 -> オプション -> ウィンドウ/漢字コード タブ -> 漢字コード グループ<br>
+  　 -> □漢字/改行コードを自動認識する　にチェックをつける<br>
+  　 -> 下の二つは両方「読み込み時の○○コードと同じ」を選ぶ<br>
+  とすることで解決すると思います</li>
+
+ <li><h3 class="ul">パーミッション（属性）について</h4>
+  無料サーバーなどだと、セキュリティ確保のために、サーバー側から、<br>
+  「CGIスクリプトのパーミッションは 700 にしてください」<br>
+  と言われることがあると思います<br>
+  この場合は、この説明書の記述に関わらず、サーバー側の指示に従ってください</li>
+ <li><h3 class="ul">説明書に書いていないファイルが圧縮ファイルの中に入ってた</h4>
+  わたしのミスです<br>
+  申し訳ありませんが、無い物と思ってください</li>
+</ul>
+</div>
+
+<div class="thread" style="text-align:left">
+<h2 class="ul">◇お世話になったところ</h3></li>
+<ul>
+<li><h3 class="ul"><a href="http://openlab.ring.gr.jp/k16/htmllint/" title="Another HTML-lint">Another HTML-lint</a></h4>
+HTMLの検証に際し利用しました<br>
+心の準備をせずにここで調べてもらうと心臓に悪いです</li>
+<li><h3 class="ul"><a href="http://www.artemis.ac/arrange/" title="ARTEMIS">ARTEMIS</a></h4>
+IconPreviewはここからです、便利なので頂きましたｗ<br>
+新しい投稿があると教えてくれる～もここのを見て、です<br>
+他にもいろいろと参考にしています
+管理機能でここを見習う点は数多くあります</li>
+<li><h3 class="ul"><a href="http://kano.vis.ne.jp/erial/" title="elialarts.">erialarts.</a></h4>
+LastPostはここからの拝借です<br>
+これだけのレベルのDHTML機能は当分わたしには無理です^^;;<br>
+tableを使わずに表示させようとしているのも尊敬します<br>
+ここを見なかったら知らなかった機能が何個も・・・</li>
+<li><h3 class="ul"><a href="http://www.ne.jp/asahi/minazuki/bakera/html/hatomaru" title="HTML鳩丸倶楽部">HTML鳩丸倶楽部</a></h4>
+ツッコミメインなHTML解説サイト、にわたしは見えました<br>
+「HTML 4.01 のみを、純粋に学問的な興味から研究」しているそうです
+HTMLの構成に際して参考にしました</li>
+<li><h3 class="ul"><a href="http://www.srekcah.org/jcode/" title="jcode.pl">jcode.pl</a></h4>
+日本語のPerlを扱う際にはかなりの頻度で使います<br>
+Mireille本体では横着しているので使っていませんが^^;;</li>
+<li><h3 class="ul"><a href="http://openlab.ring.gr.jp/Jcode/index-j.html" title="Jcode.pm">Jcode.pm</a></h4>
+再発明された車輪jcode.plの後継、Perl5用PerlModuleとなったJcodeです<br>
+オブジェクト指向でも使えるので、使いやすくなりました</li>
+<li><h3 class="ul"><a href="http://www.kent-web.com/" title="KNET-WEB">KENT-WEB</a></h4>
+なにはともあれ日本のCGI/Perl界に与えた影響は少なくはないはずです<br>
+私個人では特にYYBOARD,YYCHATにはお世話になりました<br>
+きわめてとっつき易いCGIが多いです</li>
+<li><h3 class="ul"><a href="http://www.din.or.jp/~ohzaki/perl.htm" title="Perlメモ">Perlメモ</a></h4>
+URI自動リンク機能をつけるに際し参考に・・・むしろ丸写しです（汗
+PerlのTIPSとしてかなり高いレベルだと思います</li>
+<li><h3 class="ul"><a href="http://validator.w3.org/" title="W3C HTML Validation Service">W3C HTML Validation Service</a></h4>
+HTML規格の策定を行う団体、W3CによるHTML検証サービスです<br>
+Another HTML-lintよりチェック項目は少なめです</li>
+<li><h3 class="ul"><a href="http://wakusei.cplaza.ne.jp/twn/www.htm" title="とほほのWWW入門">とほほのWWW入門</a></h4>
+HTML部、Perl部ともに時々リファレンス代わりにしました<br>
+なかなか載っていて便利です<br>
+それでも一部省略されているのが残念ですが、、</li>
+<li><h3 class="ul"><a href="http://snowish.cside8.com/" title="Snowish Hills">Snowish Hills</a></h4>
+Mireilleを作りこむにあたって、有用なアドバイスや他と対抗可能な機能の助言などを頂きました<br>
+特に管理機能は西名さんに言われなければかなり貧弱なものになっていたでしょう^^;;<br>
+初期状態のデザインも西名さんのデザインをベースにしています<br>
+ちなみに、西名さんのサイト自体はKey系CGサイトです</li>
+<li>他にも意見を下さった方々、参考にしたサイト・CGIの作者さんに感謝します</li>
+</ul>
+</div>
+
+<table cellspacing="3" style="background-color:#6ac;color:#fff;width:90%;">
+<tr>
+<td style="letter-spacing:1em;margin-left:0.5em;text-align:left">■■■■■■■</td>
+<th><h2 style="background:transparent;margin:0 0.5em 0 0;padding:0;text-align:right;width:100%">
+<a href="./" style="color:#fff;font-size:17px;font-weight:normal">BACK to Contents</a></h2></th>
+</tr>
+</table>
+<p style="margin:0;text-align:right;width:90%">[ $Date$ ]</p>
+<p style="font-size:90%;margin:1em;">Copyright&copy; 2001 Airemix. All Rights Reserved.</p>
+</body>
+</html>
