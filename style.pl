@@ -497,7 +497,7 @@ $	この記事の情報
     }
     
     #ファイル添付
-    my($files,$thumbnails) = getAttachedFiles(\%DT) if $DT{'attach'};
+    my $attachments = getAttachedFiles(\%DT) if $DT{'attach'};
     
     #いよいよ出力だよ
     print<<"_HTML_";
@@ -523,7 +523,7 @@ $	この記事の情報
 </TR>
 <TR><TD class="icon">$DT{'_Signature'} $DT{'_Icon'}</TD>
 	<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD></TR>
-$thumbnails$files</TABLE>
+$attachments</TABLE>
 
 _HTML_
     return$DT{'-unreads'};
@@ -559,7 +559,7 @@ $	この記事の情報
     }
     
     #ファイル添付
-    my($files,$thumbnails) = getAttachedFiles(\%DT) if $DT{'attach'};
+    my $attachments = getAttachedFiles(\%DT) if $DT{'attach'};
     
     #いよいよ出力だよ
     print<<"_HTML_";
@@ -585,7 +585,7 @@ _HTML_
 </TR>
 <TR><TD class="icon">$DT{'_Signature'} $DT{'_Icon'}</TD>
 	<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD></TR>
-$thumbnails$files</TABLE>
+$attachments</TABLE>
 
 _HTML_
     return$DT{'-unreads'};
