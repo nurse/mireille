@@ -7,9 +7,9 @@
 # Scripted by NARUSE,Yui.
 #------------------------------------------------------------------------------#
 # $cvsid = q$Id$;
-require 5.005;
-use strict;
-use vars qw(%CF %IC %IN %CK);
+#require 5.005;
+#use strict;
+#use vars qw(%CF %IC %IN %CK);
 
 #-----------------------------
 # デザイン情報
@@ -185,42 +185,6 @@ $CF{'note'}=<<"_CONFIG_";
 <LI>記事ナンバーをクリックすると、その記事の修正画面になります。</LI>
 <LI>その他、機能の詳細についてはヘルプをご覧ください。</LI>
 </UL></TD></TR></TABLE>
-
-_CONFIG_
-
-#-----------------------------
-# 記事のフッター（記事表示モード）
-$CF{'artfot'}=<<'_CONFIG_';
-<TABLE border="0" cellspacing="0" class="foot" summary="ArticleFooter" width="100%"><TR>
-<TH align="right" width="100%"><P align="right"><A accesskey="$DT{'ak'}" name="res$DT{'i'}"
- href="index.cgi?res=$DT{'i'}#art$DT{'i'}-$DT{'j'}">この記事スレッドNo.$DT{'i'}に返信する(<SPAN
- class="ak">$DT{'ak'}</SPAN>)</A></P></TH>
-</TR></TABLE>
-</DIV>
-
-
-_CONFIG_
-
-#-----------------------------
-# 記事のフッター（子記事数制限超過）
-$CF{'artfoto'}=<<'_CONFIG_';
-<TABLE border="0" cellspacing="0" class="foot" summary="ArticleFooter" width="100%"><TR>
-<TH align="right" width="100%"><P align="right"><A accesskey="$DT{'ak'}" name="res$DT{'i'}" class="warning"
- href="#res$DT{'i'}">この記事スレッドNo.$DT{'i'}は子記事数制限に達したので返信できません(<SPAN
- class="ak">$DT{'ak'}</SPAN>)</A></P></TH>
-</TR></TABLE>
-</DIV>
-
-
-_CONFIG_
-#memo.
-#返信モードがないのに「href="#res$DT{'i'}"」とリンクを張っているのは、アクセスキーを使用可能にするため
-
-#-----------------------------
-# 記事のフッター（返信モード）
-$CF{'artfotr'}=<<'_CONFIG_';
-</DIV>
-
 
 _CONFIG_
 
@@ -460,34 +424,27 @@ $	この記事の情報
 	#いよいよ出力だよ
 	print<<"_HTML_";
 <DIV class="thread" title="$DT{'i'}番スレッド">
-<TABLE border="0" cellspacing="0" class="subject" summary="$DT{'i'}番スレッド" width="100%">
-<TR>
+<TABLE class="subject" summary="$DT{'i'}番スレッド" width="100%"><TR>
 <TH class="subject"><H2 class="subject"><A name="art$DT{'i'}" id="art$DT{'i'}" title="$DT{'i'}番スレッド">$DT{'subject'}</A></H2></TH>
 <TD class="arrow">
 <A name="nav_n$DT{'ak'}" href="#nav_n@{[$DT{'ak'}-1]}" title="上のスレッドへ">▲</A>
 <A name="nav_r$DT{'i'}" href="index.cgi?res=$DT{'i'}#Form" title="この記事No.$DT{'i'}に返信">■</A>
 <A name="nav_s$DT{'ak'}" href="#nav_s@{[$DT{'ak'}+1]}" title="下のスレッドへ">▼</A>
-</TD></TR>
-</TABLE>
+</TD>
+</TR></TABLE>
 
-<TABLE border="0" cellspacing="0" class="parent" summary="Article$DT{'i'}-0" title="$DT{'i'}-0" width="100%">
+<TABLE cellspacing="0" class="parent" summary="Article$DT{'i'}-0" title="$DT{'i'}-0">
 <COL class="number"><COL class="name"><COL class="date">
 <TR class="info">
 	<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" id="art$DT{'i'}-$DT{'j'}" class="number" href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【No.$DT{'i'}】</A></TH>
-	<TD class="name">$DT{'new'}&nbsp;<SPAN class="name">$DT{'name'}</SPAN><SPAN class="nbsp">&nbsp;&nbsp;</SPAN><SPAN class="home">$DT{'home'}</SPAN></TD>
-	<TD class="date"><SPAN class="date">$DT{'date'}</SPAN><SPAN class="nbsp">&nbsp;&nbsp;</SPAN>
-	<SPAN class="revise" title="$DT{'i'}番スレッドの親記事を修正する"><A
+	<TD class="name">$DT{'new'}&nbsp;<SPAN class="name">$DT{'name'}</SPAN>
+	<SPAN class="home">$DT{'home'}</SPAN></TD>
+	<TD class="date"><SPAN class="date">$DT{'date'}</SPAN>
+	<SPAN class="revise" title="$DT{'i'}番スレッドの親記事を修正"><A
 	 href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【修正】</A></SPAN></TD>
 </TR>
-<TR>
-	<!-- アイコンを使用する場合ここから -->
-	<TD class="icon"><IMG src="$CF{'icon'}$DT{'icon'}" alt="" title="$DT{'icon'}"></TD>
-	<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD>
-	<!-- アイコンを使用する場合ここまで -->
-	<!-- アイコンを使用しない場合ここから -->
-	<!-- <TD colspan="3" class="body" style="color:\$DT{'color'}">\$DT{'body'}</TD> -->
-	<!-- アイコンを使用しない場合ここまで -->
-</TR>
+<TR><TD class="icon"><IMG src="$CF{'icon'}$DT{'icon'}" alt="" title="$DT{'icon'}"></TD>
+	<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD></TR>
 </TABLE>
 
 _HTML_
@@ -517,29 +474,26 @@ $	この記事の情報
 	$DT{'time'}>$^T-$CF{'newnc'}&&($DT{'new'}=$CF{'new'});
 	#いよいよ出力だよ
 	print<<"_HTML_";
-<TABLE border="0" cellspacing="0" class="child" summary="Article$DT{'i'}-$DT{'j'}" title="$DT{'i'}-$DT{'j'}">
+<TABLE cellspacing="0" class="child" summary="Article$DT{'i'}-$DT{'j'}" title="$DT{'i'}-$DT{'j'}">
 <COL class="space"><COL class="number"><COL class="name"><COL class="date">
-<!-- 子記事タイトルを使用する場合、下の1行をコメント外す -->
-<!-- <TR><TH class="space" rowspan="3">&nbsp;</TH>
-<TH colspan="3" class="subject"><H3 class="subject">\$DT{'subject'}</H3></TH></TR> -->
-<TR class="info">
-	<!-- 子記事タイトルを使用する場合、コメントアウト --><TH class="space" rowspan="2">&nbsp;</TH><!-- -->
-	<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" id="art$DT{'i'}-$DT{'j'}" class="number" href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【Re:$DT{'j'}】</A></TH>
-	<TD class="name">$DT{'new'}&nbsp;<SPAN class="name">$DT{'name'}</SPAN>
-	<SPAN class="nbsp">&nbsp;&nbsp;</SPAN><SPAN class="home">$DT{'home'}</SPAN></TD>
-	<TD class="date"><SPAN class="date">$DT{'date'}</SPAN><SPAN class="nbsp">&nbsp;&nbsp;</SPAN>
-	<SPAN class="revise" title="$DT{'i'}番スレッドの親記事を修正する"><A
-	 href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【修正】</A></SPAN></TD>
+_HTML_
+
+=pod 子記事タイトルを使用する場合
+	print<<"_HTML_";
+	<TR><TH class="space">&nbsp;</TH>
+<TH colspan="3" class="subject"><H3 class="subject">$DT{'subject'}</H3></TH></TR>
+_HTML_
+=cut
+
+	print<<"_HTML_";
+<TR class="info"><TH class="space" rowspan="2">&nbsp;</TH>
+<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" class="number" href=".?rvs=$DT{'i'}-$DT{'j'}">【Re:$DT{'j'}】</A></TH>
+<TD class="name">$DT{'new'} <SPAN class="name">$DT{'name'}</SPAN><SPAN class="home">$DT{'home'}</SPAN></TD>
+<TD class="date"><SPAN class="date">$DT{'date'}</SPAN>
+	<SPAN class="revise" title="$DT{'i'}番スレッドの子記事$DT{'j'}を修正"
+	><A href=".?rvs=$DT{'i'}-$DT{'j'}">【修正】</A></SPAN></TD>
 </TR>
-<TR>
-	<!-- アイコンを使用する場合ここから -->
-		<TD class="icon"><IMG src="$CF{'icon'}$DT{'icon'}" alt="" title="$DT{'icon'}"></TD>
-		<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD>
-	<!-- アイコンを使用する場合ここまで -->
-	<!-- アイコンを使用しない場合ここから -->
-	<!-- <TD colspan="3" class="body" style="color:\$DT{'color'}">\$DT{'body'}</TD> -->
-	<!-- アイコンを使用しない場合ここまで -->
-</TR>
+<TR><TD class="icon"><IMG src="$CF{'icon'}$DT{'icon'}" alt="" title="$DT{'icon'}"></TD><TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD></TR>
 </TABLE>
 
 _HTML_
@@ -558,15 +512,39 @@ sub artfot{
 	
 	if($DT{'res'}||$CF{'readOnly'}){
 		#返信モードのとき
-		eval qq(print<<"_HTML_";\n$CF{'artfotr'}\n_HTML_);
+			print<<'_HTML_';
+</DIV>
+
+
+_HTML_
 	}else{
 		#記事表示
 		if($CF{'maxChilds'}&&$DT{'j'}>=$CF{'maxChilds'}){
 			#子記事数制限を超えた
-			eval qq(print<<"_HTML_";\n$CF{'artfoto'}\n_HTML_);
+			print<<"_HTML_";
+<TABLE border="0" cellspacing="0" class="foot" summary="ArticleFooter" width="100%"><TR>
+<TH align="right" width="100%"><P align="right"><A accesskey="$DT{'ak'}" name="res$DT{'i'}" class="warning"
+ href="#res$DT{'i'}">この記事スレッドNo.$DT{'i'}は子記事数制限に達したので返信できません(<SPAN
+ class="ak">$DT{'ak'}</SPAN>)</A></P></TH>
+</TR></TABLE>
+</DIV>
+
+
+_HTML_
+#memo.
+#返信モードがないのに「href="#res$DT{'i'}"」とリンクを張っているのは、アクセスキーを使用可能にするため
 		}else{
 			#この記事スレッドNo.???に返信する(?)
-			eval qq(print<<"_HTML_";\n$CF{'artfot'}\n_HTML_);
+		print<<"_HTML_";
+<TABLE border="0" cellspacing="0" class="foot" summary="ArticleFooter" width="100%"><TR>
+<TH align="right" width="100%"><P align="right"><A accesskey="$DT{'ak'}" name="res$DT{'i'}"
+ href="index.cgi?res=$DT{'i'}#art$DT{'i'}-$DT{'j'}">この記事スレッドNo.$DT{'i'}に返信する(<SPAN
+ class="ak">$DT{'ak'}</SPAN>)</A></P></TH>
+</TR></TABLE>
+</DIV>
+
+
+_HTML_
 		}
 	}
 	#記事ナビ
@@ -663,6 +641,9 @@ _HTML_
 #-------------------------------------------------
 # 書き込みの前処理を拡張したい時用
 sub exprewrt{
+	#ファイル名指定アイコン
+	$IN{'icon'}=$1 if($CF{'exicfi'}&&($IN{'cmd'}=~/\b$CF{'exicfi'}=([^;]*)/o)&& index($1,':')<0&& index($1,'..')<0);
+	
 	return 0;
 }
 
@@ -687,16 +668,16 @@ $ time形式時刻
 # アイコンリスト
 #
 sub iptico{
+
 =item 引数
+
 $ デフォルト指定にしたいアイコンファイル名を入れた書き換え可能な変数
 ;
 $ SELECTタグに追加したい属性
 $ 拡張コマンド
-=cut
-	my$opt='';
-	($_[1])&&($opt=" $_[1]");
 
 =item 複数アイコンリスト
+
 $CF{'icls'}の最初の一文字が' '（半角空白）だった場合複数リストモードになります
 具体的な例を出すと、
 ・単一とみなされる例
@@ -707,11 +688,13 @@ $CF{'icls'}の最初の一文字が' '（半角空白）だった場合複数リストモードになります
 ' "icon.txt" "exicon.txt"'
 ' "icon.txt" exicon.txt'
 ' icon.txt exicon.txt'
+
 =cut
 
-	if($CK{'iconlist'}&&('reset'ne$_[2])){
-		#キャッシュである$CK{'iconlist'}を返す
-		return$CK{'iconlist'};
+	my$opt=$_[1]?" $_[1]":'';
+	if($CF{'-CacheIconList'}&&('reset'ne$_[2])){
+		#キャッシュである$CF{'-CacheIconList'}を返す
+		return$CF{'-CacheIconList'};
 	}
 	
 	#アイコンリスト読み込み
@@ -723,7 +706,7 @@ $CF{'icls'}の最初の一文字が' '（半角空白）だった場合複数リストモードになります
 		for($CF{'icls'}=~/("[^"\\]*(?:\\.[^"\\]*)*"|\S+)/go){
 			$_||next;
 			my$tmp;
-			open(RD,"<$_")||die"Can't open multi-iconlist($_).";
+			open(RD,'<'.$_)||die"Can't open multi-iconlist($_).";
 			eval{flock(RD,1)};
 			read(RD,$tmp,-s$_);
 			close(RD);
@@ -731,28 +714,38 @@ $CF{'icls'}の最初の一文字が' '（半角空白）だった場合複数リストモードになります
 		}
 	}else{
 		#単一アイコンリスト読み込み
-		open(RD,"<$CF{'icls'}")||die"Can't open single-iconlist.";
+		open(RD,'<'.$CF{'icls'})||die"Can't open single-iconlist.";
 		eval{flock(RD,1)};
 		read(RD,$iconlist,-s$CF{'icls'});
 		close(RD);
 	}
-
+	
 	#選択アイコンの決定＋SELECTタグの中身
-	unless(@_){
+	my$isEconomy=$CK{'cmd'}=~/\biconlist=economy(?:\s*;|$)/o;
+	unless(defined$_[0]){
 	}elsif($CF{'exicon'}&&($CK{'cmd'}=~/\bicon=([^;]*)/o)&&$IC{$1}){
 		#パスワード型
 		$_[0]=$IC{$1};
 		$iconlist.=qq(<OPTION value="$_[0]" selected>専用アイコン</OPTION>\n);
-	}elsif($_[0]and$iconlist=~s/(value=(["'])$_[0]\2)/$1 selected/io){
+	}elsif($CF{'exicfi'}&&($CK{'cmd'}=~/\b$CF{'exicfi'}=([^;]*)/o)&& index($1,':')<0&& index($1,'..')<0){
+		#ファイル指定型
+		$_[0]=$1;
+		if($isEconomy){
+			$iconlist=qq(<OPTION value="$_[0]" selected>ファイル指定</OPTION>\n);
+		}else{
+			$iconlist.=qq(<OPTION value="$_[0]" selected>ファイル指定</OPTION>\n);
+		}
+	}elsif($_[0]and$iconlist=~s/^(.*value=(["'])$_[0]\2)(.*)$/$1 selected$3/imo){
+		$iconlist="$1 selected$3"if$isEconomy;
 	}elsif($iconlist=~s/value=(["'])(.+?)\1/value=$1$2$1 selected/io){
 		$_[0]=$2;
 	}
 	
-	$CK{'iconlist'}=<<"_HTML_";
+	$CF{'-CacheIconList'}=<<"_HTML_";
 <SELECT name="icon" id="icon" onchange="document.images['Preview'].src='$CF{'icon'}'+this.value;document.images['Preview'].title=this.value;"$opt>
 $iconlist</SELECT>
 _HTML_
-	return$CK{'iconlist'};
+	return$CF{'-CacheIconList'};
 }
 
 
@@ -944,36 +937,32 @@ $ 記事ナビのモード
 		#記事ナビ本体
 		#------------------------------------------------------------------------------------
 		#ブラウザ判定
-		my$style='display:none;position:absolute;filter:alpha(opacity=60);';
+		my$style='display:none;position:fixed';
 		unless($::IN{'hua'}){
-			#guess to be WinIE4-6
-		}elsif(index($::IN{'hua'},'Opera')>-1){
-			#guess to be Opera
-			$style='display:block;position:fixed;top:-1000;left:-1000;visibility:visible;/*Opera*/';
-		}elsif(index($::IN{'hua'},'Mac')>-1&& index($::IN{'hua'},'MSIE')>-1){
-			#guess to be MacIE5
-			#どうせMacIE4なら記事ナビは動かない
-			$style='display:none;position:fixed;/*MacIE*/';
-		}elsif(index($::IN{'hua'},'Mozilla/5')>-1){
-			#guess to be Mozilla/Netscape
-			$style='display:none;position:fixed;/*Mozilla*/';
-		}else{
-			#guess to be WinIE4-6
+			#guess to be WinIEorMozilla
+		}elsif(index($::IN{'hua'},'Opera 6')>-1||index($::IN{'hua'},'Opera/6')>-1){
+			#guess to be Opera6
+			$style='display:block;position:fixed;top:-1000;left:-1000;visibility:visible;/*Opera6*/';
+		}elsif(index($::IN{'hua'},'MSIE 4')>-1){
+			#guess to be MSIE 4
+			$style='display:none;position:absolute;filter:alpha(opacity=60)';
 		}
-		#iCabとかはどうなのだろう？
-		#WinIE系はタブブラウザの普及との関係でHUAが特定できない => その他はすべてWinIEとする
 		
 		print<<"_HTML_";
+<!--[if IE]>
+<DIV id="naviwind" style="display:none;position:absolute;filter:alpha(opacity=60)">
+<![endif]--><![if ! IE]>
 <DIV id="naviwind" style="$style">
+<![endif]>
 <TABLE id="navihead" cellspacing="1" summary="ArtNavi Header">
 <COL span="2">
 <TR>
 <TH id="navititl" onmousedown="beginDrag(event,'naviwind')">■記事ナビ - Mireille</TH>
 <TD id="navibutt" style="width:35px" onmousedown="beginDrag(event,'naviwind')">
-<A accesskey="m" onclick="view(event,'navibody')" onkeypress="acskey(event,'navibody')"
-href="#拡大/縮小" title="拡大/縮小(&amp;M)">□</A>
-<A accesskey="c" onclick="view(event,'naviwind')" onkeypress="acskey(event,'naviwind')"
-href="#閉じる" title="閉じる(&amp;C)">×</A></TD>
+<A accesskey="m" onclick="void(view(event,'navibody'))" onkeydown="acskey(event,'navibody')"
+ href="#拡大/縮小" title="拡大/縮小(&amp;M)">□</A>
+<A accesskey="c" onclick="void(view(event,'naviwind'))" onkeydown="acskey(event,'naviwind')"
+ href="#閉じる" title="閉じる(&amp;C)">×</A></TD>
 </TR>
 </TABLE>
 <DIV id="navibody" style="display:block">
@@ -1035,15 +1024,11 @@ _HTML_
 		my$isNew=shift;
 		if($isNew){
 			#未読
-			$ArtNaviBody.=<<"_HTML_";
-<A class="new" href="#art$DT{'i'}-$DT{'j'}" title="$DT{'name'}">$DT{'j'}</A>
-_HTML_
+			$ArtNaviBody.=qq(<A class="new" href="#art$DT{'i'}-$DT{'j'}" title="$DT{'name'}">$DT{'j'}</A> );
 			return;
 		}else{
 			#既読
-			$ArtNaviBody.=<<"_HTML_";
-<A href="#art$DT{'i'}-$DT{'j'}" title="$DT{'name'}">$DT{'j'}</A>
-_HTML_
+			$ArtNaviBody.=qq(<A href="#art$DT{'i'}-$DT{'j'}" title="$DT{'name'}">$DT{'j'}</A> );
 			return;
 		}
 	}
