@@ -31,12 +31,12 @@ print<<'_HTML_';
 				利用者が不適切な内容の記事を投稿した場合、管理者の判断によって、記事を削除したり、<BR>
 				記事の内容を編集することがあります。</LI>
 			<LI>管理者による情報の利用<BR>
-				管理者は掲示板における情報を利用者に無許可で再利用することができます。<BR>
-				記事の本文だけでなく、あらゆる統計やその他Cookieなどの情報もこれに含まれます。<BR>
+				管理者は掲示板における情報を利用者に無断で利用することができます。<BR>
+				記事の本文だけでなく、あらゆる統計やその他Cookieのような情報もこれに含まれます。<BR>
 				利用者は著作権を始めとした権利をこの場合行使できません。</LI>
 			<LI>利用者に対する投稿された記事の信頼性保証等の責任回避<BR>
 				管理者は記事の内容の信憑性に対して責任を持ちません。<BR>
-				公共の福祉に反する内容が投稿された場合も誠意ある対応することを約束しません。<BR>
+				公共の福祉に反する内容が投稿された場合も誠意ある対応をすることを約束しません。<BR>
 				その他この掲示板の利用によって何か損害が出ても管理者は責任を負いません</LI>
 		</UL>
 	</LI>
@@ -125,7 +125,7 @@ $4: data
 	}
 	print"\t\t\t<LI>$groupグループ、$icons個のアイコンが利用可能です</LI>\n";
 	delete$icon{''};
-	(%icon)&&(print"\t\t\t<LI>".join("、\n",values%icon)."\nが著作権を有する素材を使用しています。</LI>\n");
+	(%icon)&&(print"\t\t\t<LI>".join("、\n",values%icon)."\nが著作権を保有する素材を使用しています。</LI>\n");
 }
 #クッキー関連
 {
@@ -221,8 +221,13 @@ function resetCookie(e){
 				この掲示板でおかしいところ、気になるところ、新しく追加して欲しい機能があれば、<BR>
 				Airemix <A href="http://www.airemix.com/" title="Airemix" target="_top">http://www.airemix.com/</A>
 				の掲示板に書き込むか、
-				メール(<A href="mailto:naruse@airemix.com">naruse@airemix.com</A>)をください<BR>
-				お気軽にして下さって結構ですので♪</LI>
+				メール(<A href="mailto:naruse&#64;airemix.com">naruse&#64;airemix.com</A>)をください<BR>
+				お気軽にして下さって結構ですので♪<BR>
+				<BR>
+				ちなみにメールをPGP暗号化して送りたい方は、pgp.nic.ad.jpのような公開鍵サーバーで、<BR>
+				"Airemix"で検索すると成瀬の公開鍵が手に入りますので、それを使ってください<BR>
+				鍵の指紋は「DB DB A4 76 FD BD 94 50 02 CD 0E FC BC E3 C3 88 47 2E C1 EA」です<BR>
+				</LI>
 		</UL>
 	</LI>
 </UL>
@@ -270,76 +275,82 @@ function resetCookie(e){
 </UL>
 </DIV>
 
-<DIV class="hthread">
-<H2 class="list">◇お世話になったところ</H2>
+<DIV class="hthread" style="text-align:left">
+<H2 class="list"><A name="お世話になったところ">◇お世話になったところ</A></H2>
 <UL>
-<LI><H3 class="list"><A href="http://www.tg.rim.or.jp/~hexane/ach/" title="Academic HTML" target="_top">Academic HTML</A></H3>
+<LI><H3 class="list"><A href="http://www.tg.rim.or.jp/~hexane/ach/" title="Academic HTML">Academic HTML</A></H3>
 HTML,CSSに関する的確な情報がたくさんあります<BR>
 HTML,CSSを一通り学びたい場合はここを見るだけで事足りてしまいます</LI>
-<LI><H3 class="list"><A href="http://openlab.ring.gr.jp/k16/htmllint/" title="Another HTML-lint" target="_top">Another HTML-lint</A></H3>
+<LI><H3 class="list"><A href="http://openlab.ring.gr.jp/k16/htmllint/" title="Another HTML-lint">Another HTML-lint</A></H3>
 HTMLの検証に際し利用しました<BR>
 初めてチェックすると、ほとんどの人がショックを受けることでしょう</LI>
-<LI><H3 class="list"><A href="http://www.artemis.ac/arrange/" title="ARTEMIS" target="_top">ARTEMIS</A></H3>
+<LI><H3 class="list"><A href="http://www.artemis.ac/arrange/" title="ARTEMIS">ARTEMIS</A></H3>
 IconPreviewはここからです、便利なので頂きましたｗ<BR>
 新しい投稿があると教えてくれる〜もここのを見て、です<BR>
 他にもいろいろと参考にしています<BR>
 管理機能でここを見習う点は数多くあります</LI>
-<LI><H3 class="list"><A href="http://kano.feena.jp/" title="彼の野原" target="_top">彼の野原</A></H3>
-LastPostはここのealisの真似です<BR>
-1.2.2の記事ナビは神乃さんのものベースに作りました<BR>
-DHTML周りではかないません^^;;<BR>
-tableを使わずに表示させようとしているのも尊敬します<BR>
-最近はPHP+PostgreSQLにはまっているとか</LI>
-<LI><H3 class="list"><A href="http://www.ne.jp/asahi/minazuki/bakera/html/hatomaru" title="HTML鳩丸倶楽部" target="_top">HTML鳩丸倶楽部</A></H3>
+<LI><H3 class="list"><A href="http://www.ne.jp/asahi/minazuki/bakera/html/hatomaru" title="HTML鳩丸倶楽部">HTML鳩丸倶楽部</A></H3>
 ツッコミメインなHTML解説サイト、にわたしは見えました<BR>
 「HTML 4.01 のみを、純粋に学問的な興味から研究」しているそうです<BR>
 HTMLの構成に際して参考にしました</LI>
-<LI><H3 class="list"><A href="http://www.srekcah.org/jcode/" title="jcode.pl" target="_top">jcode.pl</A></H3>
+<LI><H3 class="list"><A href="http://www.srekcah.org/jcode/" title="jcode.pl">jcode.pl</A></H3>
 漢字コード変換用のライブラリです<BR>
 Mireille本体では横着しているので使っていません<BR>
 管理CGIでは一部を切り出して使っています</LI>
-<LI><H3 class="list"><A href="http://openlab.ring.gr.jp/Jcode/index-j.html" title="Jcode.pm" target="_top">Jcode.pm</A></H3>
+<LI><H3 class="list"><A href="http://openlab.ring.gr.jp/Jcode/index-j.html" title="Jcode.pm">Jcode.pm</A></H3>
 jcode.plの後継でPerl5用PerlModuleとなっています<BR>
-jcode.plの機能にUnicodeを扱う機能が追加されています</LI>
-<LI><H3 class="list"><A href="http://www.kent-web.com/" title="KNET-WEB" target="_top">KENT-WEB</A></H3>
+jcode.plの機能にUnicodeを扱う機能が追加されています<BR>
+Perl5.8ではEncodeモジュールに置換されているようです</LI>
+<LI><H3 class="list"><A href="http://www.kent-web.com/" title="KNET-WEB">KENT-WEB</A></H3>
 なにはともあれ日本のCGI/Perl界に与えた影響は少なくはないはずです<BR>
 私個人では特にYYBOARD,YYCHATにはお世話になりました<BR>
 きわめてとっつき易いCGIが多いです</LI>
-<LI><H3 class="list"><A href="http://www.din.or.jp/~ohzaki/perl.htm" title="Perlメモ" target="_top">Perlメモ</A></H3>
+<LI><H3 class="list"><A href="http://www.din.or.jp/~ohzaki/perl.htm" title="Perlメモ">Perlメモ</A></H3>
 URI自動リンク機能をつけるに際し参考に・・・むしろ丸写しです<BR>
 Perlの正規表現に関してとても有用な情報があります</LI>
-<LI><H3 class="list"><A href="http://validator.w3.org/" title="W3C HTML Validation Service" target="_top">W3C HTML Validation Service</A></H3>
+<LI><H3 class="list"><A href="http://validator.w3.org/" title="W3C HTML Validation Service">W3C HTML Validation Service</A></H3>
 HTML規格の策定を行う団体、W3CによるHTML検証サービスです<BR>
 Another HTML-lintよりチェック項目は少なめです</LI>
-<LI><H3 class="list"><A href="http://tohoho.wakusei.ne.jp/" title="とほほのWWW入門" target="_top">とほほのWWW入門</A></H3>
+<LI><H3 class="list"><A href="http://tohoho.wakusei.ne.jp/" title="とほほのWWW入門">とほほのWWW入門</A></H3>
 HTML部、Perl部ともに時々リファレンス代わりにしました<BR>
-なかなか載っていて便利です<BR>
-それでも一部省略されているのが残念ですが、、</LI>
-<LI><H3 class="list"><A href="http://snowish.cside8.com/" title="Snowish Hills" target="_top">Snowish Hills</A></H3>
-Mireilleを作りこむにあたって、有用なアドバイスを多数頂きました<BR>
-特に管理機能は西名さんに言われなければかなり貧弱なものになっていたでしょう<BR>
-初期状態のデザインも西名さんのデザインをベースにしています<BR>
+なかなか載っていて便利です</LI>
+<LI><H3 class="list"><A href="http://kano.feena.jp/" title="彼の野原">彼の野原</A></H3>
+LastPostはここのealisの真似です<BR>
+また1.2.2の記事ナビは神乃さんのものベースに作りました<BR>
+最近ではPHPに移ってあるべき姿というものを模索していらっしゃるようです</LI>
+<LI><H3 class="list"><A href="http://www10.plala.or.jp/ryokufuudou/kijindou.html" title="SWORD AND COMMERCE">SWORD AND COMMERCE</A></H3>
+retroさんにはMireilleでつまづく所No.1と思われるアイコン設定の解説を書いていただきました<BR>
+他にもMireilleの解説の不備な点を多数してもらいました<BR>
+ちなみに、retroさんのサイト自体はRagnarkOnline系雑談サイトです</LI>
+<LI><H3 class="list"><A href="http://snowish.cside8.com/" title="Snowish Hills">Snowish Hills</A></H3>
+Mireilleを作りこむにあたって、半ばオンサイト顧客として、数々の有用なアドバイスを頂きました<BR>
+特に管理CGIは西名さんに言われなければ、かなり貧弱なものになっていたでしょう<BR>
+現在の初期状態のデザインも西名さんのデザインをベースにしています<BR>
 ちなみに、西名さんのサイト自体はKey系CGサイトです</LI>
 <LI>他にも意見を下さった方々、参考にしたサイト・CGIの作者さんに感謝します</LI>
 </UL>
 </DIV>
 
-<DIV align="center" class="note" style="margin-bottom:2em;width:600px"><PRE>
-この掲示板は、Microsoft Internet Explorer 5以上を主とした対象とし、
-Microsoft Internet Explorer 6において完全な動作をします。
-Netscape 6及びMozilla 0.8以降でもほぼ期待通りの動作をすることを確認済みです。
-以上のブラウザ以外では動作はしますが、見苦しくなってしまいます。ご了承ください。</PRE></DIV>
+<P class="note">この説明では&trade;や&reg;や&copy;マークは省略しています<BR>
+それぞれのサイト名やソフトウェア名などは各々の商標や登録商標などです</P>
+<P align="center" class="note" style="margin-bottom:2em;width:600px">
+この掲示板は、Microsoft Internet Explorer 5以上を主とした対象とし、<BR>
+Microsoft Internet Explorer 6において完全な動作をします。<BR>
+Netscape 6及びMozilla 0.8以降でもほぼ期待通りの動作をすることを確認済みです。<BR>
+以上のブラウザ以外では動作はしますが、見苦しくなってしまいます。ご了承ください。</P>
 _HTML_
-print<<"_HTML_";
-<DIV align="center" class="note" style="width:15em;"><PRE>
-　■　バージョン情報　■
-■Index: $CF{'Index'}
-■Core : $CF{'Core'}
-■Style: $CF{'Style'}
-■Help : $CF{'Help'}
-</PRE></DIV>
+print<<"_HTML_".&getFooter;
+<DIV align="center" class="note" style="width:15em;">
+<H4 class="list" style="text-align:center">■　バージョン情報　■</H4>
+<UL style="font-family:monospace;font-size:90%">
+<LI>Index: $CF{'Index'}</LI>
+<LI>Core : $CF{'Core' }</LI>
+<LI>Style: $CF{'Style'}</LI>
+<LI>Help : $CF{'Help' }</LI>
+</UL>
+</DIV>
 _HTML_
-&footer;
+exit;
 
 1;
 __END__
