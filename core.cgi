@@ -32,10 +32,10 @@ sub main{
 	#¥í¥°¥Õ¥¡¥¤¥ë¤Á¤ã¤ó¤È¤¢¤ë¡©
 	defined$CF{'log'}||die"\$CF{'log'} is Undefined";
 	unless(-e"$CF{'log'}0.cgi"){
-		-e"$CF{'log'}0.pl"&& die"µì·Á¼°0.pl¤¬»Ä¤Ã¤Æ¤¤¤Þ¤¹ ÉÔ¶ñ¹ç¤ÎÃû¤·¡©";
+		-e"$CF{'log'}0.pl"&&die"µì·Á¼°0.pl¤¬»Ä¤Ã¤Æ¤¤¤Þ¤¹ ÉÔ¶ñ¹ç¤ÎÃû¤·¡©";
 		DIR:{
-			-e"$CF{'log'}"&& last DIR;
-			mkdir("$CF{'log'}",0777)&& last DIR;
+			-e"$CF{'log'}"&&last DIR;
+			mkdir("$CF{'log'}",0777)&&last DIR;
 			die"Can't read/write/create LogDir($CF{'log'})[$?:$!]";
 		}
 		open(ZERO,'+>>'."$CF{'log'}0.cgi")||die"Can't write log(0.cgi)[$?:$!]";
@@ -70,9 +70,9 @@ sub main{
 	#¸¡º÷
 	defined$IN{'seek'}&&&showArtSeek;
 	#¥Ø¥ë¥×
-	defined$IN{'help'}&&(require($CF{'help'}?$CF{'help'}:'help.pl'))&& exit;
+	defined$IN{'help'}&&(require($CF{'help'}?$CF{'help'}:'help.pl'))&&exit;
 	#¥¢¥¤¥³¥ó
-	defined$IN{'icct'}&& require($CF{'icct'}?$CF{'icct'}:'iconctlg.cgi')&&&iconctlg&& exit;
+	defined$IN{'icct'}&&require($CF{'icct'}?$CF{'icct'}:'iconctlg.cgi')&&&iconctlg&&exit;
 	#¥Û¡¼¥à
 	defined$IN{'home'}&&&locate($CF{'home'});
 	#µ­»öÉ½¼¨
@@ -90,8 +90,6 @@ sub main{
 # Index µ­»öÉ½¼¨
 #
 sub showIndex{
-#	&xmlmode if$IN{'viewstyle'}&& 'xml'eq$IN{'viewstyle'};
-
 	#-----------------------------
 	#Cookie¼èÆÀ¡õ½ñ¤­¹þ¤ß
 	&getCookie?&setCookie(\%CK):($CK{'time'}=$^T-$CF{'newnc'});
@@ -281,9 +279,9 @@ Perl¥â¥¸¥å¡¼¥ë¤ÎImage::size¤òÍÑ¤¤¤ë¤³¤È¤Ë¤è¤Ã¤Æ¡¢¥µ¥¤¥ºÀ©¸Â¤ò¤«¤±¤ë¤³¤È¤¬½ÐÍè¤ë¤
 	#-----------------------------
 	#ËÜÊ¸¤Î½èÍý
 	#form->dataÊÑ´¹
-	unless(defined$IN{'body'}&& length$IN{'body'}){
+	unless(defined$IN{'body'}&&length$IN{'body'}){
 		$IN{'body'}='';
-	}elsif($CF{'tags'}&& 'ALLALL'eq$CF{'tags'}){
+	}elsif($CF{'tags'}&&'ALLALL'eq$CF{'tags'}){
 		#ALLALL¤ÏÁ´ÌÌOK¡£Ã¢¤·¶¯Ä´¤ÏÌµ¸ú¡£URI¼«Æ°¥ê¥ó¥¯¤âÌµ¸ú¡£
 		#¼«Á°¤Ç¥ê¥ó¥¯¤òÄ¥¤Ã¤¿¤ê¡¢¶¯Ä´¤·¤Æ¤¢¤ë¤â¤Î¤ò¡¢Æó½Å¤Ë¥ê¥ó¥¯¡¦¶¯Ä´¤·¤Æ¤·¤Þ¤¤¤Þ¤¹¤«¤é
 	}else{
@@ -298,7 +296,7 @@ Perl¥â¥¸¥å¡¼¥ë¤ÎImage::size¤òÍÑ¤¤¤ë¤³¤È¤Ë¤è¤Ã¤Æ¡¢¥µ¥¤¥ºÀ©¸Â¤ò¤«¤±¤ë¤³¤È¤¬½ÐÍè¤ë¤
 		if($CF{'tags'}&&!$EX{'notag'}){
 			my$tag_regex_='[^\01-\04]*(?:\01[^\01]*\01[^\01-\04]*|\02[^\02]*\02[^\01-\04]*)*(?:\04|(?=\03)|$(?!\n))';
 			my$comment_tag_regex='\03!(?:--[^-]*-(?:[^-]+-)*?-(?:[^\04-]*(?:-[^\04-]+)*?)??)*(?:\04|$(?!\n)|--.*$)';
-			my$text_regex = '[^\03]*';
+			my$text_regex='[^\03]*';
 			
 			my$tags=$CF{'tags'};
 			my%tagCom=map{m/(!\w+)(?:\(([^()]+)\))?/o;$1," $2 "||''}($tags=~/!\w+(?:\([^()]+\))?/go);
@@ -319,7 +317,7 @@ Perl¥â¥¸¥å¡¼¥ë¤ÎImage::size¤òÍÑ¤¤¤ë¤³¤È¤Ë¤è¤Ã¤Æ¡¢¥µ¥¤¥ºÀ©¸Â¤ò¤«¤±¤ë¤³¤È¤¬½ÐÍè¤ë¤
 			my$pos=length$str;
 			while($str=~/\G($text_regex)($comment_tag_regex|\03$tag_regex_)?/gso){
 				$pos=pos$str;
-				($1&& length$1)||($2&& length$2)||last;
+				($1&&length$1)||($2&&length$2)||last;
 				$result.=$1;
 				my$tag_tmp=$2;
 				if($tag_tmp=~s/^\03((\/?(?:$remain))(?![\dA-Za-z]).*)\04/<$1>/io){
@@ -412,7 +410,7 @@ Perl¥â¥¸¥å¡¼¥ë¤ÎImage::size¤òÍÑ¤¤¤ë¤³¤È¤Ë¤è¤Ã¤Æ¡¢¥µ¥¤¥ºÀ©¸Â¤ò¤«¤±¤ë¤³¤È¤¬½ÐÍè¤ë¤
 			my$skip=0;
 			my$pos=length$str;
 			while($str=~/($text_regex)($tag_regex)?/gso){
-				''eq$1&&!$2&& last;
+				''eq$1&&!$2&&last;
 				$pos=pos$str;
 				my$text_tmp=$1;
 				my$tag_tmp=$2;
@@ -461,7 +459,7 @@ Perl¥â¥¸¥å¡¼¥ë¤ÎImage::size¤òÍÑ¤¤¤ë¤³¤È¤Ë¤è¤Ã¤Æ¡¢¥µ¥¤¥ºÀ©¸Â¤ò¤«¤±¤ë¤³¤È¤¬½ÐÍè¤ë¤
 	#$IN{'cook'}¤¬ON¤Ê¤éCookie¤Î½ñ¤­¹þ¤ß
 	COOKIE:{
 		$IN{'cook'}||last COOKIE;
-		$CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'}&& last COOKIE; #´ÉÍý¥Ñ¥¹¤Î»þ¤ÏCookieÊÝÂ¸¤·¤Ê¤¤
+		$CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'}&&last COOKIE; #´ÉÍý¥Ñ¥¹¤Î»þ¤ÏCookieÊÝÂ¸¤·¤Ê¤¤
 		&getCookie;
 		&setCookie(\%IN);
 	}
@@ -490,7 +488,7 @@ _HTML_
 	eval{flock(ZERO,2)};
 	seek(ZERO,0,0);
 	my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
-	index($zero[0],"Mir12=\t")&& die"ZERO¤Î¥í¥°·Á¼°¤¬Mir12·¿°Ê³°¤Ç¤¹($zero[0])";
+	index($zero[0],"Mir12=\t")&&die"ZERO¤Î¥í¥°·Á¼°¤¬Mir12·¿°Ê³°¤Ç¤¹($zero[0])";
 	%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
 	my@zer1=split(/\s+/o,$zero[1]);
 	@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
@@ -504,7 +502,7 @@ _HTML_
 	#@zer2¤Î¥¨¥é¡¼ÄûÀµ
 	for(@file){
 		$_>$zer2[0]||next; #´û¤Ë¸Å¤¯¤Ê¤Ã¤¿¤â¤Î
-		$zer2[$_-$zer2[0]]&& next; #Àµ¾ï
+		$zer2[$_-$zer2[0]]&&next; #Àµ¾ï
 		
 		#°Ê²¼°Û¾ï¤Ê¤â¤Î¤ÎÉüµì
 		$zer2[$_-$zer2[0]]=(stat("$CF{'log'}$_.cgi"))[9];
@@ -635,8 +633,8 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 		eval{flock(RW,2)};
 		seek(RW,0,0);
 		my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
-		$#log<$IN{'j'} and die"Something Wicked happend!(j¤¬Âç¤­¤¹¤®)";
-		$log[$IN{'j'}] or  die"Something Wicked happend!(½¤Àµ¤Ç¤Ê¤¤j)";
+		$#log<$IN{'j'}&&die"Something Wicked happend!(j¤¬Âç¤­¤¹¤®)";
+		$log[$IN{'j'}]||die"Something Wicked happend!(½¤Àµ¤Ç¤Ê¤¤j)";
 		my%DT=($log[$IN{'j'}]=~/([^\t]*)=\t([^\t]*);\t/go);
 		#PasswordCheck
 		if($CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'}){
@@ -834,7 +832,7 @@ _HTML_
 	my$pgslct=&pgslct($#file,$CF{'delpg'},$mode);
 	my@i=@file;
 	@i=splice(@i,($IN{'page'}-1)*$CF{'delpg'},$CF{'delpg'});
-	$i[$#i]==0&& pop@i;
+	$i[$#i]==0&&pop@i;
 	print<<"_HTML_";
 <DIV class="center">$pgslct</DIV>
 
@@ -1016,12 +1014,12 @@ _HTML_
 				print&getFooter;
 				exit;
 			}
-			$IN{'j'}==0&&$IN{'type'}==2&& last SWITCH;
+			$IN{'j'}==0&&$IN{'type'}==2&&last SWITCH;
 		}else{
 			#°ìÈÌPass
 			&mircrypt($DT{'time'},$IN{'pass'},$DT{'pass'})
 			 or &showRvsMenu("ÆþÎÏ¤µ¤ì¤¿¥Ñ¥¹¥ï¡¼¥É¤¬Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Î¤â¤Î¤È¹çÃ×¤·¤Þ¤»¤ó¡£");
-			$IN{'j'}==0&&$#log==0&& last SWITCH;
+			$IN{'j'}==0&&$#log==0&&last SWITCH;
 		}
 		
 		#mark
@@ -1196,12 +1194,11 @@ $ Èô¤ÖÀè¤ÎURL¡ÊÀäÂÐ¤Ç¤âÁêÂÐ¤Ç¤â¡Ë
 	}
 	print<<"_HTML_";
 Status: 303 See Other
-Content-type: text/html; charset=euc-jp
-Content-Language: ja-JP
 Pragma: no-cache
 Cache-Control: no-cache
 Location: $i
-X-CGI-Moe: Mireille
+Content-Language: ja-JP
+Content-type: text/html; charset=euc-jp
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN"> 
 <HTML>
@@ -1454,8 +1451,6 @@ sub getParam{
 		$IN{'read'}=0;
 		$IN{'page'}=($DT{'page'}&&$DT{'page'}=~/([1-9]\d*)/o)?$1:1;
 	}
-	$IN{'viewstyle'}=$1 if$DT{'viewstyle'}&&$DT{'viewstyle'}=~/(\w+)/o;
-	$IN{'xslurl'}=$1 if$DT{'xslurl'}&&$DT{'xslurl'}=~/(.+)/o;
 	return%IN;
 }
 
@@ -1511,11 +1506,10 @@ sub showHeader{
 		if($client&&(&parse_rfc1123($lastModified))[0]<=$client){
 			print<<"_HTML_";
 Status: 304 Not Modified
-Content-type: text/html; charset=euc-jp
-Content-Language: ja-JP
 Connection: keep-alive
 Date: @{[&datef($^T,'rfc1123')]}
-X-CGI-Moe: Mireille
+Content-Language: ja-JP
+Content-type: text/html; charset=euc-jp
 
 _HTML_
 			exit;
@@ -1552,7 +1546,7 @@ _HTML_
 			eval{flock(ZERO,1)};
 			my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
 			close(ZERO);
-			(!$zero[0]||index($zero[0],"Mir12=\t")!=0)&& die"ZERO¤Î¥í¥°·Á¼°¤¬Mir12·¿°Ê³°¤Ç¤¹($zero[0])";
+			(!$zero[0]||index($zero[0],"Mir12=\t")!=0)&&die"ZERO¤Î¥í¥°·Á¼°¤¬Mir12·¿°Ê³°¤Ç¤¹($zero[0])";
 			%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
 			@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
 		}
@@ -1567,41 +1561,36 @@ _HTML_
 	
 	#-----------------------------
 	#HTML½ñ¤­½Ð¤·
-	if(index($ENV{'SERVER_NAME'},'tsukaeru.net')>-1){
-		print"Content-Language: ja\n";
-	}else{
-		print<<"_HTML_";
+	print<<"_HTML_";
 Status: 200 OK
-Content-type: text/html; charset=euc-jp
-Content-Language: ja-JP
 Connection: keep-alive
 Date: @{[&datef($^T,'rfc1123')]}
-X-CGI-Moe: Mireille
+Content-Language: ja-JP
+Content-type: text/html; charset=euc-jp
 _HTML_
-	}
 	print"Last-Modified: $lastModified\n"if$CF{'useLastModified'};#exp.
 	#GZIP Switch
-	my$status=qq(<META http-equiv="Last-Modified" content=").$lastModified."\">\n";
+	my$status=qq(<META http-equiv="Last-Modified" content="$lastModified">\n);
 	$status.=join ''
 	,map{qq(<META http-equiv="Set-Cookie" content="$_">\n)}split("\n",$CF{'-setCookie'})if$CF{'-setCookie'};
 	
-	!defined$CF{'conenc'}&&$CF{'gzip'}&&($CF{'conenc'}="|$CF{'gzip'} -cfq9");
-	if($CF{'conenc'}&&$ENV{'HTTP_ACCEPT_ENCODING'}&&(index($ENV{'HTTP_ACCEPT_ENCODING'},'gzip')>-1)){
+	(!defined$CF{'conenc'}||$CF{'conenc'}=='|gzip -cfq9')&&$CF{'gzip'}&&($CF{'conenc'}="|$CF{'gzip'} -cfq9");
+	if($CF{'conenc'}&&$ENV{'HTTP_ACCEPT_ENCODING'}&&(index($ENV{'HTTP_ACCEPT_ENCODING'},'gzip')>-1)or$CF{'forceGZIP'}){
 		#¾å¤ÎifÊ¸¤Çgzip·è¤áÂÇ¤Á¤·¤Æ¤¤¤ë¤Î¤Ï¡È»ÅÍÍ¡É
 		#gzip/compress°Ê³°¤ËÂÐ±þ¤·¤Æ¤ë¥Ö¥é¥¦¥¶¤Ïµ©¤Ê¤¿¤á¡¢²ÄÊÑ¤Ø¤Î¼ûÍ×¤¬¾¯¤Ê¤¤¤È»×¤ï¤ì¤ë¤¿¤á¤È
 		#$CF{'conenc'}¤òÀßÄê²ÄÇ½¤Ë¤·¤Æ¤¤¤ë¤Î¤Ï¡¢GZIP°µ½ÌÅ¾Á÷¤ÎON/OFFÀÚ¤êÂØ¤¨¤Î¤¿¤á¡¢¤À¤«¤é
-		if( $ENV{'SERVER_NAME'}#¹­¹ðÂÐºö
-		and	index($ENV{'SERVER_NAME'},'tkcity.net')>-1
-		||	index($ENV{'SERVER_NAME'},'infoseek.co.jp')>-1
-		||	index($ENV{'SERVER_NAME'},'tok2.com')>-1
-		||	index($ENV{'SERVER_NAME'},'tripod')>-1
-		||	index($ENV{'SERVER_NAME'},'virtualave.net')>-1
-		||	index($ENV{'SERVER_NAME'},'hypermart.net')>-1
-		||	index($ENV{'SERVER_NAME'},'tsukaeru.net')>-1
+		if(!$CF{'forceGZIP'}&&$ENV{'SERVER_NAME'}#¹­¹ðÂÐºö
+			and	index($ENV{'SERVER_NAME'},'tkcity.net')>-1
+			||	index($ENV{'SERVER_NAME'},'infoseek.co.jp')>-1
+			||	index($ENV{'SERVER_NAME'},'tok2.com')>-1
+			||	index($ENV{'SERVER_NAME'},'tripod')>-1
+			||	index($ENV{'SERVER_NAME'},'virtualave.net')>-1
+			||	index($ENV{'SERVER_NAME'},'hypermart.net')>-1
+			||	index($ENV{'SERVER_NAME'},'tsukaeru.net')>-1
 		){
 			print"\n";
 			$status.="<!-- can't use gzip on this server because of advertisements -->";
-#		}elsif($ENV{'SERVER_SOFTWARE'}&& index($ENV{'SERVER_SOFTWARE'},'mod_gzip')>-1){
+#		}elsif($ENV{'SERVER_SOFTWARE'}&&index($ENV{'SERVER_SOFTWARE'},'mod_gzip')>-1){
 #			print"\n";
 #			$status.="<!-- did't use gzip because this server is using mod_gzip -->";
 #memo. cgi¤À¤Èmod_gzip¤·¤Æ¤¯¤ì¤Ê¤¤¤Ã¤Ý¤¤
@@ -1726,8 +1715,8 @@ $ ¥â¡¼¥É¤ÎÊÝ»ý(rvs,del)
 	:qq(<A href="index.cgi?$mode$_").($key[$_]?$key[$_]:'').">$_</A>\n"}($str..$end);
 
 	#ºÇÀè¤ÈºÇ¸å
-	$str!=1&& unshift(@page,qq(<A accesskey="&#60;" href="index.cgi?${mode}1">1</A>&#60;&#60;));
-	$end!=$pags&& push(@page,qq(&#62;&#62;<A accesskey="&#62;" href="index.cgi?$mode$pags">$pags</A>));
+	$str!=1&&unshift(@page,qq(<A accesskey="&#60;" href="index.cgi?${mode}1">1</A>&#60;&#60;));
+	$end!=$pags&&push(@page,qq(&#62;&#62;<A accesskey="&#62;" href="index.cgi?$mode$pags">$pags</A>));
 
 	#¤¤¤¶½ÐÎÏ
 	return<<"_HTML_";
@@ -1764,6 +1753,10 @@ sub showArticle{
 	
 	my$maxChildsShown=$DT{'maxChildsShown'}>-1?int(abs($DT{'maxChildsShown'})):$#articles;
 	my$horizon=$#articles-$maxChildsShown;
+	
+	#read¥â¡¼¥É¤Î»þ¤ÎÊäÀµ
+	$horizon=0if$IN{'read'}&&$IN{'read'}==$DT{'i'};
+	
 	for(@articles){
 		unless(++$DT{'j'}){
 			#¿Æµ­»ö
@@ -1775,7 +1768,7 @@ _HTML_
 			next;
 		}else{
 			#»Òµ­»ö
-			$horizon<$DT{'j'}||next;
+			$DT{'j'}>$horizon||next;
 			/^Mir12=\tdel;\t/o||&artchd(\%DT,$_);
 		}
 	}
