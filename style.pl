@@ -63,9 +63,9 @@ sub getPageFooter{
 	return<<"_HTML_";
 <DIV class="center"><TABLE align="center" border="0" cellspacing="0" class="head" summary="PageFooter" width="90%"><TR>
 <TD nowrap>¢£¢£¢£¢£¢£¢£¢£</TD>
-<TH width="100%"><H1 class="head" align="right"><A href="@{[
+<TH width="100%"><DIV class="head"><A href="@{[
 	$_[0]?qq($CF{'home'}">BACK to HOME):qq(index.cgi">BACK to INDEX)
-]}</A></H1></TH>
+]}</A></DIV></TH>
 </TR></TABLE></DIV>
 _HTML_
 }
@@ -263,18 +263,7 @@ $CF{'jscript_AtSe'}=<<'_CONFIG_';
 if(document.getElementsByTagName){
 	var tags=document.getElementsByTagName('INPUT');
 	for(var i in tags){
-		if(tags[i].className&&tags[i].className.substr(0,6)=='button'){
-			tags[i].onfocus=
-				function(){if(this.className.substr(this.className.length-4)!='Over')this.className+='Over'}
-			tags[i].onmouseover=
-				function(){if(this.className.substr(this.className.length-4)!='Over')this.className+='Over'}
-			tags[i].onblur=
-				function(){if(this.className.substr(this.className.length-4)=='Over')
-					this.className=this.className.substring(0,this.className.length-4)};
-			tags[i].onmouseout=
-				function(){if(this.className.substr(this.className.length-4)=='Over')
-					this.className=this.className.substring(0,this.className.length-4)};
-		}else if('button'==tags[i].type||'button'==tags[i].className){
+		if('button'==tags[i].className){
 			tags[i].className='button';
 			tags[i].onfocus=function()		{this.className='buttonover'};
 			tags[i].onmouseover=function()	{this.className='buttonover'};
@@ -292,6 +281,17 @@ if(document.getElementsByTagName){
 			tags[i].onmouseover=function()	{this.className='resetover'};
 			tags[i].onblur=function()		{this.className='reset'};
 			tags[i].onmouseout=function()	{this.className='reset'};
+		}else if(tags[i].className&&tags[i].className.substr(0,6)=='button'){
+			tags[i].onfocus=
+				function(){if(this.className.substr(this.className.length-4)!='Over')this.className+='Over'}
+			tags[i].onmouseover=
+				function(){if(this.className.substr(this.className.length-4)!='Over')this.className+='Over'}
+			tags[i].onblur=
+				function(){if(this.className.substr(this.className.length-4)=='Over')
+					this.className=this.className.substring(0,this.className.length-4)};
+			tags[i].onmouseout=
+				function(){if(this.className.substr(this.className.length-4)=='Over')
+					this.className=this.className.substring(0,this.className.length-4)};
 		}else if('text'==tags[i].type||'password'==tags[i].type){
 			tags[i].className='blur';
 			tags[i].onfocus=function()	{this.className='focus';};
@@ -900,7 +900,7 @@ _HTML_
 	sub ArtNavi::addThreadHead{
 		my$class=shift;
 		my%DT=%{shift()};
-		my$subject=&::getTruncated($DT{'subject'},45);
+		my$subject=$DT{'subject'}; #&::getTruncated($DT{'subject'},45);
 		$ArtNaviBody.=<<"_HTML_";
 <DIV class="navithre">
 <DIV class="navisubj">
