@@ -198,7 +198,7 @@ sub getParam{
 		$j=($j=~/($eucchar*)/o)?"$1":'';
 		#メインフレームの改行は\x85らしいけど、対応する必要ないよね？
 		$j=~s/\x0D\x0A/\n/go;$j=~tr/\r/\n/;
-		$DT{$i}=$j;
+		$DT{$i}=$DT{$i}?$DT{$i}.' '.$j:$j;
 	}
 	# Password Check
 	$DT{'mode'}||return undef;
@@ -235,9 +235,10 @@ sub getParam{
 		$IN{'end'}=($DT{'end'}=~/([1-9]\d*)/o)?$1:0;
 		$IN{'del'}=$1 if($DT{'del'}=~/(\w+)/o);
 		$IN{'save'}=($DT{'save'}=~/([1-9]\d*)/o)?$1:0;
-		$IN{'push'}=($DT{'push'}=~/(\d)/o)?"$1":'';
+		$IN{'push'}=($DT{'push'}=~/(\d)/o)?$1:'';
 		$IN{'lock'}=($DT{'lock'}=~/([1-9]\d*)/o)?$1:0;
 		$IN{'type'}=$1 if($DT{'type'}=~/(\w)/o);
+		$IN{'lockType'}=($DT{'lockType'}=~/(\w+(?:\s+\w+)*)/o)?$1:'';
 		return%IN;
 	}elsif('zero'eq$DT{'mode'}){#Zero
 		$IN{'recover'}=1 if($DT{'recover'}=~/(.)/o);
@@ -258,7 +259,7 @@ sub menu{
 	my$status=@_?shift():'';
 	my$pass=defined$IN{'pass'}?$IN{'pass'}:'';
 	print&getManageHeader.<<"ASDF".&getManageFooter;
-<H2 class="mode" style="margin:1em auto">[ $status ]</H2>
+<H2 class="heading2" style="margin:1em auto">[ $status ]</H2>
 <FORM accept-charset="euc-jp" name="menu" method="post" action="$AT{'manage'}">
 <FIELDSET style="text-align:left;padding:0.5em;margin:auto;width:15em">
 <LEGEND>Mode</LEGEND>
@@ -316,7 +317,7 @@ sub icont{
 		$icon=~s/\t/\ \ /go;
 		$icon=~s/[\x0D\x0A]*$//o;
 		print&getManageHeader.<<"ASDF".&getManageFooter;
-<H2 class="mode">アイコンリスト編集モード（タグ）</H2>
+<H2 class="heading2">アイコンリスト編集モード（タグ）</H2>
 <FORM accept-charset="euc-jp" name="iconedit" method="post" action="$AT{'manage'}">
 <P><TEXTAREA name="icon" cols="100" rows="15">$icon</TEXTAREA></P>
 <P></DEL><LABEL accesskey="r" for="renew">アイコン見本更新(<SPAN class="ak">R</SPAN>):
@@ -355,7 +356,7 @@ sub icons{
 	unless($IN{'icon'}){
 		#アイコンリストSharp編集画面
 		print&getManageHeader.<<"ASDF";
-<H2 class="mode">アイコンリスト編集モード（＃）</H2>
+<H2 class="heading2">アイコンリスト編集モード（＃）</H2>
 <FORM accept-charset="euc-jp" name="iconedit" method="post" action="$AT{'manage'}">
 <P><TEXTAREA name="icon" cols="100" rows="15">
 ASDF
@@ -605,7 +606,7 @@ _HTML_
 <BODY style="margin-top:1em">
 $CF{'pghead'}
 $CF{'menu'}
-<H2 class="mode">アイコン見本</H2>\n$CF{'iched'}
+<H2 class="heading2">アイコン見本</H2>\n$CF{'iched'}
 @icon
 $CF{'icfot'}
 @{[&getPageFooter]}
@@ -640,8 +641,9 @@ my@required=(
 );
 		my@implied=(
  admps	=>'管理者パスワード（全ての記事を編集・削除できます 25文字以上推奨）'
+,signatureSpecial=>'特殊署名リスト（「パスワード 表示署名 パスワード 表示署名 ・・・」）'
 ,tags	=>'使用を許可するタグ（半角スペース区切り）'
-,strong	=>'強調する記号と対応するCSSのクラス（半角スペース区切りで「記号 クラス 記号・・・」）'
+,strong	=>'強調する記号と対応するCSSのクラス（「記号 クラス 記号 クラス ・・・」）'
 ,ngWords=>'NGワード（半角スペース区切り）'
 ,newnc	=>'投稿後*****秒以内の記事にNewマークをつける'
 ,newuc	=>'読んだ記事でも???秒間は「未読」状態を維持する'
@@ -651,7 +653,7 @@ my@required=(
 ,logmax	=>'最大スレッド数'
 ,maxChilds		=>'一スレッドあたりの最大子記事数を制限する'
 ,maxChildsShown	=>'一スレッドあたりの最大表示子記事数を制限する'
-,sekitm	=>'検索できる項目（"項目のname 選択字の名前 "をくりかえす）'
+,sekitm	=>'検索できる項目（「項目のname 表示名 項目のname 表示名 ・・・」）'
 ,prtitm	=>'親記事の項目(+color +email +home +icon +ra +hua +cmd +subject)'
 ,chditm	=>'子記事の項目(+color +email +home +icon +ra +hua +cmd)'
 ,cokitm	=>'Cookieの項目(color email home icon cmd)'
@@ -698,14 +700,14 @@ _HTML_
 			$config{"$_"}=~s/>/&#62;/go;
 		}
 		print&getManageHeader.<<"ASDF";
-<H2 class="mode">index.cgi編集モード</H2>
+<H2 class="heading2">index.cgi編集モード</H2>
 $message
 <FORM accept-charset="euc-jp" name="cssedit" method="post" action="$AT{'manage'}">
-<TABLE style="margin:1em">
+<TABLE class="section">
 <COL style="text-align:left;width:600px"><COL style="text-align:left;width:200px">
 
 <TBODY>
-<TR><TH colspan="2"><H3 class="list">稼動させる前に確認すること</H2></TH></TR>
+<TR><TH colspan="2" class="heading3">稼動させる前に確認するもの</TH></TR>
 ASDF
 		my$i=0;
 		#稼動させる前に確認すること
@@ -726,7 +728,7 @@ ASDF
 </TBODY>
 
 <TBODY>
-<TR><TH colspan="2"><H3 class="list">必要に応じて変更</H2></TH></TR>
+<TR><TH colspan="2" class="heading3">必要に応じて変更するもの</TH></TR>
 ASDF
 		#必要に応じて変更
 		for($i=0;$i<$#implied;$i+=2){
@@ -769,7 +771,7 @@ ASDF
 </TBODY>
 
 <TBODY>
-<TR><TH colspan="2"><H3 class="list">専用アイコン</H2></TH></TR>
+<TR><TH colspan="2" class="heading3">専用アイコン</TH></TR>
 <TR>
 <TH class="item">専用アイコン機能：</TD>
 ASDF
@@ -798,7 +800,7 @@ ASDF
 ASDF
 		}
 		print<<"ASDF";
-<TR><TH colspan="2"><H3 class="list">Mireille内のHTMLデザイン</H2></TH></TR>
+<TR><TH colspan="2" class="heading3">Mireille内のHTMLデザイン</TH></TR>
 ASDF
 		#Mireille内のHTMLデザイン
 		for($i=0;$i<$#design;$i+=2){
@@ -841,7 +843,7 @@ require 5.005;
 #use vars qw(\%CF \%IC);
 
 #-------------------------------------------------
-# 稼動させる前に確認すること
+# 稼動させる前に確認するもの
 
 ASDF
 		my$i=0;
@@ -856,7 +858,7 @@ ASDF
 \$ENV{'TZ'}=\'$IN{'TZ'}\';
 
 #-------------------------------------------------
-# 必要に応じて変更
+# 必要に応じて変更するもの
 
 ASDF
 		for($i=0;$i<$#implied;$i+=2){
@@ -965,7 +967,7 @@ ASDF
 sub css{
 	unless($IN{'file'}){
 		print&getManageHeader.<<"ASDF".&getManageFooter;
-<H2 class="mode">スタイルシートファイル選択</H2>
+<H2 class="heading2">スタイルシートファイル選択</H2>
 <FORM accept-charset="euc-jp" name="cssedit" method="post" action="$AT{'manage'}">
 <P>CSSファイル名<INPUT name="file" type="text" style="ime-mode:disabled" value="$IN{'file'}">（拡張子は入力しない）<BR>
 例：$CF{'style'}なら、styleとだけ入力する<BR>
@@ -991,7 +993,7 @@ ASDF
 		$css=~s/>/&#62;/go;
 		
 		print&getManageHeader.<<"ASDF".&getManageFooter;
-<H2 class="mode">スタイルシート編集モード</H2>
+<H2 class="heading2">スタイルシート編集モード</H2>
 <FORM accept-charset="euc-jp" name="cssedit" method="post" action="$AT{'manage'}">
 <P>CSSファイル名:$IN{'file'}.css<INPUT name="file" type="hidden" value="$IN{'file'}"><P>
 <P><TEXTAREA name="css" cols="100" rows="15">$css</TEXTAREA><P>
@@ -1022,7 +1024,7 @@ sub log{
 	unless($IN{'type'}){
 		#ログ管理初期メニュー
 		print&getManageHeader.<<"ASDF";
-<H2 class="mode">ログ管理モード</H2>
+<H2 class="heading2">ログ管理モード</H2>
 <FORM accept-charset="euc-jp" name="logedit" method="post" action="$AT{'manage'}">
 
 <FIELDSET style="padding:0.5em;width:60%">
@@ -1031,8 +1033,13 @@ sub log{
 <P><LABEL for="threadLock"><INPUT name="type" id="threadLock" type="radio" value="4" accesskey="l" checked
 >スレッドをロックする(<SPAN class="ak">L</SPAN>)</LABEL> ---
 第<INPUT name="lock" type="text" size="3" style="ime-mode:disabled" value="">番スレッドをロックする。</P>
+<FIELDSET style="padding:0.5em;width:60%">
+<LEGEND>オプション</LEGEND>
+<LABEL for="revise"><INPUT name="lockType" id="revise" type="checkbox" value="revise">記事修正もロックする</LABEL>
+<LABEL for="delete"><INPUT name="lockType" id="delete" type="checkbox" value="delete">記事削除もロックする</LABEL>
+</FIELDSET>
 <P>スレッドをロックして、新しく投稿できないようにします。
-既にロックしているスレッドをもう一度ロックしようとすると、ロックを解除します。</P>
+既にロックしているスレッドをもう一度ロックしようとすると、オプションが何であれ、ロックを解除します。</P>
 </DIV>
 </FIELDSET>
 
@@ -1071,9 +1078,9 @@ sub log{
 ASDF
 		if($CF{'gzip'}){
 			print<<'ASDF';
-<LABEL for="gzip">GZIP：<INPUT name="del" id="gzip" type="radio" value="gzip" checked></LABEL>
-<LABEL for="rename">ファイル名変更：<INPUT name="del" id="rename" type="radio" value="rename"></LABEL>
-<LABEL for="unlink">ファイル削除：<INPUT name="del" id="unlink" type="radio" value="unlink"></LABEL>
+<LABEL for="gzip"><INPUT name="del" id="gzip" type="radio" value="gzip" checked>GZIP</LABEL>
+<LABEL for="rename"><INPUT name="del" id="rename" type="radio" value="rename">ファイル名変更</LABEL>
+<LABEL for="unlink"><INPUT name="del" id="unlink" type="radio" value="unlink">ファイル削除</LABEL>
 <P>GZIPは処理に時間がかかるので、レンタルサーバーで行うとTimeOutし、エラーが出ることがあります。
 この場合は2,3回リロードすれば、処理完了の画面が出るはずです。</P>
 ASDF
@@ -1087,7 +1094,7 @@ ASDF
 </FIELDSET>
 
 <P><LABEL for="push"><INPUT id="push" name="push" type="checkbox" value="1">スレッド番号をつめる</LABEL>
-<BR>スレッド番号を１から順番に変更します</P>
+<BR>スレッド番号が1から順番になるように、全てのスレッドの番号を振りなおします</P>
 </FIELDSET>
 
 <P><INPUT name="mode" type="hidden" value="log">
@@ -1109,10 +1116,11 @@ ASDF
 				my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
 				
 				my$flag=0;
-				if(index($log[$#log],"Mir12=\tLocked")){
-					push(@log,"Mir12=\tLocked;\t");$flag++;
-				}else{
+				if(index($log[$#log],"Mir12=\tLocked")+1){
 					pop@log;
+				}else{
+					push(@log,"Mir12=\tLocked:$IN{'lockType'};\t");
+					++$flag;
 				}
 				truncate(RW,0);
 				seek(RW,0,0);
@@ -1125,7 +1133,7 @@ ASDF
 		
 		#スレッドロック以外と、スレッドロックのエラー
 		print&getManageHeader.<<"_HTML_";
-<H2 class="mode">ログ管理モード</H2>
+<H2 class="heading2">ログ管理モード</H2>
 <FORM accept-charset="euc-jp" name="logedit" method="post" action="$AT{'manage'}">
 _HTML_
 		if($IN{'type'}==1){
@@ -1232,7 +1240,7 @@ ASDF
 			seek(ZERO,0,0);
 			my@zero=map{m/(.*)/o}<ZERO>;
 			my@zer2=split(/ /o,$zero[2]);
-			my@zerC=();
+			my@zerC=(0);
 			my@zerD=();
 			
 			my$i=1;
@@ -1243,7 +1251,6 @@ ASDF
 				push(@zerD,"$_=>$i");
 				$i++;
 			}
-			$zerC[0]=0;
 			
 			truncate(ZERO,0);
 			seek(ZERO,0,0);
@@ -1340,7 +1347,7 @@ $ 削除方式
 sub zero{
 	unless($IN{'recover'}){
 		print&getManageHeader.<<"ASDF".&getManageFooter;
-<H2 class="mode">記事情報ファイル回復モード</H2>
+<H2 class="heading2">記事情報ファイル回復モード</H2>
 <FORM accept-charset="euc-jp" name="zero" method="post" action="$AT{'manage'}">
 <P>記事情報ファイルをリカバリすると、既存の情報は失われます<BR>
 それでもよろしいですか？
@@ -1381,7 +1388,7 @@ ASDF
 sub manage{
 	unless($IN{'manage'}){
 		print&getManageHeader.<<"ASDF".&getManageFooter;
-<H2 class="mode">管理CGIの管理</H2>
+<H2 class="heading2">管理CGIの管理</H2>
 <FORM accept-charset="euc-jp" name="zero" method="post" action="$AT{'manage'}">
 
 <FIELDSET style="padding:0.5em;width:25em;text-align:left">
