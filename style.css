@@ -741,7 +741,7 @@ P.artinfo{
 .thread .body{
 	color: #355;
 	font-size: 100%;
-	line-height: 1.2;
+	line-height: 1.4;
 	padding: 0.2em;
 	text-align: left;
 	vertical-align: top;
@@ -799,15 +799,15 @@ P.artinfo{
 	margin: 0.2em auto;
 }
 #writingForm .leftColumn{
-	width: 120px;
+	width: 200px;
 }
 #writingForm .inputBody .item{
 	text-align: center;
-	width: 260px;
+	width: 100px;
 }
 #writingForm .rightColumn{
 	text-align: right;
-	width: 120px;
+	width: 200px;
 }
 /* Quicksave/Autosave用のボタン */
 @media all{
@@ -815,6 +815,11 @@ P.artinfo{
 		border: #355 solid 1px;
 		color: #355;
 		width: 2.7em;
+	}
+	#writingForm .rightColumn BUTTON{
+		border: #355 solid 1px;
+		color: #355;
+		width: 60px;
 	}
 	/* Quicksave書き込みボタン */
 	#writingForm .buttonQuicksave{
