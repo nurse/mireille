@@ -16,33 +16,44 @@ my(%Z0,@zer2,@file);
 $CF{'encoding'}||='euc-jp';
 $CF{'index'}||='index.cgi';
 
-=pod core.cgi¤òÃ±ÂÎµ¯Æ°¤µ¤»¤ë¤È¡¢location¤ÇÄ·¤Ð¤»¤ëCGI¤Ë
+=head1 "Mireille" Bulletin Board System
+
+=begin :comment
+
+# core.cgi¤òÃ±ÂÎµ¯Æ°¤µ¤»¤ë¤È¡¢location¤ÇÄ·¤Ð¤»¤ëCGI¤Ë
 # ¤³¤Îµ¡Ç½¤ò»È¤¦¤Ë¤Ï¾å¤Î¹Ô¤ò # ¤Ç #=item ¤È¥³¥á¥ó¥È¥¢¥¦¥È¤·¤Æ¤¯¤À¤µ¤¤
 if($CF{'program'}eq __FILE__){
 	#Ä¾ÀÜ¼Â¹Ô¤À¤Ã¤¿¤éÆ°¤­½Ð¤¹
 	&locate($ENV{'QUERY_STRING'});
-}
-=pod
+ }
+
+=end :comment
+
 =cut
+
 
 #-------------------------------------------------
 # MAIN SWITCH
 #
 sub main{
+	#-----------------------------
 	#Encoding Checker
 	my$message='The encoding of "%s" is not "%s" but "%s"!';
+	my%enc=(130=>'shift_jis',164=>'euc-jp',27 =>'iso-2022-jp',227=>'utf-8',254=>'utf-16');
 	for(keys%{$CF{'_HiraganaLetterA'}}){
-		my$file=$_;
 		my$chr=ord$CF{'_HiraganaLetterA'}->{$_};
-		my%enc=(130=>'shift_jis',164=>'euc-jp',27 =>'iso-2022-jp',227=>'utf-8',254=>'utf-16');
 		if($enc{$chr}){
-			lc$CF{'encoding'}eq$enc{$chr}or die sprintf($message,$file,$CF{'encoding'},$enc{$chr});
+			lc$CF{'encoding'}eq$enc{$chr}or die sprintf($message,$_,$CF{'encoding'},$enc{$chr});
 		}elsif($chr==12354){
 			#Perl Native¤Ê¤Î¤Ï¡¢²¿¤ä¤Ã¤Æ¤ë¤Î¤«¤ï¤«¤é¤Ê¤¤¤«¤é¥¹¥ë¡¼¤¹¤ë
 		}else{
-			#ÈóÆüËÜ¸ì¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°¤ò»È¤Ã¤Æ¤¤¤ë¤Î¤«¤â¤·¤ì¤Ê¤¤¤«¤é¥¹¥ë¡¼¤¹¤ë
+			#Ì¤ÃÎ¤Î¥¨¥ó¥³¡¼¥Ç¥£¥ó¥°¤Ï¤â¤Ã¤È¤ï¤«¤é¤Ê¤¤¤Î¤ÇÌµ»ë¤¹¤ë
 		}
+		#³ÎÇ§¤Ç¤­¤¿¤«¤éºï½ü
+		delete$CF{'_HiraganaLetterA'}->{$_};
 	}
+	
+	#-----------------------------
 	#¥í¥°¥Õ¥¡¥¤¥ë¤Á¤ã¤ó¤È¤¢¤ë¡©
 	defined$CF{'log'}||die q($CF{'log'} is Undefined);
 	unless(-e"$CF{'log'}0.cgi"){
@@ -59,6 +70,7 @@ sub main{
 		close(ZERO);
 	}
 
+	#-----------------------------
 	#¥â¡¼¥É¤´¤È¤Î¿¶¤êÊ¬¤±
 	&getParam;
 	
@@ -206,21 +218,42 @@ sub showCover{
 
 
 #-------------------------------------------------
-# µ­»ö½ñ¤­¹þ¤ß
-#
-sub writeArticle{
 
-=item ½ñ¤­¹þ¤ß¤Î¾ðÊó
+=head2 µ­»ö½ñ¤­¹þ¤ß
 
-(length$IN{'j'}xor$IN{'i'})			¿·µ¬
-(!defined$IN{'i'}&&$IN{'j'}eq 0)	¿·µ¬¿Æµ­»ö
-($IN{'i'}&&!defined$IN{'j'})		¿·µ¬»Òµ­»ö
-($IN{'i'}&&defined$IN{'j'})			½¤Àµ
-($IN{'i'}&&$IN{'j'}eq 0)			½¤Àµ¿Æµ­»ö
-($IN{'i'}&&$IN{'j'}ne 0)			½¤Àµ»Òµ­»ö
+=head3 ½ñ¤­¹þ¤ß¤Î¾ðÊó
+
+=over
+
+=item ¿·µ¬
+
+C<(length$IN{'j'}xor$IN{'i'})>
+
+=item ¿·µ¬¿Æµ­»ö
+
+C<(!defined$IN{'i'}&&$IN{'j'}eq 0)>
+
+=item ¿·µ¬»Òµ­»ö
+
+C<($IN{'i'}&&!defined$IN{'j'})>
+
+=item ½¤Àµ
+
+C<($IN{'i'}&&defined$IN{'j'})>
+
+=item ½¤Àµ¿Æµ­»ö
+
+C<($IN{'i'}&&$IN{'j'}eq 0)>
+
+=item ½¤Àµ»Òµ­»ö
+
+C<($IN{'i'}&&$IN{'j'}ne 0)>
+
+=back
 
 =cut
 
+sub writeArticle{
 	#-----------------------------
 	#¥³¥Þ¥ó¥É¤ÎÆÉ¤ß¹þ¤ß
 	my%EX;
@@ -290,77 +323,133 @@ sub writeArticle{
 	#-----------------------------
 	#¥³¥Þ¥ó¥É¤Î½èÍý
 
-=pod ¥³¥Þ¥ó¥É¤Ç»È¤¨¤ë¤â¤Î
+=head2 ¥³¥Þ¥ó¥É¤Ç»È¤¨¤ë¤â¤Î
 
-:icon
-  ¡Öicon = <password>¡×
-  ÀìÍÑ¥¢¥¤¥³¥ó
-:iconlist
-  ¡Öiconlist = (nolist|economy)¡×
-  :nolist
-    ¥¢¥¤¥³¥ó¥ê¥¹¥È¤òÆÉ¤ß¹þ¤Þ¤Ê¤¤
-  :economy
-    ¥¢¥¤¥³¥ó¥ê¥¹¥È¤òÆÉ¤ß¹þ¤à¤±¤ì¤É¡¢É½¼¨¤·¤Ê¤¤
-:absoluteIcon
-  ¡ÖabsoluteIcon = <absoluteUrl>¡×
-  ÀäÂÐ»ØÄê¥¢¥¤¥³¥ó
-:relativeIcon
-  ¡ÖrelativeIcon = <relativeUrl>¡×
-  ÁêÂÐ»ØÄê¥¢¥¤¥³¥ó
-  ¡ÊÁêÂÐ»ØÄê¤Î´ð½à¤Ï$CF{'icon'}¤Ç¤¹¡Ë
-:signature
-  ¡Ösignature = <seed of signature>¡×
-  ¡Ö½ðÌ¾¤Î¤â¤È¡×¤ò»ØÄê
+=head3 ¥¢¥¤¥³¥ó»ØÄê
 
-:usetag
-  !SELECTABLE()¤Çµö²Ä¤·¤Æ¤¢¤ëÈÏ°ÏÆâ¤Ç»È¤¦¥¿¥°¤òÁª¤Ù¤ë
-:notag
-  ¥¿¥°¤ò»È¤ï¤Ê¤¤
-:noautolink
-  URI¼«Æ°¥ê¥ó¥¯¤ò»È¤ï¤Ê¤¤
-:noartno
-  µ­»öÈÖ¹æ¥ê¥ó¥¯¤ò»È¤ï¤Ê¤¤
-:nostrong
-  ¸ì¶ç¶¯Ä´¤ò»È¤ï¤Ê¤¤
+=over
 
-:dnew
-  µ­»ö¤ÎÅê¹ÆÆü»þ¤ò¹¹¿·¤·¤Þ¤¹
-:znew
-  ¥¹¥ì¥Ã¥É¤ÎºÇ½ªÊÑ¹¹Æü»þ¤ò¹¹¿·¤·¤Þ¤¹
-:renew
-  dnew¤Èznew¤òÆ±»þ¤Ë¹Ô¤¤¤Þ¤¹
+=item ÀìÍÑ¥¢¥¤¥³¥ó
 
-:lockArticle
-  µ­»ö¤ò¥í¥Ã¥¯¤·¤Þ¤¹
-:lockThread
-  ¡ÖlockThread = (all| (revise|delete).. )¡×
-  ¥¹¥ì¥Ã¥É¤ò¥í¥Ã¥¯¤·¤Þ¤¹¡£
-  ´ÉÍý¥Ñ¥¹¥ï¡¼¥É¤«¡¢¿Æµ­»ö¤Î¥Ñ¥¹¥ï¡¼¥É¤ò»È¤Ã¤Æ¡¢
-  ¥í¥Ã¥¯¤·¤¿¤¤¥¹¥ì¥Ã¥É¤ËÊÖ¿®¤¹¤ë¤È¥í¥Ã¥¯¤Ç¤­¤Þ¤¹
-  ¥ª¥×¥·¥ç¥ó¤ò»ØÄê¤·¤Ê¤¤¾ì¹ç¤Ï¡¢¤½¤Î¥¹¥ì¥Ã¥É¤ËÂÐ¤¹¤ëÊÖ¿®¤¬¥í¥Ã¥¯¤µ¤ì¤Þ¤¹¡£
-  :all
-    Á´¤Æ¤Î¥ª¥×¥·¥ç¥ó¤ò¥ª¥ó
-  :revise
-    ½¤Àµ¤ò¥í¥Ã¥¯
-  :delete
-    ºï½ü¤ò¥í¥Ã¥¯
+C<< icon = <password> >>
 
-#Ì¤¼ÂÁõ
-su:	´ÉÍý¥Ñ¥¹¥ï¡¼¥É¤òÆþ¤ì¤Æ¤ª¤¯¤È¡¢ÊÖ¿®¤Ç¤­¤Ê¤¤¥¹¥ì¥Ã¥É¤ËÊÖ¿®¤Ç¤­¤¿¤ê¤¹¤ë¡Ê¤è¤¦¤Ë¤Ê¤ëÍ½Äê¡Ë
+=item ÀäÂÐ»ØÄê¥¢¥¤¥³¥ó
 
-"key=value;key=value"¤Î·Á¼°¤Ç¥³¥Þ¥ó¥ÉÍó¤ËÆþÎÏ¤¹¤ë
+C<< absoluteIcon = <absoluteUrl> >>
+
+=item ÁêÂÐ»ØÄê¥¢¥¤¥³¥ó
+
+C<< relativeIcon = <relativeUrl> >>
+¡ÊÁêÂÐ»ØÄê¤Î´ð½à¤Ï$CF{'icon'}¤Ç¤¹¡Ë
+
+=back
+
+=head3 ¥¢¥¤¥³¥ó¥ê¥¹¥È¤ÎÆÉ¤ß¹þ¤ß
+
+C<< iconlist = [ nolist | economy ] >>
+
+=over
+
+=item nolist
+
+¥¢¥¤¥³¥ó¥ê¥¹¥È¤òÆÉ¤ß¹þ¤Þ¤Ê¤¤¡£
+
+=item economy
+
+¥¢¥¤¥³¥ó¥ê¥¹¥È¤òÆÉ¤ß¹þ¤à¤±¤ì¤É¡¢É½¼¨¤·¤Ê¤¤¡£
+
+=back
+
+
+=head3 ¡Ö½ðÌ¾¤Î¤â¤È¡×¤ò»ØÄê
+
+C<< signature = <seed of signature> >>
+
+=head3 usetag
+
+!SELECTABLE()¤Çµö²Ä¤·¤Æ¤¢¤ëÈÏ°ÏÆâ¤Ç»È¤¦¥¿¥°¤òÁª¤Ù¤ë¡£
+
+=head3 notag
+
+¥¿¥°¤ò»È¤ï¤Ê¤¤¡£
+
+=head3 noautolink
+
+URI¼«Æ°¥ê¥ó¥¯¤ò»È¤ï¤Ê¤¤¡£
+
+=head3 noartno
+
+µ­»öÈÖ¹æ¥ê¥ó¥¯¤ò»È¤ï¤Ê¤¤¡£
+
+=head3 nostrong
+
+¸ì¶ç¶¯Ä´¤ò»È¤ï¤Ê¤¤¡£
+
+=head3 ¹¹¿·Æü»þÄ´À°
+
+=over
+
+=item dnew
+
+µ­»ö¤ÎÅê¹ÆÆü»þ¤ò¹¹¿·¤·¤Þ¤¹¡£
+
+=item znew
+
+¥¹¥ì¥Ã¥É¤ÎºÇ½ªÊÑ¹¹Æü»þ¤ò¹¹¿·¤·¤Þ¤¹¡£
+
+=item renew
+
+dnew¤Èznew¤òÆ±»þ¤Ë¹Ô¤¤¤Þ¤¹¡£
+
+=back
+
+=head3 lockArticle
+
+µ­»ö¤ò¥í¥Ã¥¯¤·¤Þ¤¹¡£
+
+=over
+
+=item lockThread
+
+C<< lockThread = [ all | revise | delete ] >>
+
+¥¹¥ì¥Ã¥É¤ò¥í¥Ã¥¯¤·¤Þ¤¹¡£
+´ÉÍý¥Ñ¥¹¥ï¡¼¥É¤«¡¢¿Æµ­»ö¤Î¥Ñ¥¹¥ï¡¼¥É¤ò»È¤Ã¤Æ¡¢
+¥í¥Ã¥¯¤·¤¿¤¤¥¹¥ì¥Ã¥É¤ËÊÖ¿®¤¹¤ë¤È¥í¥Ã¥¯¤Ç¤­¤Þ¤¹
+¥ª¥×¥·¥ç¥ó¤ò»ØÄê¤·¤Ê¤¤¾ì¹ç¤Ï¡¢¤½¤Î¥¹¥ì¥Ã¥É¤ËÂÐ¤¹¤ëÊÖ¿®¤¬¥í¥Ã¥¯¤µ¤ì¤Þ¤¹¡£
+
+=item all
+
+Á´¤Æ¤Î¥ª¥×¥·¥ç¥ó¤ò¥ª¥ó
+
+=item revise
+
+½¤Àµ¤ò¥í¥Ã¥¯
+
+=item delete
+
+ºï½ü¤ò¥í¥Ã¥¯
+
+=back
+
+=head3 Note.
+
+C<key=value;key=value>¤Î·Á¼°¤Ç¥³¥Þ¥ó¥ÉÍó¤ËÆþÎÏ¤¹¤ë
 keyµÚ¤Óvalue¤Ï[=;]¤ò´Þ¤ó¤Ç¤Ï¤Ê¤é¤Ê¤¤
 ¡ÊQ:¥¢¥¤¥³¥ó¤Îurl¤Ë[=;]¤¬´Þ¤Þ¤ì¤ë¤³¤È¤Ã¤Æ¤¢¤ë¡©¡Ë
 ¡ÊA:cgi¤ÇÃæ·Ñ¤·¤Æ¤ë¾ì¹ç¤Ï¤¢¤ë¤«¤â¤Í¡£¡£¡Ë
 
-¡¦È÷¹Í
-key1="value1;value1";key2=value2;
-¤ÏMireille1.2.2.16¤Ç¤Ï´üÂÔÄÌ¤ê¤Ë²ò¼á¤·¤Æ¤¯¤ì¤Ê¤¤¤ï¤±¤Ç¤¹
+C<key1="value1;value1";key2=value2;>
+¤ÏMireille1.2.2.16¤Ç¤Ï´üÂÔÄÌ¤ê¤Ë²ò¼á¤·¤Æ¤¯¤ì¤Ê¤¤¤ï¤±¤Ç¤¹¡£
+
 1.2.2.16¸½ºß¤Ç¤Ï¤ª¤½¤é¤¯º£¤ÎÅ¬Åö¤Ê½èÍý¤Ç¤â¤¤¤¤¤±¤ì¤É¡¢
-ËÜ³ÊÅª¤Ë¥³¥Þ¥ó¥É¤ò³È½¼¤µ¤»¤ë¤Ê¤éMarldia¤Î¥³¥Þ¥ó¥É¼þ¤ê¤ò¤â¤Ã¤ÆÍè¤ë¤Ù¤­
+ËÜ³ÊÅª¤Ë¥³¥Þ¥ó¥É¤ò³È½¼¤µ¤»¤ë¤Ê¤éMarldia¤Î¥³¥Þ¥ó¥É¼þ¤ê¤ò¤â¤Ã¤ÆÍè¤ë¤Ù¤­¡£
 ¤Þ¤¡¡¢¤³¤ì¤é°Ê³°¤Ë¥³¥Þ¥ó¥É¤Î¥Í¥¿¤¬»×¤¤¤Ä¤«¤Ê¤¤¤Î¤Ç¡¦¡¦¡¦^^;;
-Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤¿¤ê¤¹¤ë¤Î¤Ç¡¢
-¾åµ­¤Î¤è¤¦¤Ê¤â¤Î¤ò»È¤¦É¬Í×À­¤¬¤¢¤ë¤«¤â¤·¤ì¤Ê¤¤¤¿¤á¡¢Ç°¤Î¤¿¤áÂÐ±þ¤µ¤»¤Æ¤¤¤ë¤Î¤Ç¤¹¤±¤É¤Í
+
+Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢
+·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤¿¤ê¤¹¤ë¤Î¤Ç¡¢
+¾åµ­¤Î¤è¤¦¤Ê¤â¤Î¤ò»È¤¦É¬Í×À­¤¬¤¢¤ë¤«¤â¤·¤ì¤Ê¤¤¤¿¤á¡¢
+Ç°¤Î¤¿¤áÂÐ±þ¤µ¤»¤Æ¤¤¤ë¤Î¤Ç¤¹¤±¤É¤Í¡£
 
 =cut
 
@@ -393,20 +482,37 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 		$IN{'pass'}||($CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'})
 		or push(@error,'¥Ñ¥¹¥ï¡¼¥É')&&push(@message,'¥Ñ¥¹¥ï¡¼¥É¤Ï8Ê¸»ú°Ê¾å¡¢128Ê¸»ú°Ê²¼¤Ç¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó¡£');
 		if($CF{'ngWords'}&&!@error){
-			#NG¥ï¡¼¥É
-			my%item=split(/\s+/o,$CF{'itemsCheckingNGWords'})||(body=>'ËÜÊ¸',subject=>'ÂêÌ¾',name=>'Ì¾Á°');
+
+=head2 CONFIG::NG¥ï¡¼¥É
+
+=head3 ngWordsItems
+
+NG¥ï¡¼¥É¤¬´Þ¤Þ¤ì¤ë¤«Ä´¤Ù¤ë¹àÌÜ¡£
+·Á¼°¤ÏC<< <¥×¥í¥°¥é¥à¾å¤Î¹àÌÜÌ¾>=<É½¼¨¾å¤Î¹àÌÜÌ¾> >>¤È¤¤¤Ã¤¿·Á¡£
+
+=head3 ngWords
+
+È¾³Ñ¥¹¥Ú¡¼¥¹¶èÀÚ¤ê¤Ç¡¢NG¥ï¡¼¥É¤òÎóµó
+
+=head3 ngWordsMessage
+
+NG¥ï¡¼¥É¤ò¸«¤Ä¤±¤¿¤È¤­¤ËÉ½¼¨¤¹¤ë¥á¥Ã¥»¡¼¥¸
+
+=cut
+
+			my%item=($CF{'ngWordsItems'}||'body=ËÜÊ¸ subject=ÂêÌ¾ name=Ì¾Á°')=~/(\w+)=(\S+)/go;
 			for(keys%item){
 				my$item=$IN{$_};
 				my$err=$item{$_};
 				study$item;
-				for($CF{'ngWords'}=~/\S+/go){
+				for(split(/\s+/o,$CF{'ngWords'})){
 					MirString->match($item,$_)||next;
 					push(@error,$err);
 					last;
 				}
 				@error&&last;
 			}
-			push(@message,'Å¬ÀÚ¤Ç¤Ê¤¤Ê¸»úÎó¤ò´Þ¤àÅê¹Æ¤Ê¤Î¤ÇµñÀä¤µ¤ì¤Þ¤·¤¿¡£')if@error;
+			push(@message,$CF{'ngWordsMessage'}||'Å¬ÀÚ¤Ç¤Ê¤¤Ê¸»úÎó¤ò´Þ¤àÅê¹Æ¤Ê¤Î¤ÇµñÀä¤µ¤ì¤Þ¤·¤¿¡£')if@error;
 		}
 		if(@error){
 			&showHeader;
@@ -650,34 +756,38 @@ _HTML_
 			if($CF{'logmax'}>0&&@file>$CF{'logmax'}){
 				#¸Å¤¤µ­»ö¥¹¥ì¥Ã¥É¥Õ¥¡¥¤¥ë¤ò ¥Õ¥¡¥¤¥ëÌ¾ÊÑ¹¹/ºï½ü ¤¹¤ë
 
-=pod ¤³¤ÎÉôÊ¬¤Ï¤³¤ó¤¬¤é¤¬¤ê¤ä¤¹¤¤¤Î¤Ç¥á¥â¡£
+=begin :comment
 
-@file¤Ï (101,100,99,95,91,¡¦¡¦¡¦,3,2,1,0) ¤È¤¤¤Ã¤¿ÇÛÎó
-¤³¤Î½çÈÖ¤Ï¾ï¤Ë¹ß½ç
-ºÇ¸å¤ËÉ¬¤ºµ­»ö¾ðÊó¥Õ¥¡¥¤¥ë¤òÉ½¤¹ 0 ¤¬Íè¤ë
+# ¤³¤ÎÉôÊ¬¤Ï¤³¤ó¤¬¤é¤¬¤ê¤ä¤¹¤¤¤Î¤Ç¥á¥â¡£
 
-@zer2¤Ï (1 1000000 10000001 ¡¦¡¦¡¦ 1200000) ¤È¤¤¤Ã¤¿ÇÛÎó
-ºÇ½é¤Î¿ô»ú¤Ïµ­»öÈÖ¹æ¤È@zer2¤Ç¤ÎÅº¤¨»ú¤È¤ÎÂÐ±þ¤òÉ½¤¹
-¤³¤ÎOffset¤¬100¤Ê¤éµ­»öÈÖ¹æ159¤Î¾ðÊó¤Ï$zer2[59]¤Ë¤¢¤ë
+@file¤ÏC<(101,100,99,95,91,¡¦¡¦¡¦,3,2,1,0)>¤È¤¤¤Ã¤¿ÇÛÎó¡£
+¤³¤Î½çÈÖ¤Ï¾ï¤Ë¹ß½ç¡£
+ºÇ¸å¤ËÉ¬¤ºµ­»ö¾ðÊó¥Õ¥¡¥¤¥ë¤òÉ½¤¹ 0 ¤¬Íè¤ë¡£
+
+@zer2¤ÏC<(1 1000000 10000001 ¡¦¡¦¡¦ 1200000)>¤È¤¤¤Ã¤¿ÇÛÎó¡£
+ºÇ½é¤Î¿ô»ú¤Ïµ­»öÈÖ¹æ¤È@zer2¤Ç¤ÎÅº¤¨»ú¤È¤ÎÂÐ±þ¤òÉ½¤¹¡£
+¤³¤ÎOffset¤¬100¤Ê¤éµ­»öÈÖ¹æ159¤Î¾ðÊó¤Ï$zer2[59]¤Ë¤¢¤ë¡£
 
 ¥Õ¥¡¥¤¥ë¤¬Áý¤¨¤¹¤®¤¿¤È¤­¤Ëµ­»ö¥¹¥ì¥Ã¥É¥Õ¥¡¥¤¥ë¤òºï½ü¤¹¤ëºÝ¤Ë¤Ï¡¢
-¾åµ­¤ÎÆó¤Ä¤ÎÇÛÎó¤òÆ±»þ¤ËÀµ¤·¤¯½èÍý¤·¤Ê¤±¤ì¤Ð¤Ê¤é¤Ê¤¤
+¾åµ­¤ÎÆó¤Ä¤ÎÇÛÎó¤òÆ±»þ¤ËÀµ¤·¤¯½èÍý¤·¤Ê¤±¤ì¤Ð¤Ê¤é¤Ê¤¤¡£
 ¤³¤Î»þ¡¢µ­»ö¥¹¥ì¥Ã¥É¥Õ¥¡¥¤¥ë¤¬ºï½ü¤µ¤ì¤¿¤³¤È¤Ë¤è¤Ã¤Æ¡¢
-@file¤¬½ê¡¹¿ô»ú¤¬Èô¤ó¤Ç¤¤¤ë²ÄÇ½À­¤¬¤¢¤ë¤³¤È¤ËÃí°Õ
-@zer2¤Ïµ­»ö¤¬ºï½ü¤µ¤ì¤Æ¤¤¤Æ¤âÏ¢ÈÖ¤Ë¤Ê¤Ã¤Æ¤¤¤ë
+@file¤¬½ê¡¹¿ô»ú¤¬Èô¤ó¤Ç¤¤¤ë²ÄÇ½À­¤¬¤¢¤ë¤³¤È¤ËÃí°Õ¡£
+@zer2¤Ïµ­»ö¤¬ºï½ü¤µ¤ì¤Æ¤¤¤Æ¤âÏ¢ÈÖ¤Ë¤Ê¤Ã¤Æ¤¤¤ë¡£
 
 ¤Á¤Ê¤ß¤Ë¡¢
 $file[$#file-1] ¤Ï¤³¤Î»þºï½ü¤µ¤ì¤ëµ­»ö¤Î¤¦¤Á¤Çµ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤¬ºÇ¤â¾®¤µ¤¤¤â¤Î¤Î¡¢µ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤ò¡¢
-$file[$CF{'logmax'}-1] ¤Ïµ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤¬ºÇ¤âÂç¤­¤¤¤â¤Î¤Î¡¢µ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤ò¤¢¤é¤ï¤¹
+$file[$CF{'logmax'}-1] ¤Ïµ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤¬ºÇ¤âÂç¤­¤¤¤â¤Î¤Î¡¢µ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤ò¤¢¤é¤ï¤¹¡£
 $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
-ºÇ¤âµ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤¬¾®¤µ¤Ê¤â¤Î¤Î¡¢µ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤ò¤¢¤é¤ï¤¹
+ºÇ¤âµ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤¬¾®¤µ¤Ê¤â¤Î¤Î¡¢µ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤ò¤¢¤é¤ï¤¹¡£
 
-¤è¤Ã¤Æ¡¢$file[$CF{'logmax'}-2]-$file[$#file-1] ¤Ï¤³¤Î»þºï½ü¤µ¤ì¤ë±ä¤Ùµ­»ö¿ô¤ò¤¢¤é¤ï¤¹
-#ÅÓÃæµ­»ö¥¹¥ì¥Ã¥É¤¬ºï½ü¤µ¤ì¤Æ¤¤¤ë¾ì¹ç¡¢¼ÂºÝ¤Ëºï½ü¤µ¤ì¤ëµ­»ö¥¹¥ì¥Ã¥É¿ô¤È¤Ï°Û¤Ê¤ë
+¤è¤Ã¤Æ¡¢C<$file[$CF{'logmax'}-2]-$file[$#file-1]>¤Ï¤³¤Î»þºï½ü¤µ¤ì¤ë±ä¤Ùµ­»ö¿ô¤ò¤¢¤é¤ï¤¹¡£
+#ÅÓÃæµ­»ö¥¹¥ì¥Ã¥É¤¬ºï½ü¤µ¤ì¤Æ¤¤¤ë¾ì¹ç¡¢¼ÂºÝ¤Ëºï½ü¤µ¤ì¤ëµ­»ö¥¹¥ì¥Ã¥É¿ô¤È¤Ï°Û¤Ê¤ë¡£
 
 Ãí¡§
- @file¤Ë¤Ï0.cgi¤¬´Þ¤Þ¤ì¤Æ¤¤¤ë¤Î¤Ç°ì¤ÄÂ¿¤¤¡¢
- ¤Þ¤¿@file¤Ë¤Ï¤³¤ì¤«¤éÄÉ²Ã¤¹¤ë¿·¥¹¥ì¥Ã¥É¤¬¤Ê¤¤¤Î¤Ç°ì¤Ä¾¯¤Ê¤¤
+@file¤Ë¤Ï0.cgi¤¬´Þ¤Þ¤ì¤Æ¤¤¤ë¤Î¤Ç°ì¤ÄÂ¿¤¤¡£
+¤Þ¤¿@file¤Ë¤Ï¤³¤ì¤«¤éÄÉ²Ã¤¹¤ë¿·¥¹¥ì¥Ã¥É¤¬¤Ê¤¤¤Î¤Ç°ì¤Ä¾¯¤Ê¤¤
+
+=end :comment
 
 =cut
 
@@ -829,7 +939,8 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 ¤³¤ì¤Ç¤è¤±¤ì¤Ð¤½¤Î¤Þ¤ÞTOP¤ä·Ç¼¨ÈÄ¤ËÌá¤Ã¤Æ¤¯¤À¤µ¤¤¡£<BR>
 ½¤Àµ¤·¤¿¤¤¾ì¹ç¤Ï°Ê²¼¤Î¥Õ¥©¡¼¥à¤Ç½¤Àµ¤·¤ÆÅê¹Æ¤·¤Æ¤¯¤À¤µ¤¤¡£</P>
 
-<DIV class="box"><P class="heading3">--- PREVIEW ---</P><P class="body">$IN{'body'}</P></DIV>
+<DIV class="box"><P class="heading3">--- PREVIEW ---</P>
+<P class="body" style="color:$IN{'color'}">$IN{'body'}</P></DIV>
 
 <TABLE border="0" cellspacing="0" summary="BackMenu">
 <COL span="2" width="150">
@@ -936,12 +1047,16 @@ _HTML_
 
 
 #-------------------------------------------------
-# µ­»ö½¤Àµ¡¦ºï½ü¥á¥Ë¥å¡¼
-#
-sub showRvsMenu{
-=item °ú¿ô
-$ Á°²ó¤Î½èÍý¤Î·ë²Ì
+
+=head2 µ­»ö½¤Àµ¡¦ºï½ü¥á¥Ë¥å¡¼
+
+=head3 °ú¿ô
+
+  $ Á°²ó¤Î½èÍý¤Î·ë²Ì
+
 =cut
+
+sub showRvsMenu{
 	&getCookie;
 	&showHeader;
 	my$mode='';
@@ -1051,13 +1166,19 @@ sub rvsArticle{
 	close(RD);
 	my%DT=$log[$IN{'j'}]=~/([^\t]*)=\t([^\t]*);\t/go;
 	%DT||die"Âè$IN{'i'}ÈÖ¥¹¥ì¥Ã¥É¤Ë¤Ï$IN{'j'}¤Ê¤ó¤Æ¤¢¤ê¤Þ¤»¤ó";
-=pod
+
+=begin :comment
+
 ¤¿¤È¤¨$IN{'pass'}¤¬ÅÏ¤µ¤ì¤Ê¤¯¤Æ¤â¡¢GetCookie¤ÇCookie¤ò»²¾È¤·¡¢
 ¤â¤·¤½¤³¤ÇÆÀ¤é¤ì¤¿$CK{'pass'}¤¬¥Ñ¥¹¥ï¡¼¥É¤È°ìÃ×¤¹¤ì¤Ð½¤Àµ¥â¡¼¥É¤ËÄÌ¤¹¡¢
 ¤È¤¤¤¦¤è¤¦¤Ë¤·¤ÆÍøÊØÀ­¤Î¸þ¾å¤ò¿Þ¤Ã¤Æ¤¤¤ë¡£
 ÅöÁ³¥Ñ¥¹¥ï¡¼¥É¤¬°ìÃ×¤·¤Ê¤±¤ì¤ÐÆþÎÏ¤¹¤ë¤è¤¦¤ËÍ×ÀÁ¤¹¤ë¡£
+
+=end :comment
+
 =cut
-	if($IN{'pass'}){
+
+		if($IN{'pass'}){
 		#IN¤ÇÁ÷¤é¤ì¤Æ¤­¤¿¡©
 		$IN{'oldps'}=$IN{'pass'};
 		if($CF{'admps'}&&$IN{'pass'}eq$CF{'admps'}){
@@ -1318,13 +1439,17 @@ _HTML_
 
 
 #-------------------------------------------------
-# Location¤ÇÅ¾Á÷
-#
-sub locate{
-=item °ú¿ô
-;
-$ Èô¤ÖÀè¤ÎURL¡ÊÀäÂÐ¤Ç¤âÁêÂÐ¤Ç¤â¡Ë
+
+=head2 Location¤ÇÅ¾Á÷
+
+=head3 °ú¿ô
+
+  ;
+  $ Èô¤ÖÀè¤ÎURL¡ÊÀäÂÐ¤Ç¤âÁêÂÐ¤Ç¤â¡Ë
+
 =cut
+
+sub locate{
 	my$i=$_[0];
 	$i||die'"Stay here."';
 	if(!index($i,'http:')){
@@ -1376,8 +1501,8 @@ sub getParam{
 	unless($ENV{'REQUEST_METHOD'}){
 		@params=@ARGV;
 	}elsif('HEAD'eq$ENV{'REQUEST_METHOD'}){ #forWWWD
-#Method¤¬HEAD¤Ê¤é¤ÐLastModifed¤ò½ÐÎÏ¤·¤Æ¡¢
-#ºÇ¸å¤ÎÅê¹Æ»þ¹ï¤òÃÎ¤é¤»¤ë
+		#Method¤¬HEAD¤Ê¤é¤ÐLastModifed¤ò½ÐÎÏ¤·¤Æ¡¢
+		#ºÇ¸å¤ÎÅê¹Æ»þ¹ï¤òÃÎ¤é¤»¤ë
 		my$last=&datef((stat("$CF{'log'}0.cgi"))[9],'rfc1123');
 		print"Status: 200 OK\nLast-Modified: $last\n"
 		."Content-Type: text/plain\n\nLast-Modified: $last";
@@ -1482,12 +1607,16 @@ sub getParam{
 			$IN{'_ArticleType'}=0;
 		}
 
-=item µ­»ö¼ïÊÌ
+=begin :comment
+
+# µ­»ö¼ïÊÌ
 
 0: ¿·µ¬¿Æµ­»ö
 1: ¿·µ¬»Òµ­»ö
 2: ½¤Àµ¿Æµ­»ö
 3: ½¤Àµ»Òµ­»ö
+
+=end :comment
 
 =cut
 
@@ -1590,17 +1719,20 @@ sub getParam{
 
 
 #------------------------------------------------------------------------------#
-# HTTP,HTML,Page¥Ø¥Ã¥À¡¼¤ò¤Þ¤È¤á¤Æ½ÐÎÏ¤¹¤ë
-#
-sub showHeader{
-=item °ú¿ô
-;
-% ½ÐÎÏ¤¹¤ëHTML¤Î¥ª¥×¥·¥ç¥ó
+
+=head2 HTTP,HTML,Page¥Ø¥Ã¥À¡¼¤ò¤Þ¤È¤á¤Æ½ÐÎÏ¤¹¤ë
+
+=head3 °ú¿ô
+
+  ;
+  % ½ÐÎÏ¤¹¤ëHTML¤Î¥ª¥×¥·¥ç¥ó
+
 =cut
 
+sub showHeader{
 	my$lastModified;
 	if($CF{'use304'}&&$ENV{'HTTP_IF_MODIFIED_SINCE'}){
-		my$client=(&parse_rfc1123($ENV{'HTTP_IF_MODIFIED_SINCE'}))[0];
+		my$client=(&parse_date($ENV{'HTTP_IF_MODIFIED_SINCE'}))[0];
 		my$server=(stat("$CF{'log'}0.cgi"))[9];
 		if($client&&$server<=$client){
 			print<<"_HTML_";
@@ -1659,10 +1791,18 @@ _HTML_
 		){
 			print"\n";
 			$status.="<!-- can't use gzip on this server because of advertisements -->";
-#		}elsif($ENV{'SERVER_SOFTWARE'}&&index($ENV{'SERVER_SOFTWARE'},'mod_gzip')+1){
-#			print"\n";
-#			$status.="<!-- did't use gzip because this server is using mod_gzip -->";
-#memo. cgi¤À¤Èmod_gzip¤·¤Æ¤¯¤ì¤Ê¤¤¤Ã¤Ý¤¤
+
+=begin :comment
+
+		#memo. cgi¤À¤Èmod_gzip¤·¤Æ¤¯¤ì¤Ê¤¤¤Ã¤Ý¤¤
+		}elsif($ENV{'SERVER_SOFTWARE'}&&index($ENV{'SERVER_SOFTWARE'},'mod_gzip')+1){
+			print"\n";
+			$status.="<!-- did't use gzip because this server is using mod_gzip -->";
+
+=end :comment
+
+=cut
+
 		}else{
 			print"Content-encoding: gzip\n\n";
 			if(!open(STDOUT,$CF{'conenc'})){
@@ -1729,21 +1869,23 @@ sub getZeroInfo{
 
 
 #-------------------------------------------------
-# µ­»ö¥¹¥ì¥Ã¥É¥Õ¥¡¥¤¥ë¤Î¥ê¥¹¥È¤ò¼èÆÀ
-#
-sub logfiles{
-=item °ú¿ô
-;
-$ µ­»ö¥¹¥ì¥Ã¥É¥Õ¥¡¥¤¥ë¥ê¥¹¥È¤Î½çÈÖ(date|number)
 
-=item ÀâÌÀ
+=head2 µ­»ö¥¹¥ì¥Ã¥É¥Õ¥¡¥¤¥ë¤Î¥ê¥¹¥È¤ò¼èÆÀ
+
+=head3 °ú¿ô
+
+  ;
+  $ µ­»ö¥¹¥ì¥Ã¥É¥Õ¥¡¥¤¥ë¥ê¥¹¥È¤Î½çÈÖ(date|number)
+
+=head3 ÀâÌÀ
 
 ¥í¥°¥Õ¥¡¥¤¥ëÌ¾¤ò¼èÆÀ¤·¡¢
 ¤½¤ÎÈÖ¹æËô¤Ï¹¹¿·Æü»þ¤Ë´ð¤Å¤¤¤ÆÊÂ¤ÓÂØ¤¨¤Æ
-¥Õ¥¡¥¤¥ëÌ¾ÈÖ¹æ¤Î¥ê¥¹¥È¤òÊÖ¤¹
+¥Õ¥¡¥¤¥ëÌ¾ÈÖ¹æ¤Î¥ê¥¹¥È¤òÊÖ¤¹¡£
 
 =cut
 
+sub logfiles{
 	undef@file;
 	opendir(DIR,$CF{'log'})||die"Can't read directory($CF{'log'})[$?:$!]";
 	my@list=grep{int$_}map{m/^(\d+)\.cgi$/o}readdir(DIR);
@@ -1764,17 +1906,21 @@ $ µ­»ö¥¹¥ì¥Ã¥É¥Õ¥¡¥¤¥ë¥ê¥¹¥È¤Î½çÈÖ(date|number)
 
 
 #-------------------------------------------------
-# ¥Ú¡¼¥¸ÁªÂòTABLE
-#
-sub pageSelector{
-=item °ú¿ô
-$ Á´Éô¤Ç²¿¥¹¥ì¥Ã¥É¤¢¤ë¤Î¡©
-$ 1¥Ú¡¼¥¸¤¢¤¿¤ê¤Î¥¹¥ì¥Ã¥É¿ô
-;
-$ ¥â¡¼¥É¤ÎÊÝ»ý(rvs,del)
-$ Ä¾ÀÜÈô¤Ù¤ë¥Ú¡¼¥¸¿ô
-$ following / preceding¤Ç»È¤¦Ê¸»úÎó¤ÎarrayRef
+
+=head2 ¥Ú¡¼¥¸ÁªÂòTABLE
+
+=head3 °ú¿ô
+
+  $ Á´Éô¤Ç²¿¥¹¥ì¥Ã¥É¤¢¤ë¤Î¡©
+  $ 1¥Ú¡¼¥¸¤¢¤¿¤ê¤Î¥¹¥ì¥Ã¥É¿ô
+  ;
+  $ ¥â¡¼¥É¤ÎÊÝ»ý(rvs,del)
+  $ Ä¾ÀÜÈô¤Ù¤ë¥Ú¡¼¥¸¿ô
+  $ following / preceding¤Ç»È¤¦Ê¸»úÎó¤ÎarrayRef
+
 =cut
+
+sub pageSelector{
 	my$thds=shift||1;
 	my$page=shift||1;
 	my$mode=$_[0]?"$_[0];page":'page';@_&&shift;
@@ -1828,12 +1974,16 @@ $ following / preceding¤Ç»È¤¦Ê¸»úÎó¤ÎarrayRef
 
 
 #-------------------------------------------------
-# µ­»öÉ½¼¨
-#
-sub showArticle{
-=item °ú¿ô
-% ½ÐÎÏ¤¹¤ëµ­»ö¤Î¾ðÊó
+
+=head2 µ­»öÉ½¼¨
+
+=head3 °ú¿ô
+
+  % ½ÐÎÏ¤¹¤ëµ­»ö¤Î¾ðÊó
+
 =cut
+
+sub showArticle{
 	#¤³¤Î¥¹¥ì¥Ã¥É¶¦ÄÌ¤Î¾ðÊó
 	my%DT=@_;
 	$DT{'j'}=-1;
@@ -1900,12 +2050,15 @@ sub getCookie{
 
 
 #-------------------------------------------------
-# Cookie¤ÎÄ´À°
-#
-sub checkCookie{
-=item °ú¿ô
+=head2 Cookie¤ÎÄ´À°
+
+=head3 °ú¿ô
+
 \% Ä´¤Ù¤ë¥Ï¥Ã¥·¥å¤Î¥ê¥Õ¥¡¥ì¥ó¥¹
+
 =cut
+
+sub checkCookie{
 	my%DT=%{shift()};
 	#»þ´Ö¼þ¤ê¤òÀßÄê
 	$DT{'time'}=0;
@@ -1931,12 +2084,16 @@ sub checkCookie{
 
 
 #-------------------------------------------------
-# Cookie½ñ¤­¹þ¤ß
-#
-sub setCookie{
-=item °ú¿ô
+
+=head2 Cookie½ñ¤­¹þ¤ß
+
+=head3 °ú¿ô
+
 \% Cookie¤Ë½ñ¤­¹þ¤àÆâÍÆ¤ò»ý¤Ä¥Ï¥Ã¥·¥å¤Î¥ê¥Õ¥¡¥ì¥ó¥¹
+
 =cut
+
+sub setCookie{
 	my%DT=%{shift()};
 	$DT{'name'}||return undef;
 	unless($DT{'lastModified'}){
@@ -1973,44 +2130,55 @@ sub setCookie{
 
 
 #-------------------------------------------------
-# ¥Õ¥©¡¼¥Þ¥Ã¥È¤µ¤ì¤¿ÆüÉÕ¼èÆÀ¤òÊÖ¤¹
-#
-sub datef{
-=item °ú¿ô
-$ time·Á¼°¤Î»þ¹ï
-;
-$ ½ÐÎÏ·Á¼°(cookie|last|dateTime)
+
+=head2 ¥Õ¥©¡¼¥Þ¥Ã¥È¤µ¤ì¤¿ÆüÉÕ¼èÆÀ¤òÊÖ¤¹
+
+=head3 °ú¿ô
+
+  $ time·Á¼°¤Î»þ¹ï
+  ;
+  $ ½ÐÎÏ·Á¼°(cookie|last|dateTime)
+  $ »þº¹¡Ê$CF{'timeOffset'}¤ÈÆ±¤¸·Á¼°¡Ë
+
 =cut
+
+sub datef{
 	my$time=shift;
 	my$type=shift;
+	gmtime$time||return 0;
 	unless($type){
 	}elsif('cookie'eq$type){
 	# NetscapeÉ÷CookieÍÑ
 		return sprintf("%s, %02d-%s-%d %s GMT",(split(/\s+/o,gmtime$time))[0,2,1,4,3]);
 	}elsif('rfc1123'eq$type){
-	# RFC1123 ¼ç¤È¤·¤ÆLastModifiedÍÑ
+	# RFC1123 'Thu, 01 Jan 1970 00:00:00 GMT'
 		return sprintf("%s, %02d %s %d %s GMT",(split(/\s+/o,gmtime$time))[0,2,1,4,3]);
 	}elsif('dateTime'eq$type){
 	# ISO 8601 dateTime (CCYY-MM-DDThh:mm:ss+09:00)
-		$CF{'timezone'}||&cfgTimeZone($ENV{'TZ'});
-		my($sec,$min,$hour,$day,$mon,$year,$wday)=gmtime($time+$CF{'timeOffset'});
-		return sprintf("%04d-%02d-%02dT%02d:%02d:%02d+09:00",$year+1900,$mon+1,$day,$hour,$min,$sec,$CF{'timezone'});
+		my$timeOffset=@_?shift:$CF{'timeOffset'}||&cfgTimeZone($ENV{'TZ'});
+		my($sec,$min,$hour,$day,$mon,$year,$wday)=gmtime($time+$timeOffset)or return 0;
+		return sprintf"%04d-%02d-%02dT%02d:%02d:%02d%s",$year+1900,$mon+1,$day,$hour,$min,$sec,
+			$timeOffset?sprintf'%s%02d:%02d',($timeOffset>0?'+':'-'),$timeOffset/3600,$timeOffset%3600/60:'Z';
 	}
 	return&date($time);
 }
 
 
 #-------------------------------------------------
-# ¥¿¥¤¥à¥¾¡¼¥ó¤Î¼èÆÀ
-#
-sub cfgTimeZone{
-=pod
+
+=head2 ¥¿¥¤¥à¥¾¡¼¥ó¤Î¼èÆÀ
+
 ¥¿¥¤¥à¥¾¡¼¥ó¤ò´Ä¶­ÊÑ¿ôTZ¤«¤é¼èÆÀ¤·¤Æ¡¢%CF¤ËÀßÄê¤¹¤ë
 Â¾¤Î´Ø¿ô¤Ï¤³¤Î$CF{'timezone'},$CF{'timeOffset'}¤ò»È¤Ã¤Æ¡¢
 gmtime()¤«¤é³Î¼Â¤Ë´õË¾¤ÎÃÏ°è¤Î»þ¹ï¤ò»»½Ð¤Ç¤­¤ë
-=item °ú¿ô
+
+=head3 °ú¿ô
+
 $ $ENV{'TZ'}
+
 =cut
+
+sub cfgTimeZone{
 	my$envtz=shift();
 	if($CF{'timezone'}&&$CF{'TZ'}eq$envtz){
 		#note. $CF{'timezone'}= EastPlus TimeZone <-> ENV-TZ= EastMinus TimeZone
@@ -2031,15 +2199,77 @@ $ $ENV{'TZ'}
 
 
 #-------------------------------------------------
-# ¥Ñ¥¹¥ï¡¼¥É°Å¹æ²½
-#
-sub mircrypt{
-=item °ú¿ô
-$ Íð¿ô¤Î¼ï¡Êtime·Á¼°»þ¹ï¡Ë
-$ °Å¹æ²½¤¹¤ëÊ¸»úÎó
-;
-$ Èæ¤Ù¤ë¥Ñ¥¹¥ï¡¼¥É
+
+=head2 ÆüÉÕ¤ò²òÀÏ
+
+=head3 Arguments
+
+  $ ÆüÉÕ
+
+=head3 Return Value
+
+  $jd,$year,$mon,$day,$hour,$min,$sec,$unix
+
+=head3 ÂÐ±þÆüÉÕ·Á¼°
+
+RFC1123, ANSI C·Á¼°, ISO9601 dateTime
+
+=head3 See Also
+
+=over
+
+=item RFC1123·Á¼°¤ÎÆüÉÕ¤ò²òÀÏ
+
+  http://www.faireal.net/articles/3/16/
+
+=back
+
 =cut
+
+sub parse_date{
+	my$date=shift();
+	my($day,$mon,$year,$hour,$min,$sec);
+	my$months='(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)';
+	my%month=qw(Jan 1 Feb 2 Mar 3 Apr 4 May 5 Jun 6 Jul 7 Aug 8 Sep 9 Oct 10 Nov 11 Dec 12);
+	if($date=~/\w+,?\s*(\d+)(?:-|\s+)($months)(?:-|\s+)(\d+) (\d+):(\d+):(\d+)\s*GMT/o){
+		# RFC1123 'Thu, 01 Jan 1970 00:00:00 GMT'
+		($year,$mon,$day,$hour,$min,$sec)=map{int}($3,$month{$2},$1,$4,$5,$6);
+	}elsif($date=~/\w+\s+($months)\s+(\d+)\s+(\d+):(\d+):(\d+)\s+(\d+)/o){
+		#gmtime() 'Thu Jan  1 00:00:00 1970'
+		($year,$mon,$day,$hour,$min,$sec)=map{int}($6,$month{$1},$2,$3,$4,$5);
+	}elsif($date=~/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:Z|([-+])(\d{2})(?::(\d{2})))?/o){
+		# ISO 8601 dateTime (CCYY-MM-DDThh:mm:ss+09:00)
+		($year,$mon,$day,$hour,$min,$sec)=map{int}($1,$2,$3,$4,$5,$6);
+		'+'eq$7?($hour-=$8,$9 and$min-=$9):($hour+=$8,$9 and$min+=$9)if$7&&$8;
+	}else{
+		return 0;
+	}
+	$mon||return 0;
+	my($_Y,$_M,$_day)=($year,$mon,$hour/24+$min/1440+$sec/86400);
+	if($mon<3){
+		$_Y-=1;
+		$_M+=12;
+	}
+	my$jd=int(365.25*($_Y+4716))+int(30.6001*($_M+1))+2-int($_Y/100)+int($_Y/400)+$day+$_day-1524.5;
+	my$unix=((int($jd-$_day-2440587.5)*24+$hour)*60+$min)*60+$sec;
+	return$jd,$year,$mon,$day,$hour,$min,$sec,$unix;
+}
+
+
+#-------------------------------------------------
+
+=head2 ¥Ñ¥¹¥ï¡¼¥É°Å¹æ²½
+
+=head3 °ú¿ô
+
+  $ Íð¿ô¤Î¼ï¡Êtime·Á¼°»þ¹ï¡Ë
+  $ °Å¹æ²½¤¹¤ëÊ¸»úÎó
+  ;
+  $ Èæ¤Ù¤ë¥Ñ¥¹¥ï¡¼¥É
+
+=cut
+
+sub mircrypt{
 	srand($_[0]);
 	my$salt=join('',('a'..'z','.',0..9,'/','A'..'Z')[rand(64),rand(64)]);
 	my$pass='';
@@ -2052,15 +2282,21 @@ $ Èæ¤Ù¤ë¥Ñ¥¹¥ï¡¼¥É
 
 
 # ------------------------------------------ #
-# getCRC32
-# based on 2000/06/26 crc32.pl 1.1.0 digiz
+
+=head2 CRC32¤ò¼èÆÀ¤¹¤ë
+
+based on 2000/06/26 crc32.pl 1.1.0 digiz
+
+=head3 °ú¿ô
+
+  $ CRC32¤ò¤È¤ê¤¿¤¤Ê¸»úÎó
+  ;
+  $ 32bit¤Î10¿Ê¿ô¤¬Íß¤·¤¤»þ¤Ë¿¿¤ò¡£
+
+=cut
+
 my@crc32;
 sub getCRC32{
-=item °ú¿ô
-$ CRC32¤ò¤È¤ê¤¿¤¤Ê¸»úÎó
-;
-$ 32bit¤Î10¿Ê¿ô¤¬Íß¤·¤¤»þ¤Ë¿¿¤ò¡£
-=cut
 	@crc32=map{my$a=$_;$a=$a&1?($a>>1&0x7fffffff)^0xedb88320:$a>>1&0x7fffffff for 0..7;$a}0..255unless@crc32;
 	my$word=shift;
 	my$r=0xffffffff;
@@ -2117,27 +2353,39 @@ sub getSignatureView{
 
 
 #-------------------------------------------------
-# ¥¢¥¤¥³¥óÍÑ¤ÎIMG¥¿¥°
-#
-sub getIconTag{
-=item °ú¿ô
 
-$ µ­»ö¾ðÊó¤ÎÆþ¤Ã¤¿¥Ï¥Ã¥·¥å¤Ø¤Î¥ê¥Õ¥¡¥ì¥ó¥¹
-;
-$ ¤É¤Î¤è¤¦¤Ê·Á¤ÇÊÖ¤¹¤«¤ÎÀßÄê
+=head2 ¥¢¥¤¥³¥óÍÑ¤ÎIMG¥¿¥°
 
-=item ÊÖ¤êÃÍÀßÄê
+=head3 °ú¿ô
+
+  $ µ­»ö¾ðÊó¤ÎÆþ¤Ã¤¿¥Ï¥Ã¥·¥å¤Ø¤Î¥ê¥Õ¥¡¥ì¥ó¥¹
+  ;
+  $ ¤É¤Î¤è¤¦¤Ê·Á¤ÇÊÖ¤¹¤«¤ÎÀßÄê
+
+=head3 ÊÖ¤êÃÍÀßÄê
+
 ¡Ö-!keyword!-¡×¤Î¤è¤¦¤Ê·Á¼°¤Ç¤¹
 ¶ñÂÎÅª¤Ë¤Ï°Ê²¼¤Î¤È¤ª¤ê
-:-!src!-
-  dir+file
-:-!dir!-
-  dir
-:-!file!-
-  file
+
+=over
+
+=item -!src!-
+
+¥Ç¥£¥ì¥¯¥È¥êÌ¾+¥Õ¥¡¥¤¥ëÌ¾¡áIMGsrc¤ÎÃÍ
+
+=item -!dir!-
+
+¥Ç¥£¥ì¥¯¥È¥êÌ¾
+
+=item -!file!-
+
+¥Õ¥¡¥¤¥ëÌ¾
+
+=back
 
 =cut
 
+sub getIconTag{
 	my$data=shift;
 	my$text=shift||'<IMG src="-!src!-" alt="" title="-!dir!-+-!file!-">';
 	my%DT=(dir=>$CF{'icon'},file=>$data->{'icon'});
@@ -2160,32 +2408,40 @@ $ ¤É¤Î¤è¤¦¤Ê·Á¤ÇÊÖ¤¹¤«¤ÎÀßÄê
 
 
 #-------------------------------------------------
-# ¥¢¥¤¥³¥ó¥ê¥¹¥È
-#
-sub iptico{
 
-=item °ú¿ô
+=head2 ¥¢¥¤¥³¥ó¥ê¥¹¥È
 
-$ ¥Ç¥Õ¥©¥ë¥È»ØÄê¤Ë¤·¤¿¤¤¥¢¥¤¥³¥ó¥Õ¥¡¥¤¥ëÌ¾¤òÆþ¤ì¤¿½ñ¤­´¹¤¨²ÄÇ½¤ÊÊÑ¿ô
-;
-$ SELECT¥¿¥°¤ËÄÉ²Ã¤·¤¿¤¤Â°À­
-$ ³ÈÄ¥¥³¥Þ¥ó¥É
+=head3 °ú¿ô
 
-=item Ê£¿ô¥¢¥¤¥³¥ó¥ê¥¹¥È
+  $ ¥Ç¥Õ¥©¥ë¥È»ØÄê¤Ë¤·¤¿¤¤¥¢¥¤¥³¥ó¥Õ¥¡¥¤¥ëÌ¾¤òÆþ¤ì¤¿½ñ¤­´¹¤¨²ÄÇ½¤ÊÊÑ¿ô
+  ;
+  $ SELECT¥¿¥°¤ËÄÉ²Ã¤·¤¿¤¤Â°À­
+  $ ³ÈÄ¥¥³¥Þ¥ó¥É
 
-$CF{'icls'}¤ÎºÇ½é¤Î°ìÊ¸»ú¤¬' '¡ÊÈ¾³Ñ¶õÇò¡Ë¤À¤Ã¤¿¾ì¹çÊ£¿ô¥ê¥¹¥È¥â¡¼¥É¤Ë¤Ê¤ê¤Þ¤¹
+=head3 Ê£¿ô¥¢¥¤¥³¥ó¥ê¥¹¥È
+
+$CF{'icls'}¤ÎºÇ½é¤Î°ìÊ¸»ú¤¬' '¡ÊÈ¾³Ñ¶õÇò¡Ë¤À¤Ã¤¿¾ì¹çÊ£¿ô¥ê¥¹¥È¥â¡¼¥É¤Ë¤Ê¤ê¤Þ¤¹¡£
 ¶ñÂÎÅª¤ÊÎã¤ò½Ð¤¹¤È¡¢
-¡¦Ã±°ì¤È¤ß¤Ê¤µ¤ì¤ëÎã
-'icon.txt'
-'icon1.txt icon2.txt' #"icon1.txt icon2"¤È¤¤¤¦¥Æ¥­¥¹¥È¥Õ¥¡¥¤¥ë¤À¤È¤ß¤Ê¤·¤Þ¤¹
-'"icon.txt" "exicon.txt"'
-¡¦Ê£¿ô¤È¤ß¤Ê¤µ¤ì¤ëÎã
-' "icon.txt" "exicon.txt"'
-' "icon.txt" exicon.txt'
-' icon.txt exicon.txt'
+
+=over
+
+=item Ã±°ì¤È¤ß¤Ê¤µ¤ì¤ëÎã
+
+  'icon.txt'
+  'icon1.txt icon2.txt' #=> "icon1.txt icon2"¤È¤¤¤¦¥Æ¥­¥¹¥È¥Õ¥¡¥¤¥ë¤À¤È¤ß¤Ê¤·¤Þ¤¹
+  '"icon.txt" "exicon.txt"'
+
+=item Ê£¿ô¤È¤ß¤Ê¤µ¤ì¤ëÎã
+
+  ' "icon.txt" "exicon.txt"'
+  ' "icon.txt" exicon.txt'
+  ' icon.txt exicon.txt'
+
+=back
 
 =cut
 
+sub iptico{
 	my$opt=$_[1]?" $_[1]":'';
 	if($CF{'-CacheIconList'}&&('reset'ne$_[2])){
 		#¥­¥ã¥Ã¥·¥å¤Ç¤¢¤ë$CF{'-CacheIconList'}¤òÊÖ¤¹
@@ -2247,7 +2503,7 @@ $CF{'icls'}¤ÎºÇ½é¤Î°ìÊ¸»ú¤¬' '¡ÊÈ¾³Ñ¶õÇò¡Ë¤À¤Ã¤¿¾ì¹çÊ£¿ô¥ê¥¹¥È¥â¡¼¥É¤Ë¤Ê¤ê¤Þ¤¹
 	$_[0]=$CF{'icon'}.$_[0]unless$isAbsolute;
 	$isDisabled&&=' disabled';
 	$CF{'-CacheIconList'}=<<"_HTML_";
-<SELECT name="icon" id="icon" onchange="document.images['Preview'].src='$CF{'icon'}'+this.value;document.images['Preview'].title=this.value;"$opt$isDisabled>
+<SELECT name="icon" id="icon" onchange="document.images['Preview'].src='$CF{'icon'}'+this.value;document.images['Preview'].title='$CF{'icon'}'+'+'+this.value;"$opt$isDisabled>
 $iconlist</SELECT>
 _HTML_
 	return$CF{'-CacheIconList'};
@@ -2255,12 +2511,16 @@ _HTML_
 
 
 #-------------------------------------------------
-# ¥«¥é¡¼¥ê¥¹¥ÈÆÉ¤ß¹þ¤ß
-#
-sub iptcol{
-=item °ú¿ô
-$ ¥Ç¥Õ¥©¥ë¥È»ØÄê¤Ë¤·¤¿¤¤¿§Ì¾
+
+=head2 ¥«¥é¡¼¥ê¥¹¥ÈÆÉ¤ß¹þ¤ß
+
+=head3 °ú¿ô
+
+  $ ¥Ç¥Õ¥©¥ë¥È»ØÄê¤Ë¤·¤¿¤¤¿§Ì¾
+
 =cut
+
+sub iptcol{
 	if('input'eq$CF{'colway'}){
 		return<<"_HTML_";
 <INPUT type="text" name="color" id="color" maxlength="20" style="ime-mode:disabled"
@@ -2424,13 +2684,17 @@ _HTML_
 
 
 #-------------------------------------------------
-# µ­»ö¥¹¥ì¥Ã¥É¥Õ¥¡¥¤¥ëºï½ü
-#
-sub delThread{
-=item °ú¿ô
-$ ºï½üÊý¼°
-@ ºï½ü¤¹¤ë¥Õ¥¡¥¤¥ë¤Îµ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤Î¥ê¥¹¥È
+
+=head2 µ­»ö¥¹¥ì¥Ã¥É¥Õ¥¡¥¤¥ëºï½ü
+
+=head3 °ú¿ô
+
+  $ ºï½üÊý¼°
+  @ ºï½ü¤¹¤ë¥Õ¥¡¥¤¥ë¤Îµ­»ö¥¹¥ì¥Ã¥ÉÈÖ¹æ¤Î¥ê¥¹¥È
+
 =cut
+
+sub delThread{
 	my($type,@del)=@_;
 	my$file=0;
 	if('gzip'eq$type&&$CF{'gzip'}){
@@ -2475,8 +2739,54 @@ $ ºï½üÊý¼°
 
 
 #-------------------------------------------------
-# µ­»öÊÔ½¸Ãæ·Ñ
-#
+
+=head2 µ­»öÊÔ½¸Ãæ·Ñ
+
+=head3 ¼«Æ°¤Ç¤Ä¤±¤¿¥¿¥°¤ò¾Ã¤¹
+
+Á°Äó¤È¤·¤Æ¡¢¥¿¥°¤È¤·¤Æ»È¤ï¤ì¤ë°Ê³°¤Î'<','>'¤ÏÂ¸ºß¤·¤Æ¤Ï¤Ê¤ê¤Þ¤»¤ó¡£
+¥í¥°¤Ë½ñ¤­¹þ¤Þ¤ì¤ë»þÅÀ¤ÇÂ°À­Ãæ¤Î<>¤Ï&#60;&#62;¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤³¤È¤È¤·¤Þ¤¹¡£
+
+¤Þ¤¿¡¢¤³¤Î»þÅÀ¤ÇÂ¸ºß¤¹¤ë¥¿¥°¤Ï¡¢
+
+=over
+
+=item 1. ÍøÍÑ¼Ô¤¬ÆþÎÏ¤·¤¿¥¿¥°
+
+$CF{'tag'}¤Çµö²Ä¤µ¤ì¤¿¥¿¥°¡£
+
+=item 2. ¼«Æ°¥ê¥ó¥¯¤Ë¤è¤ë¥¿¥°
+
+C<< /<A class="autolink"[^>]*>/ >>¤Ë¥Þ¥Ã¥Á¤¹¤ë¤â¤Î
+
+=item 3. µ­»öÈÖ¹æ¥ê¥ó¥¯¤Ë¤è¤ë¥¿¥°
+
+C<< /<A class="autolink"[^>]*>/ >>
+
+=item 4. ¸ì¶ç¶¯Ä´¤Ë¤è¤ë¥¿¥°
+
+C<< /<STRONG  clAss="[^"]*"[^>]*>/ >>
+
+=back
+
+¤³¤Î¤¦¤Á¡¢1.¤Ï["'<>]¤ò¥¨¥¹¥±¡¼¥×¤·¡¢2.¤È3.¤È 4.¤Ïºï½ü¤·¤Þ¤¹¡£
+
+¤Þ¤¿2.¤È3.¤Ë¤Ä¤¤¤Æ¤Ïºï½ü¤ËºÝ¤·¤Æ°Ê²¼¤ò²¾Äê¤·¤Þ¤¹¡£
+
+=over
+
+=item A¥¿¥°¤ÎÆâÍÆ¤Ë¤Ï[<>]¤¬Íè¤Ê¤¤
+
+=item ¼«Æ°¥ê¥ó¥¯1¥»¥Ã¥È¤ÏÉ¬¤ºC<< /<A class="autolink" [^>]*>([^<]+)<\/A>/ >>¤Ë¥Þ¥Ã¥Á¤¹¤ë
+
+=item ¥ê¥ó¥¯¤¹¤ëÂÐ¾Ý¤ÎC<&>¤ò¥¨¥¹¥±¡¼¥×¤·¤¿ºÝ¤ÏC<&#38;>¤Ç¥¨¥¹¥±¡¼¥×¤·¤¿
+
+=back
+
+²¿¤é¤«¤Î·Á¤Ç¤³¤Î²¾Äê¤¬Êø¤ì¤¿¾ì¹ç¡¢ºï½ü¤·¤­¤ì¤Ê¤¤¤³¤È¤ä¡¢¤­¤Á¤ó¤ÈÉü¸µ¤Ç¤­¤Ê¤¤²ÄÇ½À­¤¬¤¢¤ê¤Þ¤¹¡£
+
+=cut
+
 sub rvsij{
 	#¥Ç¡¼¥¿¤òÌá¤¹
 	$CK{'body'}=~s/<BR\b[^>]*>/\n/gio;
@@ -2485,27 +2795,6 @@ sub rvsij{
 	#data->formÊÑ´¹
 	if('ALLALL'eq$CF{'tags'}){
 	}else{
-
-=item ¼«Æ°¤Ç¤Ä¤±¤¿¥¿¥°¤ò¾Ã¤¹
-
-Á°Äó¤È¤·¤Æ¡¢¥¿¥°¤È¤·¤Æ»È¤ï¤ì¤ë°Ê³°¤Î'<','>'¤ÏÂ¸ºß¤·¤Æ¤Ï¤Ê¤ê¤Þ¤»¤ó
-¥í¥°¤Ë½ñ¤­¹þ¤Þ¤ì¤ë»þÅÀ¤ÇÂ°À­Ãæ¤Î<>¤Ï&#60;&#62;¤Ë¤Ê¤Ã¤Æ¤¤¤ë¤³¤È¤È¤·¤Þ¤¹
-
-¤Þ¤¿¡¢¤³¤Î»þÅÀ¤ÇÂ¸ºß¤¹¤ë¥¿¥°¤Ï¡¢
-1.ÍøÍÑ¼Ô¤¬ÆþÎÏ¤·¤¿¥¿¥°¡Êµö²Ä¥¿¥°¡Ë
-2.¼«Æ°¥ê¥ó¥¯¤Ë¤è¤ë¥¿¥°		/<A class="autolink"[^>]*>/
-3.µ­»öÈÖ¹æ¥ê¥ó¥¯¤Ë¤è¤ë¥¿¥°	/<A class="autolink"[^>]*>/
-4.¸ì¶ç¶¯Ä´¤Ë¤è¤ë¥¿¥°		/<STRONG  clAss="[^"]*"[^>]*>/
-¤³¤Î¤¦¤Á¡¢1¤Ï "'<> ¤ò¥¨¥¹¥±¡¼¥×¤·¡¢2,3,4¤Ïºï½ü¤·¤Þ¤¹
-
-¤Þ¤¿2¤È3¤Ë¤Ä¤¤¤Æ¤Ïºï½ü¤ËºÝ¤·¤Æ°Ê²¼¤ò²¾Äê¤·¤Þ¤¹
-¡¦A¥¿¥°¤ÎÆâÍÆ¤Ë¤Ï[<>]¤¬Íè¤Ê¤¤
-¡¦¼«Æ°¥ê¥ó¥¯1¥»¥Ã¥È¤ÏÉ¬¤º/<A class="autolink" [^>]*>([^<]+)<\/A>/¤Ë¥Þ¥Ã¥Á¤¹¤ë
-¡¦¥ê¥ó¥¯¤¹¤ëÂÐ¾Ý¤Î¡Ö&¡×¤ò¥¨¥¹¥±¡¼¥×¤·¤¿ºÝ¤Ï¡Ö&#38;¡×¤Ç¥¨¥¹¥±¡¼¥×¤·¤¿
-²¿¤é¤«¤Î·Á¤Ç¤³¤Î²¾Äê¤¬Êø¤ì¤¿¾ì¹ç¡¢ºï½ü¤·¤­¤ì¤Ê¤¤¤³¤È¤ä¡¢¤­¤Á¤ó¤ÈÉü¸µ¤Ç¤­¤Ê¤¤²ÄÇ½À­¤¬¤¢¤ê¤Þ¤¹
-
-=cut
-
 		my$str=$CK{'body'};
 		#µ­»öÈÖ¹æ¥ê¥ó¥¯¡Ö>>No.12-6¡×
 		$str=~s{<A class="autolink"[^>]*>&#38;#62;&#38;#62;(No\.(\d+)(-\d+)?)</A>}{&#62;&#62;$1}go;
@@ -2534,31 +2823,6 @@ sub rvsij{
 	$CK{'body'}=~s/>/&#62;/go;
 	#»Òµ­»ö¡§¿Æµ­»ö
 	'0'eq$CK{'j'}?&prtfrm:&chdfrm;
-}
-
-
-#-------------------------------------------------
-# RFC1123·Á¼°¤ÎÆüÉÕ¤ò²òÀÏ
-#
-sub parse_rfc1123() {
-#http://www.faireal.net/articles/3/16/#d10908
-=item
-$ RFC1123·Á¼°¤ÎÆüÉÕ
-=cut
-	my$date=shift();
-	my%month=qw(Jan 1 Feb 2 Mar 3 Apr 4 May 5 Jun 6 Jul 7 Aug 8 Sep 9 Oct 10 Nov 11 Dec 12);
-	my($day,$mon,$year,$hour,$min,$sec)=(split(/[\s:]/o,$date))[1..6];
-	$mon=$month{$mon};
-	$mon||return 0;
-	my($_Y, $_M, $_D)=($year,$mon,$day+$hour/24+$mon/1440+$sec/86400);
-	if($mon==1||$mon==2){
-		$_Y=$year-1;
-		$_M=$mon+12;
-	}
-	my $a=int($year/100);
-	return(
-		int(365.25*($_Y+4716))+int(30.6001*($_M+1))+$_D+(2-$a-int($a/4))-1524.5,
-		$year,$mon,$day,$hour,$min,$sec);
 }
 
 
@@ -2645,13 +2909,17 @@ $ RFC1123·Á¼°¤ÎÆüÉÕ
 		return$char;
 	}
 	#-------------------------------------------------
-	# Ê¸»ú²½¤±¤µ¤»¤º¤ËÊ¸»úÎó¤ÎÄ¹¤µ¤òÀÚ¤êµÍ¤á¤ë
-	#
-	sub getTruncated{
-=item °ú¿ô
-$ $str
-$ Ê¸»ú¿ôÀ©¸Â
+
+=head2 Ê¸»ú²½¤±¤µ¤»¤º¤ËÊ¸»úÎó¤ÎÄ¹¤µ¤òÀÚ¤êµÍ¤á¤ë
+
+=head3 °ú¿ô
+
+  $ $str
+  $ Ê¸»ú¿ôÀ©¸Â
+
 =cut
+
+		sub getTruncated{
 		my$class=shift;
 		my$str=shift;
 		my$length=shift;
@@ -2677,13 +2945,13 @@ $ Ê¸»ú¿ôÀ©¸Â
 # ½é´üÀßÄê
 #
 BEGIN{
-	# Mireille Error Screen 1.4
+	# Mireille Error Screen 1.2.1
 	unless(%CF){
 		$CF{'program'}=__FILE__;
 		$SIG{'__DIE__'}=$ENV{'REQUEST_METHOD'}?sub{
-			if($_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/o){return}
+			$_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/&&return;
 			print"Status: 200 OK\nContent-Language: ja-JP\nContent-type: text/plain; charset=$CF{'encoding'}"
-			."\n\n<PRE>\t:: Mireille ::\n   * Error Screen 1.4 (o__)o// *\n\n";
+			."\n\n<PRE>\t:: Mireille ::\n   * Error Screen 1.2.1 (o__)o// *\n\n";
 			print"ERROR: $_[0]\n"if@_;
 			print join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(Index Style Core Exte))
 			."\n".join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(log icon icls style));
@@ -2702,7 +2970,7 @@ BEGIN{
 	}
 	$CF{'_HiraganaLetterA'}->{'Core'}='¤¢';
 	# Version
-	$CF{'Version'}=join('.',q$Mireille: 1_2_11 $=~/\d+[a-z]?/go);
+	$CF{'Version'}=join('.',q$Mireille: 1_2_12 $=~/\d+[a-z]?/go);
 	($CF{'Core'}=q$Revision$)=~/(\d+((?:\.\d+)*))/o;
 	$CF{'CoreRevision'}=$1;
 	my$subver=$2;
