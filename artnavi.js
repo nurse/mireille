@@ -32,11 +32,12 @@ var docmentObj; //clientWidthやclientHeightを取得するためのオブジェクト
 function artnavi(p){
 	//初期化
 	if(!window.opera&&document.all){
-		scrollObj=document.compatMode&&document.compatMode=='CSS1Compat'?document.documentElement:document.body;
 		naviwind=document.all('naviwind');
 //		navititl=document.all('navititl');
 //		navibutt=document.all('navibutt');
 		navibody=document.all('navibody');
+		if(naviwind.style.position!='fixed')scrollObj=
+			document.compatMode&&document.compatMode=='CSS1Compat'?document.documentElement:document.body;
 		window.onscroll=function(){emufixedid||(emufixedid=setTimeout(emufixed,300))};
 		
 		//ChangeOpacity for IE LessThan 5.5
@@ -54,24 +55,28 @@ function artnavi(p){
 		document.documentElement&&document.documentElement.clientHeight&&document.body.clientHeight
 		&&document.documentElement.clientHeight<document.body.clientHeight
 		?document.documentElement:document.body;
-	
 	if(p=='popup'||!document.cookie.match(/(^|; )ArtNavi=([^;]+)/)){
 		naviwind.style.width=maW+'px';
-		resetXY(1);
 		naviwind.style.display=navibody.style.display='block';
+		resetXY(1);
 		if(document.cookie.match(/(^|; )ArtNavi=([^;]+)/))setcookie();
 	}else{
 		//ページ間移動
 		var cook=unescape(RegExp.$2);
 		navibody.style.display=(cook.match(/\tnavibodydisplay=\t(\w+);\t/))?RegExp.$1:'block';
 		naviwind.style.width=(navibody.style.display=='none'?miW:maW)+'px';
+		naviwind.style.display=(cook.match(/\tnaviwinddisplay=\t(\w+);\t/))?RegExp.$1:'block';
 		ncX=(cook.match(/\tncX=\t(\d+);\t/))?parseInt(RegExp.$1):
 			(deX<0?docmentObj.clientWidth +deX+1-naviwind.offsetWidth :deX);
 		ncY=(cook.match(/\tncY=\t(\d+);\t/))?parseInt(RegExp.$1):
 			(deY<0?docmentObj.clientHeight+deY+1-naviwind.offsetHeight:deY);
-		naviwind.style.left=(scrollObj?scrollObj.scrollLeft:0)+ncX+'px';
-		naviwind.style.top =(scrollObj?scrollObj.scrollTop:0) +ncY+'px';
-		naviwind.style.display=(cook.match(/\tnaviwinddisplay=\t(\w+);\t/))?RegExp.$1:'block';
+		if(scrollObj){
+			naviwind.style.left=scrollObj.scrollLeft+ncX+'px';
+			naviwind.style.top =scrollObj.scrollTop +ncY+'px';
+		}else{
+			naviwind.style.left=ncX+'px';
+			naviwind.style.top =ncY+'px';
+		}
 	}
 	window.onresize=refresh;
 	return true;
@@ -81,7 +86,7 @@ function artnavi(p){
 //--------------------------------------
 // フレームサイズ変更のときは再描画
 function refresh(p){
-	if(p=='popup');
+	if(naviwind=='none')return true;
 	else if(ncX>docmentObj.clientWidth -naviwind.offsetWidth );
 	else if(ncY>docmentObj.clientHeight-naviwind.offsetHeight);
 	else return false;
@@ -203,8 +208,13 @@ function doDrag(e){
 }
 function endDrag(){
 	if(!drag_obj)return false;
-	ncX=parseInt(drag_obj.style.left)-(scrollObj?scrollObj.scrollLeft:0);
-	ncY=parseInt(drag_obj.style.top) -(scrollObj?scrollObj.scrollTop:0);
+	if(scrollObj){
+		ncX=parseInt(drag_obj.style.left)-scrollObj.scrollLeft;
+		ncY=parseInt(drag_obj.style.top )-scrollObj.scrollTop ;
+	}else{
+		ncX=parseInt(drag_obj.style.left);
+		ncY=parseInt(drag_obj.style.top );
+	}
 	drag_obj=null;
 	document.onmousemove=null;
 	document.onmouseup=null;
