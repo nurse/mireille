@@ -26,6 +26,7 @@ var deX=-maW,deY=50; //記事ナビのクライアント領域（ウィンドウ）上の初期座標
 var drag_obj; //D&D用オブジェクト
 var docele; //IE標準準拠モード時に、有効なscrollTop/scrollLeftプロパティを持つオブジェクトを入れる
 var naviwind,navibody;
+var emufixedid; //position:fixed仮想化IDの格納用
 
 function artnavi(p){
 	//初期化
@@ -47,40 +48,48 @@ function artnavi(p){
 //		navititl=document.getElementById('navititl');
 //		navibutt=document.getElementById('navibutt');
 		navibody=document.getElementById('navibody');
-	}else{return}
-	INIT:{
-		do{
-//			if((document.location.href.lastIndexOf('?')<0)||(p=='popup')){break;} //exp.
-			if((p=='popup')||!document.cookie.match(/(^|; )ArtNavi=([^;]+)/)){break;}
-			//ページ間移動
-			var cook=unescape(RegExp.$2);
-			ncX=(cook.match(/\tncX=\t(\d+);\t/))?parseInt(RegExp.$1):0;
-			ncY=(cook.match(/\tncY=\t(\d+);\t/))?parseInt(RegExp.$1):0;
-			naviwind.style.display=(cook.match(/\tnaviwinddisplay=\t(\w+);\t/))?RegExp.$1:'block';
-			navibody.style.display=(cook.match(/\tnavibodydisplay=\t(\w+);\t/))?RegExp.$1:'block';
-			if(navibody.style.display=='none'){naviwind.style.width=miW+'px';}
-			naviwind.style.left=(docele?docele.scrollLeft:0)+ncX+'px';
-			naviwind.style.top =(docele?docele.scrollTop:0) +ncY+'px';
-			break INIT;
-		}while(0);
-		refresh('popup');
+	}else return false;
+	
+	if(p=='popup'||!document.cookie.match(/(^|; )ArtNavi=([^;]+)/))refresh('popup');
+	else{
+		//ページ間移動
+		var cook=unescape(RegExp.$2);
+		ncX=(cook.match(/\tncX=\t(\d+);\t/))?parseInt(RegExp.$1):0;
+		ncY=(cook.match(/\tncY=\t(\d+);\t/))?parseInt(RegExp.$1):0;
+		naviwind.style.display=(cook.match(/\tnaviwinddisplay=\t(\w+);\t/))?RegExp.$1:'block';
+		navibody.style.display=(cook.match(/\tnavibodydisplay=\t(\w+);\t/))?RegExp.$1:'block';
+		if(navibody.style.display=='none')naviwind.style.width=miW+'px';
+		naviwind.style.left=(docele?docele.scrollLeft:0)+ncX+'px';
+		naviwind.style.top =(docele?docele.scrollTop:0) +ncY+'px';
 	}
 	window.onresize=refresh;
-//	frames.onresize=refresh;
+	return true;
 }
 
 
 //--------------------------------------
 // フレームサイズ変更のときは再描画
 function refresh(p){
-	if(p=='popup'||ncX>document.body.clientWidth||ncY>document.body.clientHeight){
-		ncX=(deX<0?document.body.clientWidth +deX-5+(navibody.style.display=='none'?maW-miW:0):deX);
-		ncY=(deY<0?document.body.clientHeight+deY-5:deY);
-		naviwind.style.left=(docele?docele.scrollLeft:0)+ncX+'px';
-		naviwind.style.top =(docele?docele.scrollTop:0) +ncY+'px';
-		naviwind.style.display='block';
-		if(document.cookie.match(/(^|; )ArtNavi=([^;]+)/)){setcookie();}
+	if(p=='popup');
+	else if(ncX+naviwind.offsetWidth >document.body.clientWidth);
+	else if(ncY+naviwind.offsetHeight>document.body.clientlHeight);
+	else return false;
+	ncX=deX<0?document.body.clientWidth +deX-5+(navibody.style.display=='none'?maW-miW:0):deX;
+	ncY=deY<0?document.body.clientHeight+deY-5:deY;
+	if(docele){
+		naviwind.style.left=(docele.scrollLeft+ncX+naviwind.offsetWidth <document.body.scrollWidth ?
+			docele.scrollLeft+ncX:document.body.scrollWidth -naviwind.offsetWidth )+'px';
+		naviwind.style.top =(docele.scrollTop +ncY+naviwind.offsetHeight<document.body.scrollHeight?
+			docele.scrollTop +ncY:document.body.scrollHeight-naviwind.offsetHeight)+'px';
+	}else{
+		naviwind.style.left=(ncX+naviwind.offsetWidth <document.body.scrollWidth ?
+			ncX:document.body.scrollWidth -naviwind.offsetWidth )+'px';
+		naviwind.style.top =(ncY+naviwind.offsetHeight<document.body.scrollHeight?
+			ncY:document.body.scrollHeight-naviwind.offsetHeight)+'px';
 	}
+	naviwind.style.display='block';
+	if(document.cookie.match(/(^|; )ArtNavi=([^;]+)/))setcookie();
+	return true;
 }
 
 
@@ -94,7 +103,7 @@ function view(e,id){
 	}else if(document.getElementById){
 		viewobj=document.getElementById(id);
 		e.preventDefault();
-	}else{return false;}
+	}else return false;
 	e.cancelBubble=true;
 	
 	if(!viewobj.style){
@@ -103,17 +112,13 @@ function view(e,id){
 		e.preventDefault=true;
 		if(!viewobj.style.visibility){
 		}else if(viewobj.style.visibility=='hidden'){
-			if(id=='naviwind'){
-			}else if(id=='navibody'){
-				naviwind.style.pixelHeight=200;
-			}
+			if(id=='naviwind');
+			else if(id=='navibody')naviwind.style.pixelHeight=200;
 			viewobj.style.visibility='visible';
 		}else{
 			viewobj.style.visibility='hidden';
-			if(id=='naviwind'){
-			}else if(id=='navibody'){
-				naviwind.style.pixelHeight=navititl.style.pixelHeight+5;
-			}
+			if(id=='naviwind');
+			else if(id=='navibody')naviwind.style.pixelHeight=navititl.style.pixelHeight+5;
 		}
 		return false;
 	}else if(viewobj.style.display=='none'){
@@ -134,6 +139,7 @@ function view(e,id){
 		}
 	}
 	setcookie();
+	return true;
 }
 
 
@@ -150,6 +156,7 @@ function setcookie(){
 	expiresDate.setTime(expiresDate.getTime()+60*60*24*7*1000);
 	data+="; expires="+expiresDate.toGMTString();
 	document.cookie="ArtNavi="+data;
+	return true;
 }
 
 
@@ -162,7 +169,7 @@ function beginDrag(e,id){
 	}else if(document.getElementById){
 		drag_obj=document.getElementById(id);
 		e.preventDefault();
-	}else{return false;}
+	}else return false;
 	e.cancelBubble=true;
 	
 	ncX=parseInt(drag_obj.style.left)-e.clientX;
@@ -172,17 +179,16 @@ function beginDrag(e,id){
 	return false;
 }
 function doDrag(e){
-	if(!drag_obj){return
-	}else if(document.all){
-		e=event;
-	}else if(document.getElementById){
-	}else{return}
+	if(!drag_obj)return false;
+	else if(document.all)e=event;
+	else if(document.getElementById);
+	else return false;
 	drag_obj.style.left=e.clientX+ncX+'px';
 	drag_obj.style.top =e.clientY+ncY+'px';
 	return false;
 }
 function endDrag(){
-	if(!drag_obj){return}
+	if(!drag_obj)return false;
 	ncX=parseInt(drag_obj.style.left)-(docele?docele.scrollLeft:0);
 	ncY=parseInt(drag_obj.style.top) -(docele?docele.scrollTop:0);
 	drag_obj=null;
@@ -196,47 +202,47 @@ function endDrag(){
 //--------------------------------------
 // ショートカットキー(accesskey)の捕獲
 function acskey(e,id){
-	if(document.all){
-//		e.returnValue=false;
-	}else if(document.getElementById){
-//		e.preventDefault();
-	}else{return false;}
+	if(document.all);
+	else if(document.getElementById);
+	else return false;
 	e.cancelBubble=true;
 	
 	if(e.type=='keypress'||e.type=='keydown'){
 		switch(document.all?e.keyCode:document.getElementById?e.which:0){
-		case/*'C'*/0x43:if('naviwind'!=id)return;break;
-		case/*'c'*/0x63:if('naviwind'!=id)return;break;
-		case/*'M'*/0x4d:if('navibody'!=id)return;break;
-		case/*'m'*/0x6d:if('navibody'!=id)return;break;
-		case/*'Enter'*/0x0d:if('naviwind'!=id&&'navibody'!=id)return;break;
-		case/*'Space'*/0x20:if('naviwind'!=id&&'navibody'!=id)return;break;
+		case/*'C'*/0x43:if('naviwind'!=id)return false;break;
+		case/*'c'*/0x63:if('naviwind'!=id)return false;break;
+		case/*'M'*/0x4d:if('navibody'!=id)return false;break;
+		case/*'m'*/0x6d:if('navibody'!=id)return false;break;
+		case/*'Enter'*/0x0d:if('naviwind'!=id&&'navibody'!=id)return false;break;
+		case/*'Space'*/0x20:if('naviwind'!=id&&'navibody'!=id)return false;break;
 		case/*'Tab'*/0x09:return true;break;
-		default : return;
+		default:return false;break;
 		}
 	}else{
 		return false;
 	}
 	view(e,id);
+	return true;
 }
 
 
 //------------------------------------------------------------------------------
 // InternetExplorer with ConditionalCompilation
 /*@cc_on
-
-var emufixedid; //position:fixed仮想化IDの格納用
+emufixedid=null;
 //--------------------------------------
 // Emulating"position:fixed;"
 function emufixed(){
 	//画面に対して記事ナビを固定（position:fixed;を力技で）
-	clearTimeout(emufixedid);
+	if(emufixedid)clearTimeout(emufixedid);
 	if(docele){
-		//WinIE4-6
-		naviwind.style.left=docele.scrollLeft+ncX+'px';
-		naviwind.style.top =docele.scrollTop +ncY+'px';
-	}else{return}
+		naviwind.style.left=(docele.scrollLeft+ncX+naviwind.offsetWidth <document.body.scrollWidth ?
+			docele.scrollLeft+ncX:document.body.scrollWidth -naviwind.offsetWidth )+'px';
+		naviwind.style.top =(docele.scrollTop +ncY+naviwind.offsetHeight<document.body.scrollHeight?
+			docele.scrollTop +ncY:document.body.scrollHeight-naviwind.offsetHeight)+'px';
+	}else return false;
 	emufixedid=null;
+	return true;
 }
 
 //--------------------------------------
