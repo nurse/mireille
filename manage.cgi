@@ -621,54 +621,55 @@ _HTML_
 # index.cgiの設定
 sub config{
 my@required=(
- 'name'		=>'サイトの名前'
-,'home'		=>'サイトトップページのURL'
-,'title'	=>'この掲示板のタイトル（TITLE要素）'
-,'pgtitle'	=>'この掲示板のタイトル（ページのヘッダーで表示）'
-,'icon'		=>'アイコンのディレクトリ'
-,'icls'		=>'アイコンリスト'
-,'icct'		=>'アイコンカタログCGI'
-,'style'	=>'スタイルシート'
-,'navjs'	=>'記事ナビJavaScript'
-,'help'		=>'ヘルプファイル'
-,'log'		=>'ログディレクトリ'
-,'gzip'		=>'gzipの場所'
+ name	=>'サイトの名前'
+,home	=>'サイトトップページのURL'
+,title	=>'この掲示板のタイトル（TITLE要素）'
+,pgtitle=>'この掲示板のタイトル（ページのヘッダーで表示）'
+,icon	=>'アイコンのディレクトリ'
+,icls	=>'アイコンリスト'
+,icct	=>'アイコンカタログCGI'
+,style	=>'スタイルシート'
+,navjs	=>'記事ナビJavaScript'
+,help	=>'ヘルプファイル'
+,log	=>'ログディレクトリ'
+,gzip	=>'gzipの場所'
 );
 		my@implied=(
- 'admps'	=>'管理者パスワード（全ての記事を編集・削除できます 25文字以上推奨）'
-,'tags'		=>'使用を許可するタグ（半角スペース区切り）'
-,'strong'	=>'強調する記号と対応するCSSのクラス（半角スペース区切りで「記号 クラス 記号・・・」）'
-,'newnc'	=>'投稿後*****秒以内の記事にNewマークをつける'
-,'newuc'	=>'読んだ記事でも???秒間は「未読」状態を維持する'
-,'new'		=>'投稿後*****秒以内の記事につけるNewマーク'
-,'page'		=>'通常モードでの1ページあたりのスレッド数'
-,'delpg'	=>'削除・修正モードでの1ページあたりのスレッド数'
-,'logmax'	=>'最大スレッド数'
-,'maxChilds'=>'一スレッドあたりの最大子記事数を制限する'
-,'sekitm'	=>'検索できる項目（"項目のname 選択字の名前 "をくりかえす）'
-,'prtitm'	=>'親記事の項目(+color +email +home +icon +ra +hua +cmd +subject)'
-,'chditm'	=>'子記事の項目(+color +email +home +icon +ra +hua +cmd)'
-,'cokitm'	=>'Cookieの項目(color email home icon cmd)'
-,'conenc'	=>'圧縮転送のやり方(Content-Encodingの方法)'
-,'ckpath'	=>'Cookieを登録するPATH(path=/ といった形で)'
+ admps	=>'管理者パスワード（全ての記事を編集・削除できます 25文字以上推奨）'
+,tags	=>'使用を許可するタグ（半角スペース区切り）'
+,strong	=>'強調する記号と対応するCSSのクラス（半角スペース区切りで「記号 クラス 記号・・・」）'
+,newnc	=>'投稿後*****秒以内の記事にNewマークをつける'
+,newuc	=>'読んだ記事でも???秒間は「未読」状態を維持する'
+,new	=>'投稿後*****秒以内の記事につけるNewマーク'
+,page	=>'通常モードでの1ページあたりのスレッド数'
+,delpg	=>'削除・修正モードでの1ページあたりのスレッド数'
+,logmax	=>'最大スレッド数'
+,maxChilds		=>'一スレッドあたりの最大子記事数を制限する'
+,maxChildsShown	=>'一スレッドあたりの最大表示子記事数を制限する'
+,sekitm	=>'検索できる項目（"項目のname 選択字の名前 "をくりかえす）'
+,prtitm	=>'親記事の項目(+color +email +home +icon +ra +hua +cmd +subject)'
+,chditm	=>'子記事の項目(+color +email +home +icon +ra +hua +cmd)'
+,cokitm	=>'Cookieの項目(color email home icon cmd)'
+,conenc	=>'圧縮転送の方式(Content-Encodingの方法)'
+,ckpath	=>'Cookieを登録するPATH(path=/ といった形で)'
 );
 		my@select=(
- 'colway'	=>'色の選択方法','input INPUTタグ select SELECTタグ'
-,'delold'	=>'古い記事スレッドの削除方法','gzip GZIP圧縮 rename ファイル名変更 unlink ファイル削除'
-,'delthr'	=>'記事スレッドの削除方法','gzip GZIP圧縮 rename ファイル名変更 unlink ファイル削除'
-,'sort'		=>'記事の並び順','number スレッド番号順 date 投稿日時順'
-,'prtwrt'	=>'新規投稿フォームをIndexに表示','0 表示しない 1 表示する'
-,'mailnotify'=>'新規/返信 があったときに指定アドレスにメールする','0 使わない 1 使う'
-,'readOnly'	=>'掲示板を閲覧専用にする','0 読み書きOK 1 閲覧専用'
-,'use304'	=>'更新がないときに「304 Not Modified」を渡すか否か','0 渡さない 1 渡す'
-,'useLastModified'=>'常に「Last-Modified」を渡すか否か','0 渡さない 1 渡す'
+ colway	=>'色の選択方法','input INPUTタグ select SELECTタグ'
+,delold	=>'古い記事スレッドの削除方法','gzip GZIP圧縮 rename ファイル名変更 unlink ファイル削除'
+,delthr	=>'記事スレッドの削除方法','gzip GZIP圧縮 rename ファイル名変更 unlink ファイル削除'
+,sort	=>'記事の並び順','number スレッド番号順 date 投稿日時順'
+,prtwrt	=>'新規投稿フォームをIndexに表示','0 表示しない 1 表示する'
+,mailnotify	=>'新規/返信 があったときに指定アドレスにメールする','0 使わない 1 使う'
+,readOnly	=>'掲示板を閲覧専用にする','0 読み書きOK 1 閲覧専用'
+,use304		=>'更新がないときに「304 Not Modified」を渡すか否か','0 渡さない 1 渡す'
+,useLastModified	=>'常に「Last-Modified」を渡すか否か','0 渡さない 1 渡す'
 );
 		my@design=(
- 'colorList'=>'色リスト'
-,'bodyHead'	=>'HTML-BODYのヘッダー（ページ最上部のバナー広告はここに）'
-,'bodyFoot'	=>'HTML-BODYのフッター（ページ最下部のバナー広告はここに）'
-,'iched'	=>'アイコンカタログのヘッダー'
-,'icfot'	=>'アイコンカタログのフッター'
+ colorList	=>'色リスト'
+,bodyHead	=>'HTML-BODYのヘッダー（ページ最上部のバナー広告はここに）'
+,bodyFoot	=>'HTML-BODYのフッター（ページ最下部のバナー広告はここに）'
+,iched	=>'アイコンカタログのヘッダー'
+,icfot	=>'アイコンカタログのフッター'
 );
 	unless($IN{'name'}){
 		my$message='';
@@ -1054,6 +1055,8 @@ ASDF
 <LABEL for="gzip">GZIP：<INPUT name="del" id="gzip" type="radio" value="gzip" checked></LABEL>
 <LABEL for="rename">ファイル名変更：<INPUT name="del" id="rename" type="radio" value="rename"></LABEL>
 <LABEL for="unlink">ファイル削除：<INPUT name="del" id="unlink" type="radio" value="unlink"></LABEL>
+<P>GZIPは処理に時間がかかるので、レンタルサーバーで行うとTimeOutし、エラーが出ることがあります。
+この場合は2,3回リロードすれば、処理完了の画面が出るはずです。</P>
 ASDF
 		}else{
 			print<<'ASDF';
