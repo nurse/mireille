@@ -1985,10 +1985,11 @@ BEGIN{
 			exit;
 		};
 	}
-	# Revision Number
+	# Version
 	$CF{'Core'}=q$Revision$;
 	$CF{'CoreName'}=q$Name$;
 	$CF{'Version'}=join('.',($CF{'CoreName'}=~/(\d+)/go));
+	$CF{'Version'}.=".$1"if q$Status: Exp $=~/Exp/o&&$CF{'Core'}=~/(?:\d+.)+(\d+)/;
 }
 
 1;
