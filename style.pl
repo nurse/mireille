@@ -481,8 +481,9 @@ sub artprt{
 $	この記事の情報
 =cut
 	#記事情報を受け取って
-	my%DT=(%{shift()},(shift()=~/([^\t]*)=\t([^\t]*);\t/go),
-	_Name=>'',_Home=>'',_Date=>'',_Icon=>'',_Signature=>'',_New=>'');
+	my%DT=(%{shift()},(shift()=~/([^\t]*)=\t([^\t]*);\t/go));
+	my@temp=qw(Name Home Date Icon Signature New accessUnread);
+	@DT{map{'_'.$_}@temp}=map{''}@temp;
 	#削除されたら知らせて
 	'del'eq$DT{'Mir12'}&&($DT{'body'}='Mireille: [この記事は削除されました]');
 	#記事ナビ
@@ -490,13 +491,17 @@ $	この記事の情報
 	ArtNavi->addArticle(\%DT,($DT{'time'}>$CK{'time'}));
 	#記事項目の調整をして
 	$DT{'_Name'}=sprintf '<SPAN class="name">%s</SPAN>'
-	,$DT{'email'}?qq(<A href="mailto:$DT{'email'}">$DT{'name'}</A>):$DT{'name'};
+		,$DT{'email'}?qq(<A href="mailto:$DT{'email'}">$DT{'name'}</A>):$DT{'name'};
 	$DT{'_Home'}=qq(<SPAN class="home"><A href="$DT{'home'}" target="_top">【HOME】</A></SPAN>)if$DT{'home'};
 	$DT{'_Date'}=sprintf$DT{'time'}>$CK{'time'}?'<SPAN class="new">%s</SPAN>':'%s',&date($DT{'time'});
 	$DT{'_Icon'}=&getIconTag(\%DT)||'&nbsp;';
-	$DT{'_Signature'}=sprintf qq(<SPAN class="signature">[&nbsp;%s&nbsp;]</SPAN>)
-	,&getSignatureView(\%DT)if$CF{'signature'}&&$DT{'signature'};
-	$DT{'_New'}=$CF{'new'}if$DT{'time'}>$^T-$CF{'newnc'};
+	$DT{'_Signature'}=sprintf '<SPAN class="signature">[&nbsp;%s&nbsp;]</SPAN><BR>'
+		,&getSignatureView(\%DT)if$CF{'signature'}&&$DT{'signature'};
+	if($DT{'time'}>$^T-$CF{'newnc'}){
+		$DT{'_New'}=$CF{'new'};
+		$DT{'_tabUnread'}=sprintf ' tabindex="%d"',$DT{'-unreads'};
+		++$DT{'-unreads'};
+	}
 	#いよいよ出力だよ
 	print<<"_HTML_";
 <DIV class="thread" title="$DT{'i'}番スレッド" width="99%">
@@ -512,7 +517,8 @@ $	この記事の情報
 <TABLE border="0" cellspacing="0" class="parent" summary="Article$DT{'i'}-0" title="$DT{'i'}-0" width="100%">
 <COL class="number"><COL class="name"><COL class="date">
 <TR class="info">
-	<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" class="number" href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【No.$DT{'i'}】</A></TH>
+	<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" class="number"
+	 href="index.cgi?rvs=$DT{'i'}-$DT{'j'}"$DT{'_tabUnread'}>【No.$DT{'i'}】</A></TH>
 	<TD class="name">$DT{'_New'} $DT{'_Name'} $DT{'_Home'}</TD>
 	<TD class="date"><SPAN class="date">$DT{'_Date'}</SPAN>
 	<SPAN class="revise" title="$DT{'i'}番スレッドの親記事を修正"><A
@@ -523,7 +529,7 @@ $	この記事の情報
 </TABLE>
 
 _HTML_
-	return;
+	return$DT{'-unreads'};
 }
 
 
@@ -535,20 +541,25 @@ sub artchd{
 $	この記事の情報
 =cut
 	#記事情報を受け取って
-	my%DT=(%{shift()},(shift()=~/([^\t]*)=\t([^\t]*);\t/go),
-	_Name=>'',_Home=>'',_Date=>'',_Icon=>'',_Signature=>'',_New=>'');
+	my%DT=(%{shift()},(shift()=~/([^\t]*)=\t([^\t]*);\t/go));
+	my@temp=qw(Name Home Date Icon Signature New accessUnread);
+	@DT{map{'_'.$_}@temp}=map{''}@temp;
 	#削除されてるときはここの前に飛ばしちゃうの
 	#記事ナビ
 	ArtNavi->addArticle(\%DT,($DT{'time'}>$CK{'time'}));
 	#記事項目の調整をして
 	$DT{'_Name'}=sprintf '<SPAN class="name">%s</SPAN>'
-	,$DT{'email'}?qq(<A href="mailto:$DT{'email'}">$DT{'name'}</A>):$DT{'name'};
+		,$DT{'email'}?qq(<A href="mailto:$DT{'email'}">$DT{'name'}</A>):$DT{'name'};
 	$DT{'_Home'}=qq(<SPAN class="home"><A href="$DT{'home'}" target="_top">【HOME】</A></SPAN>)if$DT{'home'};
 	$DT{'_Date'}=sprintf$DT{'time'}>$CK{'time'}?'<SPAN class="new">%s</SPAN>':'%s',&date($DT{'time'});
 	$DT{'_Icon'}=&getIconTag(\%DT)||'&nbsp;';
-	$DT{'_Signature'}=sprintf qq(<SPAN class="signature">[&nbsp;%s&nbsp;]</SPAN>)
-	,&getSignatureView(\%DT)if$CF{'signature'}&&$DT{'signature'};
-	$DT{'_New'}=$CF{'new'}if$DT{'time'}>$^T-$CF{'newnc'};
+	$DT{'_Signature'}=sprintf '<SPAN class="signature">[&nbsp;%s&nbsp;]</SPAN><BR>'
+		,&getSignatureView(\%DT)if$CF{'signature'}&&$DT{'signature'};
+	if($DT{'time'}>$^T-$CF{'newnc'}){
+		$DT{'_New'}=$CF{'new'};
+		$DT{'_tabUnread'}=sprintf ' tabindex="%d"',$DT{'-unreads'};
+		++$DT{'-unreads'};
+	}
 	#いよいよ出力だよ
 	print<<"_HTML_";
 <TABLE border="0" cellspacing="0" class="child" summary="Article$DT{'i'}-$DT{'j'}" title="$DT{'i'}-$DT{'j'}" width="100%">
@@ -564,7 +575,8 @@ _HTML_
 
 	print<<"_HTML_";
 <TR class="info"><TH class="space" rowspan="2">&nbsp;</TH>
-	<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" class="number" href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【Re:$DT{'j'}】</A></TH>
+	<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" class="number"
+	 href="index.cgi?rvs=$DT{'i'}-$DT{'j'}"$DT{'_tabUnread'}>【Re:$DT{'j'}】</A></TH>
 	<TD class="name">$DT{'_New'} $DT{'_Name'} $DT{'_Home'}</TD>
 	<TD class="date"><SPAN class="date">$DT{'_Date'}</SPAN>
 	<SPAN class="revise" title="$DT{'i'}番スレッドの子記事$DT{'j'}を修正"
@@ -575,7 +587,7 @@ _HTML_
 </TABLE>
 
 _HTML_
-	return;
+	return$DT{'-unreads'};
 }
 
 
@@ -776,7 +788,7 @@ $ 記事ナビのモード
 			$style='display:block;position:fixed;top:-1000;left:-1000;visibility:visible;/*Opera6*/';
 		}elsif(index($::IN{'hua'},'MSIE 4')>-1){
 			#guess to be MSIE 4
-			$style='display:none;position:absolute;filter:alpha(opacity=60)';
+			$style='display:none;position:absolute;position:fixed;filter:alpha(opacity=60)';
 		}
 		
 		print<<"_HTML_";
