@@ -4,7 +4,7 @@
 = Mireille - Bulletin Board System
 # - Mireille Manpage -
 #
-# $Mireille: 1_2_11 $
+# $Mireille: 1_2_12 $
 # $Revision$
 # "This file is written in shift_jis, CRLF." 空
 # http://www.airemix.com/
@@ -102,6 +102,20 @@ index.cgiの中の(({$CF{'conenc'}='|gzip -cfq9';}))という所を(({$CF{'conenc'}='';}
 
 #------------------------------------------------------------------------------#
 == Mireille History
+=== 2003-07-25 Release 1.2.12
+:core.cgi
+  * 0.cgiの情報を記事番号順のとき読み込んでいなかったのを修正
+  * 記事データの無いログファイルを読み込んだとき、記事フッタを出力していたのを修正
+  * index.cgi直うちでなく、$CF{'index'}を使うように
+  * 文字エンコーディングを調べる機能をつけた
+  * PODを整備？
+  * その他個々の関数の調整
+:style.pl
+  * 文字エンコーディングを調べる機能をつけた
+  * 本文データの読み込みができなかったのを修正
+  * そのほか調整
+:index.cgi,manage.cgi
+  * 文字エンコーディングを調べる機能をつけた
 === 2003-07-05 Release 1.2.11
 配布圧縮ファイルのディレクトリ構成を変更
 :core.cgi
@@ -983,6 +997,8 @@ maxChildrenでなく、maxChildsになっているのは仕様です。
 === NGワード
 指定した文字列が本文含まれる場合はじきます。
 ただ、文字参照を使ったりで回避できるのはご愛嬌。
+
+隠し機能として$CF{'itemsCheckingNGWords'}でチェックする項目を決められます。
 
 === 日時形式あれこれ
 ISO8601やらRFC822やらRFC2822やらと、日時に関する取り決めはいくつかあります。
