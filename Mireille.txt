@@ -4,7 +4,7 @@
 = Mireille - Bulletin Board System
 # - Mireille Manpage -
 #
-# $Mireille: 1_2_15 $
+# $Mireille: 1_2_16 $
 # $Revision$
 # "This file is written in shift_jis, CRLF." 空
 # Airemix http://airemix.com/
@@ -96,6 +96,11 @@ index.cgiの中の(({$CF{'conenc'}='|gzip -cfq9';}))という所を(({$CF{'conenc'}='';}
 
 #------------------------------------------------------------------------------#
 == Mireille History
+=== 2005-03-12 Release 1.2.16
+:core.cgi
+  * 日本語ドメインのURL自動リンクに対応
+:index.cgi,manage.cgi,Mireille.html
+  * 誤字の修正
 === 2005-03-03 Release 1.2.15
 :core.cgi
   * METAタグによるLast-Modifiedの出力位置をもっと先に
