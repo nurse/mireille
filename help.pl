@@ -27,14 +27,14 @@ print<<'_HTML_';
 		これらは無断で行われる可能性があります。<BR>
 		具体的には、<BR>
 		<UL>
-			<LI>管理者による記事の削除・変更<BR>
+			<LI><H4 class="list">管理者による記事の削除・変更</H4>
 				利用者が不適切な内容の記事を投稿した場合、管理者の判断によって、記事を削除したり、<BR>
 				記事の内容を編集することがあります。</LI>
-			<LI>管理者による情報の利用<BR>
+			<LI><H4 class="list">管理者による情報の利用</H4>
 				管理者は掲示板における情報を利用者に無断で利用することができます。<BR>
 				記事の本文だけでなく、あらゆる統計やその他Cookieのような情報もこれに含まれます。<BR>
 				利用者は著作権を始めとした権利をこの場合行使できません。</LI>
-			<LI>利用者に対する投稿された記事の信頼性保証等の責任回避<BR>
+			<LI><H4 class="list">利用者に対する投稿された記事の信頼性保証等の責任回避</H4>
 				管理者は記事の内容の信憑性に対して責任を持ちません。<BR>
 				公共の福祉に反する内容が投稿された場合も誠意ある対応をすることを約束しません。<BR>
 				その他この掲示板の利用によって何か損害が出ても管理者は責任を負いません</LI>
@@ -42,19 +42,19 @@ print<<'_HTML_';
 	</LI>
 	<LI><H3 class="list">Mireille特有の仕様</H3>
 		<UL>
-			<LI>記事の削除<BR>
-				まず、削除は推奨しません。修正機能を使うことをお勧めします。<BR>
-				親記事を削除しようとする場合、<BR>
+			<LI><H4 class="list">記事の削除</H4>
+				まず、削除は推奨しません、修正機能を使うことをお勧めします。<BR>
+				それでも親記事を削除しようとする場合は以下のようになります<BR>
 				・親記事だけが存在し、子記事が付いていないものはスレッドごと削除されます。<BR>
-				・親記事だけでなく、子記事が一件でもついている場合は本文だけが削除されます。<BR>
+				・親記事に子記事が一件でもついている場合は、親記事の本文だけが削除されます。<BR>
 				・管理者のみが子記事が付いているスレッドを、スレッドごと削除できます。</LI>
-			<LI>本文<BR>
+			<LI><H4 class="list">本文</H4>
 				URLを探して、自動的にリンクしてくれますので、ぜひご活用ください。<BR>
-				下に示してある強調記号から始まる行は、書いた時に何らかの形で語句が強調されます<BR>
-				それ以外にも語句が強調されることがあります
+				別項目に示してある強調記号から始まる行は、書いた時に何らかの形で語句が強調されます<BR>
+				それ以外にも語句が強調されることがあります<BR>
 				ちなみに半角カタカナもたぶん使えます</LI>
-			<LI>コマンド<BR>
-				現在は専用アイコンのパスワードを入れるのに使っています。<BR>
+			<LI><H4 class="list">コマンド</H4>
+				現在は主に専用アイコンのパスワードを入れるのに使っています。<BR>
 				形式は&#34;icon=password&#34;となっています。<BR>
 				専用アイコンが欲しい方は、管理人さんに交渉してみましょう。</LI>
 		</UL>
@@ -63,7 +63,7 @@ print<<'_HTML_';
 		<UL>
 _HTML_
 print<<"_HTML_";
-			<LI>投稿後<STRONG>$CF{'newnc'}</STRONG>秒以内の記事にNewマークをつける</LI>
+			<LI>投稿後<STRONG>$CF{'newnc'}</STRONG>秒以内の記事に「$CF{'new'}」マークをつける</LI>
 			<LI>読んだ記事でも<STRONG>$CF{'newuc'}</STRONG>秒間は「未読」状態を維持する</LI>
 			<LI>通常モードでは、1ページあたり<STRONG>$CF{'page'}</STRONG>スレッド表示します</LI>
 			<LI>削除・修正モードでは、1ページあたり<STRONG>$CF{'delpg'}</STRONG>スレッド表示します</LI>
@@ -78,12 +78,13 @@ _HTML_
 	my$line;my$regexp;
 	for(keys%ST){
 		if(m!^(/.+/)$!o){
-			$regexp.=qq(<STRONG>$_</STRONG>,);
+			$regexp.=qq(<STRONG style="color:#f77;font-weight:normal">$_</STRONG>, );
 		}else{
-			$line.=qq(<STRONG class="$ST{$_}">$_</STRONG>,);
+			$line.=qq(<STRONG class="$ST{$_}">$_</STRONG>, );
 		}
 	}
-	chop$line;chop$regexp;
+	chop$line;chop$line;
+	chop$regexp;chop$regexp;
 	if($line&&$regexp){
 		print"\t\t\t<LI>$line から始まる行と、<BR>正規表現 $regexp にマッチする文字列は強調表示されます</LI>\n";
 	}elsif($line){
@@ -123,7 +124,7 @@ $4: data
 			}
 		}
 	}
-	print"\t\t\t<LI>$groupグループ、$icons個のアイコンが利用可能です</LI>\n";
+	print"\t\t\t<LI>$groupグループ、$icons種のアイコンが利用可能です</LI>\n";
 	delete$icon{''};
 	(%icon)&&(print"\t\t\t<LI>".join("、\n",values%icon)."\nが著作権を保有する素材を使用しています。</LI>\n");
 }
@@ -142,18 +143,25 @@ $4: data
 		$decoded=$j;
 	}
 	print<<"_HTML_";
-			<LI>クッキー関連<BR><FORM action="#" method="get">
-			あなたのクッキー：<INPUT id="yourCookie" name="yourcookie" type="text"
-			 size="100" value="$ENV{'HTTP_COOKIE'}" readonly><BR>
-			Mireille用の内容：<INPUT id="mirCookie" name="mirCookie" type="text"
-			 size="100" value="$decoded" readonly><BR>
-			クッキー書き換え：<INPUT id="cookiedata" name="cookiedata" type="text"
-			 size="100" value="$cookie"><BR>
+			<LI><H4 class="list">クッキー関連</H4>
+			<FORM action="#" method="get">
+			<TABLE cellspacing="2" summary="クッキーの設定" style="margin:0.5em auto 0.5em 1em">
+			<TR><TH>あなたのクッキー：</TH>
+	<TD><INPUT id="yourCookie" name="yourCookie" type="text" size="100" value="$ENV{'HTTP_COOKIE'}" readonly></TD>
+			</TR>
+			<TR><TH>Mireille用の内容：</TH>
+			<TD><INPUT id="mirCookie" name="mirCookie" type="text" size="100" value="$decoded" readonly></TD>
+			</TR>
+			<TR><TH>クッキー書き換え：</TH>
+			<TD><INPUT id="cookiedata" name="cookiedata" type="text" size="100" value="$cookie"></TD>
+			</TR>
+			<TR><TD colspan="2">
 				<INPUT type="submit" class="submit" value="OK"
 				 onclick="reviseCookie(window.event)" onkeypress="reviseCookie(window.event)">
 				<INPUT type="reset" class="reset" value="Reset"
 				 onclick="resetCookie(window.event)" onkeypress="resetCookie(window.event)">
-			<BR></FORM>
+			</TD></TR></TABLE>
+			</FORM>
 _HTML_
 }
 		print<<'_HTML_';
@@ -206,22 +214,20 @@ function resetCookie(e){
 	</LI>
 	<LI><H3 class="list">そのほか</H3>
 		<UL>
-			<LI>一つのスレッドの使いまわしを推奨します<BR>
+			<LI><H4 class="list">一つのスレッドの使いまわしを推奨します</H4>
 				この掲示板は一つ一つのスレッドが恐ろしい長さまで伸びる・・・<BR>
 				といった使い方を想定して作られています。<BR>
 				親記事は3行の文章だけレスは無し、なスレッドがたくさん・・・<BR>
 				という使い方は避けたほうがいいかもしれません<BR>
 				（ログ保存方式の都合でオーバーヘッドが増えるかも。。）</LI>
-			<LI>アイコンの最大数<BR>
+			<LI><H4 class="list">アイコンの最大数</H4>
 				理論上は無限です。<BR>
 				アイコンを増やしてもあまり処理速度は落ちないようにしているので大丈夫かと。<BR>
 				いちおうローカルのテスト環境では700個のアイコンで試してみても数秒で表示されることを確認しました。<BR>
 				実際はHTTPの負荷が膨大になり、転送に時間がかかるので難しいとは思いますが^^;;</LI>
-			<LI>なにか・・・<BR>
+			<LI><H4 class="list">なにか・・・</H4>
 				この掲示板でおかしいところ、気になるところ、新しく追加して欲しい機能があれば、<BR>
-				Airemix <A href="http://www.airemix.com/" title="Airemix" target="_top">http://www.airemix.com/</A>
-				の掲示板に書き込むか、
-				メール(<A href="mailto:naruse&#64;airemix.com">naruse&#64;airemix.com</A>)をください<BR>
+				Airemix <A href="http://www.airemix.com/" title="Airemix" target="_top">http://www.airemix.com/</A> の掲示板に書き込むか、メール(<A href="mailto:naruse&#64;airemix.com">naruse&#64;airemix.com</A>)をください<BR>
 				お気軽にして下さって結構ですので♪<BR>
 				<BR>
 				ちなみにメールをPGP暗号化して送りたい方は、pgp.nic.ad.jpのような公開鍵サーバーで、<BR>
@@ -235,18 +241,25 @@ function resetCookie(e){
 
 <DIV class="hthread">
 <H2 class="list">◇アクセスキー</H2>
+<P style="margin-top:0.5em;margin-left:1.5em;text-align:left;width:95%">
+Mireilleにはアクセス性を向上させるための「アクセスキー」が設定されています<BR>
+これはWindowsでいう「ショートカットキー」のようなもので、<BR>
+覚えなければいけない訳ではありませんが、使えると便利かもしれません<BR>
+<BR>
+どのようなものが設定されているか知りたいという、暇人・・・<BR>
+もとい奇特な方のために以下に主なものを挙げておきます</P>
 <UL>
-	<LI>Mireilleにはアクセス性を向上させるための「アクセスキー」を設定しています。<BR>
-		これはWindowsでいう「ショートカットキー」のようなものです<BR>
-		覚えなければいけない訳ではありませんが、使えると便利かもしれません</LI>
 	<LI><H3 class="list">Index画面のとき</H3>
 		<DL>
 			<DT><KBD>Alt+[1-9]</KBD></DT>
-			<DD>そのページ内の上から[1-9]番目の記事の、返信へのリンクが選択されます</DD>
+			<DD>そのページ内の上から[1-9]番目の記事の、返信へのリンクが選択されます<BR>
+			ブラウザによっては、その記事に対する返信画面に移動します</DD>
 			<DT><KBD>Alt+Shift+[1-9]</KBD></DT>
-			<DD>[1-9]ページ目へのリンクに移動します</DD>
+			<DD>[1-9]ページ目へのリンクが選択されます<BR>
+			ブラウザによっては、そのまま選択ページへ移動します</DD>
 			<DT><KBD>Alt+[,.]</KBD></DT>
-			<DD><KBD>,</KBD> だと後のページに、<KBD>.</KBD> だと古いページへ移動します<BR>
+			<DD><KBD>,</KBD> で新しい記事のあるページ、<KBD>.</KBD> で昔の記事のあるページのリンクが選択されます<BR>
+			ブラウザによっては、そのままページを移動します<BR>
 			JISキーボードを使っている方でしたらこのキー選択の意味がわかるかもしれません</DD>
 		</DL>
 	</LI>
@@ -333,11 +346,12 @@ Mireilleを作りこむにあたって、半ばオンサイト顧客として、数々の有用なアドバイスを
 
 <P class="note">この説明では&trade;や&reg;や&copy;マークは省略しています<BR>
 それぞれのサイト名やソフトウェア名などは各々の商標や登録商標などです</P>
-<P align="center" class="note" style="margin-bottom:2em;width:600px">
-この掲示板は、Microsoft Internet Explorer 5以上を主とした対象とし、<BR>
-Microsoft Internet Explorer 6において完全な動作をします。<BR>
-Netscape 6及びMozilla 0.8以降でもほぼ期待通りの動作をすることを確認済みです。<BR>
-以上のブラウザ以外では動作はしますが、見苦しくなってしまいます。ご了承ください。</P>
+
+<P class="note">この掲示板は、Microsoft Internet Explorer for Windows バージョン5以上を主とした対象とし、<BR>
+Windows版InternetExplorer6と、NetscapeやChimeraなどのMozilla系で、ほぼ完全な動作をします<BR>
+またOpera7やMicrosoft Internet Explorer 5 for Macintoshでも概ね期待通りの動作をするはずです。<BR>
+上記のブラウザ以外では動作はするはずですが、見辛くなってしまう可能性があります。<BR>
+ご了承くださいまし。 （但し、読み書きができない場合はMireilleのバグです）</P>
 _HTML_
 print<<"_HTML_".&getFooter;
 <DIV align="center" class="note" style="width:15em;">
