@@ -730,29 +730,63 @@ sub res{
 	&getCookie;
 	&showHeader;
 	print qq(<H2 class="mode">- 記事返信モード -</H2>\n)
-	.qq(<DIV id="thread$IN{'i'}_div" style="border:dashed 1px #333;height:400px;overflow:auto;width:99%">\n)
+	.qq(<DIV id="thread_div" style="border:dashed 1px #333;height:auto;overflow:visible;width:99%">\n)
 	.qq(<H3>このスレッドの今までの内容</H3>\n);
 	print"This thread$IN{'i'} is deleted."if"del"eq&showArticle(i=>$IN{'i'},ak=>1,res=>1);
-	print<<"_HTML_";
+	print<<'_HTML_';
 </DIV>
-<P style="margin-right:10%;text-align:right"><INPUT type="button" class="button" onclick="switchDivBorder(this);return false" value="枠を広げる"></P>
+<P style="margin:0 10% 0 auto;text-align:right">
+<LABEL for="inpDivHeight">枠の高さ:
+<INPUT type="text" id="inpDivHeight" value="400px">
+<INPUT type="button" class="button" onclick="setDivHeight();return false" value="高さ設定">
+<INPUT type="button" class="button" id="inpDivBorder" onclick="switchDivBorder(this);return false" value="枠を狭める">
+</P>
 <SCRIPT type="text/javascript">
 <!--
+/* ========== 枠の高さ設定 ========== */
+function setDivHeight(){
+	if(!document.getElementById)return false;
+	var div=document.getElementById('thread_div');
+	var but=document.getElementById('inpDivBorder');
+	var inp=document.getElementById('inpDivHeight');
+	if(!div.style||!div.style.height)return false;
+	but.value='枠を広げる';
+	div.style.height=inp.value=inp.value.match(/([1-9]\d*)/)?RegExp.$1+'px':'400px';
+	div.style.overflow='auto';
+}
+
+/* ========== 枠を広げたり狭めたり ========== */
 function switchDivBorder(self){
 	if(!document.getElementById)return false;
-	var div=document.getElementById('thread$IN{'i'}_div');
+	var div=document.getElementById('thread_div');
+	var inp=document.getElementById('inpDivHeight');
 	if(!div.style||!div.style.overflow){
 		return false;
-	}else if(div.style.overflow=='auto'){
+	}else if(div.style.height=='auto'){
+		self.value='枠を広げる';
+	div.style.height=inp.value=inp.value.match(/([1-9]\d*)/)?RegExp.$1+'px':'400px';
+		div.style.overflow='auto';
+	}else{
 		self.value='枠を狭める';
 		div.style.height='auto';
 		div.style.overflow='visible';
-	}else{
-		self.value='枠を広げる';
-		div.style.height='400px';
-		div.style.overflow='auto';
 	}
 }
+
+/* ========== 枠を初期化 ========== */
+function initDiv(){
+	if(!document.getElementById)return false;
+	var div=document.getElementById('thread_div');
+	var but=document.getElementById('inpDivBorder');
+	var inp=document.getElementById('inpDivHeight');
+	if(!div.style||!div.style.height)return false;
+	but.value='枠を広げる';
+	div.style.height=inp.value=inp.value.match(/([1-9]\d*)/)?RegExp.$1+'px':'400px';
+	div.style.overflow='auto';
+}
+
+/* ==========  ========== */
+//initDiv();
 -->
 </SCRIPT>
 _HTML_
@@ -1533,7 +1567,10 @@ _HTML_
 	
 	#-----------------------------
 	#HTML書き出し
-	print<<"_HTML_";
+	if(index($ENV{'SERVER_NAME'},'tsukaeru.net')>-1){
+		print"Content-Language: ja\n";
+	}else{
+		print<<"_HTML_";
 Status: 200 OK
 Content-type: text/html; charset=euc-jp
 Content-Language: ja-JP
@@ -1541,6 +1578,7 @@ Connection: keep-alive
 Date: @{[&datef($^T,'rfc1123')]}
 X-CGI-Moe: Mireille
 _HTML_
+	}
 	print"Last-Modified: $lastModified\n"if$CF{'useLastModified'};#exp.
 	#GZIP Switch
 	my$status=qq(<META http-equiv="Last-Modified" content=").$lastModified."\">\n";
@@ -1559,6 +1597,7 @@ _HTML_
 		||	index($ENV{'SERVER_NAME'},'tripod')>-1
 		||	index($ENV{'SERVER_NAME'},'virtualave.net')>-1
 		||	index($ENV{'SERVER_NAME'},'hypermart.net')>-1
+		||	index($ENV{'SERVER_NAME'},'tsukaeru.net')>-1
 		){
 			print"\n";
 			$status.="<!-- can't use gzip on this server because of advertisements -->";
