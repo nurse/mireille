@@ -26,22 +26,15 @@ print<<'_HTML_';
 
 <DIV class="section">
 <H3 class="h">利用規約</H3>
-<P>管理者によって、利用者が掲示板に投稿した記事の著作権が制限されたり、<BR>
-掲示板を通して取得した個人情報を利用したりすることがあります。<BR>
-これらは無断で行われる可能性があります。</P>
+<P>管理者によって、利用者が掲示板に投稿した記事の著作権が制限されたり、掲示板を通して取得した個人情報を利用したりすることがあります。これらは無断で行われる可能性があります。</P>
 <P>具体的には以下の通りになります。（とは言ってもこれ以外のケースも存在しえます。）</P>
 <DL class="section">
 	<DT>管理者による記事の削除・変更</DT>
-	<DD>利用者が不適切な内容の記事を投稿した場合、管理者の判断によって、記事を削除したり、<BR>
-		記事の内容を編集することがあります。</DD>
+	<DD>利用者が不適切な内容の記事を投稿した場合、管理者の判断によって、記事を削除したり、記事の内容を編集することがあります。</DD>
 	<DT>管理者による情報の利用</DT>
-	<DD>管理者は掲示板における情報を利用者に無断で利用することができます。<BR>
-		記事の本文だけでなく、あらゆる統計やその他Cookieのような情報もこれに含まれます。<BR>
-		利用者は著作権を始めとした権利をこの場合行使できません。</DD>
+	<DD>管理者は掲示板における情報を利用者に無断で利用することができます。記事の本文だけでなく、あらゆる統計やその他Cookieのような情報もこれに含まれます。利用者は著作権を始めとした権利をこの場合行使できません。</DD>
 	<DT>利用者に対する投稿された記事の信頼性保証等の責任回避</DT>
-	<DD>管理者は記事の内容の信憑性に対して責任を持ちません。<BR>
-		公共の福祉に反する内容が投稿された場合も誠意ある対応をすることを約束しません。<BR>
-		その他この掲示板の利用によって何か損害が出ても管理者は責任を負いません。</DD>
+	<DD>管理者は記事の内容の信憑性に対して責任を持ちません。公共の福祉に反する内容が投稿された場合も誠意ある対応をすることを約束しません。その他この掲示板の利用によって何か損害が出ても管理者は責任を負いません。</DD>
 </DL>
 </DIV>
 
@@ -61,28 +54,24 @@ print<<'_HTML_';
 	
 	<DIV class="section">
 	<H4 class="h">署名</H4>
-	<P>基本的に、署名が同じ人なら同一人物、違えば異なる人物、のはずです。
-	投稿時に使ったパスワードと名前から生成しているので、少しでも名前が変わると違う人物扱いになってしまいます。</P>
+	<P>基本的に、署名が同じ人なら同一人物、違えば異なる人物、のはずです。投稿時に使ったパスワードと名前から生成しているので、少しでも名前が変わると違う人物扱いになってしまいます。</P>
 	</DIV>
 	
 	<DIV class="section">
 	<H4 class="h">本文</H4>
-	<P>URL系の文字列があると自動的にリンクしてくれます。
-	たとえHTTPなURLでも、httpから書かないようにすれば自動リンクされないようになりますが、そうする時は本当に自動リンクされないようにした方がいいのか、良く考えてからにしてください。</P>
+	<P>URL系の文字列があると自動的にリンクしてくれます。たとえHTTPなURLでも、httpから書かないようにすれば自動リンクされないようになります。しかし、そうする時は本当に自動リンクされないようにした方がいいのか、良く考えてからにするべきでしょう。</P>
 	<P>別項目に示してある強調記号から始まる行や、正規表現にマッチする語句は、書いた時に何らかの形で強調されます。</P>
 	<P>ちなみに半角カタカナもたぶん使えます。</P>
 	</DIV>
 		
 	<DIV class="section">
 	<H4 class="h">ロック</H4>
-	<P>記事が管理者の判断によってロックされたり、スレッドがそのスレッドの作成者や管理者の判断によりロックされることがあります。
-	ロックされた記事やスレッドは、それ以降変更ができなくなります。</P>
+	<P>記事が管理者の判断によってロックされることがあります。また、スレッドがそのスレッドの作成者や管理者の判断によりロックされることがあります。ロックされた記事やスレッドは、それ以降変更ができなくなります。</P>
 	</DIV>
 	
 	<DIV class="section">
 	<H4 class="h">NGワード</H4>
-	<P>NGワードを含んだ投稿をしてしまうと、エラーが発生します。
-	NGワードを含まないようにしないと投稿できませんが、これに引っかかってしまうような投稿は、投稿することそのものを見直したほうがいいかもしれません。</P>
+	<P>NGワードを含んだ投稿をしてしまうと、エラーが発生します。この場合はNGワードを含まないようにしてから、投稿してください。しかし、これに引っかかってしまうような投稿は、投稿することそのものを考え直したほうがいいかもしれません。</P>
 	</DIV>
 	
 	<DIV class="section">
@@ -96,9 +85,9 @@ print<<'_HTML_';
 		<DT>znew</DT>
 		<DD>修正時にスレッドの最終変更日時を更新します。</DD>
 		<DT>renew</DT>
-		<DD>修正時に、記事の投稿日時とスレッドの最終変更日時を、ともに更新します。</DD>
+		<DD>修正時に、記事の投稿日時とスレッドの最終変更日時を、共に更新します。</DD>
 		<DT>signature=<VAR>seed of signature</VAR></DT>
-		<DD>署名を生成する際に使う文字列を、パスワードでなく、これを使うようにします。</DD>
+		<DD>パスワードでなくこれを、署名を生成する際に使う文字列として使うようにします。</DD>
 	</DL>
 	</DIV>
 	
@@ -106,13 +95,12 @@ print<<'_HTML_';
 	<H4 class="h">Quicksave / Quickload</H4>
 	<P>本文の内容を一時的に保存することができます。保存できる文字数は使っているブラウザによって異なりますが、日本語を普通に使っている場合だと、InternetExplorerでは数万文字、それ以外では一千文字程度になると思われます。長い文章を投稿する場合は、時々Quicksaveするようにすると、もし送信に失敗したり、ブラウザが急に落ちてしまった時でも、本文の内容が失われずにすみます。同時に保存できるのは一つだけです。<TEXTAREA id="body" style="display:none"></TEXTAREA></P>
 	<P><BUTTON class="buttonLoadQuicksave" title="Quicksaveしたデータを削除します" onclick="alert(removeBodyData('MireilleQuicksave'));return false" onkeypress="alert(removeBodyData('MireilleQuicksave'));return false">一時保存したデータを削除</BUTTON></P>
-
 	</DIV>
 	
 	<DIV class="section">
 	<H4 class="h">Autosave</H4>
 	<P>本文の内容を自動的に一時保存します。一時保存した内容を読み出すには、投稿フォームのALoadボタンを押してください。いちいち自分でQuicksaveするのが面倒、という人にはとっても便利〜かもしれません。保存可能な文字数など、制限事項はQuicksaveに準じます。ただし、Quicksaveとは別領域に保存しているので、Autosaveによって、Quicksaveした内容が上書きされる、ということはありません。</P>
-	<P>この機能についてセキュリティの面から何らかの見解を持つ方の意見を募集しています。</P>
+	<P>この機能について、セキュリティ面から何らかの見解を持つ方の意見を待っています。</P>
 	<P><BUTTON class="buttonLoadAutosave" title="Autosaveしたデータを削除します" onclick="alert(removeBodyData('MireilleAutosave'));return false" onkeypress="alert(removeBodyData('MireilleAutosave'));return false">自動保存したデータを削除</BUTTON></P>
 
 	</DIV>
@@ -228,7 +216,7 @@ $4: data
 		<TD><INPUT id="mirCookie" name="mirCookie" type="text" size="100" value="$decoded" readonly></TD>
 		</TR>
 		<TR><TH>クッキー書き換え：</TH>
-		<TD><INPUT id="cookiedata" name="cookiedata" type="text" size="100" value="$cookie"></TD>
+		<TD><INPUT id="newCookie" name="newCookie" type="text" size="100" value="$cookie"></TD>
 		</TR>
 		<TR><TD colspan="2">
 		<INPUT type="submit" class="submit" value="OK"
@@ -243,15 +231,21 @@ _HTML_
 <SCRIPT type="text/JavaScript">
 <!--
 function reviseCookie(e){
-	var cookie;
-	if(document.all)cookiedata=document.all('cookiedata').value;
-	else if(document.getElementById)cookie=document.getElementById('cookiedata').value;
-	else return false;
+	var eNewCookie;
+	if(document.all){
+		eNewCookie=document.all('newCookie');
+		e.returnValue=false;
+	}else if(document.getElementById){
+		eNewCookie=document.getElementById('newCookie');
+		e.preventDefault();
+	}else return false;
+	e.cancelBubble=true;
 	
-	if(cookie){
+	if(eNewCookie.value){
 		if(confirm('以下のようにMireilleのクッキーを書き換えますがよろしいですか？'
-		 +"（仕様上日本語が化けていますが、実際に書き込まれる内容は正常に書き込まれます）\n"+unescape(cookie))){
-			document.cookie='Mireille='+cookie+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';//終わりの日
+		 +"（仕様上日本語が化けていますが、実際に書き込まれる内容は正常に書き込まれます）\n"
+		 +unescape(eNewCookie.value))){
+			document.cookie='Mireille='+eNewCookie.value+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';//終わりの日
 			alert("クッキーを設定しました");
 		}
 	}else{
@@ -260,15 +254,22 @@ function reviseCookie(e){
 			alert("クッキーを削除しました");
 		}
 	}
+	return true;
 }
 function resetCookie(e){
-	var cookiedata;
-	if(document.all)cookiedata=document.all('cookiedata');
-	else if(document.getElementById)cookiedata=document.getElementById('cookiedata');
-	else return false;
+	var eNewCookie;
+	if(document.all){
+		eNewCookie=document.all('newCookie');
+		e.returnValue=false;
+	}else if(document.getElementById){
+		eNewCookie=document.getElementById('newCookie');
+		e.preventDefault();
+	}else return false;
+	e.cancelBubble=true;
 	
 	var date=new Date();
-	cookiedata.value="expire%09"+parseInt(date.getTime()/1000);
+	eNewCookie.value="time%09"+parseInt(date.getTime()/1000);
+	return true;
 }
 
 
@@ -323,12 +324,8 @@ function removeBodyData(key){
 var bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
 //-->
 </SCRIPT>
-		<P>「クッキー書き換え」によって、Mireille用のクッキーを書き換えることができます。<BR>
-		新しく来た掲示板に、今まで行っている掲示板のクッキーを移植する、ということも、<BR>
-		移植元にない項目のクッキーは移植できませんが、基本的には可能です。</P>
-		<P>「Reset」を押すと、未読記事お知らせ機能が効く、最小限のクッキーだけが与えられます。<BR>
-		クッキーがない状態から、「Reset」ボタンを押した上で、「OK」を押してクッキーを保存すると、<BR>
-		未読記事お知らせ機能は効くようになります。</P>
+		<P>「クッキー書き換え」によって、Mireille用のクッキーを書き換えることができます。新しく来た掲示板に、今まで行っている掲示板のクッキーを移植する、ということも、移植元にない項目のクッキーは移植できませんが、基本的には可能です。</P>
+		<P>「Reset」を押すと、未読記事お知らせ機能が効く、最小限のクッキーだけが与えられます。クッキーがない状態から、「Reset」ボタンを押した上で、「OK」を押してクッキーを保存すると、未読記事お知らせ機能は効くようになります。</P>
 	</DIV>
 </DIV>
 
@@ -336,29 +333,19 @@ var bodyObj=document.all?document.all('body'):document.getElementById?document.g
 <H3 class="h">そのほか</H3>
 		<DIV class="section">
 		<H4 class="h">一つのスレッドの使いまわしを推奨します</H4>
-		<P>この掲示板は一つ一つのスレッドが恐ろしい長さまで伸びる・・・<BR>
-		といった使い方を想定して作られています。<BR>
-		親記事は3行の文章だけレスは無し、なスレッドがたくさん・・・<BR>
-		という使い方は避けたほうがいいかもしれません。<BR>
-		（ログ保存方式の都合でオーバーヘッドが増えるかも。。）</P>
+		<P>この掲示板は一つ一つのスレッドが恐ろしい長さまで伸びる・・・といった使い方を想定して作られています。親記事は3行の文章だけレスは無し、なスレッドがたくさん・・・という使い方は避けたほうがいいかもしれません。（ログ保存方式の都合でオーバーヘッドが増えるかも。。）</P>
 		</DIV>
 		
 		<DIV class="section">
 		<H4 class="h">アイコンの最大数</H4>
-		<P>理論上は無限です。<BR>
-		アイコンを増やしてもあまり処理速度は落ちないようにしているので大丈夫かと。<BR>
-		いちおうローカルのテスト環境では700個のアイコンで試してみても数秒で表示されることを確認しました。<BR>
-		実際はHTTPの負荷が膨大になり、転送に時間がかかるので難しいとは思いますが^^;;</P>
+		<P>理論上は無限です。アイコンを増やしてもあまり処理速度は落ちないようにしているので大丈夫かと。いちおうローカルのテスト環境では700個のアイコンで試してみても数秒で表示されることを確認しました。実際はHTTPの負荷が膨大になり、転送に時間がかかるので難しいとは思いますが^^;;</P>
 		</DIV>
 		
 		<DIV class="section">
 		<H4 class="h">なにか・・・</H4>
-		<P>この掲示板でおかしいところ、気になるところ、新しく追加して欲しい機能があれば、<BR>
-		Airemix <A href="http://www.airemix.com/" title="Airemix" target="_top">http://www.airemix.com/</A> の掲示板に書き込むか、メール(<A href="mailto:naruse&#64;airemix.com">naruse&#64;airemix.com</A>)をください。<BR>
-		お気軽にして下さって結構ですので♪</P>
-		<P>ちなみにメールをPGP暗号化して送りたい方は、pgp.nic.ad.jpのような公開鍵サーバーで、<BR>
-		"Airemix"で検索すると成瀬の公開鍵が手に入りますので、それを使ってください。<BR>
-		鍵の指紋は「DB DB A4 76 FD BD 94 50 02 CD 0E FC BC E3 C3 88 47 2E C1 EA」です。</P>
+		<P>この掲示板でおかしいところ、気になるところ、新しく追加して欲しい機能があれば、Airemix <A href="http://www.airemix.com/" title="Airemix" target="_top">http://www.airemix.com/</A> の掲示板に書き込むか、メール(<A href="mailto:naruse&#64;airemix.com">naruse&#64;airemix.com</A>)をください。お気軽にして下さって結構ですので♪</P>
+		<P>ちなみにメールをPGP暗号化して送りたい方は、pgp.nic.ad.jpのような公開鍵サーバーで、"Airemix"で検索すると成瀬の公開鍵が手に入りますので、それを使ってください。</P>
+		<P>鍵の指紋は「DB DB A4 76 FD BD 94 50 02 CD 0E FC BC E3 C3 88 47 2E C1 EA」です。</P>
 		</DIV>
 	</DIV>
 </DIV>
@@ -367,26 +354,20 @@ var bodyObj=document.all?document.all('body'):document.getElementById?document.g
 
 <DIV class="section">
 <H2 class="h">◇アクセスキー</H2>
-<P>Mireilleにはアクセス性を向上させるための「アクセスキー」が設定されています。<BR>
-これはWindowsでいう「ショートカットキー」のようなもので、<BR>
-覚えなければいけない訳ではありませんが、使えると便利かもしれません。</P>
-<P>どのようなものが設定されているか知りたいという、暇人・・・<BR>
-もとい奇特な方のために以下に主なものを挙げておきます。</P>
+<P>Mireilleにはアクセス性を向上させるための「アクセスキー」が設定されています。</P>
+<P>これはWindowsでいう「ショートカットキー」のようなもので、覚えなければいけない訳ではありませんが、使えると便利かもしれません。</P>
+<P>どのようなものが設定されているか知りたいという、暇人・・・もとい奇特な方のために以下に主なものを挙げておきます。</P>
 
 
 <DIV class="section">
 <H3 class="h">Index画面のとき</H3>
 <DL>
 	<DT><KBD>Alt+[1-9]</KBD></DT>
-	<DD>そのページ内の上から[1-9]番目の記事の、返信へのリンクが選択されます。<BR>
-	ブラウザによっては、その記事に対する返信画面に移動します。</DD>
+	<DD>そのページ内の上から[1-9]番目の記事の、返信へのリンクが選択されます。ブラウザによっては、その記事に対する返信画面に移動します。</DD>
 	<DT><KBD>Alt+Shift+[1-9]</KBD></DT>
-	<DD>[1-9]ページ目へのリンクが選択されます。<BR>
-	ブラウザによっては、そのまま選択ページへ移動します。</DD>
+	<DD>[1-9]ページ目へのリンクが選択されます。ブラウザによっては、そのまま選択ページへ移動します。</DD>
 	<DT><KBD>Alt+[,.]</KBD></DT>
-	<DD><KBD>,</KBD> で新しい記事のあるページ、<KBD>.</KBD> で昔の記事のあるページのリンクが選択されます。<BR>
-	ブラウザによっては、そのままページを移動します。<BR>
-	JISキーボードを使っている方でしたらこのキー選択の意味がわかるかもしれません。</DD>
+	<DD><KBD>,</KBD> で新しい記事のあるページ、<KBD>.</KBD> で昔の記事のあるページのリンクが選択されます。ブラウザによっては、そのままページを移動します。JISキーボードを使っている方でしたらこのキー選択の意味がわかるかもしれません。</DD>
 	<DT><KBD>Alt+M</KBD></DT>
 	<DD>記事ナビを 最大化/タイトル化 します。</DD>
 	<DT><KBD>Alt+C</KBD></DT>
@@ -435,54 +416,29 @@ var bodyObj=document.all?document.all('body'):document.getElementById?document.g
 <H2 class="h">◇<A name="お世話になったところ">お世話になったところ</A></H2>
 <DL>
 <DT>Academic HTML &lt;<a href="http://www.tg.rim.or.jp/~hexane/ach/">http://www.tg.rim.or.jp/~hexane/ach/</A>&gt;</DT>
-<DD>HTML/CSSに関する的確な情報がたくさんあります。<BR>
-HTML/CSSを一通り学びたい場合はここを見るだけで事足りてしまいます。</DD>
+<DD>HTML/CSSに関する的確な情報がたくさんあります。HTML/CSSを一通り学びたい場合はここを見るだけで事足りてしまいます。</DD>
 <DT>Another HTML-lint &lt;<a href="http://openlab.ring.gr.jp/k16/htmllint/">http://openlab.ring.gr.jp/k16/htmllint/</A>&gt;</DT>
-<DD>HTMLの検証に際し利用しました。<BR>
-初めてチェックすると、ほとんどの人がショックを受けることでしょう。</DD>
+<DD>HTMLの検証に際し利用しました。初めてチェックすると、ほとんどの人がショックを受けることでしょう。</DD>
 <DT>ARTEMIS &lt;<a href="http://www.artemis.ac/arrange/">http://www.artemis.ac/arrange/</A>&gt;</DT>
-<DD>IconPreviewはここからです、便利なので頂きました。<BR>
-新しい投稿があると教えてくれる〜もここのを見て、です。<BR>
-他にもいろいろと参考にしています。<BR>
-管理機能でここを見習う点は数多くあります。</DD>
+<DD>IconPreviewはここからです、便利なので頂きました。新しい投稿があると教えてくれる〜もここのを見て、です。他にもいろいろと参考にしています。管理機能でここを見習う点は数多くあります。</DD>
 <DT>HTML鳩丸倶楽部 &lt;<a href="http://www.ne.jp/asahi/minazuki/bakera/html/hatomaru">http://www.ne.jp/asahi/minazuki/bakera/html/hatomaru</A>&gt;</DT>
-<DD>ツッコミメインなHTML解説サイト、にわたしは見えました。<BR>
-「HTML 4.01 のみを、純粋に学問的な興味から研究」しているそうです。<BR>
-HTMLの構成に際して参考にしました。</DD>
+<DD>ツッコミメインなHTML解説サイト、にわたしは見えました。「HTML 4.01 のみを、純粋に学問的な興味から研究」しているそうです。HTMLの構成に際して参考にしました。</DD>
 <DT>jcode.pl &lt;<a href="http://www.srekcah.org/jcode/">http://www.srekcah.org/jcode/</A>&gt;</DT>
-<DD>漢字コード変換用のライブラリです。<BR>
-Mireille本体では横着しているので使っていません。<BR>
-管理CGIでは一部を切り出して使っています。</DD>
-<DT>Jcode.pm &lt;<a href="http://openlab.ring.gr.jp/Jcode/index-j.html">http://openlab.ring.gr.jp/Jcode/index-j.html</A>&gt;</DT>
-<DD>jcode.plの後継でPerl5用PerlModuleとなっています。<BR>
-jcode.plの機能にUnicodeを扱う機能が追加されています。<BR>
-Perl5.8ではEncodeモジュールに置換されているようです。</DD>
+<DD>漢字コード変換用のライブラリです。Mireille本体では横着しているので使っていません。管理CGIでは一部を切り出して使っています。</DD>
 <DT>KNET-WEB &lt;<a href="http://www.kent-web.com/">http://www.kent-web.com/</A>&gt;</DT>
-<DD>なにはともあれ日本のCGI/Perl界に与えた影響は少なくはないはずです。<BR>
-私個人では特にYYBOARD,YYCHATにはお世話になりました。<BR>
-きわめてとっつき易いCGIが多いです。</DD>
+<DD>なにはともあれ日本のCGI/Perl界に与えた影響は少なくはないはずです。私個人では特にYYBOARDとYYCHATにはお世話になりました。きわめてとっつき易いCGIが多いです。</DD>
 <DT>Perlメモ &lt;<a href="http://www.din.or.jp/~ohzaki/perl.htm">http://www.din.or.jp/~ohzaki/perl.htm</A>&gt;</DT>
-<DD>URI自動リンク機能をつけるに際し参考に・・・むしろ丸写しです。<BR>
-Perlの正規表現に関してとても有用な情報があります。</DD>
+<DD>URI自動リンク機能をつけるに際し参考に・・・むしろ丸写しです。Perlの正規表現に関してとても有用な情報があります。</DD>
 <DT>W3C HTML Validation Service &lt;<a href="http://validator.w3.org/">http://validator.w3.org/</A>&gt;</DT>
-<DD>HTML規格の策定を行う団体、W3CによるHTML検証サービスです。<BR>
-Another HTML-lintよりチェック項目は少なめです。</DD>
+<DD>HTML規格の策定を行う団体、W3CによるHTML検証サービスです。Another HTML-lintよりチェック項目は少なめです。</DD>
 <DT>とほほのWWW入門 &lt;<a href="http://tohoho.wakusei.ne.jp/">http://tohoho.wakusei.ne.jp/</A>&gt;</DT>
-<DD>HTML部、Perl部ともに時々リファレンス代わりにしました。<BR>
-なかなか載っていて便利です。</DD>
+<DD>HTML部、Perl部ともに時々リファレンス代わりにしました。なかなか載っていて便利です。</DD>
 <DT>彼の野原 &lt;<a href="http://kano.feena.jp/">http://kano.feena.jp/</A>&gt;</DT>
-<DD>LastPostはここのealisの真似です。<BR>
-また1.2.2の記事ナビは神乃さんのものベースに作りました。<BR>
-最近ではPHPに移ってあるべき姿というものを模索していらっしゃるようです。</DD>
+<DD>LastPostはここのealisの真似です。また1.2.2の記事ナビは神乃さんのものベースに作りました。今はPerlからPHPに力点を移した模様。ヰキはじめました？</DD>
 <DT>SWORD AND COMMERCE &lt;<a href="http://www10.plala.or.jp/ryokufuudou/kijindou.html">http://www10.plala.or.jp/ryokufuudou/kijindou.html</A>&gt;</DT>
-<DD>retroさんにはMireilleでつまづく所No.1と思われるアイコン設定の解説を書いていただきました。<BR>
-他にもMireilleの解説の不備な点を多数してもらいました。<BR>
-ちなみに、retroさんのサイト自体はRagnarkOnline系雑談サイトです。</DD>
+<DD>retroさんにはMireilleでつまづく所No.1と思われるアイコン設定の解説を書いていただきました。他にもMireilleの解説の不備な点を多数してもらいました。ちなみに、retroさんのサイト自体はRagnarkOnline系雑談サイトです。</DD>
 <DT>Snowish Hills &lt;<DEL>http://snowish.cside8.com/</DEL>&gt;</DT>
-<DD>Mireilleを作りこむにあたって、半ばオンサイト顧客として、数々の有用なアドバイスを頂きました。<BR>
-特に管理CGIは西名さんに言われなければ、かなり貧弱なものになっていたでしょう。<BR>
-現在の初期状態のデザインも西名さんのデザインをベースにしています。<BR>
-ちなみに、西名さんのサイト自体はKey系CGサイトです。</DD>
+<DD>Mireilleを作りこむにあたって、半ばオンサイト顧客として、数々の有用なアドバイスを頂きました。特に管理CGIは西名さんに言われなければ、かなり貧弱なものになっていたでしょう。現在の初期状態のデザインも西名さんのデザインをベースにしています。ちなみに、西名さんのサイト自体はKey系CGサイトでした。</DD>
 </DL>
 <P>他にも意見を下さった方々、参考にしたサイト・CGIの作者さんに感謝します。</P>
 </DIV>
@@ -491,7 +447,7 @@ Another HTML-lintよりチェック項目は少なめです。</DD>
 それぞれのサイト名やソフトウェア名などは各々の商標や登録商標などです。</P>
 
 <P class="note">この掲示板は、Microsoft Internet Explorer for Windows バージョン5以上を主とした対象とし、<BR>
-Windows版InternetExplorer6と、NetscapeやChimeraなどのMozilla系で、ほぼ完全な動作をします。<BR>
+Windows版InternetExplorer6と、NetscapeやMozilla FirebirdなどのMozilla系で、ほぼ完全な動作をします。<BR>
 またOpera7やMicrosoft Internet Explorer 5 for Macintoshでも概ね期待通りの動作をするはずです。<BR>
 上記のブラウザ以外では動作はするはずですが、見辛くなってしまう可能性があります。<BR>
 ご了承くださいまし。 （但し、読み書きができない場合はMireilleのバグです）</P>
