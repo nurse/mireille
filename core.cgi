@@ -1955,6 +1955,7 @@ _HTML_
 	#$CF{'conenc'}を設定可能にしているのは、GZIP圧縮転送のON/OFF切り替えのため、だから
 	if(!$CF{'forceGZIP'}&&$ENV{'SERVER_NAME'}#広告対策
 	   and	1+index($ENV{'SERVER_SOFTWARE'},'WhizBanner') #infoseek系
+	   ||	1+index($ENV{'SERVER_NAME'},'hp.infoseek.co.jp')
 	   ||	1+index($ENV{'SERVER_NAME'},'tkcity.net')
 	   ||	1+index($ENV{'SERVER_NAME'},'aaacafe.ne.jp')
 	   ||	1+index($ENV{'SERVER_NAME'},'xrea.com')
@@ -2008,8 +2009,8 @@ _HTML_
 <!--DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"-->
 <HTML lang="ja-JP">
 <HEAD>
-$DT{'head'}
 $status
+$DT{'head'}
 </HEAD>
 
 <BODY>
@@ -3128,8 +3129,15 @@ sub rvsij{
 BEGIN{
     $CF{'index'}||='index.cgi';
     $CF{'encoding'}||='euc-jp';
-    $CF{'self'} = sprintf( 'http://%s%s/%s', $ENV{'SERVER_NAME'},
- 			  substr($ENV{'SCRIPT_NAME'}, 0, rindex($ENV{'SCRIPT_NAME'},'/')), $CF{'index'});
+    my $server = $ENV{'HTTP_HOST'} || $ENV{'SERVER_NAME'};
+    my $dir;
+    if($ENV{'REQUEST_URI'}=~/((?:\/[^?\/]*)*)\//o){
+	$dir = $1;
+    }else{
+	$dir = substr($ENV{'SCRIPT_NAME'}, 0, rindex($ENV{'SCRIPT_NAME'},'/'));
+    }
+    $CF{'self'} = sprintf( 'http://%s%s/%s', $server, $dir, $CF{'index'});
+    
     # Mireille Error Screen 1.2.2
     unless($CF{'program'}){
 	$CF{'program'}=__FILE__;
@@ -3160,7 +3168,7 @@ BEGIN{
     }
     $CF{'_HiraganaLetterA'}->{'Core'}='あ';
     # Version
-    $CF{'Version'}=join('.',q$Mireille: 1_2_14 $=~/\d+[a-z]?/go);
+    $CF{'Version'}=join('.',q$Mireille: 1_2_15 $=~/\d+[a-z]?/go);
     ($CF{'Core'}=q$Revision$)=~/(\d+((?:\.\d+)*))/o;
     $CF{'CoreRevision'}=$1;
     my$subver=$2;
