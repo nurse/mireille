@@ -126,7 +126,7 @@ SELECT{
 	font-size: 90%;
 }
 TABLE{
-	background-color: transparent;
+/*	background-color: transparent;*/
 	color: #355;
 	font-family: 'ＭＳ Ｐゴシック',sans-serif;
 	font-size: 100%;
@@ -323,6 +323,7 @@ H1.head,H1.head A:link{
 H1.head{margin: 0;}
 H1.head A:visited{color: #fff;}
 TABLE.head TD{
+	color: #fff;
 	letter-spacing: 1em;
 	padding: 3px 5px;
 	text-align: right;
@@ -341,16 +342,28 @@ H2.mode{
 	width: 80%;
 	margin-top:10px;margin-bottom:10px;
 }
+H3.mode{
+	background-color: #cdf;
+	color: #05a;
+	font-size: 15px;
+	font-weight: normal;
+	margin: 0.4em auto 0 auto;
+	padding: 1px;
+	text-align: center;
+	vertical-align: middle;
+	width: 60%;
+	margin-top:0.4em;margin-bottom:0;
+}
 /* ========== メニュー ========== */
 TABLE.menu{
-	background-color: transparent;
+/*	background-color: transparent;*/
 	border-style: none;
 	margin: auto;
 	margin-top:10px;margin-bottom:10px;
 	text-align: center;
 }
 TD.menu{
-	background-color: transparent;/*メニューの背景色を変更するならこっち*/
+/*	background-color: transparent;*//*メニューの背景色を変更するならこっち*/
 	border: #6ac solid 2px;
 	font-size: 14px;
 	padding: 5px;
@@ -378,20 +391,20 @@ STRONG.pgsl{
 
 /* ========== 注意書き ========== */
 TABLE.note{
-	background-color: transparent;
+/*	background-color: transparent;*/
 	margin: auto;
 	text-align: center;
 	margin-top:10px;margin-bottom:10px;
 }
 DIV.note{
-	background-color: transparent;
+/*	background-color: transparent;*/
 	border: #6ac solid 5px;
 	margin: 0 auto;
 	padding: 0.1em;
 	margin-top:0;margin-bottom:0;
 }
 UL.note{
-	background-color: transparent;/*注意書きの背景色を変更するならこっち*/
+/*	background-color: transparent;*//*注意書きの背景色を変更するならこっち*/
 	border: #6ac solid 5px;
 	margin: 0 auto;
 	padding: 5px 0 5px 20px;
@@ -433,7 +446,7 @@ P.artinfo{
 	border: #6ac solid 5px;
 	margin: 20px auto;
 	padding: 3px;
-	text-align: right;
+	text-align: center;
 	width: 90%;
 	margin-top:20px;margin-bottom:20px;
 }
@@ -511,17 +524,17 @@ P.artinfo{
 .thread .child  .info .number{font-size: 13px; font-weight: normal;}
 
 /* 投稿者名 */
-.thread .info TD.name{text-align: left; white-space: nowrap;}
+.thread .info TD.name{text-align: left;}
 .thread .info SPAN.name{font-size: 17px;}
 /* 署名 */
-.thread .info SPAN.signature{font-size: 13px; font-weight: normal;margin-left: 1em}
+.thread SPAN.signature{font-size: 13px; font-weight: normal}
 /* HOME */
-@media all{.thread .info SPAN.home{margin-left:3em}}
+@media all{.thread .info SPAN.home{margin-left:1em}}
 /* 投稿日時 */
 .thread .info TD.date{text-align: right; white-space: nowrap;}
 .thread .info SPAN.date{}
 /* 【修正】 */
-@media all{.thread .info SPAN.revise{margin-left:3em}}
+@media all{.thread .info SPAN.revise{margin-left:1em}}
 /* info行での余白 */
 .thread .info SPAN.nbsp{letter-spacing: 30px;}
 
