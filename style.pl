@@ -76,6 +76,9 @@ $CF{'pgfoot'}=&getPageFooter;
 $CF{'jsWritingForms'}=<<"_CONFIG_";
 <SCRIPT type="text/javascript" defer>
 <!--
+var isLoaded;
+var autosaveId;
+var bodyObj;
 var iconDirectory='$CF{'icon'}';
 var iconSetting=@{[$CF{'absoluteIcon'}?1:0]}+@{[$CF{'relativeIcon'}?1:0]}*2;
 _CONFIG_
@@ -117,64 +120,133 @@ function changePreviewIcon(){
 }
 
 
+/* ========================================================================== */
+// General Routines
+
 /*========================================================*/
-// Save/Load BodyData from Cookie
-function saveBodyCk(){
+// Autosave Body Data
+function autosaveBodyData(){
+	if(!bodyObj)return false;
+	if(autosaveId)clearTimeout(autosaveId);
+	if(bodyObj.value.length>100){
+		switch(saveBodyData('MireilleAutosave')){
+		case'DeleteBodyData':
+			status='Something Wicked happend!';
+			break;
+		case'SavedBodyDataIE':
+			status="現在の本文データをIE式で自動保存しました。";
+			break;
+		case'SavedBodyDataCookie':
+			status="現在の本文データを自動保存しました。";
+			break;
+		case'FailedToSave':
+			status="自動保存に失敗しました。保存可能な最大文字数(約4KB)を超えたからかもしれません。";
+			break;
+		default:
+			status='Something Wicked happend!';
+		}
+	}
+	autosaveId=setTimeout(autosaveBodyData,60000);
+	return true;
+}
+
+/*========================================================*/
+// Quick Save Body Data
+saveBodyCk=quicksaveBodyData;
+function quicksaveBodyData(){
+	if(!bodyObj)return false;
 	if(!confirm("新しい本文を保存すると、古い本文データは消えてしまいます\nそれでも保存してよろしいですか？"))
 		return false;
-	var bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
-	if(!bodyObj)return false;
 	
+	switch(saveBodyData('MireilleQuicksave')){
+	case'DeleteBodyData':
+		alert('一時保存されていた本文データを削除しました。');
+			break;
+	case'SavedBodyDataIE':
+		alert("現在の本文データを一時保存しました。\nあくまでIEによる“一時保存”なので過信しないでください。");
+			break;
+	case'SavedBodyDataCookie':
+		alert("現在の本文データを一時保存しました。\nあくまで“一時保存”なので過信しないでください。");
+			break;
+	case'FailedToSave':
+		alert("一時保存に失敗しました。\n保存可能な最大文字数を超えたからかもしれません。\n"
+				+'本文をファイルに保存しながら書いた方がよいかと思われます。');
+			break;
+	default:
+		alert('Something Wicked happend!');
+	}
+}
+
+/*========================================================*/
+// Save Body Data
+function saveBodyData(key){
+	if(!bodyObj)return false;
 	var backup='';
-	if(document.cookie.match(/(^|; )MirBody=([^;]+)/))backup=unescape(RegExp.$2);
-	if(!bodyObj.value.length){
-		//valueが空
+	var regexp=new RegExp('(^|; )'+key+'=([^;]+)');
+	if(document.cookie.match(regexp))backup=unescape(RegExp.$2);
+	if(document.cookie.match(/(^|; )MirBody=([^;]+)/))
 		document.cookie='MirBody=; expires=Thu, 01-Jan-1970 00:00:00; ';
+	if(!bodyObj.value.length){
+		//valueが空→削除
+		document.cookie=key+'=; expires=Thu, 01-Jan-1970 00:00:00; ';
 		if(bodyObj.addBehavior){
 			//bahavior版（IE依存）
-			if(!bodyObj.getAttribute('MireilleBody'))bodyObj.addBehavior('#default#userData');
-			bodyObj.setAttribute('MireilleBody','');
-			bodyObj.save('MireilleBody');
+			if(!bodyObj.getAttribute(key))bodyObj.addBehavior('#default#userData');
+			bodyObj.removeAttribute(key);
+			bodyObj.save(key);
 		}
-		alert('一時保存されていた本文データを削除しました');
-		return;
+		return'DeleteBodyData';
 	}else if(bodyObj.addBehavior){
-		//bahavior版（IE依存）（サイズ制限128KB）
-		if(!bodyObj.getAttribute('MireilleBody'))bodyObj.addBehavior('#default#userData');
-		bodyObj.setAttribute('MireilleBody',bodyObj.value);
-		bodyObj.save('MireilleBody');
-		alert("今の本文データを一時保存しました\nあくまでIEによる“一時保存”だから過信しないでください");
+		//bahavior版（IE依存）（サイズ制限:escape無しで128KB）
+		if(!bodyObj.getAttribute(key))bodyObj.addBehavior('#default#userData');
+		bodyObj.setAttribute(key,bodyObj.value);
+		bodyObj.save(key);
+		return'SavedBodyDataIE';
 	}else{
-		//Cookie版（サイズ制限3KBほど）
-		document.cookie='MirBody='+escape(bodyObj.value)+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';
-		if(document.cookie.match(/(^|; )MirBody=([^;]+)/)&&bodyObj.value==unescape(RegExp.$2)){
-			alert("今の本文データを一時保存しましたょ\nあくまで“一時保存”だから過信しないでねっ");
+		//Cookie版（サイズ制限:escapeした後で3KBほど）
+		document.cookie=key+'='+escape(bodyObj.value)+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';
+		if(document.cookie.match(regexp)&&bodyObj.value==unescape(RegExp.$2)){
+			return'SavedBodyDataCookie';
 		}else{
 			//3850byte程度でサイズ制限がかかる。
-			document.cookie='MirBody='+backup+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';//終末の日
-			alert("save失敗\nサイズオーバーかも。");
-			return false;
+			document.cookie=key+'='+backup+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';//終末の日
+			return'FailedToSave';
 		}
 	}
 }
-function loadBodyCk(){
+
+/*========================================================*/
+// Load Body Data
+loadBodyCk=loadBodyData;
+function loadBodyData(){
+	if(!bodyObj)return false;
 	if(!confirm("Cookieから本文データを読み出すと、現在の本文は消えてしまいます\nそれでも読み出してよろしいですか？"))
 		return false;
-	var bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
-	if(!bodyObj)return false;
 	
+	if(confirm("QuicksaveのデータとAutosaveのデータ、どちらを読み出しますか？\n"
+				+"Quicksaveの場合は「OK」、Autosaveの場合は「キャンセル」を選んでください"))
+		var key='MireilleQuicksave';
+	else key='MireilleAutosave';
+	
+	var regexp=new RegExp('(^|; )'+key+'=([^;]+)');
 	if(bodyObj.addBehavior){
-		if(!bodyObj.getAttribute('MireilleBody'))bodyObj.addBehavior('#default#userData');
-		bodyObj.load('MireilleBody');
-		var temp=bodyObj.getAttribute('MireilleBody');
+		if(!bodyObj.getAttribute(key))bodyObj.addBehavior('#default#userData');
+		bodyObj.load(key);
+		var temp=bodyObj.getAttribute(key);
 		if(temp)bodyObj.value=temp;
-	}else if(document.cookie.match(/(^|; )MirBody=([^;]+)/)){
+	}else if(document.cookie.match(regexp)){
 		bodyObj.value=unescape(RegExp.$2);
 	}else{
-		alert('load失敗');
-		return false;
+		alert('読み込みに失敗しました');
 	}
 }
+
+
+/*========================================================*/
+// initialization
+bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
+if(!autosaveId)autosaveId=setTimeout(autosaveBodyData,60000);
+isLoaded=true;
 -->
 </SCRIPT>
 _CONFIG_
@@ -349,8 +421,10 @@ $CF{'wrtfm'}=<<'_CONFIG_';
 <TD colspan="3" class="foot">
 <INPUT type="submit" class="submit" accesskey="s" value="投稿する">
 <!-- <INPUT type="reset" class="reset" value="リセット"> -->
-<INPUT type="button" class="button" accesskey="," value="一時保存," onclick="saveBodyCk()" onkeypress="saveBodyCk()">
-<INPUT type="button" class="button" accesskey="." value="読み込み." onclick="loadBodyCk()" onkeypress="loadBodyCk()">
+<INPUT type="button" class="button" accesskey="," value="Quicksave,"
+ onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()" title="本文データを保存します">
+<INPUT type="button" class="button" accesskey="." value="LoadData."
+ onclick="loadBodyData()" onkeypress="loadBodyData()" title="Quicksave/Autosaveしたデータを読み込みます">
 </TD></TR></TBODY>
 
 </TABLE>
@@ -448,8 +522,10 @@ $CF{'resfm'}=<<'_CONFIG_';
 <TD colspan="3" class="foot">
 <INPUT type="submit" class="submit" accesskey="s" value="投稿する">
 <!-- <INPUT type="reset" class="reset" value="リセット"> -->
-<INPUT type="button" class="button" accesskey="," value="一時保存," onclick="saveBodyCk()" onkeypress="saveBodyCk()">
-<INPUT type="button" class="button" accesskey="." value="読み込み." onclick="loadBodyCk()" onkeypress="loadBodyCk()">
+<INPUT type="button" class="button" accesskey="," value="Quicksave,"
+ onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()" title="本文データを保存します">
+<INPUT type="button" class="button" accesskey="." value="LoadData."
+ onclick="loadBodyData()" onkeypress="loadBodyData()" title="Quicksave/Autosaveしたデータを読み込みます">
 </TD></TR>
 </TBODY>
 </TABLE>
@@ -642,7 +718,7 @@ _HTML_
 		print<<"_HTML_";
 <TABLE border="0" cellspacing="0" class="foot" summary="ArticleFooter" width="100%"><TR>
 <TH align="right" width="100%"><P align="right"><A accesskey="$DT{'ak'}" name="res$DT{'i'}"
- href="index.cgi?res=$DT{'i'}#art$DT{'i'}-$DT{'j'}">この記事スレッドNo.$DT{'i'}に返信する(<SPAN
+ href="index.cgi?res=$DT{'i'}#Form">この記事スレッドNo.$DT{'i'}に返信する(<SPAN
  class="ak">$DT{'ak'}</SPAN>)</A></P></TH>
 </TR></TABLE>
 </DIV>
