@@ -39,11 +39,11 @@ sub main{
 	#-----------------------------
 	#Encoding Checker
 	my$message='The encoding of "%s" is not "%s" but "%s"!';
-	my%enc=(130=>'shift_jis',164=>'euc-jp',27 =>'iso-2022-jp',227=>'utf-8',254=>'utf-16');
+	my%enc=(130=>'shift_jis',164=>'euc-jp',27 =>'iso-2022-jp',227=>'utf-8',48=>'utf-16be',66=>'utf-16le');
 	for(keys%{$CF{'_HiraganaLetterA'}}){
 		my$chr=ord$CF{'_HiraganaLetterA'}->{$_};
 		if($enc{$chr}){
-			lc$CF{'encoding'}eq$enc{$chr}or die sprintf($message,$_,$CF{'encoding'},$enc{$chr});
+			lc$CF{'encoding'}eq$enc{$chr}||die sprintf($message,$_,$CF{'encoding'},$enc{$chr});
 		}elsif($chr==12354){
 			#Perl Nativeなのは、何やってるのかわからないからスルーする
 		}else{
@@ -485,14 +485,18 @@ Marldiaはデータの保持などは適当でもいいこともあって、
 
 =head2 CONFIG::NGワード
 
-=head3 ngWordsItems
-
-NGワードが含まれるか調べる項目。
-形式はC<< <プログラム上の項目名>=<表示上の項目名> >>といった形。
+  $CF{'ngWords'}='ばーか あーほ どーじ まぬけー';
+  $CF{'ngWordsItems'}='body=本文 subject=題名 name=名前 email=メールアドレス home 自分のWebサイトのアドレス';
+  $CF{'ngWordsMessage'}='NGワードに引っかかってるよん〜';
 
 =head3 ngWords
 
 半角スペース区切りで、NGワードを列挙
+
+=head3 ngWordsItems
+
+NGワードが含まれるか調べる項目。
+形式はC<< <プログラム上の項目名>=<表示上の項目名> >>といった形。
 
 =head3 ngWordsMessage
 
@@ -500,12 +504,13 @@ NGワードを見つけたときに表示するメッセージ
 
 =cut
 
+			my@ngWords=split(/\s+/o,$CF{'ngWords'});
 			my%item=($CF{'ngWordsItems'}||'body=本文 subject=題名 name=名前')=~/(\w+)=(\S+)/go;
 			for(keys%item){
 				my$item=$IN{$_};
 				my$err=$item{$_};
 				study$item;
-				for(split(/\s+/o,$CF{'ngWords'})){
+				for(@ngWords){
 					MirString->match($item,$_)||next;
 					push(@error,$err);
 					last;
