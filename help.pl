@@ -37,22 +37,25 @@ print<<'_HTML_';
 			<LI><H4 class="list">利用者に対する投稿された記事の信頼性保証等の責任回避</H4>
 				管理者は記事の内容の信憑性に対して責任を持ちません。<BR>
 				公共の福祉に反する内容が投稿された場合も誠意ある対応をすることを約束しません。<BR>
-				その他この掲示板の利用によって何か損害が出ても管理者は責任を負いません</LI>
+				その他この掲示板の利用によって何か損害が出ても管理者は責任を負いません。</LI>
 		</UL>
 	</LI>
 	<LI><H3 class="list">Mireille特有の仕様</H3>
 		<UL>
 			<LI><H4 class="list">記事の削除</H4>
 				まず、削除は推奨しません、修正機能を使うことをお勧めします。<BR>
-				それでも親記事を削除しようとする場合は以下のようになります<BR>
-				・親記事だけが存在し、子記事が付いていないものはスレッドごと削除されます。<BR>
-				・親記事に子記事が一件でもついている場合は、親記事の本文だけが削除されます。<BR>
-				・管理者のみが子記事が付いているスレッドを、スレッドごと削除できます。</LI>
+				それでも親記事を削除しようとする場合は以下のようになります。<BR>
+				<UL>
+				<LI>親記事だけが存在し、子記事が付いていないものはスレッドごと削除されます。</LI>
+				<LI>親記事に子記事が一件でもついている場合は、親記事の本文だけが削除されます。</LI>
+				<LI>管理者のみが子記事が付いているスレッドを、スレッドごと削除できます。</LI>
+				</UL>
+			</LI>
 			<LI><H4 class="list">本文</H4>
 				URLを探して、自動的にリンクしてくれますので、ぜひご活用ください。<BR>
-				別項目に示してある強調記号から始まる行は、書いた時に何らかの形で語句が強調されます<BR>
-				それ以外にも語句が強調されることがあります<BR>
-				ちなみに半角カタカナもたぶん使えます</LI>
+				別項目に示してある強調記号から始まる行は、書いた時に何らかの形で語句が強調されます。<BR>
+				それ以外にも語句が強調されることがあります。<BR>
+				ちなみに半角カタカナもたぶん使えます。</LI>
 			<LI><H4 class="list">コマンド</H4>
 				現在は主に専用アイコンのパスワードを入れるのに使っています。<BR>
 				形式は「<CODE>icon=<VAR style="border-bottom:1px solid #3aa;cursor:help;font-style:normal" title="個々のアイコンのパスワード">password</VAR></CODE>」のようになっています。<BR>
@@ -63,14 +66,17 @@ print<<'_HTML_';
 		<UL>
 _HTML_
 print<<"_HTML_";
-			<LI>投稿後<STRONG>$CF{'newnc'}</STRONG>秒以内の記事に「$CF{'new'}」マークをつける</LI>
-			<LI>読んだ記事でも<STRONG>$CF{'newuc'}</STRONG>秒間は「未読」状態を維持する</LI>
-			<LI>通常モードでは、1ページあたり<STRONG>$CF{'page'}</STRONG>スレッド表示します</LI>
-			<LI>削除・修正モードでは、1ページあたり<STRONG>$CF{'delpg'}</STRONG>スレッド表示します</LI>
-			<LI>新しいものから順に<STRONG>$CF{'logmax'}</STRONG>スレッドが保存されています</LI>
-			<LI>タグは@{[($CF{'tags'})?"<STRONG>$CF{'tags'}</STRONG>を使用できます":'一切使用できません']}</LI>
-			<LI>色は<STRONG>@{[('input'eq$CF{'colway'})?'INPUT':'SELECT']}タグ</STRONG>で選べます</LI>
-			<LI>記事は<STRONG>@{[('date'eq$CF{'sort'})?'投稿日時':'記事番号']}</STRONG>順に表示されます</LI>
+			<LI>投稿後<STRONG>$CF{'newnc'}</STRONG>秒以内の記事に「$CF{'new'}」マークをつける。</LI>
+			<LI>読んだ記事でも<STRONG>$CF{'newuc'}</STRONG>秒間は「未読」状態を維持する。</LI>
+			<LI>通常モードでは、1ページあたり<STRONG>$CF{'page'}</STRONG>スレッド表示します。</LI>
+			<LI>削除・修正モードでは、1ページあたり<STRONG>$CF{'delpg'}</STRONG>スレッド表示します。</LI>
+			<LI>新しいものから順に<STRONG>$CF{'logmax'}</STRONG>スレッドが保存されています。</LI>
+			<LI>タグは@{[($CF{'tags'})?"<STRONG>$CF{'tags'}</STRONG>を使用できます":'一切使用できません']}。</LI>
+			<LI>色は<STRONG>@{[('input'eq$CF{'colway'})?'INPUT':'SELECT']}タグ</STRONG>で選べます。</LI>
+			<LI>記事は<STRONG>@{[('date'eq$CF{'sort'})?'投稿日時':'記事番号']}</STRONG>順に表示されます。</LI>
+			<LI>相対指定アイコンは<STRONG>使用@{[$CF{'relativeIcon'}?'':'不']}可能</STRONG>です。</LI>
+			<LI>絶対指定アイコンは<STRONG>使用@{[$CF{'absoluteIcon'}?'':'不']}可能</STRONG>です。</LI>
+			<LI>署名を<STRONG>表示しま@{[$CF{'signature'}?'す':'せん']}</STRONG>。</LI>
 _HTML_
 #語句強調関連
 {
@@ -94,13 +100,13 @@ _HTML_
 	chop$line;chop$line;
 	chop$regexp;chop$regexp;
 	if($line&&$regexp){
-		print"\t\t\t<LI>$line で始まる行と、<BR>正規表現 $regexp にマッチする語句は強調表示されます</LI>\n";
+		print"\t\t\t<LI>$line で始まる行と、<BR>正規表現 $regexp にマッチする語句は強調表示されます。</LI>\n";
 	}elsif($line){
-		print"\t\t\t<LI>$line で始まる行は強調表示されます</LI>\n";
+		print"\t\t\t<LI>$line で始まる行は強調表示されます。</LI>\n";
 	}elsif($regexp){
-		print"\t\t\t<LI>正規表現 $regexp にマッチする語句は強調表示されます</LI>\n";
+		print"\t\t\t<LI>正規表現 $regexp にマッチする語句は強調表示されます。</LI>\n";
 	}else{
-		print"\t\t\t<LI>語句強調はOFFになっています</LI>\n";
+		print"\t\t\t<LI>語句強調はOFFになっています。</LI>\n";
 	}
 }
 #アイコン関連
@@ -132,7 +138,7 @@ $4: data
 			}
 		}
 	}
-	print"\t\t\t<LI>$groupグループ、$icons種のアイコンが利用可能です</LI>\n";
+	print"\t\t\t<LI>$groupグループ、$icons種のアイコンが利用可能です。</LI>\n";
 	delete$icon{''};
 	(%icon)&&(print"\t\t\t<LI>".join("、\n",values%icon)."\nが著作権を保有する素材を使用しています。</LI>\n");
 }
@@ -205,12 +211,13 @@ function resetCookie(e){
 }
 //-->
 </SCRIPT>
-			「クッキー書き換え」によって、Mireille用のクッキーを書き換えることができます<BR>
+			「クッキー書き換え」によって、Mireille用のクッキーを書き換えることができます。<BR>
 			新しく来た掲示板に、今まで行っている掲示板のクッキーを移植する、ということも、<BR>
-			移植元にない項目のクッキーは移植できませんが、基本的には可能です<BR>
+			移植元にない項目のクッキーは移植できませんが、基本的には可能です。<BR>
 			<BR>
-			「Reset」を押すと、未読記事お知らせ機能が効く、最小限のクッキーだけが与えられます<BR>
-			クッキーがない状態から、「Reset」「OK」でクッキーを保存すると、未読記事お知らせ機能は効くようになります</LI>
+			「Reset」を押すと、未読記事お知らせ機能が効く、最小限のクッキーだけが与えられます。<BR>
+			クッキーがない状態から、「Reset」ボタンを押した上で、「OK」を押してクッキーを保存すると、<BR>
+			未読記事お知らせ機能は効くようになります。</LI>
 		</UL>
 	</LI>
 	<LI><H3 class="list">そのほか</H3>
@@ -219,7 +226,7 @@ function resetCookie(e){
 				この掲示板は一つ一つのスレッドが恐ろしい長さまで伸びる・・・<BR>
 				といった使い方を想定して作られています。<BR>
 				親記事は3行の文章だけレスは無し、なスレッドがたくさん・・・<BR>
-				という使い方は避けたほうがいいかもしれません<BR>
+				という使い方は避けたほうがいいかもしれません。<BR>
 				（ログ保存方式の都合でオーバーヘッドが増えるかも。。）</LI>
 			<LI><H4 class="list">アイコンの最大数</H4>
 				理論上は無限です。<BR>
@@ -228,12 +235,12 @@ function resetCookie(e){
 				実際はHTTPの負荷が膨大になり、転送に時間がかかるので難しいとは思いますが^^;;</LI>
 			<LI><H4 class="list">なにか・・・</H4>
 				この掲示板でおかしいところ、気になるところ、新しく追加して欲しい機能があれば、<BR>
-				Airemix <A href="http://www.airemix.com/" title="Airemix" target="_top">http://www.airemix.com/</A> の掲示板に書き込むか、メール(<A href="mailto:naruse&#64;airemix.com">naruse&#64;airemix.com</A>)をください<BR>
+				Airemix <A href="http://www.airemix.com/" title="Airemix" target="_top">http://www.airemix.com/</A> の掲示板に書き込むか、メール(<A href="mailto:naruse&#64;airemix.com">naruse&#64;airemix.com</A>)をください。<BR>
 				お気軽にして下さって結構ですので♪<BR>
 				<BR>
 				ちなみにメールをPGP暗号化して送りたい方は、pgp.nic.ad.jpのような公開鍵サーバーで、<BR>
-				"Airemix"で検索すると成瀬の公開鍵が手に入りますので、それを使ってください<BR>
-				鍵の指紋は「DB DB A4 76 FD BD 94 50 02 CD 0E FC BC E3 C3 88 47 2E C1 EA」です<BR>
+				"Airemix"で検索すると成瀬の公開鍵が手に入りますので、それを使ってください。<BR>
+				鍵の指紋は「DB DB A4 76 FD BD 94 50 02 CD 0E FC BC E3 C3 88 47 2E C1 EA」です。<BR>
 				</LI>
 		</UL>
 	</LI>
@@ -243,47 +250,47 @@ function resetCookie(e){
 <DIV class="hthread">
 <H2 class="list">◇アクセスキー</H2>
 <P style="margin-top:0.5em;margin-left:1.5em;text-align:left;width:95%">
-Mireilleにはアクセス性を向上させるための「アクセスキー」が設定されています<BR>
+Mireilleにはアクセス性を向上させるための「アクセスキー」が設定されています。<BR>
 これはWindowsでいう「ショートカットキー」のようなもので、<BR>
-覚えなければいけない訳ではありませんが、使えると便利かもしれません<BR>
+覚えなければいけない訳ではありませんが、使えると便利かもしれません。<BR>
 <BR>
 どのようなものが設定されているか知りたいという、暇人・・・<BR>
-もとい奇特な方のために以下に主なものを挙げておきます</P>
+もとい奇特な方のために以下に主なものを挙げておきます。</P>
 <UL>
 	<LI><H3 class="list">Index画面のとき</H3>
 		<DL>
 			<DT><KBD>Alt+[1-9]</KBD></DT>
-			<DD>そのページ内の上から[1-9]番目の記事の、返信へのリンクが選択されます<BR>
-			ブラウザによっては、その記事に対する返信画面に移動します</DD>
+			<DD>そのページ内の上から[1-9]番目の記事の、返信へのリンクが選択されます。<BR>
+			ブラウザによっては、その記事に対する返信画面に移動します。</DD>
 			<DT><KBD>Alt+Shift+[1-9]</KBD></DT>
-			<DD>[1-9]ページ目へのリンクが選択されます<BR>
-			ブラウザによっては、そのまま選択ページへ移動します</DD>
+			<DD>[1-9]ページ目へのリンクが選択されます。<BR>
+			ブラウザによっては、そのまま選択ページへ移動します。</DD>
 			<DT><KBD>Alt+[,.]</KBD></DT>
-			<DD><KBD>,</KBD> で新しい記事のあるページ、<KBD>.</KBD> で昔の記事のあるページのリンクが選択されます<BR>
-			ブラウザによっては、そのままページを移動します<BR>
-			JISキーボードを使っている方でしたらこのキー選択の意味がわかるかもしれません</DD>
+			<DD><KBD>,</KBD> で新しい記事のあるページ、<KBD>.</KBD> で昔の記事のあるページのリンクが選択されます。<BR>
+			ブラウザによっては、そのままページを移動します。<BR>
+			JISキーボードを使っている方でしたらこのキー選択の意味がわかるかもしれません。</DD>
 		</DL>
 	</LI>
 	<LI><H3 class="list">投稿画面のとき</H3>
 		<DL>
-			<DT><KBD>Alt+J</KBD></DT><DD>「題名」にカーソルが移ります</DD>
-			<DT><KBD>Alt+N</KBD></DT><DD>「名前」にカーソルが移ります</DD>
-			<DT><KBD>Alt+K</KBD></DT><DD>「Cookie」にカーソルが移ります</DD>
-			<DT><KBD>Alt+I</KBD></DT><DD>「アイコン」にカーソルが移ります</DD>
-			<DT><KBD>Alt+L</KBD></DT><DD>「E-mail」にカーソルが移ります</DD>
-			<DT><KBD>Alt+O</KBD></DT><DD>「ホーム」にカーソルが移ります</DD>
-			<DT><KBD>Alt+B</KBD></DT><DD>「本文」にカーソルが移ります</DD>
-			<DT><KBD>Alt+C</KBD></DT><DD>「色」にカーソルが移ります</DD>
-			<DT><KBD>Alt+P</KBD></DT><DD>「パスワード」にカーソルが移ります</DD>
-			<DT><KBD>Alt+M</KBD></DT><DD>「コマンド」にカーソルが移ります</DD>
+			<DT><KBD>Alt+J</KBD></DT><DD>「題名」にカーソルが移ります。</DD>
+			<DT><KBD>Alt+N</KBD></DT><DD>「名前」にカーソルが移ります。</DD>
+			<DT><KBD>Alt+K</KBD></DT><DD>「Cookie」にカーソルが移ります。</DD>
+			<DT><KBD>Alt+I</KBD></DT><DD>「アイコン」にカーソルが移ります。</DD>
+			<DT><KBD>Alt+L</KBD></DT><DD>「E-mail」にカーソルが移ります。</DD>
+			<DT><KBD>Alt+O</KBD></DT><DD>「ホーム」にカーソルが移ります。</DD>
+			<DT><KBD>Alt+B</KBD></DT><DD>「本文」にカーソルが移ります。</DD>
+			<DT><KBD>Alt+C</KBD></DT><DD>「色」にカーソルが移ります。</DD>
+			<DT><KBD>Alt+P</KBD></DT><DD>「パスワード」にカーソルが移ります。</DD>
+			<DT><KBD>Alt+M</KBD></DT><DD>「コマンド」にカーソルが移ります。</DD>
 			
-			<DT><KBD>Alt+S</KBD></DT><DD>フォームの内容を送信します</DD>
+			<DT><KBD>Alt+S</KBD></DT><DD>フォームの内容を送信します。</DD>
 		</DL>
 	</LI>
 	<LI><H3 class="list">その他のとき</H3>
 		<DL>
-			<DT><KBD>Alt+S</KBD></DT><DD>決定/送信します</DD>
-			<DT><KBD>Alt+R</KBD></DT><DD>フォームの内容をリセットします</DD>
+			<DT><KBD>Alt+S</KBD></DT><DD>決定/送信します。</DD>
+			<DT><KBD>Alt+R</KBD></DT><DD>フォームの内容をリセットします。</DD>
 		</DL>
 	</LI>
 </UL>
@@ -293,63 +300,63 @@ Mireilleにはアクセス性を向上させるための「アクセスキー」が設定されています<BR>
 <H2 class="list"><A name="お世話になったところ">◇お世話になったところ</A></H2>
 <UL>
 <LI><H3 class="list"><A href="http://www.tg.rim.or.jp/~hexane/ach/" title="Academic HTML">Academic HTML</A></H3>
-HTML,CSSに関する的確な情報がたくさんあります<BR>
-HTML,CSSを一通り学びたい場合はここを見るだけで事足りてしまいます</LI>
+HTML,CSSに関する的確な情報がたくさんあります。<BR>
+HTML,CSSを一通り学びたい場合はここを見るだけで事足りてしまいます。</LI>
 <LI><H3 class="list"><A href="http://openlab.ring.gr.jp/k16/htmllint/" title="Another HTML-lint">Another HTML-lint</A></H3>
-HTMLの検証に際し利用しました<BR>
-初めてチェックすると、ほとんどの人がショックを受けることでしょう</LI>
+HTMLの検証に際し利用しました。<BR>
+初めてチェックすると、ほとんどの人がショックを受けることでしょう。</LI>
 <LI><H3 class="list"><A href="http://www.artemis.ac/arrange/" title="ARTEMIS">ARTEMIS</A></H3>
 IconPreviewはここからです、便利なので頂きましたｗ<BR>
-新しい投稿があると教えてくれる〜もここのを見て、です<BR>
-他にもいろいろと参考にしています<BR>
-管理機能でここを見習う点は数多くあります</LI>
+新しい投稿があると教えてくれる〜もここのを見て、です。<BR>
+他にもいろいろと参考にしています。<BR>
+管理機能でここを見習う点は数多くあります。</LI>
 <LI><H3 class="list"><A href="http://www.ne.jp/asahi/minazuki/bakera/html/hatomaru" title="HTML鳩丸倶楽部">HTML鳩丸倶楽部</A></H3>
-ツッコミメインなHTML解説サイト、にわたしは見えました<BR>
-「HTML 4.01 のみを、純粋に学問的な興味から研究」しているそうです<BR>
-HTMLの構成に際して参考にしました</LI>
+ツッコミメインなHTML解説サイト、にわたしは見えました。<BR>
+「HTML 4.01 のみを、純粋に学問的な興味から研究」しているそうです。<BR>
+HTMLの構成に際して参考にしました。</LI>
 <LI><H3 class="list"><A href="http://www.srekcah.org/jcode/" title="jcode.pl">jcode.pl</A></H3>
-漢字コード変換用のライブラリです<BR>
-Mireille本体では横着しているので使っていません<BR>
-管理CGIでは一部を切り出して使っています</LI>
+漢字コード変換用のライブラリです。<BR>
+Mireille本体では横着しているので使っていません。<BR>
+管理CGIでは一部を切り出して使っています。</LI>
 <LI><H3 class="list"><A href="http://openlab.ring.gr.jp/Jcode/index-j.html" title="Jcode.pm">Jcode.pm</A></H3>
-jcode.plの後継でPerl5用PerlModuleとなっています<BR>
-jcode.plの機能にUnicodeを扱う機能が追加されています<BR>
-Perl5.8ではEncodeモジュールに置換されているようです</LI>
+jcode.plの後継でPerl5用PerlModuleとなっています。<BR>
+jcode.plの機能にUnicodeを扱う機能が追加されています。<BR>
+Perl5.8ではEncodeモジュールに置換されているようです。</LI>
 <LI><H3 class="list"><A href="http://www.kent-web.com/" title="KNET-WEB">KENT-WEB</A></H3>
-なにはともあれ日本のCGI/Perl界に与えた影響は少なくはないはずです<BR>
-私個人では特にYYBOARD,YYCHATにはお世話になりました<BR>
-きわめてとっつき易いCGIが多いです</LI>
+なにはともあれ日本のCGI/Perl界に与えた影響は少なくはないはずです。<BR>
+わたし個人では特にYYBOARD,YYCHATにはお世話になりました。<BR>
+きわめてとっつき易いCGIが多いです。</LI>
 <LI><H3 class="list"><A href="http://www.din.or.jp/~ohzaki/perl.htm" title="Perlメモ">Perlメモ</A></H3>
-URI自動リンク機能をつけるに際し参考に・・・むしろ丸写しです<BR>
-Perlの正規表現に関してとても有用な情報があります</LI>
+URI自動リンク機能をつけるに際し参考に・・・むしろ丸写しです。<BR>
+Perlの正規表現に関してとても有用な情報があります。</LI>
 <LI><H3 class="list"><A href="http://validator.w3.org/" title="W3C HTML Validation Service">W3C HTML Validation Service</A></H3>
-HTML規格の策定を行う団体、W3CによるHTML検証サービスです<BR>
-Another HTML-lintよりチェック項目は少なめです</LI>
+HTML規格の策定を行う団体、W3CによるHTML検証サービスです。<BR>
+Another HTML-lintよりチェック項目は少なめです。</LI>
 <LI><H3 class="list"><A href="http://tohoho.wakusei.ne.jp/" title="とほほのWWW入門">とほほのWWW入門</A></H3>
-HTML部、Perl部ともに時々リファレンス代わりにしました<BR>
-なかなか載っていて便利です</LI>
+HTML部、Perl部ともに時々リファレンス代わりにしました。<BR>
+なかなか載っていて便利です。</LI>
 <LI><H3 class="list"><A href="http://kano.feena.jp/" title="彼の野原">彼の野原</A></H3>
-LastPostはここのealisの真似です<BR>
-また1.2.2の記事ナビは神乃さんのものベースに作りました<BR>
-最近ではPHPに移ってあるべき姿というものを模索していらっしゃるようです</LI>
+LastPostはここのealisの真似です。<BR>
+また1.2.2の記事ナビは神乃さんのものベースに作りました。<BR>
+最近ではPHPに移ってあるべき姿というものを模索していらっしゃるようです。</LI>
 <LI><H3 class="list"><A href="http://www10.plala.or.jp/ryokufuudou/kijindou.html" title="SWORD AND COMMERCE">SWORD AND COMMERCE</A></H3>
-retroさんにはMireilleでつまづく所No.1と思われるアイコン設定の解説を書いていただきました<BR>
-他にもMireilleの解説の不備な点を多数してもらいました<BR>
-ちなみに、retroさんのサイト自体はRagnarkOnline系雑談サイトです</LI>
-<LI><H3 class="list"><A href="http://snowish.cside8.com/" title="Snowish Hills">Snowish Hills</A></H3>
-Mireilleを作りこむにあたって、半ばオンサイト顧客として、数々の有用なアドバイスを頂きました<BR>
-特に管理CGIは西名さんに言われなければ、かなり貧弱なものになっていたでしょう<BR>
-現在の初期状態のデザインも西名さんのデザインをベースにしています<BR>
-ちなみに、西名さんのサイト自体はKey系CGサイトです</LI>
-<LI>他にも意見を下さった方々、参考にしたサイト・CGIの作者さんに感謝します</LI>
+retroさんにはMireilleでつまづく所No.1と思われるアイコン設定の解説を書いていただきました。<BR>
+他にもMireilleの解説の不備な点を多数してもらいました。<BR>
+ちなみに、retroさんのサイト自体はRagnarkOnline系雑談サイトです。</LI>
+<LI><H3 class="list"><A title="Snowish Hills">Snowish Hills</A></H3>
+Mireilleを作りこむにあたって、半ばオンサイト顧客として、数々の有用なアドバイスを頂きました。<BR>
+特に管理CGIは西名さんに言われなければ、かなり貧弱なものになっていたでしょう。<BR>
+現在の初期状態のデザインも西名さんのデザインをベースにしています。<BR>
+ちなみに、西名さんのサイト自体はKey系CGサイトでした。</LI>
+<LI>他にも意見を下さった方々、参考にしたサイト・CGIの作者さんに感謝します。</LI>
 </UL>
 </DIV>
 
-<P class="note">この説明では&trade;や&reg;や&copy;マークは省略しています<BR>
-それぞれのサイト名やソフトウェア名などは各々の商標や登録商標などです</P>
+<P class="note">この説明では&trade;や&reg;や&copy;マークは省略しています。<BR>
+それぞれのサイト名やソフトウェア名などは各々の商標や登録商標などです。</P>
 
 <P class="note">この掲示板は、Microsoft Internet Explorer for Windows バージョン5以上を主とした対象とし、<BR>
-Windows版InternetExplorer6と、NetscapeやChimeraなどのMozilla系で、ほぼ完全な動作をします<BR>
+Windows版InternetExplorer6と、NetscapeやChimeraなどのMozilla系で、ほぼ完全な動作をします。<BR>
 またOpera7やMicrosoft Internet Explorer 5 for Macintoshでも概ね期待通りの動作をするはずです。<BR>
 上記のブラウザ以外では動作はするはずですが、見辛くなってしまう可能性があります。<BR>
 ご了承くださいまし。 （但し、読み書きができない場合はMireilleのバグです）</P>
