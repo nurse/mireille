@@ -4,12 +4,10 @@
 = Mireille - Bulletin Board System
 # - Mireille Manpage -
 #
-# $Mireille: 1_2_14 $
+# $Mireille: 1_2_15 $
 # $Revision$
 # "This file is written in shift_jis, CRLF." 空
-# http://www.airemix.com/
-# naruse@airemix.com
-# Scripted by NARUSE,Yui.
+# Airemix http://airemix.com/
 #------------------------------------------------------------------------------#
 # $Id$
 == これはなにか
@@ -98,6 +96,28 @@ index.cgiの中の(({$CF{'conenc'}='|gzip -cfq9';}))という所を(({$CF{'conenc'}='';}
 
 #------------------------------------------------------------------------------#
 == Mireille History
+=== 2005-03-03 Release 1.2.15
+:core.cgi
+  * METAタグによるLast-Modifiedの出力位置をもっと先に
+  * infoseekでは強制的に対広告モードになるように変更（有料で広告が無い場合は・・・
+  * infoseekなどでRSSからきちんと飛べるように対策
+  * デバッグコードである環境変数ログ取得機能(env.log)が残っていたのでコメントアウト
+  * ファイル添付機能を追加
+  * gzipが無いときの対策
+  * アップロードされたファイルが画像でないときはサムネイルを作らないように
+  * 連続書き込み対策機能の変数を設定可能に
+:style.pl
+  * ファイル添付関連のHTMLを追加
+:manage.cgi
+  * アイコンリスト編集＃の速度向上
+  * 記事情報ファイル回復をより正確に行うようにした
+  * ファイル添付の設定
+  * 連続書き込み対策機能の変数を設定可能に
+:artnavi.js
+  * 640x480未満の画面では記事ナビが自動起動しないようにした
+:Mireille.html
+  * RSS対応についての言及を追加
+  * エディタの配布Webサイトへのリンクを修正
 === 2004-10-01 Release 1.2.14
 インデント幅をPerlStyle推奨の4にしました
 :core.cgi
@@ -583,7 +603,7 @@ $CF{'icls'}の最初の一文字が' '（半角空白）だった場合複数リストモードになります。
 
 === 絶対指定アイコン
 絶対パスを指定します。
-コマンドは((%absoluteIcon=http://www.airemix.com/airemix.png%))という感じです。
+コマンドは((%absoluteIcon=http://airemix.com/airemix.png%))という感じです。
 
 
 === アイコンリストの拡張コマンド
@@ -883,16 +903,16 @@ $CK{'expire'}は、$CK{'time'}が変更された時刻+$CF{'newuc'}、です。
 また自動リンクの精度をあげるのも大変です。
 ベースはこのテキストの末尾にも載せてある、Perlメモさんのところの断片なのですが、
 これがよくできたもので、
-(({<STRONG title="http://www.airemix.com/">http:www.airemix.com/</STRONG>}))
-などという文字列があるとき、ちゃんと(({">http:www.airemix.com/</}))の部分だけに、
+(({<STRONG title="http://airemix.com/">http:airemix.com/</STRONG>}))
+などという文字列があるとき、ちゃんと(({">http:airemix.com/</}))の部分だけに、
 リンクを張ってくれるんです。
  
 ただ、ここでも修正機能が話を複雑にします。
-(({<IMG src="http://www.airemix.com/airemixb.png">Airemix}))
+(({<IMG src="http://airemix.com/airemixb.png">Airemix}))
 最初にという文字列があったとすると、IMGタグを許可していない場合にはタグが無効化されて、
-(({&#60;IMG src=&#34;http://www.airemix.com/airemixb.png&#34;&#62;Airemix}))
+(({&#60;IMG src=&#34;http://airemix.com/airemixb.png&#34;&#62;Airemix}))
 となります。ここで、
-(({http://www.airemix.com/bbs/index.cgi?icct&page=1}))
+(({http://airemix.com/bbs/index.cgi?icct&page=1}))
 などの(({&}))とエスケープ後の(({.png&#34;&}))の区別がつけられなくなります。
 
 記事参照機能というのは、
@@ -1331,6 +1351,6 @@ imac零式さん、幽霊猫さん、西名さん、神乃さん、Bさん、TAKE4さん、かろかろさん、xb
 
 
 == Copyright
-Copyright (c) 2001-2003 NARUSE,Yui (((<Airemix|URL:http://www.airemix.com/>))). All rights reserved.
+Copyright (c) 2001-2005 ((<Airemix|URL:http://airemix.com/>)). All rights reserved.
 
 =end
