@@ -8,10 +8,9 @@
 # "This file is written in euc-jp, CRLF." 空
 # Scripted by NARUSE,Yui.
 #------------------------------------------------------------------------------#
-#require 5.005;
+require 5.005;
 #use strict;
 #use vars qw(%CF %IC);
-$|=1;
 
 #-------------------------------------------------
 # 稼動させる前に確認すること
@@ -24,18 +23,18 @@ $CF{'home'}='/';
 $CF{'title'}=': Mireille :';
 #この掲示板のタイトル（ページのヘッダーで表示）
 $CF{'pgtitle'}='Airemix Mireille Board System';
-#アイコンリスト
-$CF{'icls'}='icon.txt';
-#スタイルシート
-$CF{'style'}='style.css';
 #アイコンのディレクトリ
 $CF{'icon'}='/icon/full/';
+#アイコンリスト
+$CF{'icls'}='icon.txt';
 #アイコンカタログCGI
 $CF{'icct'}='iconctlg.cgi';
-#ヘルプファイル
-$CF{'help'}='help.pl';
+#スタイルシート
+$CF{'style'}='style.css';
 #記事ナビJavaScript
 $CF{'navjs'}='artnavi.js';
+#ヘルプファイル
+$CF{'help'}='help.pl';
 #ログディレクトリ
 $CF{'log'}='./log/';
 #gzipの場所
@@ -66,6 +65,8 @@ $CF{'delpg'}='10';
 $CF{'logmax'}='100';
 #一スレッドあたりの最大子記事数を制限する
 $CF{'maxChilds'}='100';
+#一スレッドあたりの最大表示子記事数を制限する
+$CF{'maxChildsShown'}='10';
 #検索できる項目（"項目のname 選択字の名前 "をくりかえす）
 $CF{'sekitm'}='ALL 全て name 名前 email E-mail home ホーム subject 題名 body 本文';
 #親記事の項目(+color +email +home +icon +ra +hua +cmd +subject)
@@ -74,7 +75,7 @@ $CF{'prtitm'}='+color +email +home +icon +ra +hua +cmd +subject';
 $CF{'chditm'}='+color +email +home +icon +ra +hua +cmd';
 #Cookieの項目(color email home icon cmd)
 $CF{'cokitm'}='color email home icon cmd';
-#圧縮転送のやり方(Content-Encodingの方法)
+#圧縮転送の方式(Content-Encodingの方法)
 $CF{'conenc'}='|gzip -cfq9';
 #Cookieを登録するPATH(path=/ といった形で)
 $CF{'ckpath'}='';
