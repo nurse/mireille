@@ -11,15 +11,14 @@
 <TITLE>: The Intoroduction to Mireille :</TITLE>
 <STYLE type="text/css" media="screen">
 <!--
-/*@charset "EUC-JP";
 /* Mireille Style Sheet */
 /* Default Style Sheet for Mireille */
 /* "This file is written in euc-jp, CRLF." 空 */
-/* $StyleId: style.css,v 1.5 2002/12/05 09:08:10 naruse Exp $ */
+/* $StyleId: style.css,v 1.8 2003/01/13 03:24:50 naruse Exp $ */
 
 /* note.
 ・marginをmargin:auto;margin-top:10px;margin-bottom:10px;と分けている
-Opera対策のためです
+Opera6対策のためです
 ・cursolをhand,pointerと分けている
 MSIE6未満対策のためです
 ・input,textareなどを@mediaでくくっている
@@ -31,46 +30,56 @@ MSIE6未満対策のためです
 /* 通常のリンク文字 */
 A:link		{color:#44f;text-decoration:none;}
 A:visited	{color:#44f;text-decoration:none;}
-A:link:hover{color:#fa8;text-decoration:underline;}
-A:active	{color:#f00;text-decoration:underline;}
+A:link:hover,A:visited:hover
+{color:#fa8;text-decoration:underline;}
+A:link:active,A:visited:active
+{color:#f00;text-decoration:underline;}
 
 /* 新しいものへのリンク文字 */
 A.new:link		{color:#f00;font-weight:bold;text-decoration:none;}
 A.new:visited	{color:#f00;font-weight:bold;text-decoration:none;}
-A.new:link:hover{color:#f55;font-weight:bold;text-decoration:underline;}
-A.new:active	{color:#f00;font-weight:bold;text-decoration:underline;}
+A.new:link:hover,A.new:visited:hover
+{color:#f55;font-weight:bold;text-decoration:underline;}
+A.new:link:active,A.new:visited:active
+{color:#f00;font-weight:bold;text-decoration:underline;}
 
 /* 注意なリンク文字 */
 A.warning:link		{color:#f00;font-weight:bold;text-decoration:none;}
 A.warning:visited	{color:#f00;font-weight:bold;text-decoration:none;}
-A.warning:link:hover{color:#f55;font-weight:bold;text-decoration:underline;}
-A.warning:active	{color:#f00;font-weight:bold;text-decoration:underline;}
+A.warning:link:hover,A.warning:visited:hover
+{color:#f55;font-weight:bold;text-decoration:underline;}
+A.warning:link:active,A.warning:visited:active
+{color:#f00;font-weight:bold;text-decoration:underline;}
 
 /* 記事番号のリンク文字 */
 A.number:link		{color:#06e;text-decoration:none;}
 A.number:visited	{color:#06e;text-decoration:none;}
-A.number:link:hover	{color:#fa8;text-decoration:underline;}
-A.number:active		{color:#f50;text-decoration:underline;}
+A.number:link:hover,A.number:visited:hover
+{color:#fa8;text-decoration:underline;}
+A.number:link:active,A.number:visited:active
+{color:#f50;text-decoration:underline;}
 
 /* 本文自動リンク機能のリンク文字 */
 A.autolink:link		{border-bottom: dashed 1px #88f;color:#44f;text-decoration:none;}
 A.autolink:visited	{border-bottom: dashed 1px #b9f;color:#97d;text-decoration:none;}
-A.autolink:link:hover{border-bottom: dashed 1px #fa8;color:#fa8;text-decoration:none;}
-A.autolink:active	{border-bottom: dashed 1px #f00;color:#f00;text-decoration:none;}
+A.autolink:link:hover,A.autolink:visited:hover
+{border-bottom: dashed 1px #fa8;color:#fa8;text-decoration:none;}
+A.autolink:link:active,A.autolink:visited:active
+{border-bottom: dashed 1px #f00;color:#f00;text-decoration:none;}
 
 HTML{
-	border-style: none;
-	border-width: 0;
-	margin: 0;
-	padding: 0;
-	width: 100%;
+	overflow-y: scroll;/*WinIE6の標準モード対策*/
 }
 ABBR,ACRONYM{
 	border-bottom: dotted 1px #66c;
 	cursor: help;
 }
 BODY{
+/*	background-attachment: scroll;*/
 	background-color: #fff;
+/*	background-image: url('/HP_img/bakimg.png');
+	background-position: left;
+	background-repeat: repeat; */
 	border-style: none;
 	border-width: 0;
 	color: #355;
@@ -79,10 +88,15 @@ BODY{
 	margin: 3px 0;
 	padding: 0;
 	text-align: center;
-	width: 98%;
 }
 BUTTON{
 	background-color: #ffb;
+	border: #355 solid 2px;
+	color: #355;
+	cursor: pointer; cursor: hand;
+}
+BUTTON:hover{
+	background-color: #eea;
 	border: #355 solid 2px;
 	color: #355;
 	cursor: pointer; cursor: hand;
@@ -96,7 +110,7 @@ DFN{
 	font-style: normal;
 }
 EM{
-	border-bottom: solid 1px #3a3;
+	border-bottom: solid 1px #333;
 /*	font-family: Verdana,sans-serif;*/
 	font-style: normal;
 }
@@ -184,7 +198,7 @@ DT{
 	color: #f00;
 }
 /* 何らかの注意や警告 */
-.warning, .coution{
+.warning, .caution{
 	color: #f00;
 }
 /* N4調整用一揃えクラス */
@@ -203,23 +217,23 @@ DIV.right{
 	
 	/* 標準的ボタン */
 	.button{
-		background-color: #eef;
-		border: #6ac solid 2px;
+		background-color: #dfe;
+		border: #6ca solid 2px;
 		cursor: pointer; cursor: hand;
 	}
 	INPUT[type="button"]{
-		background-color: #eef;
+		background-color: #dfe;
 		border: #6ac solid 2px;
 		cursor: pointer;
 	}
 	/* 標準的ボタン（マウスが重なった時） */
 	.button:hover,.buttonover{
-		background-color: #cdf;
+		background-color: #aeb;
 		border: #6ac solid 2px;
 		cursor: pointer; cursor: hand;
 	}
 	INPUT[type="button"]:hover,INPUT[type="button"]:focus{
-		background-color: #cdf;
+		background-color: #aeb;
 	}
 	/* 了解ボタン（投稿/修正/削除） */
 	.submit{
@@ -275,23 +289,29 @@ DIV.right{
 	}
 	/* フォームにフォーカスが無い時 */
 	.blur,TEXTAREA{
-		background-color: transparent;
-		border: #6ac dashed 1px;
+		background-color: #fff;
+		border: #ccc solid 1px;
 		color: #355;
-		font-size: 100%;
+		font-size: 14px;
+		padding: 1px;
+		margin: 0;
 	}
 	INPUT[type="text"],INPUT[type="password"]{
-		background-color: transparent;
-		border: #6ac dashed 1px;
+		background-color: #fff;
+		border: #ccc solid 1px;
 		color: #355;
-		font-size: 100%;
+		font-size: 14px;
+		padding: 1px;
+		margin: 0;
 	}
 	/* フォームにフォーカスがある時 */
 	.focus{
 		background-color: #dfd;
-		border: #6ac dashed 1px;
+		border: #9cf dashed 1px;
 		color: #355;
-		font-size: 100%;
+		font-size: 14px;
+		padding: 1px;
+		margin: 0;
 	}
 	TEXTAREA:focus,INPUT[type="text"]:focus,INPUT[type="password"]:focus{
 		background-color: #dfd;
@@ -305,7 +325,7 @@ DIV.right{
 /* ===================== メニュー部 ===================== */
 /* ========== LastPost ========== */
 P.lastpost{
-	margin: 0 0.2em 0 0;
+	margin: 0;
 	text-align: right;
 	text-decoration: underline;
 }
@@ -319,21 +339,28 @@ TABLE.head{
 	background: #6ac;
 	color: #fff;
 	margin: auto;
+	width: 90%;
 }
-TABLE.head td{
-	color: #fff;
-	letter-spacing: 1em;
+TABLE.head TH{
 	padding: 3px 5px;
+	text-align: left;
+	white-space: nowrap;
 }
-TABLE.head TH{padding: 3px 5px;}
 H1.head,H1.head A:link{
 	color: #fff;
 	font-family: 'Comic Sans MS','ＭＳ Ｐゴシック',sans-serif;
 	font-size: 19px;
 	font-weight: normal;
+	width: 100%;
 }
 H1.head{margin: 0;}
 H1.head A:visited{color: #fff;}
+TABLE.head TD{
+	letter-spacing: 1em;
+	padding: 3px 5px;
+	text-align: right;
+	white-space: nowrap;
+}
 /* ========== 見出し（Mode表示で主に使用） ========== */
 H2.mode{
 	background-color: #ace;
@@ -422,7 +449,6 @@ P.artinfo{
 	font-size: 16px;
 	font-style: normal;
 	font-weight: normal;
-	margin-right: 3%;
 	text-align: right;
 }
 
@@ -512,17 +538,17 @@ P.artinfo{
 .thread .child  .info .number{font-size: 13px; font-weight: normal;}
 
 /* 投稿者名 */
-.thread .info TD.name{text-align: left;}
+.thread .info TD.name{text-align: left; white-space: nowrap;}
 .thread .info SPAN.name{font-size: 17px;}
 /* HOME */
-.thread .info SPAN.home{}
+@media all{.thread .info SPAN.home{margin-left:3em}}
 /* 投稿日時 */
 .thread .info TD.date{
 	text-align: right;
 }
 .thread .info SPAN.date{}
 /* 【修正】 */
-.thread .info SPAN.revise{}
+@media all{.thread .info SPAN.revise{margin-left:3em}}
 /* info行での余白 */
 .thread .info SPAN.nbsp{letter-spacing: 30px;}
 
@@ -603,23 +629,18 @@ TABLE.write{
 	background-color: #6ac;
 	text-align: center;
 }
-#name	 {width:220px;ime-mode:active;}
-#cook	 {}
-#icon	 {width:160px;}
-#icon OPTGROUP{
-	color: #6ac;
-	font-style: normal;
-}
+#name	{width:220px;ime-mode:active;}
+#cook	{}
+#icon	{width:160px;}
+#icon OPTGROUP{color: #6ac;font-style: normal;}
 #icon OPTION{color:#333;}
 #email	{width:300px;ime-mode:inactive;}
-#home	 {width:300px;ime-mode:inactive;}
+#home	{width:300px;ime-mode:inactive;}
 #subject{width:300px;ime-mode:active;}
 #color	{width:100px;}
-#pass	 {width:90px;ime-mode:disabled;font-size:85%;}
-#pass[type="password"]{font-size:100%;}/* IEで100%だと大きくなってしまうので85%にし、あとで100%に */
-#cmd		{width:300px;ime-mode:inactive;}
-#body	 {	font-size: 14px;
-width:500px;ime-mode:active;}
+#pass	{width:90px;ime-mode:disabled;}
+#cmd	{width:300px;ime-mode:inactive;}
+#body	{width:500px;ime-mode:active;}
 
 /* ===================== 削除・修正モード ===================== */
 TABLE.list{
@@ -747,6 +768,7 @@ DIV#naviwind:hover{
 #navihead{
 	background-color: #6ac;
 	color: #fff;
+	cursor: default;
 	font-size: 13px;
 	font-weight: bold;
 	margin: 0;
@@ -813,7 +835,6 @@ STRONG.s81a6{
 	color: #f00;
 	font-weight:bold;
 }
-
 -->
 </STYLE>
 </HEAD>
@@ -968,8 +989,8 @@ TeraPadの場合には、オプション設定自体を変更して、<BR>
 		<TBODY>
 		<TR><TH scope="col">/Mireille.txt</TD>		<TD>MireilleのReadme</TD></TR>
 		<TR><TH scope="col">/Mireille.html</TD>		<TD>Mireilleの説明書</TD></TR>
-		<TR><TH scope="col">/log/</TD>				<TD>ログ保存フォルダ</TD></TR>
-		<TR><TH scope="col">/log/0.cgi</TD>			<TD>記事情報ファイル</TD></TR>
+		<TR><TH scope="col">/init/log/</TD>			<TD>ログ保存フォルダ</TD></TR>
+		<TR><TH scope="col">/init/log/0.cgi</TD>	<TD>記事情報ファイル</TD></TR>
 		<TR><TH scope="col">/init/</TD>				<TD>最初設置するときに使うファイル群</TD></TR>
 		<TR><TH scope="col">/init/index.cgi</TD>	<TD>CGI起動ファイル兼設定</TD></TR>
 		<TR><TH scope="col">/init/icon.txt</TD>		<TD>アイコンリスト</TD></TR>
