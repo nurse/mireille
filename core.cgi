@@ -9,9 +9,9 @@
 # Scripted by NARUSE,Yui.
 #------------------------------------------------------------------------------#
 # $cvsid = q$Id$;
-require 5.005;
-use strict;
-use vars qw(%CF %IC %IN %CK);
+#require 5.005;
+#use strict;
+#use vars qw(%CF %IC %IN %CK);
 my(%Z0,@zer2,@file);
 
 =pod core.cgiを単体起動させると、locationで跳ばせるCGIに
@@ -90,7 +90,7 @@ sub main{
 # Index 記事表示
 #
 sub showIndex{
-	&xmlmode if$IN{'viewstyle'}&& 'xml'eq$IN{'viewstyle'};
+#	&xmlmode if$IN{'viewstyle'}&& 'xml'eq$IN{'viewstyle'};
 
 	#-----------------------------
 	#Cookie取得＆書き込み
@@ -143,8 +143,8 @@ sub showIndex{
 	@view=splice(@file,($IN{'page'}-1)*$CF{'page'},$CF{'page'});
 	$#view!=0&&!$view[$#view]&&pop@view;
 	for(0..$#view){
-		$this.=qq(<A href="#art$view[$_]" title="Alt+$_">)
-		.($NEW{"$view[$_]"}?qq(<SPAN class="new">$view[$_]</SPAN>):$view[$_])."</A> ";
+		$this.='<A href="#art'.$view[$_].'" title="Alt+'.($_+1).'">'
+		.($NEW{"$view[$_]"}?qq(<SPAN class="new">$view[$_]</SPAN>):$view[$_]).'</A> ';
 	}
 
 	#-----------------------------
@@ -216,17 +216,20 @@ sub writeArticle{
 		defined$j||($j=1);
 		$EX{$i}=$j;
 	}
+	$IN{'cmd'}=~s/(?:^|;)(?:d|z|re)new(?:=[^;]*)?(?:;|$)//os; #new系はcmdとして保存されると困る
 
 =item コマンドで使えるもの
 
 icon : 専用アイコン
 bring: 持ち込みアイコン
+$CF{'exicfi'}: ファイル指定アイコン
+iconlist: (nolist|economy)
 
 dnew : 記事日時更新
 znew : スレッド日時更新
 renew: dnew&&znew
 
-usetag:		!SELECTABLE()で許可してあるアイコンの範囲内で使うアイコンを選べる
+usetag:		!SELECTABLE()で許可してある範囲内で使うタグを選べる
 notag:		タグを使わない
 noautolink:	URI自動リンクを使わない
 noartno:	記事番号リンクを使わない
@@ -654,7 +657,7 @@ $file[$CF{'logmax'}-2] は削除された後に残った記事スレッドのうち、
 		#書き込み
 		$log[$IN{'j'}]=
 			"Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'newps'};\ttime=\t$DT{'time'};\tbody=\t$IN{'body'};\t"
-			.join('',map{"$_=\t$IN{$_};\t"}((!$IN{'j'}?$CF{'prtitm'}:$CF{'chditm'})=~/\b([a-z\d]+)\b/go));
+			.join('',map{"$_=\t$IN{$_};\t"}((!$IN{'j'}?$CF{'prtitm'}:$CF{'chditm'})=~/\+([a-z\d]+)\b/go));
 		truncate(RW,0);
 		seek(RW,0,0);
 		print RW map{"$_\n"}@log;
@@ -2004,7 +2007,6 @@ BEGIN{
 			print"ERROR: $_[0]\n"if@_;
 			print join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(Index Style Core Exte))
 			."\n".join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(log icon icls style));
-			print"\ngetlogin\t: ".getlogin;
 			print"\n".join('',map{"$$_[0]\t: $$_[1]\n"}
 			([PerlVer=>$]],[PerlPath=>$^X],[BaseTime=>$^T],[OSName=>$^O],[FileName=>$0],[__FILE__=>__FILE__]))
 			."\n\t= = = ENV = = =\n".join('',map{sprintf"%-20.20s : %s\n",$_,$ENV{$_}}grep{$ENV{"$_"}}
@@ -2019,10 +2021,10 @@ BEGIN{
 		};
 	}
 	# Version
-	$CF{'Version'}=join('.',q$Mireille: 1_2_6 $=~/(\d+[a-z]?)/go);
+	$CF{'Version'}=join('.',q$Mireille: 1_2_7 $=~/(\d+[a-z]?)/go);
 	($CF{'Core'}=q$Revision$)=~/(\d+((?:\.\d+)*))/o;
 	$CF{'CoreRevision'}=$1;
-	$CF{'Version'}.=$2 if-1<index(q$State$,'Exp');
+	$CF{'Version'}.=$2.'β' if-1<index(q$State$,'Exp');
 }
 
 1;
