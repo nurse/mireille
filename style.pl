@@ -72,11 +72,12 @@ _HTML_
 $CF{'pgfoot'}=&getPageFooter;
 
 #-----------------------------
-# フォーム用JavaScript
-$CF{'form_jscript'}=<<'_CONFIG_';
+# Cookieに本文データを一時保存するJavaScript
+$CF{'SaveBody2Cookie'}=<<'_CONFIG_';
 <SCRIPT type="text/javascript" defer>
 <!--
 // Save/Load BodyData from Cookie
+
 function saveBodyCk(){
 	var bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
 	if(!bodyObj)return false;
@@ -90,13 +91,14 @@ function saveBodyCk(){
 			alert('一時保存されていた本文データを削除しましたょ');
 			return;
 		}
-		if(!document.cookie.match(/(^|; )MirBody=([^;]+)/)){
+		if(document.cookie.match(/(^|; )MirBody=([^;]+)/)&&bodyObj.value==unescape(RegExp.$2)){
+			alert("今の本文データを一時保存しましたょ\nあくまで“一時保存”だから過信しないでねっ");
+		}else{
 			//3850byte程度でサイズ制限がかかる。
 			document.cookie='MirBody='+backup+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';//終わりの日
 			alert("save失敗\nサイズオーバーかも。");
 			return false;
 		}
-		alert("今の本文データを一時保存しましたょ\nあくまで“一時保存”だから過信しないでねっ");
 	}
 }
 function loadBodyCk(){
@@ -109,8 +111,16 @@ function loadBodyCk(){
 	}
 	bodyObj.value=unescape(RegExp.$2);
 }
+-->
+</SCRIPT>
+_CONFIG_
 
 
+#-----------------------------
+# フォーム用属性セレクタ代替JScript
+$CF{'jscript_AtSe'}=<<'_CONFIG_';
+<SCRIPT type="text/JScript" defer>
+<!--
 // InternetExplorer with ConditionalCompilation
 /*@cc_on
 if(document.getElementsByTagName){
@@ -162,7 +172,7 @@ sub getFooter{
 <VAR title="times:@{[times]}">$CF{'Version'}</VAR> -</DIV>
 _HTML_
 	return$CF{'menu'}.&getPageFooter(defined$IN{'read'}).$AiremixCopy
-	.$CF{'bodyFoot'}.$CF{'form_jscript'}."</BODY>\n</HTML>\n";
+	.$CF{'bodyFoot'}.$CF{'jscript_AtSe'}."</BODY>\n</HTML>\n";
 }
 
 #-----------------------------
@@ -175,72 +185,6 @@ $CF{'note'}=<<"_CONFIG_";
 <LI>記事ナンバーをクリックすると、その記事の修正画面になります。</LI>
 <LI>その他、機能の詳細についてはヘルプをご覧ください。</LI>
 </UL></TD></TR></TABLE>
-
-_CONFIG_
-
-#-----------------------------
-# 親記事
-$CF{'artprt'}=<<'_CONFIG_';
-<DIV class="thread" title="$DT{'i'}番スレッド">
-<TABLE border="0" cellspacing="0" class="subject" summary="$DT{'i'}番スレッド" width="100%">
-<TR>
-<TH class="subject"><H2 class="subject"><A name="art$DT{'i'}" id="art$DT{'i'}" title="$DT{'i'}番スレッド">$DT{'subject'}</A></H2></TH>
-<TD class="arrow">
-<A name="nav_n$DT{'ak'}" href="#nav_n@{[$DT{'ak'}-1]}" title="上のスレッドへ">▲</A>
-<A name="nav_r$DT{'i'}" href="index.cgi?res=$DT{'i'}#Form" title="この記事No.$DT{'i'}に返信">■</A>
-<A name="nav_s$DT{'ak'}" href="#nav_s@{[$DT{'ak'}+1]}" title="下のスレッドへ">▼</A>
-</TD></TR>
-</TABLE>
-
-<TABLE border="0" cellspacing="0" class="parent" summary="Article$DT{'i'}-0" title="$DT{'i'}-0" width="100%">
-<COL class="number"><COL class="name"><COL class="date">
-<TR class="info">
-	<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" id="art$DT{'i'}-$DT{'j'}" class="number" href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【No.$DT{'i'}】</A></TH>
-	<TD class="name">$DT{'new'}&nbsp;<SPAN class="name">$DT{'name'}</SPAN><SPAN class="nbsp">&nbsp;&nbsp;</SPAN><SPAN class="home">$DT{'home'}</SPAN></TD>
-	<TD class="date"><SPAN class="date">$DT{'date'}</SPAN><SPAN class="nbsp">&nbsp;&nbsp;</SPAN>
-	<SPAN class="revise" title="$DT{'i'}番スレッドの親記事を修正する"><A
-	 href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【修正】</A></SPAN></TD>
-</TR>
-<TR>
-	<!-- アイコンを使用する場合ここから -->
-	<TD class="icon"><IMG src="$CF{'icon'}$DT{'icon'}" alt="" title="$DT{'icon'}"></TD>
-	<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD>
-	<!-- アイコンを使用する場合ここまで -->
-	<!-- アイコンを使用しない場合ここから -->
-	<!-- <TD colspan="3" class="body" style="color:\$DT{'color'}">\$DT{'body'}</TD> -->
-	<!-- アイコンを使用しない場合ここまで -->
-</TR>
-</TABLE>
-
-_CONFIG_
-
-#-----------------------------
-# 子記事
-$CF{'artchd'}=<<'_CONFIG_';
-<TABLE border="0" cellspacing="0" class="child" summary="Article$DT{'i'}-$DT{'j'}" title="$DT{'i'}-$DT{'j'}">
-<COL class="space"><COL class="number"><COL class="name"><COL class="date">
-<!-- 子記事タイトルを使用する場合、下の1行をコメント外す -->
-<!-- <TR><TH class="space" rowspan="3">&nbsp;</TH>
-<TH colspan="3" class="subject"><H3 class="subject">\$DT{'subject'}</H3></TH></TR> -->
-<TR class="info">
-	<!-- 子記事タイトルを使用する場合、コメントアウト --><TH class="space" rowspan="2">&nbsp;</TH><!-- -->
-	<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" id="art$DT{'i'}-$DT{'j'}" class="number" href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【Re:$DT{'j'}】</A></TH>
-	<TD class="name">$DT{'new'}&nbsp;<SPAN class="name">$DT{'name'}</SPAN>
-	<SPAN class="nbsp">&nbsp;&nbsp;</SPAN><SPAN class="home">$DT{'home'}</SPAN></TD>
-	<TD class="date"><SPAN class="date">$DT{'date'}</SPAN><SPAN class="nbsp">&nbsp;&nbsp;</SPAN>
-	<SPAN class="revise" title="$DT{'i'}番スレッドの親記事を修正する"><A
-	 href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【修正】</A></SPAN></TD>
-</TR>
-<TR>
-	<!-- アイコンを使用する場合ここから -->
-		<TD class="icon"><IMG src="$CF{'icon'}$DT{'icon'}" alt="" title="$DT{'icon'}"></TD>
-		<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD>
-	<!-- アイコンを使用する場合ここまで -->
-	<!-- アイコンを使用しない場合ここから -->
-	<!-- <TD colspan="3" class="body" style="color:\$DT{'color'}">\$DT{'body'}</TD> -->
-	<!-- アイコンを使用しない場合ここまで -->
-</TR>
-</TABLE>
 
 _CONFIG_
 
@@ -380,6 +324,7 @@ $CF{'wrtfm'}=<<'_CONFIG_';
 </TABLE>
 </DIV>
 
+$CF{'SaveBody2Cookie'}
 _CONFIG_
 
 #-----------------------------
@@ -481,6 +426,7 @@ $CF{'resfm'}=<<'_CONFIG_';
 <LI>その他、機能の詳細についてはヘルプをご覧ください。</LI>
 </UL></TD></TR></TABLE></DIV>
 
+$CF{'SaveBody2Cookie'}
 _CONFIG_
 
 
@@ -512,9 +458,40 @@ $	この記事の情報
 	$DT{'time'}>$CK{'time'}&&($DT{'date'}=qq(<SPAN class="new">$DT{'date'}</SPAN>));
 	$DT{'time'}>$^T-$CF{'newnc'}&&($DT{'new'}=$CF{'new'});
 	#いよいよ出力だよ
-	eval qq(print<<"_HTML_";\n$CF{'artprt'}\n_HTML_); #OLDSTYLE
-	#親記事いっちょ上がり
-	
+	print<<"_HTML_";
+<DIV class="thread" title="$DT{'i'}番スレッド">
+<TABLE border="0" cellspacing="0" class="subject" summary="$DT{'i'}番スレッド" width="100%">
+<TR>
+<TH class="subject"><H2 class="subject"><A name="art$DT{'i'}" id="art$DT{'i'}" title="$DT{'i'}番スレッド">$DT{'subject'}</A></H2></TH>
+<TD class="arrow">
+<A name="nav_n$DT{'ak'}" href="#nav_n@{[$DT{'ak'}-1]}" title="上のスレッドへ">▲</A>
+<A name="nav_r$DT{'i'}" href="index.cgi?res=$DT{'i'}#Form" title="この記事No.$DT{'i'}に返信">■</A>
+<A name="nav_s$DT{'ak'}" href="#nav_s@{[$DT{'ak'}+1]}" title="下のスレッドへ">▼</A>
+</TD></TR>
+</TABLE>
+
+<TABLE border="0" cellspacing="0" class="parent" summary="Article$DT{'i'}-0" title="$DT{'i'}-0" width="100%">
+<COL class="number"><COL class="name"><COL class="date">
+<TR class="info">
+	<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" id="art$DT{'i'}-$DT{'j'}" class="number" href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【No.$DT{'i'}】</A></TH>
+	<TD class="name">$DT{'new'}&nbsp;<SPAN class="name">$DT{'name'}</SPAN><SPAN class="nbsp">&nbsp;&nbsp;</SPAN><SPAN class="home">$DT{'home'}</SPAN></TD>
+	<TD class="date"><SPAN class="date">$DT{'date'}</SPAN><SPAN class="nbsp">&nbsp;&nbsp;</SPAN>
+	<SPAN class="revise" title="$DT{'i'}番スレッドの親記事を修正する"><A
+	 href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【修正】</A></SPAN></TD>
+</TR>
+<TR>
+	<!-- アイコンを使用する場合ここから -->
+	<TD class="icon"><IMG src="$CF{'icon'}$DT{'icon'}" alt="" title="$DT{'icon'}"></TD>
+	<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD>
+	<!-- アイコンを使用する場合ここまで -->
+	<!-- アイコンを使用しない場合ここから -->
+	<!-- <TD colspan="3" class="body" style="color:\$DT{'color'}">\$DT{'body'}</TD> -->
+	<!-- アイコンを使用しない場合ここまで -->
+</TR>
+</TABLE>
+
+_HTML_
+	return;
 }
 
 
@@ -539,8 +516,34 @@ $	この記事の情報
 	$DT{'time'}>$CK{'time'}&&($DT{'date'}=qq(<SPAN class="new">$DT{'date'}</SPAN>));
 	$DT{'time'}>$^T-$CF{'newnc'}&&($DT{'new'}=$CF{'new'});
 	#いよいよ出力だよ
-	eval qq(print<<"_HTML_";\n$CF{'artchd'}\n_HTML_); #OLDSTYLE
-	#子記事いっちょ上がり
+	print<<"_HTML_";
+<TABLE border="0" cellspacing="0" class="child" summary="Article$DT{'i'}-$DT{'j'}" title="$DT{'i'}-$DT{'j'}">
+<COL class="space"><COL class="number"><COL class="name"><COL class="date">
+<!-- 子記事タイトルを使用する場合、下の1行をコメント外す -->
+<!-- <TR><TH class="space" rowspan="3">&nbsp;</TH>
+<TH colspan="3" class="subject"><H3 class="subject">\$DT{'subject'}</H3></TH></TR> -->
+<TR class="info">
+	<!-- 子記事タイトルを使用する場合、コメントアウト --><TH class="space" rowspan="2">&nbsp;</TH><!-- -->
+	<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" id="art$DT{'i'}-$DT{'j'}" class="number" href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【Re:$DT{'j'}】</A></TH>
+	<TD class="name">$DT{'new'}&nbsp;<SPAN class="name">$DT{'name'}</SPAN>
+	<SPAN class="nbsp">&nbsp;&nbsp;</SPAN><SPAN class="home">$DT{'home'}</SPAN></TD>
+	<TD class="date"><SPAN class="date">$DT{'date'}</SPAN><SPAN class="nbsp">&nbsp;&nbsp;</SPAN>
+	<SPAN class="revise" title="$DT{'i'}番スレッドの親記事を修正する"><A
+	 href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【修正】</A></SPAN></TD>
+</TR>
+<TR>
+	<!-- アイコンを使用する場合ここから -->
+		<TD class="icon"><IMG src="$CF{'icon'}$DT{'icon'}" alt="" title="$DT{'icon'}"></TD>
+		<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD>
+	<!-- アイコンを使用する場合ここまで -->
+	<!-- アイコンを使用しない場合ここから -->
+	<!-- <TD colspan="3" class="body" style="color:\$DT{'color'}">\$DT{'body'}</TD> -->
+	<!-- アイコンを使用しない場合ここまで -->
+</TR>
+</TABLE>
+
+_HTML_
+	return;
 }
 
 
@@ -670,9 +673,8 @@ sub date{
 =item 引数
 $ time形式時刻
 =cut
-	my$time=shift();
 	$CF{'timezone'}||&cfgTimeZone($ENV{'TZ'});
-	my($sec,$min,$hour,$day,$mon,$year,$wday)=gmtime($time+$CF{'timeOffset'});
+	my($sec,$min,$hour,$day,$mon,$year,$wday)=gmtime($_[0]+$CF{'timeOffset'});
 	#sprintfの説明は、Perlの解説を見てください^^;;
 	return sprintf("%4d年%02d月%02d日(%s) %02d時%02d分%s" #"1970年01月01日(木) 09時00分"の例
 	,$year+1900,$mon+1,$day,('日','月','火','水','木','金','土')[$wday],$hour,$min,$ENV{'TZ'});
