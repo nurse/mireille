@@ -210,8 +210,15 @@ sub writeArticle{
 		or push(@message,'¥Ñ¥¹¥ï¡¼¥É¤Ï8Ê¸»ú°Ê¾å¡¢128Ê¸»ú°Ê²¼¤Ç¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó¡£')&&push(@error,'¥Ñ¥¹¥ï¡¼¥É');
 		if($CF{'ngWords'}){
 			for($CF{'ngWords'}=~/(\S+)/go){
-				index($IN{'body'},$_)<0&&next;
-				push(@error,'ËÜÊ¸');
+				if(index($IN{'body'},$_)>-1){
+					push(@error,'ËÜÊ¸');
+				}elsif($IN{'subject'}&&index($IN{'subject'},$_)>-1){
+					push(@error,'ÂêÌ¾');
+				}elsif(index($IN{'name'},$_)>-1){
+					push(@error,'Ì¾Á°');
+				}else{
+					next;
+				}
 				push(@message,'Something Wicked happend!(ÉÔÀµ¤ÊÊ¸»úÎó)');
 				last;
 			}
@@ -296,19 +303,21 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 	#-----------------------------
 	#¥¹¥ì¥Ã¥É¤Î¥í¥Ã¥¯
 	if($EX{'lockThread'}&&$IN{'i'}){
-		#¸¢¸Â¤ò¥Á¥§¥Ã¥¯
-		unless(1or$CF{'admps'}&&$IN{'pass'}eq$CF{'admps'}
-			or$CF{'lockPassword'}&&$IN{'pass'}eq$CF{'lockPassword'}){
-			die '¤¢¤Ê¤¿¤Ï¤³¤Î¥¹¥ì¥Ã¥É¤ò¥í¥Ã¥¯¤Ç¤­¤Þ¤»¤ó¡£';
-		}
 		open(RW,'+>>'."$CF{'log'}$IN{'i'}.cgi")
 		||die"Can't read/write log($IN{'i'};.cgi)[$?:$!]";
 		eval{flock(RW,2)};
 		seek(RW,0,0);
 		my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
 		
-		my$flag=0;
-		index($log[$#log],"Mir12=\tLocked")<0?++$flag&&push(@log,"Mir12=\tLocked;\t"):pop@log;
+		#¸¢¸Â¤ò¥Á¥§¥Ã¥¯
+		unless($CF{'admps'}&&$IN{'pass'}eq$CF{'admps'}
+				or$CF{'lockPassword'}&&$IN{'pass'}eq$CF{'lockPassword'}){
+			my%DT=$log[0]=~/([^\t]*)=\t([^\t]*);\t/go;
+			die '¤¢¤Ê¤¿¤Ï¤³¤Î¥¹¥ì¥Ã¥É¤ò¥í¥Ã¥¯¤Ç¤­¤Þ¤»¤ó¡£'unless&mircrypt($DT{'time'},$IN{'pass'},$DT{'pass'});
+		}
+		
+		my$isLocking=0;
+		index($log[$#log],"Mir12=\tLocked")<0?++$isLocking&&push(@log,"Mir12=\tLocked;\t"):pop@log;
 		truncate(RW,0);
 		seek(RW,0,0);
 		print RW map{"$_\n"}@log;
@@ -317,8 +326,7 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 		#½¤Àµ¥â¡¼¥É¤Ë°ÜÆ°
 		$IN{'page'}=1;
 		$IN{'rvs'}='';
-		$IN{'_isEditing'}=1;
-		&showRvsMenu(sprintf"Âè$IN{'i'}ÈÖ¥¹¥ì¥Ã¥É¤Î¥í¥Ã¥¯%sÀ®¸ù",$flag?'':'²ò½ü');
+		&showRvsMenu(sprintf"Âè$IN{'i'}ÈÖ¥¹¥ì¥Ã¥É¤Î¥í¥Ã¥¯%sÀ®¸ù",$isLocking?'':'²ò½ü');
 	}
 	
 	#-----------------------------
@@ -384,7 +392,7 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 		
 		#¸ì¶ç¶¯Ä´
 		if($CF{'strong'}&&!$EX{'nostrong'}){
-			my%ST=map{(my$str=$_)=~tr/"'<>/\01-\04/;$str}($CF{'strong'}=~/(\S+)\s+(\S+)/go);
+			my%ST=map{(my$str=$_)=~tr/"'<>&/\01-\05/;$str}($CF{'strong'}=~/(\S+)\s+(\S+)/go);
 			if($CF{'strong'}=~/^ /o){
 				#³ÈÄ¥¸ì¶ç¶¯Ä´
 				for(sort{length$b<=>length$a}keys%ST){
@@ -510,7 +518,7 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 	eval{flock(ZERO,2)};
 	seek(ZERO,0,0);
 	my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
-	index($zero[0],"Mir12=\t")<0||die"ZERO¤Î¥í¥°·Á¼°¤¬Mir12·¿°Ê³°¤Ç¤¹($zero[0])";
+	index($zero[0],"Mir12=\t")<0&&die"ZERO¤Î¥í¥°·Á¼°¤¬Mir12·¿°Ê³°¤Ç¤¹";
 	%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
 	my@zer1=split(/\s+/o,$zero[1]);
 	@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
@@ -779,7 +787,7 @@ sub res{
 </DIV>
 <P style="margin:0 10% 0 auto;text-align:right">
 <LABEL for="inpDivHeight">ÏÈ¤Î¹â¤µ:
-<INPUT type="text" id="inpDivHeight" value="400px">
+<INPUT type="text" id="inpDivHeight" value="400px"></LABEL>
 <INPUT type="button" class="button" onclick="setDivHeight();return false" value="¹â¤µÀßÄê">
 <INPUT type="button" class="button" id="inpDivBorder" onclick="switchDivBorder(this);return false" value="ÏÈ¤ò¶¹¤á¤ë">
 </P>
@@ -1027,8 +1035,6 @@ _HTML_
 # µ­»öºï½ü
 #
 sub delArticle{
-	my$delEvenIfMarkMode=0;
-	
 	($IN{'i'},$IN{'j'},$IN{'type'})=split('-',$IN{'del'});
 	open(RW,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$?:$!]";
 	eval{flock(RD,2)};
@@ -1048,15 +1054,9 @@ sub delArticle{
 <FORM accept-charset="euc-jp" id="Delete" method="post" action="index.cgi">
 <FIELDSET style="padding:0.5em;width:60%">
 <LEGEND>¥¹¥ì¥Ã¥É¤Îºï½üÊýË¡¤òÁª¤ó¤Ç¤¯¤À¤µ¤¤</LEGEND>
-_HTML_
-				my$i=<<"_HTML_";
 <TD>
-<LABEL for="mark">¿Æµ­»ö¤ÎËÜÊ¸¤Î¤ßºï½ü<INPUT id="mark" name="del" type="radio" value="$IN{'del'}-1"></LABEL>
+<LABEL for="mark">¿Æµ­»ö¤ÎËÜÊ¸¤Î¤ßºï½ü<INPUT id="mark" name="del" type="radio" value="$IN{'del'}-1" checked></LABEL>
 <LABEL for="$CF{'delthr'}">µ­»ö¥¹¥ì¥Ã¥É¤òºï½ü<INPUT id="$CF{'delthr'}" name="del" type="radio" value="$IN{'del'}-2"></LABEL>
-_HTML_
-				$i=~s/(yid="$CF{'delthr'}")/$1 checked/o;
-				print<<"_HTML_";
-$i
 </FIELDSET>
 
 <P style="margin:0.6em">
@@ -1077,9 +1077,7 @@ _HTML_
 		}
 		
 		#mark
-		if($delEvenIfMarkMode){
-			$log[$IN{'j'}]=~s/\tbody=\t([^\t]*);\t/\tbody=\tdel;\t/go;
-		}
+#		$log[$IN{'j'}]=~s/\tbody=\t([^\t]*);\t/\tbody=\tdel;\t/go;
 		$log[$IN{'j'}]=~s/^Mir12=\t([^\t]*);\t/Mir12=\tdel;\t/go;
 		truncate(RW,0);
 		seek(RW,0,0);
@@ -1391,7 +1389,7 @@ sub getParam{
 				unless($DT{'oldps'}){
 				}elsif($DT{'oldps'}eq$CF{'admps'}){
 					$IN{'oldps'}=$CF{'admps'};
-				}elsif($DT{'oldps'}=~/(.{1,24})/o){
+				}elsif($DT{'oldps'}=~/(.{8,128})/o){
 					$IN{'oldps'}=$1;
 				}
 				$IN{'_ArticleType'}=!$IN{'j'}?2:3;
@@ -1603,7 +1601,7 @@ _HTML_
 			eval{flock(ZERO,1)};
 			my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
 			close(ZERO);
-			(!$zero[0]||index($zero[0],"Mir12=\t")!=0)&&die"ZERO¤Î¥í¥°·Á¼°¤¬Mir12·¿°Ê³°¤Ç¤¹($zero[0])";
+			$zero[0]&&index($zero[0],"Mir12=\t")>-1or die"ZERO¤Î¥í¥°·Á¼°¤¬Mir12·¿°Ê³°¤Ç¤¹";
 			%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
 			@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
 		}
@@ -2011,7 +2009,7 @@ $ 32bit¤Î10¿Ê¿ô¤¬Íß¤·¤¤»þ¤Ë¿¿¤ò¡£
 	my$r=0xffffffff;
 	$r=$r>>8&0xffffff^$crc32[$r&255^$_]for unpack"C*",$word;
 	$r^=0xffffffff;
-	return shift()?$r:sprintf("%08X",$r);
+	return@_?$r:sprintf("%08X",$r);
 }
 
 
@@ -2092,6 +2090,7 @@ $ ¤É¤Î¤è¤¦¤Ê·Á¤ÇÊÖ¤¹¤«¤ÎÀßÄê
 	my$text=shift||'<IMG src="-!src!-" alt="" title="-!dir!-+-!file!-">';
 	my%DT=(dir=>$CF{'icon'},file=>'');
 	if($data->{'icon'}){
+		$DT{'file'}=$data->{'icon'};
 	}elsif($CF{'absoluteIcon'}&&$data->{'cmd'}=~/(?:^|;)absoluteIcon=([^;]*)/o){
 		#ÀäÂÐ»ØÄê¥¢¥¤¥³¥ó
 		$DT{'dir'}='';
@@ -2100,10 +2099,13 @@ $ ¤É¤Î¤è¤¦¤Ê·Á¤ÇÊÖ¤¹¤«¤ÎÀßÄê
 		#ÁêÂÐ»ØÄê¥¢¥¤¥³¥ó
 		$DT{'file'}=$1;
 	}
-	$DT{'file'}=$data->{'icon'}if(!$DT{'file'});
-	$DT{'src'}=$DT{'dir'}.$DT{'file'};
-	$text=~s/(-!(\w+)!-)/defined$DT{$2}?$DT{$2}:$1/ego;
-	return$DT{'file'}?$text:undef;
+	if($DT{'file'}){
+		$DT{'src'}=$DT{'dir'}.$DT{'file'};
+		$text=~s/(-!(\w+)!-)/defined$DT{$2}?$DT{$2}:$1/ego;
+	}else{
+		$text=undef;
+	}
+	return$text;
 }
 
 
