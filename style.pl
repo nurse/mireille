@@ -7,7 +7,7 @@
 # Scripted by NARUSE,Yui.
 #------------------------------------------------------------------------------#
 # $cvsid = q$Id$;
-#require 5.005;
+require 5.005;
 #use strict;
 #use vars qw(%CF %IC %IN %CK);
 
@@ -283,7 +283,7 @@ $CF{'wrtfm'}=<<'_CONFIG_';
 </SPAN>
 </TD>
 </TR>
-<TR title="coMmand&#10;専用アイコンを始めとする拡張命令を使う場合に使用します">
+<TR title="coMmand&#10;専用アイコンを始めとする拡張命令を使う場合に使用します&#10;'command=value'のように指定します">
 <TH class="item">
 <LABEL accesskey="m" for="cmd">■コマンド(<SPAN class="ak">M</SPAN>)：</LABEL>
 </TH>
@@ -387,7 +387,7 @@ $CF{'resfm'}=<<'_CONFIG_';
 </SPAN>
 </TD>
 </TR>
-<TR title="coMmand&#10;専用アイコンを始めとする拡張命令を使う場合に使用します">
+<TR title="coMmand&#10;専用アイコンを始めとする拡張命令を使う場合に使用します&#10;'command=value'のように指定します">
 <TH class="item">
 <LABEL accesskey="m" for="cmd">■コマンド(<SPAN class="ak">M</SPAN>)：</LABEL>
 </TH>
@@ -435,7 +435,7 @@ sub artprt{
 $	この記事の情報
 =cut
 	#記事情報を受け取って
-	my%DT=('new'=>'',%{shift()},(shift()=~/([^\t]*)=\t([^\t]*);\t/go));
+	my%DT=(new=>'',%{shift()},(shift()=~/([^\t]*)=\t([^\t]*);\t/go));
 	#削除されたら知らせて
 	'del'eq$DT{'Mir12'}&&($DT{'body'}='Mireille: [この記事は削除されました]');
 	#記事ナビ
@@ -463,8 +463,8 @@ $	この記事の情報
 <TABLE cellspacing="0" class="parent" summary="Article$DT{'i'}-0" title="$DT{'i'}-0">
 <COL class="number"><COL class="name"><COL class="date">
 <TR class="info">
-	<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" id="art$DT{'i'}-$DT{'j'}" class="number" href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【No.$DT{'i'}】</A></TH>
-	<TD class="name">$DT{'new'}&nbsp;<SPAN class="name">$DT{'name'}</SPAN>
+	<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" class="number" href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【No.$DT{'i'}】</A></TH>
+	<TD class="name">$DT{'new'} <SPAN class="name">$DT{'name'}</SPAN>
 	<SPAN class="home">$DT{'home'}</SPAN></TD>
 	<TD class="date"><SPAN class="date">$DT{'date'}</SPAN>
 	<SPAN class="revise" title="$DT{'i'}番スレッドの親記事を修正"><A
@@ -487,7 +487,7 @@ sub artchd{
 $	この記事の情報
 =cut
 	#記事情報を受け取って
-	my%DT=('new'=>'',%{shift()},(shift()=~/([^\t]*)=\t([^\t]*);\t/go));
+	my%DT=(new=>'',%{shift()},(shift()=~/([^\t]*)=\t([^\t]*);\t/go));
 
 	#削除されてるときはここの前に飛ばしちゃうの
 	#記事ナビ
@@ -514,11 +514,12 @@ _HTML_
 
 	print<<"_HTML_";
 <TR class="info"><TH class="space" rowspan="2">&nbsp;</TH>
-<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" class="number" href=".?rvs=$DT{'i'}-$DT{'j'}">【Re:$DT{'j'}】</A></TH>
-<TD class="name">$DT{'new'} <SPAN class="name">$DT{'name'}</SPAN><SPAN class="home">$DT{'home'}</SPAN></TD>
-<TD class="date"><SPAN class="date">$DT{'date'}</SPAN>
+	<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" class="number" href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【Re:$DT{'j'}】</A></TH>
+	<TD class="name">$DT{'new'} <SPAN class="name">$DT{'name'}</SPAN>
+	<SPAN class="home">$DT{'home'}</SPAN></TD>
+	<TD class="date"><SPAN class="date">$DT{'date'}</SPAN>
 	<SPAN class="revise" title="$DT{'i'}番スレッドの子記事$DT{'j'}を修正"
-	><A href=".?rvs=$DT{'i'}-$DT{'j'}">【修正】</A></SPAN></TD>
+	><A href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【修正】</A></SPAN></TD>
 </TR>
 <TR><TD class="icon"><IMG src="$CF{'icon'}$DT{'icon'}" alt="" title="$DT{'icon'}"></TD>
 	<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD></TR>
