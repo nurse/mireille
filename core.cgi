@@ -14,6 +14,7 @@ require 5.005;
 #use vars qw(%CF %IC %IN %CK);
 my(%Z0,@zer2,@file);
 $CF{'encoding'}||='euc-jp';
+$CF{'index'}||='index.cgi';
 
 =pod core.cgi¤òÃ±ÂÎµ¯Æ°¤µ¤»¤ë¤È¡¢location¤ÇÄ·¤Ð¤»¤ëCGI¤Ë
 # ¤³¤Îµ¡Ç½¤ò»È¤¦¤Ë¤Ï¾å¤Î¹Ô¤ò # ¤Ç #=item ¤È¥³¥á¥ó¥È¥¢¥¦¥È¤·¤Æ¤¯¤À¤µ¤¤
@@ -90,7 +91,7 @@ sub showCover{
 	$CK{'time'}=$^T-$CF{'newnc'}unless&getCookie;
 	&logfiles($CF{'sort'});
 	!@file&&$file[$#file-1]&&push(@file,0);
-	#%Z0||&getZeroInfo;
+	%Z0||&getZeroInfo;
 	
 	#-----------------------------
 	#$IN{'page'}¤ÎÀßÄê
@@ -117,7 +118,7 @@ sub showCover{
 	#-----------------------------
 	#µ­»ö¾ðÊó
 	my%NEW;
-	my@view=map{$NEW{"$_"}=qq(<A href="index.cgi?read=$_#art$_" class="new">$_</A>)}
+	my@view=map{$NEW{"$_"}=qq(<A href="$CF{'index'}?read=$_#art$_" class="new">$_</A>)}
 	grep{$zer2[$_-$zer2[0]]>$CK{'time'}}grep{$_>$zer2[0]}@file;
 	
 	#-----------------------------
@@ -356,8 +357,8 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 	defined$EX{$_}&&!$EX{$_}&&($EX{$_}=1)for@writeSettings,@oneTimeCommands;
 	$IN{'cmd'}=join(';',(map{"$_=$EX{$_}"}grep{$EX{$_}}@settings),(grep{$EX{$_}}@writeSettings));
 	
-	#ÀìÍÑ¥¢¥¤¥³¥óµ¡Ç½¡£index.cgi¤ÇÀßÄê¤¹¤ë¡£
-	#index.cgi¤Ç»ØÄê¤·¤¿¥¢¥¤¥³¥ó¥Ñ¥¹¥ï¡¼¥É¤Ë¹çÃ×¤¹¤ì¤Ð¡£
+	#ÀìÍÑ¥¢¥¤¥³¥óµ¡Ç½¡£
+	#»ØÄê¤·¤¿¥¢¥¤¥³¥ó¥Ñ¥¹¥ï¡¼¥É¤¬¹çÃ×¤¹¤ì¤Ð¡£
 	$IN{'icon'}=$IC{$EX{'icon'}}if$CF{'exicon'}&&$IC{$EX{'icon'}};
 	
 	#ÀäÂÐ»ØÄê¥¢¥¤¥³¥ó
@@ -378,7 +379,8 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 		$IN{'pass'}||($CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'})
 		or push(@error,'¥Ñ¥¹¥ï¡¼¥É')&&push(@message,'¥Ñ¥¹¥ï¡¼¥É¤Ï8Ê¸»ú°Ê¾å¡¢128Ê¸»ú°Ê²¼¤Ç¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó¡£');
 		if($CF{'ngWords'}&&!@error){
-			my%item=(body=>'ËÜÊ¸',subject=>'ÂêÌ¾',name=>'Ì¾Á°');
+			#NG¥ï¡¼¥É
+			my%item=split(/\s+/o,$CF{'itemsCheckingNGWords'})||(body=>'ËÜÊ¸',subject=>'ÂêÌ¾',name=>'Ì¾Á°');
 			for(keys%item){
 				my$item=$IN{$_};
 				my$err=$item{$_};
@@ -390,7 +392,7 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 				}
 				@error&&last;
 			}
-			push(@message,'wa0: Something Wicked happend!')if@error;
+			push(@message,'Å¬ÀÚ¤Ç¤Ê¤¤Ê¸»úÎó¤ò´Þ¤àÅê¹Æ¤Ê¤Î¤ÇµñÀä¤µ¤ì¤Þ¤·¤¿¡£')if@error;
 		}
 		if(@error){
 			&showHeader;
@@ -468,7 +470,7 @@ _HTML_
 		}
 		
 		#µ­»öÈÖ¹æ¥ê¥ó¥¯¡Ö>>No.12-6¡×
-		$str=~s{(\04\04No\.(\d+)(-\d+)?)}{<A class="autolink" href="index.cgi?read=$2#art$2$3">$1</A>}go
+		$str=~s{(\04\04No\.(\d+)(-\d+)?)}{<A class="autolink" href="$CF{'index'}?read=$2#art$2$3">$1</A>}go
 			if$CF{'noartno'}||!$EX{'noartno'};
 		
 		#¸ì¶ç¶¯Ä´
@@ -611,11 +613,11 @@ _HTML_
 			print<<"_HTML_";
 <H2 class="heading2">- Â¿½ÅÅê¹Æ¡© -</H2>
 <DIV class="center">
-<P style="margin:0.6em">º£Åê¹Æ¤µ¤ì¤¿µ­»ö¤ÎÆâÍÆ¤Ï<A href="index.cgi?read=$1#art$1-$2" title="³ºÅöµ­»ö¤ò³ÎÇ§¤¹¤ë">Âè$1ÈÖ¥¹¥ì¥Ã¥É¤Î$2ÈÖÌÜ</A>¤ÈÆ±°ìÆâÍÆ¤À¤È»×¤ï¤ì¤Þ¤¹<BR>
+<P style="margin:0.6em">º£Åê¹Æ¤µ¤ì¤¿µ­»ö¤ÎÆâÍÆ¤Ï<A href="$CF{'index'}?read=$1#art$1-$2" title="³ºÅöµ­»ö¤ò³ÎÇ§¤¹¤ë">Âè$1ÈÖ¥¹¥ì¥Ã¥É¤Î$2ÈÖÌÜ</A>¤ÈÆ±°ìÆâÍÆ¤À¤È»×¤ï¤ì¤Þ¤¹<BR>
 ³ºÅöµ­»ö¤ò³ÎÇ§¤·¤Æ¡¢Æ±°ìÆâÍÆ¤Ç¤Ê¤¤¾ì¹ç¤Ï¡¢²¼¤Î¥Õ¥©¡¼¥à¤Ç¾¯¤·½¤Àµ¤·¤Æ¤«¤éÅê¹Æ¤·¤Æ¤ß¤Æ¤¯¤À¤µ¤¤¡£</P>
 <TABLE align="center" border="0" cellspacing="0" summary="BackMenu">
 <COL span="2" width="150">
-<TR><TD><FORM action="index.cgi?read=$1#art$1-$2" method="get">
+<TR><TD><FORM action="$CF{'index'}?read=$1#art$1-$2" method="get">
 <INPUT type="submit" class="button" accesskey="q" value="·Ç¼¨ÈÄ¤ËÌá¤ë(Q)">
 </FORM></TD>
 <TD><FORM action="$CF{'home'}" method="get">
@@ -817,7 +819,7 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 
 <TABLE border="0" cellspacing="0" summary="BackMenu">
 <COL span="2" width="150">
-<TR><TD><FORM action="index.cgi?read=$IN{'i'}#art$IN{'i'}-$IN{'j'}" method="get">
+<TR><TD><FORM action="$CF{'index'}?read=$IN{'i'}#art$IN{'i'}-$IN{'j'}" method="get">
 <INPUT type="submit" class="button" accesskey="q" value="·Ç¼¨ÈÄ¤ËÌá¤ë(Q)">
 </FORM></TD>
 <TD><FORM action="$CF{'home'}" method="get">
@@ -940,7 +942,7 @@ $ Á°²ó¤Î½èÍý¤Î·ë²Ì
 <H3 class="heading3">$_[0]</H3>
 <TABLE align="center" border="0" cellspacing="0" summary="BackMenu">
 <COL span="2" width="150">
-<TR><TD><FORM action="index.cgi?read=$IN{'i'}#art$IN{'i'}-$IN{'j'}" method="get">
+<TR><TD><FORM action="$CF{'index'}?read=$IN{'i'}#art$IN{'i'}-$IN{'j'}" method="get">
 <INPUT type="submit" class="button" accesskey="q" value="·Ç¼¨ÈÄ¤ËÌá¤ë(Q)">
 </FORM></TD>
 <TD><FORM action="$CF{'home'}" method="get">
@@ -958,7 +960,7 @@ _HTML_
 	print<<"_HTML_";
 <DIV class="center">$pageSelector</DIV>
 
-<FORM id="List" method="post" action="index.cgi">
+<FORM id="List" method="post" action="$CF{'index'}">
 <DIV class="center"><TABLE border="1" cellspacing="0" class="list" summary="List" width="80%">
 <COL style="width:5em">
 <COL style="width:17em">
@@ -980,7 +982,7 @@ _HTML_
 		my$j=-1;
 		open(RD,'<'."$CF{'log'}$i.cgi")||die"Can't read log($i.cgi)[$?:$!]";
 		eval{flock(RD,1)};
-		my$count="<A href=\"index.cgi?read=$i#art$i\">Âè$i¹æ</A>";
+		my$count=qq(<A href="$CF{'index'}?read=$i#art$i">Âè$i¹æ</A>);
 		#µ­»ö¤´¤È
 		while(<RD>){
 			$j++;
@@ -1078,7 +1080,7 @@ sub rvsArticle{
 			&showHeader;
 			print<<"_HTML_";
 <H2 class="heading2">- Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Î¥Ñ¥¹¥ï¡¼¥ÉÇ§¾Ú -</H2>
-<FORM accept-charset="$CF{'encoding'}" id="Revise" method="post" action="index.cgi">
+<FORM accept-charset="$CF{'encoding'}" id="Revise" method="post" action="$CF{'index'}">
 <TABLE cellspacing="2" summary="Revise" width="550">
 <COL width="50">
 <COL width="170">
@@ -1128,7 +1130,7 @@ sub delArticle{
 				&showHeader;
 				print<<"_HTML_";
 <H2 class="heading2">- Âè$IN{'i'}ÈÖ¥¹¥ì¥Ã¥É¤Îºï½ü -</H2>
-<FORM accept-charset="$CF{'encoding'}" id="Delete" method="post" action="index.cgi">
+<FORM accept-charset="$CF{'encoding'}" id="Delete" method="post" action="$CF{'index'}">
 <FIELDSET style="padding:0.5em;width:60%">
 <LEGEND>¥¹¥ì¥Ã¥É¤Îºï½üÊýË¡¤òÁª¤ó¤Ç¤¯¤À¤µ¤¤</LEGEND>
 <TD>
@@ -1200,7 +1202,7 @@ sub showArtSeek{
 				read(RD,$thread,-s"$CF{'log'}$_.cgi");
 				close(RD);
 				MirString->matchedItem($thread,$item,$seek)||next;
-				$result.=qq(<A href="index.cgi?read=$_#art$_">No.$_</A>\n);
+				$result.=qq(<A href="$CF{'index'}?read=$_#art$_">No.$_</A>\n);
 			}
 		}else{
 			#µ­»ö¤´¤È¸¡º÷
@@ -1214,7 +1216,7 @@ sub showArtSeek{
 				index($thread,$IN{'seek'})+1||next;
 				my$i=$_;
 				for(MirString->matchedItems($thread,$item,$seek)){
-					$result.=qq(<A href="index.cgi?read=$i#art$i-$_">No.$i-$_</A>\n);
+					$result.=qq(<A href="$CF{'index'}?read=$i#art$i-$_">No.$i-$_</A>\n);
 				}
 			}
 		}
@@ -1227,7 +1229,7 @@ _HTML_
 	}
 	
 	print<<"_HTML_";
-<FORM accept-charset="$CF{'encoding'}" id="seek" method="post" action="index.cgi">
+<FORM accept-charset="$CF{'encoding'}" id="seek" method="post" action="$CF{'index'}">
 <DIV class="center"><TABLE cellspacing="2" summary="¸¡º÷¥Õ¥©¡¼¥à" style="margin: 1em auto">
 <TR>
 <TH class="item">
@@ -1694,7 +1696,7 @@ sub getLastpost{
 	my$date=&date($Z0{'time'});
 	my$dateNow="Date:\t\t".&datef($^T,'dateTime')
 	."\nLast-Modified:\t".&datef((stat("$CF{'log'}0.cgi"))[9],'dateTime');
-	return sprintf'<P class="lastpost" title="%s"><A href="index.cgi?read=%s#art%s">Lastpost: %s %s</A></P>'
+	return sprintf qq(<P class="lastpost" title="%s"><A href="$CF{'index'}?read=%s#art%s">Lastpost: %s %s</A></P>)
 		,$dateNow,$Z0{'Mir12'},$Z0{'Mir12'},$date,$Z0{'name'};
 }
 
@@ -1764,8 +1766,8 @@ $ following / preceding¤Ç»È¤¦Ê¸»úÎó¤ÎarrayRef
 	my$mode=$_[0]?"$_[0];page":'page';@_&&shift;
 	my$max=$_[0]||20;@_&&shift; #Ä¾ÀÜÈô¤Ù¤ë¥Ú¡¼¥¸¿ô
 	my$pageText=$_[0]?shift: #¥Ú¡¼¥¸¥»¥ì¥¯¥¿ÍÑ¤ÎÊ¸»ú
-		['[ºÇ¿·]','<A accesskey="," href="index.cgi?%s=%d">&#60; ¸å¤Î</A>'
-		,'[ºÇ¸Å]','<A accesskey="." href="index.cgi?%s=%d">ÀÎ¤Î &#62;</A>'];@_&&shift;
+		['[ºÇ¿·]',qq(<A accesskey="," href="$CF{'index'}?%s=%d">&#60; ¸å¤Î</A>)
+		,'[ºÇ¸Å]',qq(<A accesskey="." href="$CF{'index'}?%s=%d">ÀÎ¤Î &#62;</A>)];@_&&shift;
 
 	
 	#pageÉ½¼¨Ä´Àá
@@ -1794,11 +1796,11 @@ $ following / preceding¤Ç»È¤¦Ê¸»úÎó¤ÎarrayRef
 	
 	#ÇÛÎó¤Ø
 	my@page=map{$_==$IN{'page'}?qq(<STRONG class="current">$_</STRONG>)
-	:sprintf'<A href="index.cgi?%s=%d"%s>%d</A>',$mode,$_,$key[$_]?$key[$_]:'',$_}$str..$end;
+	:sprintf qq(<A href="$CF{'index'}?%s=%d"%s>%d</A>),$mode,$_,$key[$_]?$key[$_]:'',$_}$str..$end;
 	
 	#ºÇÀè¤ÈºÇ¸å
-	unshift(@page,qq(<A accesskey="&#60;" href="index.cgi?$mode=1">1</A> ..))		if$str!=1;
-	push(@page,qq(.. <A accesskey="&#62;" href="index.cgi?$mode=$pags">$pags</A>))	if$end!=$pags;
+	unshift(@page,qq(<A accesskey="&#60;" href="$CF{'index'}?$mode=1">1</A> ..))		if$str!=1;
+	push(@page,qq(.. <A accesskey="&#62;" href="$CF{'index'}?$mode=$pags">$pags</A>))	if$end!=$pags;
 	
 	#following / preceding
 	my$following=$IN{'page'}==$str?
@@ -1844,7 +1846,7 @@ sub showArticle{
 			$DT{'-unreads'}=&artprt(\%DT,$_);
 			print<<"_HTML_"if$horizon>0;
 <P class="overflowMessage">»Òµ­»ö¿ô¤¬Â¿¤¤¤¿¤á¡¢ºÇ¿·¤Î$maxChildsShown·ï¤Î¤ßÉ½¼¨¤·¤Þ¤¹¡£
-¤½¤ì°ÊÁ°¤Îµ­»ö¤Ï<A href="index.cgi?res=$DT{'i'}">ÊÖ¿®¥â¡¼¥É</A>¤Ç¸«¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹¡£</P>
+¤½¤ì°ÊÁ°¤Îµ­»ö¤Ï<A href="$CF{'index'}?res=$DT{'i'}">ÊÖ¿®¥â¡¼¥É</A>¤Ç¸«¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹¡£</P>
 _HTML_
 		}else{
 			#»Òµ­»ö
@@ -1857,7 +1859,7 @@ _HTML_
 	$DT{'-isOverflowed'}=$CF{'maxChilds'}&&$DT{'j'}>=$CF{'maxChilds'}?1:0;
 	$DT{'-isAvailable'}=not$DT{'-isLocked'}+$DT{'-isOverflowed'};
 	#µ­»ö¥Õ¥Ã¥¿
-	&artfot(\%DT);
+	&artfot(\%DT)if$DT{'j'}+1;
 	return wantarray?map{$_,$DT{$_}}grep{m/^-/o}keys%DT:$DT{'-unreads'};
 }
 
@@ -2091,7 +2093,8 @@ sub getSignatureView{
 			$Z0{'Serial'}=1+int(rand(-2+2**32));
 		}
 		srand($Z0{'Serial'}^&getCRC32($data->{name},1));
-		my$saltForSignatureView=chr(47+rand 76).chr(47+rand 76);
+		my@salt=('.','/',0..9,'A'..'Z','a'..'z');
+		my$saltForSignatureView=join'',map{$salt[rand 64]}0,1;
 		$signature=substr(crypt($data->{signature},$saltForSignatureView),2);
 		$signatureCacheView{$data->{signature}.' '.$data->{name}}=$signature;
 	}
@@ -2250,7 +2253,7 @@ $ ¥Ç¥Õ¥©¥ë¥È»ØÄê¤Ë¤·¤¿¤¤¿§Ì¾
  title="Color&#10;ËÜÊ¸¤Î¿§¤òÆþÎÏ¤·¤Þ¤¹&#10;¡Ê#0f0¡¢#00ff00¡¢rgb(0,255,0)¡¢WebColor(green¤È¤«)&#10;¤Î¤É¤Î·Á¼°¤Ç¤â»È¤¨¤Þ¤¹" value="$_[0]">
 _HTML_
 	}else{
-		my$list=$CF{'colorList'}=~/\S/o?$CF{'colorList'}:<<"_HTML_";#1.2.5°Ê²¼¤Îindex.cgi¤È¤Î¸ß´¹À­¤Î¤¿¤á
+		my$list=$CF{'colorList'}=~/\S/o?$CF{'colorList'}:<<"_HTML_";#1.2.5°Ê²¼¤È¤Î¸ß´¹À­¤Î¤¿¤á
 <OPTION value="#000000" style="color:#000000">¢£Black</OPTION>
 <OPTION value="#696969" style="color:#696969">¢£DimGray</OPTION>
 <OPTION value="#808080" style="color:#808080">¢£Gray</OPTION>
@@ -2687,7 +2690,16 @@ BEGIN{
 	$CF{'Version'}=join('.',q$Mireille: 1_2_11 $=~/\d+[a-z]?/go);
 	($CF{'Core'}=q$Revision$)=~/(\d+((?:\.\d+)*))/o;
 	$CF{'CoreRevision'}=$1;
-	$CF{'Version'}.=$2.'¦Â' if index(q$State$,'Exp')+1;
+	my$subver=$2;
+	if(q$State$!~/^State: (.*) $/o){
+	}elsif('Rel'eq$1){
+	}elsif('Stab'eq$1){
+		$CF{'Version'}.=$subver;
+	}elsif('Exp'eq$1){
+		$CF{'Version'}.=$subver.'¦Â';
+	}else{
+		$CF{'Version'}.=$subver;
+	}
 }
 1;
 __END__
