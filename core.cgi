@@ -217,7 +217,7 @@ sub writeArticle{
 	#-----------------------------
 	#¥¹¥ì¥Ã¥É¤Î¥í¥Ã¥¯
 	if($EX{'lockThread'}&&$IN{'i'}){
-		open(RW,'+>>'."$CF{'log'}$IN{'i'}.cgi")
+		open(RW,'+<'."$CF{'log'}$IN{'i'}.cgi")
 		||die"Can't read/write log($IN{'i'};.cgi)[$?:$!]";
 		eval{flock(RW,2)};
 		seek(RW,0,0);
@@ -347,11 +347,10 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 
 	my@settings=qw(icon iconlist absoluteIcon relativeIcon signature);
 	my@writeSettings=qw(usetag notag noautolink noartno nostrong);
-	my@oneTimeCommands=qw(dnew znew renew lockArticle lockThread);
+	my@oneTimeCommands=qw(dnew znew renew lockArticle);
 	
-	$IN{'cmd'}=join(';',map{"$_=$EX{$_}"}grep{$EX{$_}}@settings);
 	defined$EX{$_}&&!$EX{$_}&&($EX{$_}=1)for@writeSettings,@oneTimeCommands;
-	$IN{'cmd'}.=join(';',grep{$EX{$_}}@writeSettings);
+	$IN{'cmd'}=join(';',(map{"$_=$EX{$_}"}grep{$EX{$_}}@settings),(grep{$EX{$_}}@writeSettings));
 	
 	#ÀìÍÑ¥¢¥¤¥³¥óµ¡Ç½¡£index.cgi¤ÇÀßÄê¤¹¤ë¡£
 	#index.cgi¤Ç»ØÄê¤·¤¿¥¢¥¤¥³¥ó¥Ñ¥¹¥ï¡¼¥É¤Ë¹çÃ×¤¹¤ì¤Ð¡£
@@ -565,7 +564,7 @@ _HTML_
 	
 	#-----------------------------
 	#ZERO¾ðÊó¤Î¼èÆÀ
-	open(ZERO,'+>>'."$CF{'log'}0.cgi")||die"Can't read/write log(0.cgi)[$?:$!]";
+	open(ZERO,'+<'."$CF{'log'}0.cgi")||die"Can't read/write log(0.cgi)[$?:$!]";
 	eval{flock(ZERO,2)};
 	seek(ZERO,0,0);
 	my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
@@ -573,6 +572,12 @@ _HTML_
 	%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
 	my@zer1=split(/\s+/o,$zero[1]);
 	@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
+	
+	#-----------------------------
+	#@zer1¥Ù¡¼¥¹¹Ó¤é¤·ÂÐºö(?)
+	#120ÉÃ°ÊÆâ¤Ë@zer1¤¬Á´¤ÆÆþ¤ìÂØ¤ï¤Ã¤¿¤é´í¸±¤ÎÃû¸õ
+	$zer1[$#zer1]=~/\d+:\w+:\d+\[(\d+)\]/o&&$1+120>$^T&&&showUserError('Å·Ê¸´±¤¬¶§Ãû¤òÃÎ¤é¤»¤Æ¤­¤¿');
+	
 	#-----------------------------
 	#@zer2¤Î¥¨¥é¡¼ÄûÀµ
 	for(@file){
@@ -667,6 +672,7 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 			$IN{'i'}=$file[0]+1;
 			open(WR,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't write log($IN{'i'})[$?:$!]";
 			eval{flock(WR,2)};
+			die"½ñ¤­¹þ¤ß½èÍýÃæ¤Ë³ä¤ê¹þ¤Þ¤ì¤Þ¤·¤¿($CF{'log'}$IN{'i'}.cgi)"if-s"$CF{'log'}$IN{'i'}.cgi";
 			truncate(WR,0);
 			seek(WR,0,0);
 			print WR "Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'_NewPassword'};\ttime=\t$^T;\t"
@@ -676,7 +682,7 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 		}else{
 			#-----------------------------
 			#ÊÖ¿®½ñ¤­¹þ¤ß
-			open(RW,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$?:$!]";
+			open(RW,'+<'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$?:$!]";
 			eval{flock(RW,2)};
 			seek(RW,0,0);
 			my$line;
@@ -710,7 +716,7 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 	}else{
 		#-----------------------------
 		#½¤Àµ½ñ¤­¹þ¤ß
-		open(RW,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$?:$!]";
+		open(RW,'+<'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$?:$!]";
 		eval{flock(RW,2)};
 		seek(RW,0,0);
 		my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
@@ -769,8 +775,8 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 		#-----------------------------
 		#¥í¥°´ÉÍý¥Õ¥¡¥¤¥ë¡¢0.cgi¤Ë½ñ¤­¹þ¤ß
 		#¿·µ¬¡¦ÊÖ¿®¤Î»þ¤Ë¤ÏÅê¹Æ¾ðÊó¤òÊÝÂ¸
-		$#zer1=2if$#zer1>2;
-		unshift(@zer1,sprintf"%d:%s:%d",$IN{'i'},$crcOfThisArticle,$IN{'j'});
+		$#zer1=3if$#zer1>3; #(3+2=)5¤¬@zer1¤ÎÊÝÂ¸·ï¿ô
+		unshift(@zer1,sprintf"%d:%s:%d[%d]",$IN{'i'},$crcOfThisArticle,$IN{'j'},$^T);
 		my$No=$IN{'i'}-$zer2[0];
 		$No>0||die"ZER2¤Î¥Ç¡¼¥¿¤¬ÉÔÀµ¤Ç¤¹ 'i':$IN{'i'},'zer2':$zer2[0]";
 		$zer2[$No]=$^T;
@@ -800,12 +806,13 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 	&showHeader;
 	print<<"_HTML_";
 <H2 class="heading2">- ½ñ¤­¹þ¤ß´°Î» -</H2>
-<DIV class="center">
-<P style="margin:0.6em">°Ê²¼¤ÎÆâÍÆ¤ÇÂè$IN{'i'}ÈÖ¥¹¥ì¥Ã¥É¤Î$IN{'j'}ÈÖÌÜ¤Ë½ñ¤­¹þ¤ß¤Þ¤·¤¿¡£<BR>
+<DIV class="writingMessage">
+<P>°Ê²¼¤ÎÆâÍÆ¤ÇÂè$IN{'i'}ÈÖ¥¹¥ì¥Ã¥É¤Î$IN{'j'}ÈÖÌÜ¤Ë½ñ¤­¹þ¤ß¤Þ¤·¤¿¡£<BR>
 ¤³¤ì¤Ç¤è¤±¤ì¤Ð¤½¤Î¤Þ¤ÞTOP¤ä·Ç¼¨ÈÄ¤ËÌá¤Ã¤Æ¤¯¤À¤µ¤¤¡£<BR>
 ½¤Àµ¤·¤¿¤¤¾ì¹ç¤Ï°Ê²¼¤Î¥Õ¥©¡¼¥à¤Ç½¤Àµ¤·¤ÆÅê¹Æ¤·¤Æ¤¯¤À¤µ¤¤¡£</P>
-<DIV align="center" class="note" style="width:600px"><P align="left">
-<STRONG>--- PREVIEW ---</STRONG><BR>$IN{'body'}</P></DIV>
+
+<DIV class="box"><P class="heading3">--- PREVIEW ---</P><P class="body">$IN{'body'}</P></DIV>
+
 <TABLE border="0" cellspacing="0" summary="BackMenu">
 <COL span="2" width="150">
 <TR><TD><FORM action="index.cgi?read=$IN{'i'}#art$IN{'i'}-$IN{'j'}" method="get">
@@ -832,12 +839,12 @@ sub res{
 	&getCookie;
 	&showHeader;
 	print qq(<H2 class="heading2">- µ­»öÊÖ¿®¥â¡¼¥É -</H2>\n)
-	.qq(<DIV id="thread_div" style="border:dashed 1px #333;height:auto;overflow:visible;width:99%">\n)
+	.qq(<DIV id="threadBox">\n)
 	.qq(<H3 class="heading3">¤³¤Î¥¹¥ì¥Ã¥É¤Îº£¤Þ¤Ç¤ÎÆâÍÆ</H3>\n);
-	print"This thread$IN{'i'} is deleted."if"del"eq&showArticle(i=>$IN{'i'},ak=>1,res=>1);
+	print"This thread$IN{'i'} is deleted."if&showArticle(i=>$IN{'i'},ak=>1,res=>1)eq'del';
 	print<<'_HTML_';
 </DIV>
-<P style="margin:0 10% 0 auto;text-align:right">
+<P id="paragraphThreadBox">
 <LABEL for="inpDivHeight">ÏÈ¤Î¹â¤µ:
 <INPUT type="text" id="inpDivHeight" value="400px"></LABEL>
 <INPUT type="button" class="button" onclick="setDivHeight();return false" value="¹â¤µÀßÄê">
@@ -848,7 +855,7 @@ sub res{
 /* ========== ÏÈ¤Î¹â¤µÀßÄê ========== */
 function setDivHeight(){
 	if(!document.getElementById)return false;
-	var div=document.getElementById('thread_div');
+	var div=document.getElementById('threadBox');
 	var but=document.getElementById('inpDivBorder');
 	var inp=document.getElementById('inpDivHeight');
 	if(!div.style||!div.style.height)return false;
@@ -860,7 +867,7 @@ function setDivHeight(){
 /* ========== ÏÈ¤ò¹­¤²¤¿¤ê¶¹¤á¤¿¤ê ========== */
 function switchDivBorder(self){
 	if(!document.getElementById)return false;
-	var div=document.getElementById('thread_div');
+	var div=document.getElementById('threadBox');
 	var inp=document.getElementById('inpDivHeight');
 	if(!div.style||!div.style.overflow){
 		return false;
@@ -878,7 +885,7 @@ function switchDivBorder(self){
 /* ========== ÏÈ¤ò½é´ü²½ ========== */
 function initDiv(){
 	if(!document.getElementById)return false;
-	var div=document.getElementById('thread_div');
+	var div=document.getElementById('threadBox');
 	var but=document.getElementById('inpDivBorder');
 	var inp=document.getElementById('inpDivHeight');
 	if(!div.style||!div.style.height)return false;
@@ -891,6 +898,7 @@ function initDiv(){
 //initDiv();
 -->
 </SCRIPT>
+
 _HTML_
 	$CK{'i'}=$IN{'i'};
 	$CK{'ak'}=1;
@@ -1096,7 +1104,7 @@ _HTML_
 #
 sub delArticle{
 	($IN{'i'},$IN{'j'},$IN{'type'})=split('-',$IN{'del'});
-	open(RW,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$?:$!]";
+	open(RW,'+<'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$?:$!]";
 	eval{flock(RD,2)};
 	seek(RW,0,0);
 	my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
@@ -1641,42 +1649,9 @@ _HTML_
 	#½àÈ÷
 	
 	#Header
-	if($DT{'head'}){
-	}elsif(!defined$CF{'head'}){
-		$DT{'head'}=<<"_HTML_";
-<META http-equiv="Content-type" content="text/html; charset=euc-jp">
-<META http-equiv="Content-Script-Type" content="text/javascript">
-<META http-equiv="Content-Style-Type" content="text/css">
-<META http-equiv="MSThemeCompatible" content="yes">
-<LINK rel="Start" href="$CF{'home'}">
-<LINK rel="Index" href="index.cgi">
-<LINK rel="Help" href="index.cgi?help">
-<LINK rel="Stylesheet" type="text/css" href="$CF{'style'}">
-<TITLE>$CF{'title'}</TITLE>
-_HTML_
-	}else{
-		$DT{'head'}=$CF{'head'};
-	}
-	
+	$DT{'head'}||=$CF{'head'};
 	#Skyline
-	unless(defined$DT{'skyline'}){
-		#LastPost
-		unless(%Z0){
-			open(ZERO,'<'."$CF{'log'}0.cgi")||die"Can't read log(0.cgi)[$?:$!]";
-			eval{flock(ZERO,1)};
-			my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
-			close(ZERO);
-			$zero[0]&&index($zero[0],"Mir12=\t")+1or die"ZERO¤Î¥í¥°·Á¼°¤¬Mir12·¿°Ê³°¤Ç¤¹";
-			%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
-			@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
-		}
-		my$date=&date($Z0{'time'});
-		my$dateNow="Date:\t\t".&datef($^T,'dateTime')
-		."\nLast-Modified:\t".&datef((stat("$CF{'log'}0.cgi"))[9],'dateTime');
-		$DT{'skyline'}=<<"_HTML_";
-<P class="lastpost" title="$dateNow"><A href="index.cgi?read=$Z0{'Mir12'}#art$Z0{'Mir12'}">Lastpost: $date $Z0{'name'}</A></P>
-_HTML_
-	}
+	$DT{'skyline'}||=&getLastpost;
 	
 	#-----------------------------
 	#HTML½ñ¤­½Ð¤·
@@ -1740,7 +1715,7 @@ _HTML_
 		print"\n";
 		$status.="<!-- gzip disable -->";
 	}
-	print<<"_HTML_";
+	print<<"_HTML_",&getHeader(skyline=>$DT{'skyline'});
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <!--DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"-->
 <HTML lang="ja-JP">
@@ -1750,12 +1725,28 @@ $status
 </HEAD>
 
 <BODY>
-$CF{'bodyHead'}
-$DT{'skyline'}
-$CF{'pghead'}
-$CF{'menu'}
 _HTML_
-#	eval qq(print<<"_HTML_";\n$CF{'menu'}\n_HTML_);
+}
+
+
+#-------------------------------------------------
+# ºÇ¿·¤ÎÅê¹Æ¤Î¾ðÊó¤ò¼èÆÀ
+#
+sub getLastpost{
+	unless(%Z0){
+		open(ZERO,'<'."$CF{'log'}0.cgi")||die"Can't read log(0.cgi)[$?:$!]";
+		eval{flock(ZERO,1)};
+		my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
+		close(ZERO);
+		$zero[0]&&index($zero[0],"Mir12=\t")+1or die"ZERO¤Î¥í¥°·Á¼°¤¬Mir12·¿°Ê³°¤Ç¤¹";
+		%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
+		@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
+	}
+	my$date=&date($Z0{'time'});
+	my$dateNow="Date:\t\t".&datef($^T,'dateTime')
+	."\nLast-Modified:\t".&datef((stat("$CF{'log'}0.cgi"))[9],'dateTime');
+	return sprintf'<P class="lastpost" title="%s"><A href="index.cgi?read=%s#art%s">Lastpost: %s %s</A></P>'
+		,$dateNow,$Z0{'Mir12'},$Z0{'Mir12'},$date,$Z0{'name'};
 }
 
 
