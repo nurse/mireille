@@ -13,6 +13,7 @@ require 5.005;
 #use strict;
 #use vars qw(%CF %IC %IN %CK);
 my(%Z0,@zer2,@file);
+$CF{'encoding'}||='euc-jp';
 
 =pod core.cgi¤òÃ±ÂÎµ¯Æ°¤µ¤»¤ë¤È¡¢location¤ÇÄ·¤Ð¤»¤ëCGI¤Ë
 # ¤³¤Îµ¡Ç½¤ò»È¤¦¤Ë¤Ï¾å¤Î¹Ô¤ò # ¤Ç #=item ¤È¥³¥á¥ó¥È¥¢¥¦¥È¤·¤Æ¤¯¤À¤µ¤¤
@@ -374,21 +375,13 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 		$IN{'pass'}||($CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'})
 		or push(@error,'¥Ñ¥¹¥ï¡¼¥É')&&push(@message,'¥Ñ¥¹¥ï¡¼¥É¤Ï8Ê¸»ú°Ê¾å¡¢128Ê¸»ú°Ê²¼¤Ç¤Ê¤±¤ì¤Ð¤Ê¤ê¤Þ¤»¤ó¡£');
 		if($CF{'ngWords'}&&!@error){
-#if EUCJP
-			my$eucpre=qr{(?<!\x8F)};
-			my$eucpost=qr{(?=(?:[\xA1-\xFE][\xA1-\xFE])*(?:[\x00-\x7F\x8E\x8F]|\z))};
-#endif
 			my%item=(body=>'ËÜÊ¸',subject=>'ÂêÌ¾',name=>'Ì¾Á°');
 			for(keys%item){
 				my$item=$IN{$_};
 				my$err=$item{$_};
 				study$item;
 				for($CF{'ngWords'}=~/\S+/go){
-#if EUCJP
-					$item=~/$eucpre$_$eucpost/||next;
-#else
-#					index($item,$_)+1||next;
-#endif
+					MirString->match($item,$_)||next;
 					push(@error,$err);
 					last;
 				}
@@ -683,7 +676,7 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 			seek(WR,0,0);
 			print WR "Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'_NewPassword'};\ttime=\t$^T;\t"
 			."body=\t$IN{'body'};\tsignature=\t$IN{'_Signature'};\t"
-			.join('',map{"$_=\t$IN{$_};\t"}grep{defined$IN{$_}}($CF{'prtitm'}=~/\+([a-z\d]+)\b/go))."\n";
+			.join('',map{"$_=\t$IN{$_};\t"}grep{defined$IN{$_}}($CF{'prtitm'}=~/\+(\w+)\b/go))."\n";
 			close(WR);
 		}else{
 			#-----------------------------
@@ -707,7 +700,7 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 			print RW (!chomp$line&&++$IN{'j'}?"\n":'')
 			."Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'_NewPassword'};\ttime=\t$^T;\t"
 			."body=\t$IN{'body'};\tsignature=\t$IN{'_Signature'};\t"
-			.join('',map{"$_=\t$IN{$_};\t"}grep{defined$IN{$_}}$CF{'chditm'}=~/\+([a-z\d]+)\b/go)."\n";
+			.join('',map{"$_=\t$IN{$_};\t"}grep{defined$IN{$_}}$CF{'chditm'}=~/\+(\w+)\b/go)."\n";
 			close(RW);
 		}
 		
@@ -770,7 +763,7 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 			"Mir12=\t$IN{'Mir12'};\tname=\t$IN{'name'};\tpass=\t$IN{'_NewPassword'};\ttime=\t$DT{'time'};\t"
 			."body=\t$IN{'body'};\tsignature=\t$IN{'_Signature'};\t"
 			.join('',map{"$_=\t$IN{$_};\t"}grep{defined$IN{$_}}
-			((!$IN{'j'}?$CF{'prtitm'}:$CF{'chditm'})=~/\+([a-z\d]+)\b/go));
+			((!$IN{'j'}?$CF{'prtitm'}:$CF{'chditm'})=~/\+(\w+)\b/go));
 		truncate(RW,0);
 		seek(RW,0,0);
 		print RW map{"$_\n"}@log;
@@ -992,7 +985,7 @@ _HTML_
 			my$date=&date($DT{'time'});
 			#ËÜÊ¸¤Î½Ì¤á½èÍý
 			$DT{'body'}=~s/<BR\b[^>]*>/¢­/go;
-			$DT{'body'}=&getTruncated($DT{'body'},100);
+			$DT{'body'}=&getTruncated($DT{'body'},60);
 			my$level=!$j?'parent':'child';
 			print<<"_HTML_";
 <TR class="$level">
@@ -1070,7 +1063,7 @@ sub rvsArticle{
 			&showHeader;
 			print<<"_HTML_";
 <H2 class="heading2">- Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Î¥Ñ¥¹¥ï¡¼¥ÉÇ§¾Ú -</H2>
-<FORM accept-charset="euc-jp" id="Revise" method="post" action="index.cgi">
+<FORM accept-charset="$CF{'encoding'}" id="Revise" method="post" action="index.cgi">
 <TABLE cellspacing="2" summary="Revise" width="550">
 <COL width="50">
 <COL width="170">
@@ -1120,7 +1113,7 @@ sub delArticle{
 				&showHeader;
 				print<<"_HTML_";
 <H2 class="heading2">- Âè$IN{'i'}ÈÖ¥¹¥ì¥Ã¥É¤Îºï½ü -</H2>
-<FORM accept-charset="euc-jp" id="Delete" method="post" action="index.cgi">
+<FORM accept-charset="$CF{'encoding'}" id="Delete" method="post" action="index.cgi">
 <FIELDSET style="padding:0.5em;width:60%">
 <LEGEND>¥¹¥ì¥Ã¥É¤Îºï½üÊýË¡¤òÁª¤ó¤Ç¤¯¤À¤µ¤¤</LEGEND>
 <TD>
@@ -1182,15 +1175,6 @@ sub showArtSeek{
 		
 		&logfiles('number');
 		
-#if EUCJP
-		#Àµ¤·¤¯¥Ñ¥¿¡¼¥ó¥Þ¥Ã¥Á¤µ¤»¤ë
-		my$eucpre=qr{(?<!\x8F)};
-		my$eucpost=qr{(?=
-			(?:[\xA1-\xFE][\xA1-\xFE])*	# JIS X 0208 ¤¬ 0Ê¸»ú°Ê¾åÂ³¤¤¤Æ
-			(?:[\x00-\x7F\x8E\x8F]|\z)	# ASCII, SS2, SS3 ¤Þ¤¿¤Ï½ªÃ¼
-		)}x;
-#endif
-		
 		if('i'eq$IN{'every'}){
 			#¥¹¥ì¥Ã¥É¤´¤È¸¡º÷
 			for(@file){
@@ -1200,11 +1184,7 @@ sub showArtSeek{
 				my$thread;
 				read(RD,$thread,-s"$CF{'log'}$_.cgi");
 				close(RD);
-#if EUCJP
-				$thread=~/$item=\t[^\t]*$eucpre$seek$eucpost[^\t]*;\t/o||next;
-#else
-#				index($thread,$IN{'seek'})+1||next;
-#endif
+				MirString->matchedItem($thread,$item,$seek)||next;
 				$result.=qq(<A href="index.cgi?read=$_#art$_">No.$_</A>\n);
 			}
 		}else{
@@ -1218,14 +1198,8 @@ sub showArtSeek{
 				close(RD);
 				index($thread,$IN{'seek'})+1||next;
 				my$i=$_;
-				my$j=0;
-#if EUCJP
-				while($thread=~/$item=\t[^\t]*$eucpre$seek$eucpost[^\t]*;\t/go){
-#else
-#				while($thread=~/$item=\t[^\t]*$seek$eucpost[^\t]*;\t/go){
-#endif
-						$j=substr($thread,0,pos$thread)=~tr/\n//;
-					$result.=qq(<A href="index.cgi?read=$i#art$i-$j">No.$i-$j</A>\n);
+				for(MirString->matchedItems($thread,$item,$seek)){
+					$result.=qq(<A href="index.cgi?read=$i#art$i-$_">No.$i-$_</A>\n);
 				}
 			}
 		}
@@ -1238,7 +1212,7 @@ _HTML_
 	}
 	
 	print<<"_HTML_";
-<FORM accept-charset="euc-jp" id="seek" method="post" action="index.cgi">
+<FORM accept-charset="$CF{'encoding'}" id="seek" method="post" action="index.cgi">
 <DIV class="center"><TABLE cellspacing="2" summary="¸¡º÷¥Õ¥©¡¼¥à" style="margin: 1em auto">
 <TR>
 <TH class="item">
@@ -1334,7 +1308,7 @@ Pragma: no-cache
 Cache-Control: no-cache
 Location: $i
 Content-Language: ja-JP
-Content-type: text/html; charset=euc-jp
+Content-type: text/html; charset=$CF{'encoding'}
 
 <DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <HTML>
@@ -1383,28 +1357,6 @@ sub getParam{
 		$params=$ENV{'QUERY_STRING'};
 	}
 	
-#if EUCJP
-	# EUC-JPÊ¸»ú
-	my$char=qr((?:
-		[\x09\x0A\x0D\x20-\x7E]			# 1¥Ð¥¤¥È EUC-JPÊ¸»ú²þ
-		|(?:[\x8E\xA1-\xFE][\xA1-\xFE])	# 2¥Ð¥¤¥È EUC-JPÊ¸»ú
-		|(?:\x8F[\xA1-\xFE]{2})			# 3¥Ð¥¤¥È EUC-JPÊ¸»ú
-	))x;
-#elif UTF8
-#	# UTF-8Ê¸»ú
-#	my$char=qr((?:
-#		[\x09\x0A\x0D\x20-\x7E]			# 1¥Ð¥¤¥È UTF-8 Ê¸»ú
-#		|(?:[\xC2-\xDF][\x80-\xBF])		# 2¥Ð¥¤¥È UTF-8 Ê¸»ú
-#		|(?:[\xE0-\xEF][\x80-\xBF]{2})	# 3¥Ð¥¤¥È UTF-8 Ê¸»ú
-#		|(?:[\xF0-\xF7][\x80-\xBF]{3})	# 4¥Ð¥¤¥È UTF-8 Ê¸»ú
-#		|(?:[\xF8-\xFB][\x80-\xBF]{4})	# 5¥Ð¥¤¥È UTF-8 Ê¸»ú
-#		|(?:[\xFD-\xFE][\x80-\xBF]{5})	# 6¥Ð¥¤¥È UTF-8 Ê¸»ú
-#	))x;
-#	
-#else
-#	my$char=qr([\W\w]);
-#endif
-	
 	#°ú¿ô¤ò¥Ï¥Ã¥·¥å¤Ë
 	unless($params){
 	}elsif(length$params>262114){ # 262114:°ú¿ô¥µ¥¤¥º¤Î¾å¸Â(byte)
@@ -1427,7 +1379,7 @@ sub getParam{
 		study$j;
 		$j=~tr/+/\ /;
 		$j=~s/%([\dA-Fa-f]{2})/pack('H2',$1)/ego;
-		$j=$j=~/($char*)/o?$1:'';
+		$j=MirString->getValidString($j);
 		#¥á¥¤¥ó¥Õ¥ì¡¼¥à¤Î²þ¹Ô¤Ï\x85¤é¤·¤¤¤±¤É¡¢ÂÐ±þ¤¹¤ëÉ¬Í×¤Ê¤¤¤è¤Í¡©
 		$j=~s/\x0D\x0A/\n/go;$j=~tr/\r/\n/;
 		if('body'ne$i){
@@ -1446,7 +1398,7 @@ sub getParam{
 	
 	#°ú¿ô¤Î±øÀ÷½üµî
 	$IN{'ra'}=($ENV{'REMOTE_ADDR'}&&$ENV{'REMOTE_ADDR'}=~/([\d\:\.]{2,56})/o)?$1:'';
-	$IN{'hua'}=($ENV{'HTTP_USER_AGENT'}&&$ENV{'HTTP_USER_AGENT'}=~/($char+)/o)?$1:'';
+	$IN{'hua'}=MirString->getValidString($ENV{'HTTP_USER_AGENT'});
 	$IN{'hua'}=~tr/\x09\x0A\x0D/\x20\x20\x20/;
 	if(defined$DT{'body'}){
 		#µ­»ö½ñ¤­¹þ¤ß
@@ -1518,7 +1470,7 @@ sub getParam{
 		}
 		
 		{ #¥Õ¥©¡¼¥à¤ÎÆâÍÆ½èÍý
-			for($CF{$IN{'_ArticleType'}&1?'chditm':'prtitm'}=~/\b([a-z\d]+)\b/go){
+			for($CF{$IN{'_ArticleType'}&1?'chditm':'prtitm'}=~/\b(\w+)\b/go){
 				if('color'eq$_){
 					$IN{'color'}=($DT{'color'}=~/([\#\w\(\)\,]{1,20})/o)?$1:'';
 				}elsif('email'eq$_){
@@ -1610,48 +1562,7 @@ sub getParam{
 # Ê¸»ú²½¤±¤µ¤»¤º¤ËÊ¸»úÎó¤ÎÄ¹¤µ¤òÀÚ¤êµÍ¤á¤ë
 #
 sub getTruncated{
-=item °ú¿ô
-$ $str
-$ Ê¸»ú¿ôÀ©¸Â
-=cut
-
-	my$str=shift();
-	my$length=shift();
-	
-	$str=~/^\s*(\S.*?)\s*$/mo;
-	$str=$1;
-	$str=~s/<[^>]*>?//go;
-	$str=~tr/\x09\x0A\x0D<>/\x20/s;
-	
-	if(length$str>$length){
-		#Ê¸»úÀ©¸Â¥ª¡¼¥Ð¡¼
-#if EUCJP
-	# EUC-JPÊ¸»ú
-	my$char=qr((?:
-		[\x09\x0A\x0D\x20-\x7E]			# 1¥Ð¥¤¥È EUC-JPÊ¸»ú²þ
-		|(?:[\x8E\xA1-\xFE][\xA1-\xFE])	# 2¥Ð¥¤¥È EUC-JPÊ¸»ú
-		|(?:\x8F[\xA1-\xFE]{2})			# 3¥Ð¥¤¥È EUC-JPÊ¸»ú
-	))x;
-#elif UTF8
-#	# UTF-8Ê¸»ú
-#	my$char=qr((?:
-#		[\x09\x0A\x0D\x20-\x7E]			# 1¥Ð¥¤¥È UTF-8 Ê¸»ú
-#		|(?:[\xC2-\xDF][\x80-\xBF])		# 2¥Ð¥¤¥È UTF-8 Ê¸»ú
-#		|(?:[\xE0-\xEF][\x80-\xBF]{2})	# 3¥Ð¥¤¥È UTF-8 Ê¸»ú
-#		|(?:[\xF0-\xF7][\x80-\xBF]{3})	# 4¥Ð¥¤¥È UTF-8 Ê¸»ú
-#		|(?:[\xF8-\xFB][\x80-\xBF]{4})	# 5¥Ð¥¤¥È UTF-8 Ê¸»ú
-#		|(?:[\xFD-\xFE][\x80-\xBF]{5})	# 6¥Ð¥¤¥È UTF-8 Ê¸»ú
-#	))x;
-#	
-#else
-#	my$char=qr([\W\w]);
-#endif
-		#1byteÊ¸»ú¤Ï2byteÊ¸»ú¤ÎÈ¾Ê¬¤ÎÄ¹¤µ¤À¤«¤é¡¢É½¼¨»þ¤ÎÄ¹¤µ¤ò¤½¤í¤¨¤ë°Ù¡¢
-		$str=~/((?:\w{1,2}|$char){0,$length-3})/o;
-		$1=~/([^&]*(?:&#?\w+;[^&]*)*)/o;
-		$str="$1...";
-	}
-	return$str;
+	return MirString->getTruncated(@_);
 }
 
 
@@ -1673,7 +1584,7 @@ sub showHeader{
 Status: 304 Not Modified
 Date: @{[&datef($^T,'rfc1123')]}
 Content-Language: ja-JP
-Content-type: text/html; charset=euc-jp
+Content-type: text/html; charset=$CF{'encoding'}
 
 _HTML_
 			exit;
@@ -1699,7 +1610,7 @@ Status: 200 OK
 Cache-Control: private
 Date: @{[&datef($^T,'rfc1123')]}
 Content-Language: ja-JP
-Content-type: text/html; charset=euc-jp
+Content-type: text/html; charset=$CF{'encoding'}
 _HTML_
 	print"Last-Modified: $lastModified\n"if$CF{'useLastModified'};
 	#GZIP Switch
@@ -1941,30 +1852,10 @@ _HTML_
 #
 sub getCookie{
 	$ENV{'HTTP_COOKIE'}||return undef;
-#if EUCJP
-	# EUC-JPÊ¸»ú
-	my$char=qr((?:
-		[\x09\x0A\x0D\x20-\x7E]			# 1¥Ð¥¤¥È EUC-JPÊ¸»ú²þ
-		|(?:[\x8E\xA1-\xFE][\xA1-\xFE])	# 2¥Ð¥¤¥È EUC-JPÊ¸»ú
-		|(?:\x8F[\xA1-\xFE]{2})			# 3¥Ð¥¤¥È EUC-JPÊ¸»ú
-	))x;
-#elif UTF8
-#	# UTF-8Ê¸»ú
-#	my$char=qr((?:
-#		[\x09\x0A\x0D\x20-\x7E]			# 1¥Ð¥¤¥È UTF-8 Ê¸»ú
-#		|(?:[\xC2-\xDF][\x80-\xBF])		# 2¥Ð¥¤¥È UTF-8 Ê¸»ú
-#		|(?:[\xE0-\xEF][\x80-\xBF]{2})	# 3¥Ð¥¤¥È UTF-8 Ê¸»ú
-#		|(?:[\xF0-\xF7][\x80-\xBF]{3})	# 4¥Ð¥¤¥È UTF-8 Ê¸»ú
-#		|(?:[\xF8-\xFB][\x80-\xBF]{4})	# 5¥Ð¥¤¥È UTF-8 Ê¸»ú
-#		|(?:[\xFD-\xFE][\x80-\xBF]{5})	# 6¥Ð¥¤¥È UTF-8 Ê¸»ú
-#	))x;
-#	
-#else
-#	my$char=qr([\W\w]);
-#endif
+	my$char=MirString->getCharRegexp;
 	for($ENV{'HTTP_COOKIE'}=~/(?:^|; )Mireille=([^;]*)/go){
 		s/%([\dA-Fa-f]{2})/pack('H2',$1)/ego;
-		my%DT=(/(\w+)\t($char*)/go);
+		my%DT=/(\w+)\t($char*?)(?:\t|$)/go;
 		for(keys%DT){
 			if(!defined$CK{$_}||$CK{'lastModified'}<$DT{'lastModified'}){
 				$CK{$_}=$DT{$_};
@@ -2003,16 +1894,15 @@ sub setCookie{
 	$DT{'lastModified'}=$^T;
 	my$expires=$^T+33554432; #33554432=2<<24; #33554432¤È¤¤¤¦¿ô»ú¤ËÆÃ¤Ë°ÕÌ£¤Ï¤Ê¤¤¡¢¤Á¤Ê¤ß¤Ë°ìÇ¯¤È¾¯¤·
 	if($CF{'ckpath'}){
-		my$cook=join('',map{"\t$_\t$DT{$_}"}("time expire lastModified"=~/\b([a-z\d]+)\b/go));
+		my$cook=join('',map{"$_\t$DT{$_}\t"}("time expire lastModified"=~/\b(\w+)\b/go));
 		$cook=~s/(\W)/'%'.unpack('H2',$1)/ego;
 		$CF{'-setCookie'}="Mireille=$cook; expires=".&datef($expires,'cookie');
-		$cook=join('',map{"\t$_\t$DT{$_}"}
-		("name pass lastModified $CF{'cokitm'}"=~/\b([a-z\d]+)\b/go));
+		$cook=join('',map{"$_\t$DT{$_}\t"}("name pass lastModified $CF{'cokitm'}"=~/\b(\w+)\b/go));
 		$cook=~s/(\W)/'%'.unpack('H2',$1)/ego;
 		$CF{'-setCookie'}.="\nMireille=$cook; expires=".&datef($expires,'cookie')."; $CF{'ckpath'}";
 	}else{
-		my$cook=join('',map{"\t$_\t$DT{$_}"}
-		("name pass time expire lastModified $CF{'cokitm'}"=~/\b([a-z\d]+)\b/go));
+		my$cook=join('',map{"$_\t$DT{$_}\t"}
+		("name pass time expire lastModified $CF{'cokitm'}"=~/\b(\w+)\b/go));
 		$cook=~s/(\W)/'%'.unpack('H2',$1)/ego;
 		$CF{'-setCookie'}="Mireille=$cook; expires=".&datef($expires,'cookie');
 	}
@@ -2620,6 +2510,110 @@ $ RFC1123·Á¼°¤ÎÆüÉÕ
 }
 
 
+
+#-----------------------------------------------------------------
+# String Class
+#
+{package MirString;
+	my$char;
+	my$eucpre;
+	my$eucpost;
+	if($::CF{'encoding'}=~/euc(?:-jp)?/io){
+		# EUC-JPÊ¸»ú
+		$char=qr((?:
+			[\x09\x0A\x0D\x20-\x7E]			# 1¥Ð¥¤¥È EUC-JPÊ¸»ú²þ
+			|(?:[\x8E\xA1-\xFE][\xA1-\xFE])	# 2¥Ð¥¤¥È EUC-JPÊ¸»ú
+			|(?:\x8F[\xA1-\xFE]{2})			# 3¥Ð¥¤¥È EUC-JPÊ¸»ú
+		))x;
+		#Àµ¤·¤¯¥Ñ¥¿¡¼¥ó¥Þ¥Ã¥Á¤µ¤»¤ë
+		$eucpre=qr{(?<!\x8F)};
+		$eucpost=qr{(?=
+			(?:[\xA1-\xFE][\xA1-\xFE])*	# JIS X 0208 ¤¬ 0Ê¸»ú°Ê¾åÂ³¤¤¤Æ
+			(?:[\x00-\x7F\x8E\x8F]|\z)	# ASCII, SS2, SS3 ¤Þ¤¿¤Ï½ªÃ¼
+		)}x;
+	}elsif($::CF{'encoding'}=~/utf-?8/io){
+		# UTF-8Ê¸»ú
+		$char=qr((?:
+			[\x09\x0A\x0D\x20-\x7E]			# 1¥Ð¥¤¥È UTF-8 Ê¸»ú
+			|(?:[\xC2-\xDF][\x80-\xBF])		# 2¥Ð¥¤¥È UTF-8 Ê¸»ú
+			|(?:[\xE0-\xEF][\x80-\xBF]{2})	# 3¥Ð¥¤¥È UTF-8 Ê¸»ú
+			|(?:[\xF0-\xF7][\x80-\xBF]{3})	# 4¥Ð¥¤¥È UTF-8 Ê¸»ú
+			|(?:[\xF8-\xFB][\x80-\xBF]{4})	# 5¥Ð¥¤¥È UTF-8 Ê¸»ú
+			|(?:[\xFD-\xFE][\x80-\xBF]{5})	# 6¥Ð¥¤¥È UTF-8 Ê¸»ú
+		))x;
+	}else{
+		#use encoding»þ¤È¤«¡£
+		$char=qr([\W\w]);
+	}
+	# Àµ¤·¤¯¥Þ¥Ã¥Á¤µ¤»¤ë
+	sub match{shift;
+		my$str=shift;
+		my$regex=shift;
+		if($eucpre){
+			return$str=~/$eucpre$regex$eucpost/?1:0;
+		}else{
+			return index($str,$regex)+1?1:0;
+		}
+	}
+	# Mireille¥í¥°¤«¤ékey=value¤ò¸¡º÷
+	sub matchedItem{shift;
+		my$str=shift;
+		my$item=shift;
+		my$seek=shift;
+		if($eucpre){
+			return$str=~/$item=\t[^\t]*$eucpre$seek$eucpost[^\t]*;\t/?1:0;
+		}else{
+			return$str=~/$item=\t[^\t]*$seek[^\t]*;\t/?1:0;
+		}
+	}
+	# Mireille¥í¥°¤«¤ékey=value¤ò¸¡º÷¤·¤Æ¥ê¥¹¥È¤òÊÖ¤¹
+	sub matchedItems{shift;
+		my$str=shift;
+		my$item=shift;
+		my$seek=shift;
+		my$j=0;
+		if($eucpre){
+			return map{$j+=tr/\n//}$str=~/(\G.*?$item=\t[^\t]*$eucpre$seek$eucpost[^\t]*;\t)/gs;
+		}else{
+			return map{$j+=tr/\n//}$str=~/(\G.*?$item=\t[^\t]*$seek[^\t]*;\t)/gs;
+		}
+	}
+	# ¤½¤Î¥¨¥ó¥³¡¼¥É¤ÇÀµÅö¤ÊÊ¸»úÎó¤ò¼èÆÀ
+	sub getValidString{shift;
+		return$_[0]&&$_[0]=~/($char+)/?$1:'';
+	}
+	# ¤½¤Î¥¨¥ó¥³¡¼¥É¤ÇÀµÅö¤ÊÊ¸»ú¤òÉ½¤¹Àµµ¬É½¸½¤ò¼èÆÀ
+	sub getCharRegexp{shift;
+		return$char;
+	}
+	#-------------------------------------------------
+	# Ê¸»ú²½¤±¤µ¤»¤º¤ËÊ¸»úÎó¤ÎÄ¹¤µ¤òÀÚ¤êµÍ¤á¤ë
+	#
+	sub getTruncated{shift;
+=item °ú¿ô
+$ $str
+$ Ê¸»ú¿ôÀ©¸Â
+=cut
+		my$str=shift;
+		my$length=shift;
+		
+		$str=~/^\s*(\S.*?)\s*$/mo;
+		($str=$1)=~s/<[^>]*>?//go;
+		$str=~tr/\x09\x0A\x0D<>/\x20/s;
+		
+		if(length$str>$length){
+			#Ê¸»úÀ©¸Â¥ª¡¼¥Ð¡¼
+			$length-=2;
+			$str=~/((?:[\x00-\x7F]{1,2}|$char){0,$length})/;
+			$1=~/([^&]*(?:&#?\w+;[^&]*)*)/o;
+			$str="$1..";
+		}
+		return$str;
+	}
+}
+
+
+
 #-------------------------------------------------
 # ½é´üÀßÄê
 #
@@ -2629,7 +2623,7 @@ BEGIN{
 		$CF{'program'}=__FILE__;
 		$SIG{'__DIE__'}=$ENV{'REQUEST_METHOD'}?sub{
 			if($_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/o){return}
-			print"Status: 200 OK\nContent-Language: ja-JP\nContent-type: text/plain; charset=euc-jp"
+			print"Status: 200 OK\nContent-Language: ja-JP\nContent-type: text/plain; charset=$CF{'encoding'}"
 			."\n\n<PRE>\t:: Mireille ::\n   * Error Screen 1.4 (o__)o// *\n\n";
 			print"ERROR: $_[0]\n"if@_;
 			print join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(Index Style Core Exte))
