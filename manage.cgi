@@ -102,9 +102,9 @@ sub getPageFooter{
 	return<<"_HTML_";
 <DIV class="center"><TABLE align="center" border="0" cellspacing="0" class="head" summary="PageFooter" width="90%"><TR>
 <TD nowrap>■■■■■■■</TD>
-<TH width="100%"><H1 class="head" align="right"><A href="@{[
-	$_[0]?"$CF{'home'}\">BACK to HOME":"index.cgi\">BACK to INDEX"
-]}</A></H1></TH>
+<TH width="100%"><DIV class="head"><A href="@{[
+	$_[0]?qq($CF{'home'}">BACK to HOME):qq(index.cgi">BACK to INDEX)
+]}</A></DIV></TH>
 </TR></TABLE></DIV>
 _HTML_
 }
@@ -120,7 +120,7 @@ $CF{'jscript_AtSe'}=<<'_CONFIG_';
 if(document.getElementsByTagName){
 	var tags=document.getElementsByTagName('INPUT');
 	for(var i in tags){
-		if('button'==tags[i].type||'button'==tags[i].className){
+		if('button'==tags[i].className){
 			tags[i].className='button';
 			tags[i].onfocus=function()		{this.className='buttonover'};
 			tags[i].onmouseover=function()	{this.className='buttonover'};
@@ -138,14 +138,47 @@ if(document.getElementsByTagName){
 			tags[i].onmouseover=function()	{this.className='resetover'};
 			tags[i].onblur=function()		{this.className='reset'};
 			tags[i].onmouseout=function()	{this.className='reset'};
+		}else if(tags[i].className&&tags[i].className.substr(0,6)=='button'){
+			tags[i].onfocus=
+				function(){if(this.className.substr(this.className.length-4)!='Over')this.className+='Over'}
+			tags[i].onmouseover=
+				function(){if(this.className.substr(this.className.length-4)!='Over')this.className+='Over'}
+			tags[i].onblur=
+				function(){if(this.className.substr(this.className.length-4)=='Over')
+					this.className=this.className.substring(0,this.className.length-4)};
+			tags[i].onmouseout=
+				function(){if(this.className.substr(this.className.length-4)=='Over')
+					this.className=this.className.substring(0,this.className.length-4)};
 		}else if('text'==tags[i].type||'password'==tags[i].type){
 			tags[i].className='blur';
 			tags[i].onfocus=function()	{this.className='focus';};
 			tags[i].onblur=function()	{this.className='blur';};
 		}
 	}
+	tags=document.getElementsByTagName('BUTTON');
+	for(var i in tags){
+		if('button'==tags[i].className){
+			tags[i].className='button';
+			tags[i].onfocus=function()		{this.className='buttonover'};
+			tags[i].onmouseover=function()	{this.className='buttonover'};
+			tags[i].onblur=function()		{this.className='button'};
+			tags[i].onmouseout=function()	{this.className='button'};
+		}else if(tags[i].className&&tags[i].className.substr(0,6)=='button'){
+			tags[i].onfocus=
+				function(){if(this.className.substr(this.className.length-4)!='Over')this.className+='Over'}
+			tags[i].onmouseover=
+				function(){if(this.className.substr(this.className.length-4)!='Over')this.className+='Over'}
+			tags[i].onblur=
+				function(){if(this.className.substr(this.className.length-4)=='Over')
+					this.className=this.className.substring(0,this.className.length-4)};
+			tags[i].onmouseout=
+				function(){if(this.className.substr(this.className.length-4)=='Over')
+					this.className=this.className.substring(0,this.className.length-4)};
+		}
+	}
 	tags=document.getElementsByTagName('TEXTAREA');
 	for(var i in tags){
+		if(tags[i].className)continue;
 		tags[i].className='blur';
 		tags[i].onfocus=function(){this.className='focus';};
 		tags[i].onblur=function(){this.className='blur';};
@@ -155,7 +188,6 @@ if(document.getElementsByTagName){
 -->
 </SCRIPT>
 _CONFIG_
-
 
 #-----------------------------
 # フッターの生成
@@ -319,7 +351,7 @@ sub icont{
 		print&getManageHeader.<<"ASDF".&getManageFooter;
 <H2 class="heading2">アイコンリスト編集モード（タグ）</H2>
 <FORM accept-charset="euc-jp" name="iconedit" method="post" action="$AT{'manage'}">
-<P><TEXTAREA name="icon" cols="100" rows="15">$icon</TEXTAREA></P>
+<P><TEXTAREA name="icon" cols="120" rows="15">$icon</TEXTAREA></P>
 <P></DEL><LABEL accesskey="r" for="renew">アイコン見本更新(<SPAN class="ak">R</SPAN>):
 <INPUT name="renew" id="renew" type="checkbox" value="renew"></LABEL></DEL></P>
 <INPUT name="mode" type="hidden" value="icont">
@@ -358,7 +390,7 @@ sub icons{
 		print&getManageHeader.<<"ASDF";
 <H2 class="heading2">アイコンリスト編集モード（＃）</H2>
 <FORM accept-charset="euc-jp" name="iconedit" method="post" action="$AT{'manage'}">
-<P><TEXTAREA name="icon" cols="100" rows="15">
+<P><TEXTAREA name="icon" cols="120" rows="15">
 ASDF
 		
 		open(RD,'<'."$CF{'icls'}")||die"Can't read iconlist($CF{'icls'})[$?:$!]";
@@ -706,8 +738,7 @@ $message
 <TABLE class="section">
 <COL style="text-align:left;width:600px"><COL style="text-align:left;width:200px">
 
-<TBODY>
-<TR><TH colspan="2" class="heading3">稼動させる前に確認するもの</TH></TR>
+<TR><TH colspan="2" class="h">稼動させる前に確認するもの</TH></TR>
 ASDF
 		my$i=0;
 		#稼動させる前に確認すること
@@ -722,13 +753,14 @@ ASDF
 
 		print<<"ASDF";
 <TR>
-<TH class="item">タイムゾーン（「JST-9」のように）：</TD>
+<TH class="item">タイムゾーン（「JST-9」のように）：</TH>
 <TD><INPUT name="TZ" type="text" style="ime-mode:disabled" value="$ENV{'TZ'}"></TD>
 </TR>
-</TBODY>
+</TABLE>
 
-<TBODY>
-<TR><TH colspan="2" class="heading3">必要に応じて変更するもの</TH></TR>
+<TABLE class="section">
+<COL style="text-align:left;width:600px"><COL style="text-align:left;width:200px">
+<TR><TH colspan="2" class="h">必要に応じて変更するもの</TH></TR>
 ASDF
 		#必要に応じて変更
 		for($i=0;$i<$#implied;$i+=2){
@@ -768,12 +800,13 @@ ASDF
 ASDF
 		}
 		print<<"ASDF";
-</TBODY>
+</TABLE>
 
-<TBODY>
-<TR><TH colspan="2" class="heading3">専用アイコン</TH></TR>
+<TABLE class="section">
+<COL style="text-align:left;width:600px"><COL style="text-align:left;width:200px">
+<TR><TH colspan="2" class="h">専用アイコン</TH></TR>
 <TR>
-<TH class="item">専用アイコン機能：</TD>
+<TH class="item">専用アイコン機能：</TH>
 ASDF
 		$i=<<"ASDF";
 <TD>
@@ -794,13 +827,17 @@ ASDF
 			}
 			print<<"ASDF";
 <TR>
-<TH class="item">パスワード：<INPUT name="ICN$_" type="text" style="ime-mode:disabled" value="$key"></TD>
+<TH class="item">パスワード：<INPUT name="ICN$_" type="text" style="ime-mode:disabled" value="$key"></TH>
 <TD>ファイル名：<INPUT name="ICV$_" type="text" style="ime-mode:disabled" value="$val"></TD>
 </TR>
 ASDF
 		}
 		print<<"ASDF";
-<TR><TH colspan="2" class="heading3">Mireille内のHTMLデザイン</TH></TR>
+</TABLE>
+
+<TABLE class="section">
+<COL style="text-align:left;width:600px"><COL style="text-align:left;width:200px">
+<TR><TH colspan="2" class="h">Mireille内のHTMLデザイン</TH></TR>
 ASDF
 		#Mireille内のHTMLデザイン
 		for($i=0;$i<$#design;$i+=2){
@@ -811,10 +848,13 @@ ASDF
 		}
 		print<<"ASDF".&getManageFooter;
 </TABLE>
-<P>
-<INPUT name="mode" type="hidden" value="config">
+
+<P><INPUT name="mode" type="hidden" value="config">
 <INPUT name="pass" type="hidden" value="$IN{'pass'}">
 <INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
+</FORM>
+
+
 ASDF
 	}else{
 		for(keys%IN){
@@ -996,7 +1036,7 @@ ASDF
 <H2 class="heading2">スタイルシート編集モード</H2>
 <FORM accept-charset="euc-jp" name="cssedit" method="post" action="$AT{'manage'}">
 <P>CSSファイル名:$IN{'file'}.css<INPUT name="file" type="hidden" value="$IN{'file'}"><P>
-<P><TEXTAREA name="css" cols="100" rows="15">$css</TEXTAREA><P>
+<P><TEXTAREA name="css" cols="120" rows="15">$css</TEXTAREA><P>
 <P>
 <INPUT name="mode" type="hidden" value="css">
 <INPUT name="pass" type="hidden" value="$IN{'pass'}">
