@@ -304,13 +304,13 @@ if($CF{'program'}eq __FILE__){
 #-------------------------------------------------
 # 初期設定
 BEGIN{
-	# Mireille Error Screen 1.4
+	# Mireille Error Screen 1.2.1
 	unless(%CF){
 		$CF{'program'}=__FILE__;
 		$SIG{'__DIE__'}=sub{
-			if($_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/){return}
+			$_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/&&return;
 			print"Status: 200 OK\nContent-Language: ja-JP\nContent-type: text/plain; charset=euc-jp"
-			."\n\n<PRE>\t:: Mireille ::\n   * Error Screen 1.4 (o__)o// *\n\n";
+			."\n\n<PRE>\t:: Mireille ::\n   * Error Screen 1.2.1 (o__)o// *\n\n";
 			print"ERROR: $_[0]\n"if@_;
 			print join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(Index Style Core Exte))
 			."\n".join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(log icon icls style));
@@ -323,6 +323,7 @@ BEGIN{
 			exit;
 		};
 	}
+	$CF{'_HiraganaLetterA'}->{'Index'}='あ';
 	# Version
 	$CF{'Index'}=q$Revision$;
 	$CF{'Index'}=~/(\d+((?:\.\d+)*))/o;

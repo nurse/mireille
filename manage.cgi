@@ -964,7 +964,7 @@ BEGIN{
 	unless(%CF){
 		$CF{'program'}=__FILE__;
 		$SIG{'__DIE__'}=sub{
-			if($_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/){return}
+			$_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/&&return;
 			print"Status: 200 OK\nContent-Language: ja-JP\nContent-type: text/plain; charset=euc-jp"
 			."\n\n<PRE>\t:: Mireille ::\n   * Error Screen 1.4 (o__)o// *\n\n";
 			print"ERROR: $_[0]\n"if@_;
@@ -979,6 +979,7 @@ BEGIN{
 			exit;
 		};
 	}
+	$CF{'_HiraganaLetterA'}->{'Index'}='あ';
 	# Version
 ASDF
 		$config.=q(	$CF{'Index'}=q$)."$CF{'Manage'}".<<'ASDF';
@@ -1564,13 +1565,13 @@ sub euc2sjis{
 # BEGIN
 
 BEGIN{
-	# Mireille Error Screen 1.4
+	# Mireille Error Screen 1.2.1
 	unless(%CF){
 		$CF{'program'}=__FILE__;
 		$SIG{'__DIE__'}=sub{
-			if($_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/){return}
+			$_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/&&return;
 			print"Status: 200 OK\nContent-Language: ja-JP\nContent-type: text/plain; charset=euc-jp"
-			."\n\n<PRE>\t:: Mireille ::\n   * Error Screen 1.4 (o__)o// *\n\n";
+			."\n\n<PRE>\t:: Mireille ::\n   * Error Screen 1.2.1 (o__)o// *\n\n";
 			print"ERROR: $_[0]\n"if@_;
 			print join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(Manage Index Style Core Exte))
 			."\n".join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(log icon icls style));
@@ -1585,10 +1586,10 @@ BEGIN{
 	}
 	# Revision Number
 	$CF{'Manage'}=q$Revision$;
-
+	
 	__FILE__=~/([^\/\\:]+)$/o;
 	$AT{'manage'}=$1;
-
+	
 	#-------------------------------------------------
 	# Mireille内のHTMLデザイン
 	$CF{'title'}='Mireille Administrative Tools';
