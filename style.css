@@ -1,4 +1,4 @@
-@charset "EUC-JP";
+@charset"EUC-JP";
 /* Mireille Style Sheet */
 /* Default Style Sheet for Mireille */
 /* "This file is written in euc-jp, CRLF." 空 */
@@ -181,7 +181,7 @@ DT{
 	color: #f00;
 }
 /* 何らかの注意や警告 */
-.warning, .coution{
+.warning, .caution{
 	color: #f00;
 }
 /* N4調整用一揃えクラス */
@@ -515,7 +515,7 @@ P.artinfo{
 .thread .child  .info .number{font-size: 13px; font-weight: normal;}
 
 /* 投稿者名 */
-.thread .info TD.name{text-align: left;}
+.thread .info TD.name{text-align: left; white-space: nowrap;}
 .thread .info SPAN.name{font-size: 17px;}
 /* HOME */
 .thread .info SPAN.home{}
