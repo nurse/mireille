@@ -701,8 +701,8 @@ _HTML_
 	$str=~tr/\05/&/;
 	$IN{'body'}=$str;
     }
-    $IN{'body'}=~s/\t/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/go;
-    $IN{'body'}=~s/((?:\G|>)[^<]*?) /$1&nbsp;/go;
+    $IN{'body'}=~s/\t/&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;/go;
+    $IN{'body'}=~s/((?:\G|>)[^<]*?) /$1&#160;/go;
     $IN{'body'}=~s/\n/<BR>/go;
 	
     #-----------------------------
@@ -1485,8 +1485,6 @@ _HTML_
 
 sub rss{
     my $maxItem = 15;
-    my$link = $CF{'home'};
-    $link = $ENV{'SERVER_NAME'} if $link eq '/';
     
     my %item =();
     my @logfiles = &logfiles('date');
@@ -1499,7 +1497,7 @@ sub rss{
 	my@articles=<FILE>;
 	close(FILE);
 	
-	my $title = '';
+	my $subject = '';
 	for( 0, reverse( (@articles-$maxItem) .. $#articles )){
 	    my $j = $_;
 	    my %DT = ($articles[$_] =~ /([^\t]*)=\t([^\t]*);\t/go);
@@ -1508,14 +1506,12 @@ sub rss{
 	    $DT{'_uri'} = "$CF{'self'}?read=$DT{'i'}#art$DT{'i'}-$DT{'j'}";
 	    $DT{'_date'} = &datef($DT{'time'}, 'dateTime');
 	    if($DT{'subject'}){
-		$DT{'_title'} = "$i-$j ".$DT{'subject'};
-	    	$title = $DT{'subject'};
+		$subject = $DT{'subject'};
 	    }elsif($DT{'title'}){
-		$DT{'_title'} = "$i-$j ".$DT{'title'};
-	    	$title = $DT{'title'};
-	    }else{
-		$DT{'_title'} = "$i-$j ".$title;
+	    	$subject = $DT{'title'};
 	    }
+	    $DT{'_title'} = "$i-$j ".$subject;
+	    $DT{'_subject'} = $subject;
 	    $item{$DT{'time'}} = \%DT;
 	}
     }
@@ -1530,7 +1526,7 @@ sub rss{
   xml:lang="ja">
  <channel rdf:about="$CF{'self'}">
   <title>$CF{'title'}</title>
-  <link>$link</link>
+  <link>$CF{'self'}</link>
   <description>$CF{'pgtitle'}</description>
   <items>
    <rdf:Seq>
@@ -1549,15 +1545,27 @@ EOF
     for(@latestArticles){
 	#本文の縮め処理
 	my $title = MirString->getTruncated($_->{'_title'},90);
+	$title =~ s/<.*?>//go;
+	$title =~ s/&(\w*);/&amp;$1;/go;
 	my $description = $_->{'body'};
 	$description =~ s/<BR\b[^>]*>/　/go;
+	$description =~ s/<.*?>//go;
+	$description =~ s/&(\w*);/&amp;$1;/go;
 	$description = MirString->getTruncated($description,450);
+	my $creator = $_->{'name'};
+	$creator =~ s/<.*?>//go;
+	$creator =~ s/&(\w*);/&amp;$1;/go;
+	my $subject = $_->{'_subject'};
+	$subject =~ s/<.*?>//go;
+	$subject =~ s/&(\w*);/&amp;$1;/go;
 	$output .= <<"EOF";
  <item rdf:about="$_->{'_uri'}">
   <title>$title</title>
   <link>$_->{'_uri'}</link>
   <description>$description</description>
-  <dc:date>$_->{'_date'}</dc:date> 
+  <dc:creator>$creator</dc:creator>
+  <dc:subject>$subject</dc:subject>
+  <dc:date>$_->{'_date'}</dc:date>
  </item>
 
 EOF
@@ -1702,7 +1710,7 @@ sub getParam{
 	$j=~s/\x0D\x0A/\n/go;$j=~tr/\r/\n/;
 	if(!$option{'noescape'}&&'body'ne$i){
 	    #本文以外は全面タグ禁止
-	    $j=~s/\t/&nbsp;&nbsp;/go;
+	    $j=~s/\t/&#160;&#160;/go;
 	    $j=~s/&(#?\w+;)?/$1?"&$1":'&#38;'/ego;
 	    $j=~s/"/&#34;/go;
 	    $j=~s/'/&#39;/go;
@@ -2962,7 +2970,7 @@ C<< /<STRONG  clAss="[^"]*"[^>]*>/ >>
 sub rvsij{
     #データを戻す
     $CK{'body'}=~s/<BR\b[^>]*>/\n/gio;
-    $CK{'body'}=~s/&nbsp;/ /go;
+    $CK{'body'}=~s/&#160;/ /go;
     $CK{'body'}=~s/&/&#38;/go;
 
     #data->form変換
