@@ -18,32 +18,42 @@ MSIE6未満対策のためです
 /* 通常のリンク文字 */
 A:link		{color:#44f;text-decoration:none;}
 A:visited	{color:#44f;text-decoration:none;}
-A:link:hover{color:#fa8;text-decoration:underline;}
-A:active	{color:#f00;text-decoration:underline;}
+A:link:hover,A:visited:hover
+{color:#fa8;text-decoration:underline;}
+A:link:active,A:visited:active
+{color:#f00;text-decoration:underline;}
 
 /* 新しいものへのリンク文字 */
 A.new:link		{color:#f00;font-weight:bold;text-decoration:none;}
 A.new:visited	{color:#f00;font-weight:bold;text-decoration:none;}
-A.new:link:hover{color:#f55;font-weight:bold;text-decoration:underline;}
-A.new:active	{color:#f00;font-weight:bold;text-decoration:underline;}
+A.new:link:hover,A.new:visited:hover
+{color:#f55;font-weight:bold;text-decoration:underline;}
+A.new:link:active,A.new:visited:active
+{color:#f00;font-weight:bold;text-decoration:underline;}
 
 /* 注意なリンク文字 */
 A.warning:link		{color:#f00;font-weight:bold;text-decoration:none;}
 A.warning:visited	{color:#f00;font-weight:bold;text-decoration:none;}
-A.warning:link:hover{color:#f55;font-weight:bold;text-decoration:underline;}
-A.warning:active	{color:#f00;font-weight:bold;text-decoration:underline;}
+A.warning:link:hover,A.warning:visited:hover
+{color:#f55;font-weight:bold;text-decoration:underline;}
+A.warning:link:active,A.warning:visited:active
+{color:#f00;font-weight:bold;text-decoration:underline;}
 
 /* 記事番号のリンク文字 */
 A.number:link		{color:#06e;text-decoration:none;}
 A.number:visited	{color:#06e;text-decoration:none;}
-A.number:link:hover	{color:#fa8;text-decoration:underline;}
-A.number:active		{color:#f50;text-decoration:underline;}
+A.number:link:hover,A.number:visited:hover
+{color:#fa8;text-decoration:underline;}
+A.number:link:active,A.number:visited:active
+{color:#f50;text-decoration:underline;}
 
 /* 本文自動リンク機能のリンク文字 */
 A.autolink:link		{border-bottom: dashed 1px #88f;color:#44f;text-decoration:none;}
 A.autolink:visited	{border-bottom: dashed 1px #b9f;color:#97d;text-decoration:none;}
-A.autolink:link:hover{border-bottom: dashed 1px #fa8;color:#fa8;text-decoration:none;}
-A.autolink:active	{border-bottom: dashed 1px #f00;color:#f00;text-decoration:none;}
+A.autolink:link:hover,A.autolink:visited:hover
+{border-bottom: dashed 1px #fa8;color:#fa8;text-decoration:none;}
+A.autolink:link:active,A.autolink:visited:active
+{border-bottom: dashed 1px #f00;color:#f00;text-decoration:none;}
 
 HTML{
 	overflow-y: scroll;/*WinIE6の標準モード対策*/
@@ -317,21 +327,28 @@ TABLE.head{
 	background: #6ac;
 	color: #fff;
 	margin: auto;
+	width: 90%;
 }
-TABLE.head td{
-	color: #fff;
-	letter-spacing: 1em;
+TABLE.head TH{
 	padding: 3px 5px;
+	text-align: left;
+	white-space: nowrap;
 }
-TABLE.head TH{padding: 3px 5px;}
 H1.head,H1.head A:link{
 	color: #fff;
 	font-family: 'Comic Sans MS','ＭＳ Ｐゴシック',sans-serif;
 	font-size: 19px;
 	font-weight: normal;
+	width: 100%;
 }
 H1.head{margin: 0;}
 H1.head A:visited{color: #fff;}
+TABLE.head TD{
+	letter-spacing: 1em;
+	padding: 3px 5px;
+	text-align: right;
+	white-space: nowrap;
+}
 /* ========== 見出し（Mode表示で主に使用） ========== */
 H2.mode{
 	background-color: #ace;
