@@ -126,9 +126,11 @@ function changePreviewIcon(){
 /*========================================================*/
 // Autosave Body Data
 function autosaveBodyData(){
-	if(!bodyObj)return false;
+	if(!isLoaded||!bodyObj)return false;
 	if(autosaveId)clearTimeout(autosaveId);
-	if(bodyObj.value.length>100){
+	if(bodyObj.value==oldData){
+		return false;
+	}else if(bodyObj.value.length>100){
 		switch(saveBodyData('MireilleAutosave')){
 		case'DeleteBodyData':
 			status='as0: Something Wicked happened!';
@@ -140,11 +142,12 @@ function autosaveBodyData(){
 			status="現在の本文データを自動保存しました。";
 			break;
 		case'FailedToSave':
-			status="自動保存に失敗しました。保存可能な最大文字数(約4KB)を超えたからかもしれません。";
+			status="自動保存に失敗しました。Cookieに保存可能な最大文字数(約4KB)を超えたからかもしれません。";
 			break;
 		default:
 			status='as1: Something Wicked happened!';
 		}
+		oldData=bodyObj.value;
 	}
 	autosaveId=setTimeout(autosaveBodyData,60000);
 	return true;
@@ -153,7 +156,7 @@ function autosaveBodyData(){
 /*========================================================*/
 // Quick Save Body Data
 function quicksaveBodyData(){
-	if(!bodyObj)return false;
+	if(!isLoaded||!bodyObj)return false;
 	if(!confirm("新しい本文を保存すると、古い本文データは消えてしまいます\nそれでも保存してよろしいですか？"))
 		return false;
 	
@@ -180,36 +183,50 @@ function quicksaveBodyData(){
 /*========================================================*/
 // Save Body Data
 function saveBodyData(key){
-	if(!bodyObj)return false;
-	var backup='';
-	var regexp=new RegExp('(^|; )'+key+'=([^;]+)');
-	if(document.cookie.match(regexp))backup=unescape(RegExp.$2);
-	if(document.cookie.match(/(^|; )MirBody=([^;]+)/))
-		document.cookie='MirBody=; expires=Thu, 01-Jan-1970 00:00:00; ';
-	if(!bodyObj.value.length){
-		//valueが空→削除
-		document.cookie=key+'=; expires=Thu, 01-Jan-1970 00:00:00; ';
-		if(bodyObj.addBehavior){
-			//bahavior版（IE依存）
-			if(!bodyObj.getAttribute(key))bodyObj.addBehavior('#default#userData');
-			bodyObj.removeAttribute(key);
-			bodyObj.save(key);
-		}
-		return'DeleteBodyData';
-	}else if(bodyObj.addBehavior){
+	if(!isLoaded||!bodyObj)return false;
+	var expires=new Date();
+	if(bodyObj.addBehavior){
 		//bahavior版（IE依存）（サイズ制限:escape無しで128KB）
-		if(!bodyObj.getAttribute(key))bodyObj.addBehavior('#default#userData');
-		bodyObj.setAttribute(key,bodyObj.value);
-		bodyObj.save(key);
-		return'SavedBodyDataIE';
+		bodyObj.load('MireilleBody');
+		bodyObj.expires=expires.toUTCString();
+		if(!bodyObj.value.length){
+			//valueが空→削除
+			bodyObj.removeAttribute(key);
+			if(bodyObj.getAttribute('MireilleQuicksave')||bodyObj.getAttribute('MireilleAutosave')){
+				expires.setMonth(expires.getMonth()+1);
+				bodyObj.expires=expires.toUTCString();
+				bodyObj.save('MireilleBody');
+			}else{
+				expires.setMonth(expires.getMonth()-1);
+				bodyObj.expires=expires.toUTCString();
+				bodyObj.save('MireilleBody');
+				bodyObj.load('MireilleBody');
+			}
+			return'DeleteBodyData';
+		}else{
+			//保存
+		expires.setMonth(expires.getMonth()+1);
+			bodyObj.setAttribute(key,bodyObj.value);
+			bodyObj.save('MireilleBody');
+			return'SavedBodyDataIE';
+		}
 	}else{
 		//Cookie版（サイズ制限:escapeした後で3KBほど）
-		document.cookie=key+'='+escape(bodyObj.value)+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';
+		if(!bodyObj.value.length){
+			//valueが空→削除
+			document.cookie=key+'=; expires=Thu, 01-Jan-1970 00:00:00 GMT; ';
+			return'DeleteBodyData';
+		}
+		var backup='';
+		var regexp=new RegExp('(^|; )'+key+'=([^;]+)')
+		if(document.cookie.match(regexp))backup=unescape(RegExp.$2);
+		expires=expires.toGMTString().replace('UTC','GMT').replace(/(\d) (\w{3}) (\d)/,"$1-$2-$3");
+		document.cookie=key+'='+escape(bodyObj.value)+'; expires='+expGMT+'; ';
 		if(document.cookie.match(regexp)&&bodyObj.value==unescape(RegExp.$2)){
 			return'SavedBodyDataCookie';
 		}else{
 			//3850byte程度でサイズ制限がかかる。
-			document.cookie=key+'='+backup+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';//終末の日
+			document.cookie=key+'='+backup+'; expires='+expGMT+'; ';
 			return'FailedToSave';
 		}
 	}
@@ -219,7 +236,7 @@ function saveBodyData(key){
 /*========================================================*/
 // Load Body Data
 function loadBodyData(key){
-	if(!bodyObj)return false;
+	if(!isLoaded||!bodyObj)return false;
 	if(!confirm("Cookieから本文データを読み出すと、現在の本文は消えてしまいます\nそれでも読み出してよろしいですか？"))
 		return false;
 	
@@ -229,13 +246,11 @@ function loadBodyData(key){
 		key='MireilleQuicksave';
 	else key='MireilleAutosave';
 	
-	var regexp=new RegExp('(^|; )'+key+'=([^;]+)');
 	if(bodyObj.addBehavior){
-		if(!bodyObj.getAttribute(key))bodyObj.addBehavior('#default#userData');
-		bodyObj.load(key);
+		bodyObj.load('MireilleBody');
 		var temp=bodyObj.getAttribute(key);
 		if(temp)bodyObj.value=temp;
-	}else if(document.cookie.match(regexp)){
+	}else if(document.cookie.match(new RegExp('(^|; )'+key+'=([^;]+)'))){
 		bodyObj.value=unescape(RegExp.$2);
 	}else{
 		alert('読み込みに失敗しました');
@@ -245,10 +260,69 @@ function loadBodyData(key){
 
 
 /*========================================================*/
+// Remove Body Data
+function removeBodyData(key){
+	if(!isLoaded||!bodyObj)return false;
+	if(document.cookie.match(/(^|; )MirBody=([^;]+)/))
+		document.cookie='MirBody=; expires=Thu, 01-Jan-1970 00:00:00; ';
+	document.cookie=key+'=; expires=Thu, 01-Jan-1970 00:00:00; ';
+	if(bodyObj.addBehavior){
+		//bahavior版（IE依存）
+		var flag=0;
+		var expires=new Date();
+		expires.setMonth(expires.getMonth()-1);
+		
+		bodyObj.load('MireilleQuicksave');
+		if(bodyObj.getAttribute('MireilleQuicksave')!=null){
+			bodyObj.expires=expires.toUTCString();
+			bodyObj.save('MireilleQuicksave');
+			flag+=1;
+		}
+		
+		bodyObj.load('MireilleAutosave');
+		if(bodyObj.getAttribute('MireilleAutosave')!=null){
+			bodyObj.expires=expires.toUTCString();
+			bodyObj.save('MireilleAutosave');
+			flag+=2;
+		}
+		
+		bodyObj.load('MireilleBody');
+		bodyObj.removeAttribute('MireilleBody');
+		bodyObj.removeAttribute(key);
+		if(bodyObj.getAttribute('MireilleQuicksave')||bodyObj.getAttribute('MireilleAutosave')){
+			expires.setMonth(expires.getMonth()+1);
+			bodyObj.expires=expires.toUTCString();
+			bodyObj.save('MireilleBody');
+		}else{
+			expires.setMonth(expires.getMonth()-1);
+			bodyObj.expires=expires.toUTCString();
+			bodyObj.save('MireilleBody');
+			bodyObj.load('MireilleBody');
+		}
+		
+		if(flag&1)bodyObj.load('MireilleQuicksave');
+		if(flag&2)bodyObj.load('MireilleAutosave');
+	}
+	if(key=='MireilleQuicksave'){
+		return'一時保存されていた本文データを削除しました。';
+	}else if(key=='MireilleAutosave'){
+		return'自動保存されていた本文データを削除しました。';
+	}else{
+		return'rbd: Something Wicked happened!';
+	}
+	return true;
+}
+
+
+/*========================================================*/
 // initialization
 bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
-if(!autosaveId)autosaveId=setTimeout(autosaveBodyData,60000);
+bodyObj.addBehavior('#default#userData');
+bodyObj.load('MireilleBody');
+if(bodyObj.value&&bodyObj.getAttribute('MireilleAutosave'))status=removeBodyData('MireilleAutosave');
+oldData=bodyObj.value;
 isLoaded=true;
+if(!autosaveId)autosaveId=setTimeout(autosaveBodyData,60000);
 -->
 </SCRIPT>
 _CONFIG_
@@ -636,13 +710,13 @@ sub prtfrm{
 ><LABEL accesskey="b" for="body">■ 本文(<SPAN class="ak">B</SPAN>) ■</LABEL></TH>
 <TD class="rightColumn">
 <BUTTON accesskey="," class="buttonQuicksave"  title="本文データをQuickSaveします"
- onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()"
+ onclick="quicksaveBodyData();return false" onkeypress="quicksaveBodyData();return false"
  >QSave(<KBD class="ak">,</KBD>)</BUTTON>
 <BUTTON accesskey="." class="buttonLoadQuicksave" title="Quicksaveしたデータを読み込みます"
- onclick="loadBodyData('MireilleQuicksave')" onkeypress="loadBodyData('MireilleQuicksave')"
+ onclick="loadBodyData('MireilleQuicksave');return false" onkeypress="loadBodyData('MireilleQuicksave');return false"
  >QLoad(<KBD class="ak">.</KBD>)</BUTTON>
 <BUTTON accesskey="/" class="buttonLoadAutosave" title="Autosaveしたデータを読み込みます"
- onclick="loadBodyData('MireilleAutosave')" onkeypress="loadBodyData('MireilleAutosave')"
+ onclick="loadBodyData('MireilleAutosave');return false" onkeypress="loadBodyData('MireilleAutosave');return false"
  >ALoad(<KBD class="ak">/</KBD>)</BUTTON>
 </TD></TR>
 <TR><TD colspan="3"><TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD></TR>
@@ -715,14 +789,14 @@ sub chdfrm{
 ><LABEL accesskey="b" for="body">■ 本文(<SPAN class="ak">B</SPAN>) ■</LABEL></TH>
 <TD class="rightColumn">
 <BUTTON accesskey="," class="buttonQuicksave"  title="本文データをQuickSaveします"
- onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()"
+  onclick="quicksaveBodyData();return false" onkeypress="quicksaveBodyData();return false"
  >QSave(<KBD class="ak">,</KBD>)</BUTTON>
 <BUTTON accesskey="." class="buttonLoadQuicksave" title="Quicksaveしたデータを読み込みます"
- onclick="loadBodyData('MireilleQuicksave')" onkeypress="loadBodyData('MireilleQuicksave')"
+ onclick="loadBodyData('MireilleQuicksave');return false" onkeypress="loadBodyData('MireilleQuicksave');return false"
  >QLoad(<KBD class="ak">.</KBD>)</BUTTON>
 <BUTTON accesskey="/" class="buttonLoadAutosave" title="Autosaveしたデータを読み込みます"
- onclick="loadBodyData('MireilleAutosave')" onkeypress="loadBodyData('MireilleAutosave')"
- >ALoad(<KBD class="ak">/</KBD>)</BUTTON>
+ onclick="loadBodyData('MireilleAutosave');return false" onkeypress="loadBodyData('MireilleAutosave');return false"
+>ALoad(<KBD class="ak">/</KBD>)</BUTTON>
 </TD></TR>
 <TR><TD colspan="3"><TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD></TR>
 </TABLE>
