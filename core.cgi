@@ -42,13 +42,11 @@ sub main{
 		my$chr=ord$CF{'_HiraganaLetterA'}->{$_};
 		if($enc{$chr}){
 			lc$CF{'encoding'}eq$enc{$chr}||die sprintf($message,$_,$CF{'encoding'},$enc{$chr});
-		}elsif($chr==12354){
+#		}elsif($chr==12354){
 			#Perl Nativeなのは、何やってるのかわからないからスルーする
-		}else{
+#		}else{
 			#未知のエンコーディングはもっとわからないので無視する
 		}
-		#確認できたから削除
-		delete$CF{'_HiraganaLetterA'}->{$_};
 	}
 	
 	#-----------------------------
@@ -112,10 +110,14 @@ sub main{
 sub showCover{
 	#-----------------------------
 	#各種情報取得
-	$CK{'time'}=$^T-$CF{'newnc'}unless&getCookie;
+	&getCookie;
 	&logfiles($CF{'sort'});
 	!@file&&$file[$#file-1]&&push(@file,0);
 	%Z0||&getZeroInfo;
+	
+	#-----------------------------
+	# Cookie書き込み
+	&setCookie(\%CK);
 	
 	#-----------------------------
 	#$IN{'page'}の設定
@@ -166,10 +168,6 @@ sub showCover{
 	#-----------------------------
 	#ページ選択TABLEを取得
 	my$pageSelector=&pageSelector($#file,$CF{'page'});
-	
-	#-----------------------------
-	# Cookie書き込み
-	&setCookie(\%CK);
 	
 	#-----------------------------
 	# HTTP,HTML,PAGEヘッダーを表示
@@ -271,9 +269,9 @@ sub writeArticle{
 		||die"Can't read/write log($IN{'i'};.cgi)[$?:$!]";
 		eval{flock(FILE,2)};
 		seek(FILE,0,0);
-		my@log=map{m/^([^\x0D\x0A]*)/o}<FILE>;
+		my@log=map{/^([^\x0D\x0A]*)/o}<FILE>;
 		
-		my$isLocked=index($log[$#log],"Mir12=\tLocked")>-1;
+		my$isLocked=!index($log[$#log],"Mir12=\tLocked");
 		my$lockedBy=$log[$#log]=~/Mir12=\tLocked:(?:\S+ )*lockedBy=(\S+)[ ;]/o?$1:'';
 		
 		#権限をチェック
@@ -302,7 +300,7 @@ sub writeArticle{
 		#ロック
 		if($isLocked){
 			#ロックされている時は解除→pop
-			index(pop@log,"Mir12=\tLocked")+1||die'Mireilleのスレッドロック機能にバグがあります。';
+			index(pop@log,"Mir12=\tLocked")&&die'Mireilleのスレッドロック機能にバグがあります。';
 		}else{
 			#されていない時はロックする→push
 			push(@log,"Mir12=\tLocked:$option;\t");
@@ -554,9 +552,9 @@ _HTML_
 			my$text_regex='[^\03]*';
 			
 			my$tags=$CF{'tags'};
-			my%tagCom=map{m/(!\w+)(?:\(([^()]+)\))?/o;$1," $2 "||''}($tags=~/!\w+(?:\([^()]+\))?/go);
+			my%tagCom=map{/(!\w+)(?:\(([^()]+)\))?/o;$1," $2 "||''}($tags=~/!\w+(?:\([^()]+\))?/go);
 			if($tagCom{'!SELECTABLE'}){
-				$tags.=' '.join(' ',grep{$tagCom{'!SELECTABLE'}=~/ $_ /o}grep{m/\w+/}split(/\s+/,$EX{'usetag'}));
+				$tags.=' '.join(' ',grep{$tagCom{'!SELECTABLE'}=~/ $_ /o}grep{/\w+/}split(/\s+/,$EX{'usetag'}));
 			}elsif(defined$tagCom{'!SELECTABLE'}){
 				$tags='\w+';
 			}
@@ -565,7 +563,7 @@ _HTML_
 			#もし BRタグや Aタグなど特定のタグだけは削除したくない場合には， 
 			#$tag_tmp = $2; の後に，次のようにして $tag_tmp を $result に加えるようにすればできます． 
 			#$result .= $tag_tmp if $tag_tmp =~ /^<\/?(BR|A)(?![\dA-Za-z])/io;
-			my$remain=join('|',grep{m/^(?:\\w\+|\w+)$/o}split(/\s+/o,$tags));
+			my$remain=join('|',grep{/^(?:\\w\+|\w+)$/o}split(/\s+/o,$tags));
 			#逆に FONTタグや IMGタグなど特定のタグだけ削除したい場合には， 
 			#$tag_tmp = $2; の後に，次のようにして $tag_tmp を $result に加えるようにすればできます． 
 			#$result .= $tag_tmp if $tag_tmp !~ /^<\/?(FONT|IMG)(?![\dA-Za-z])/io;
@@ -694,26 +692,15 @@ _HTML_
 	open(ZERO,'+<'."$CF{'log'}0.cgi")||die"Can't read/write log(0.cgi)[$?:$!]";
 	eval{flock(ZERO,2)};
 	seek(ZERO,0,0);
-	my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
-	index($zero[0],"Mir12=\t")+1||die'ZEROのログ形式がMir12型以外です';
+	my@zero=map{/^([^\x0D\x0A]*)/o}<ZERO>;
+	index($zero[0],"Mir12=\t")&&die'ZEROのログ形式がMir12型以外です';
 	%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
-	my@zer1=split(/\s+/o,$zero[1]);
-	@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
 	
 	#-----------------------------
 	#@zer1ベース荒らし対策(?)
 	#120秒以内に@zer1が全て入れ替わったら危険の兆候
+	my@zer1=split(/\s+/o,$zero[1]);
 	@zer1>4&&$zer1[$#zer1]=~/\d+:\w+:\d+\[(\d+)\]/o&&$1+120>$^T&&&showUserError('凶兆が見えた');
-	
-	#-----------------------------
-	#@zer2のエラー訂正
-	for(@file){
-		$_>$zer2[0]||next; #既に古くなったもの
-		$zer2[$_-$zer2[0]]&&next; #正常
-		
-		#以下異常なものの復旧
-		$zer2[$_-$zer2[0]]=(stat("$CF{'log'}$_.cgi"))[9];
-	}
 	
 	#-----------------------------
 	#現在あるログのリストを取得
@@ -721,8 +708,18 @@ _HTML_
 	$IN{'i'}=$file[0]+1if$IN{'i'}&&$IN{'i'}>$file[0]+1;
 	
 	#-----------------------------
+	#@zer2のエラー訂正
+	if(@file){
+		my@tmp=$zero[2]?split(/\s/o,$zero[2]):(0);
+		@zer2=map{$tmp[$_-$tmp[0]]or(stat("$CF{'log'}$_.cgi"))[9]or$_}($tmp[0]+1)..$file[0];
+		unshift@zer2,$tmp[0];
+	}else{
+		die'明らかなバグ - @fileの読み忘れ';
+	}
+	
+	#-----------------------------
 	#書き込みの前処理を拡張したい時用
-	&exprewrt();
+	&exprewrt(); # doEvent('BeforeWriteArticle');
 	
 	#-----------------------------
 	#いよいよ
@@ -820,7 +817,7 @@ $file[$CF{'logmax'}-2] は削除された後に残った記事スレッドのうち、
 			$line=$_ while<FILE>;
 			
 			#スレッドのロック
-			index($line,"Mir12=\tLocked")+1&&&showUserError('このスレッドはロックされている');
+			index($line,"Mir12=\tLocked")||&showUserError('このスレッドはロックされている');
 			
 			$IN{'j'}=$.; #$.-1+1
 			seek(FILE,0,2);
@@ -850,7 +847,7 @@ $file[$CF{'logmax'}-2] は削除された後に残った記事スレッドのうち、
 		open(FILE,'+<'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$?:$!]";
 		eval{flock(FILE,2)};
 		seek(FILE,0,0);
-		my@log=map{m/^([^\x0D\x0A]*)/o}<FILE>;
+		my@log=map{/^([^\x0D\x0A]*)/o}<FILE>;
 		$#log<$IN{'j'}&&die'wa1: Something Wicked happend!';
 		$log[$IN{'j'}]||die'wa2: Something Wicked happend!';
 		my%DT=$log[$IN{'j'}]=~/([^\t]*)=\t([^\t]*);\t/go;
@@ -875,8 +872,8 @@ $file[$CF{'logmax'}-2] は削除された後に残った記事スレッドのうち、
 				print&getFooter;
 				exit;
 			}
-			index($log[$IN{'j'}],"Mir12=\tdel")+1&&&showUserError("第$IN{'i'}番の$IN{'j'}は既に削除されている");
-			index($log[$IN{'j'}],"Mir12=\tlock")+1&&&showUserError("第$IN{'i'}番の$IN{'j'}はロックされている");
+			index($log[$IN{'j'}],"Mir12=\tdel")||&showUserError("第$IN{'i'}番の$IN{'j'}は既に削除されている");
+			index($log[$IN{'j'}],"Mir12=\tlock")||&showUserError("第$IN{'i'}番の$IN{'j'}はロックされている");
 			$log[$#log]=~/Mir12=\tLocked(?:\S+ )*revise[ ;]/o&&&showUserError('このスレッドは固くロックされている');
 			#Pass変更
 			$IN{'oldps'}=$IN{'pass'};
@@ -887,7 +884,7 @@ $file[$CF{'logmax'}-2] は削除された後に残った記事スレッドのうち、
 		
 		unless($IN{'_NewPassword'}){
 			#Pass変更・日時変更
-			$EX{'dnew'}&&($DT{'time'}=$^T);
+			$DT{'time'}=$^T if$EX{'dnew'};
 			$IN{'_NewPassword'}=&mircrypt($DT{'time'},$IN{'pass'});
 		}
 		#書き込み
@@ -908,9 +905,9 @@ $file[$CF{'logmax'}-2] は削除された後に残った記事スレッドのうち、
 		#新規・返信の時には投稿情報を保存
 		$#zer1=3if$#zer1>3; #(3+2=)5が@zer1の保存件数
 		unshift(@zer1,sprintf"%d:%s:%d[%d]",$IN{'i'},$crcOfThisArticle,$IN{'j'},$^T);
-		my$No=$IN{'i'}-$zer2[0];
-		$No>0||die"ZER2のデータが不正です 'i':$IN{'i'},'zer2':$zer2[0]";
-		$zer2[$No]=$^T;
+		my$num=$IN{'i'}-$zer2[0];
+		$num>0||die"ZER2のデータが不正です 'i':$IN{'i'},'zer2':$zer2[0]";
+		$zer2[$num]=$^T;
 		truncate(ZERO,0);
 		seek(ZERO,0,0);
 		unless($Z0{'Serial'}){
@@ -927,16 +924,16 @@ $file[$CF{'logmax'}-2] は削除された後に残った記事スレッドのうち、
 	#$IN{'cook'}がONならCookieの書き込み
 	if($IN{'cook'}){
 		unless($CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'}){#管理パスの時はCookie保存しない
-			&getCookie;
 			&setCookie(\%IN);
 		}
 	}
 	
 	#-----------------------------
 	#書き込み成功＆「自由に修正をどうぞ」
+	my$writeType=$IN{'_ArticleType'}&2?'書き直し':'書き込み';
 	&showHeader;
 	print<<"_HTML_";
-<H2 class="heading2">- 書き込み完了 -</H2>
+<H2 class="heading2">- $writeType完了 -</H2>
 <DIV class="writingMessage">
 <P>以下の内容で第$IN{'i'}番スレッドの$IN{'j'}番目に書き込みました。<BR>
 これでよければそのままTOPや掲示板に戻ってください。<BR>
@@ -1118,8 +1115,8 @@ _HTML_
 		#記事ごと
 		while(<FILE>){
 			$j++;
-			index($_,"Mir12=\tdel;\t")+1&&next;
-			if(index($_,"Mir12=\tLocked")+1){
+			index($_,"Mir12=\tdel;\t")||next;
+			if(!index($_,"Mir12=\tLocked")){
 				print<<"_HTML_";
 <TR class="child">
 <TH align="right">LOCKED</TH>
@@ -1130,7 +1127,7 @@ _HTML_
 			}
 			my%DT=/([^\t]*)=\t([^\t]*);\t/go;
 			$count="Res $j"if$j;
-			my$No="$i-$j";
+			my$num="$i-$j";
 			my$date=&date($DT{'time'});
 			#本文の縮め処理
 			$DT{'body'}=~s/<BR\b[^>]*>/↓/go;
@@ -1143,7 +1140,7 @@ _HTML_
 <TD align="right">by $DT{'name'}</TD>
 </TR>
 <TR>
-<TD><INPUT type="radio" name="$mode" value="$No"></TD>
+<TD><INPUT type="radio" name="$mode" value="$num"></TD>
 <TD align="right">$date</TD>
 <TD align="right">$DT{'body'}</TD>
 </TR>
@@ -1172,7 +1169,7 @@ sub rvsArticle{
 	($IN{'i'},$IN{'j'})=split('-',$IN{'rvs'});
 	open(FILE,'<'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read log($IN{'i'}.cgi)[$?:$!]";
 	eval{flock(FILE,1)};
-	my@log=map{m/^([^\x0D\x0A]*)/o}<FILE>;
+	my@log=map{/^([^\x0D\x0A]*)/o}<FILE>;
 	close(FILE);
 	my%DT=$log[$IN{'j'}]=~/([^\t]*)=\t([^\t]*);\t/go;
 	%DT||die"第$IN{'i'}番スレッドには$IN{'j'}なんてありません";
@@ -1271,7 +1268,7 @@ sub delArticle{
 	open(FILE,'+<'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$?:$!]";
 	eval{flock(FILE,2)};
 	seek(FILE,0,0);
-	my@log=map{m/^([^\x0D\x0A]*)/o}<FILE>;
+	my@log=map{/^([^\x0D\x0A]*)/o}<FILE>;
 	my%DT=$log[$IN{'j'}]=~/([^\t]*)=\t([^\t]*);\t/go;
 	#削除分岐
 	SWITCH:{
@@ -1302,8 +1299,8 @@ _HTML_
 			$IN{'j'}==0&&$IN{'type'}==2&&last SWITCH;
 		}else{
 			#一般Pass
-			index($log[$IN{'j'}],"Mir12=\tdel")+1&&&showRvsMenu("第$IN{'i'}番の$IN{'j'}は既に削除されています。");
-			index($log[$IN{'j'}],"Mir12=\tlock")+1&&&showRvsMenu("第$IN{'i'}番の$IN{'j'}はロックされています。");
+			index($log[$IN{'j'}],"Mir12=\tdel")||&showRvsMenu("第$IN{'i'}番の$IN{'j'}は既に削除されています。");
+			index($log[$IN{'j'}],"Mir12=\tlock")||&showRvsMenu("第$IN{'i'}番の$IN{'j'}はロックされています。");
 			$log[$#log]=~/Mir12=\tLocked:(?:\S+ )*delete[ ;]/o
 				and&showRvsMenu('このスレッドは固くロックされています。');
 			&mircrypt($DT{'time'},$IN{'pass'},$DT{'pass'})
@@ -1445,7 +1442,7 @@ sub showUserError{
 <TABLE border="1" summary="ユーザー入力変数を表示しておく">
 <CAPTION>今受け取った引数</CAPTION>
 _HTML_
-	for(grep{m/^[^_]/o&&defined$IN{$_}&&length$IN{$_}}keys%IN){
+	for(grep{/^[^_]/o&&defined$IN{$_}&&length$IN{$_}}keys%IN){
 		$IN{$_}=~s/<BR>/\n/go;
 		printf"<TR><TH>%s</TH><TD><XMP>%s</XMP></TD>\n",$_,$IN{$_};
 	}
@@ -1881,9 +1878,9 @@ sub getLastpost{
 sub getZeroInfo{
 	open(ZERO,'<'."$CF{'log'}0.cgi")||die"Can't read log(0.cgi)[$?:$!]";
 	eval{flock(ZERO,1)};
-	my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
+	my@zero=map{/^([^\x0D\x0A]*)/o}<ZERO>;
 	close(ZERO);
-	$zero[0]&&index($zero[0],"Mir12=\t")+1or die'ZEROのログ形式がMir12型以外です';
+	$zero[0]&&index($zero[0],"Mir12=\t")&&die'ZEROのログ形式がMir12型以外です';
 	%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
 	@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
 }
@@ -1909,7 +1906,7 @@ sub getZeroInfo{
 sub logfiles{
 	undef@file;
 	opendir(DIR,$CF{'log'})||die"Can't read directory($CF{'log'})[$?:$!]";
-	my@list=grep{int$_}map{m/^(\d+)\.cgi$/o}readdir(DIR);
+	my@list=grep{int$_}map{/^(\d+)\.cgi$/o}readdir(DIR);
 	closedir(DIR);
 	if('date'eq$_[0]){
 		#日付順 'date'
@@ -2036,8 +2033,8 @@ _HTML_
 		}else{
 			#子記事
 			$DT{'j'}>$horizon||next;
-			index($_,"Mir12=\tdel")+1&&next;
-			index($_,"Mir12=\tLocked")+1&&++$DT{'-isLocked'}&&last;
+			index($_,"Mir12=\tdel")||next;
+			index($_,"Mir12=\tLocked")||++$DT{'-isLocked'}&&last;
 			$DT{'-unreads'}=&artchd(\%DT,$_);
 		}
 	}
@@ -2045,7 +2042,7 @@ _HTML_
 	$DT{'-isAvailable'}=not$DT{'-isLocked'}+$DT{'-isOverflowed'};
 	#記事フッタ
 	&artfot(\%DT)if$DT{'j'}+1;
-	return wantarray?map{$_,$DT{$_}}grep{m/^-/o}keys%DT:$DT{'-unreads'};
+	return wantarray?map{$_,$DT{$_}}grep{/^-/o}keys%DT:$DT{'-unreads'};
 }
 
 
@@ -2053,19 +2050,19 @@ _HTML_
 # Cookieを取得する
 #
 sub getCookie{
-	$ENV{'HTTP_COOKIE'}||return undef;
-	my$char=MirString->getCharRegexp;
-	for($ENV{'HTTP_COOKIE'}=~/(?:^|; )Mireille=([^;]*)/go){
-		s/%([\dA-Fa-f]{2})/pack('H2',$1)/ego;
-		my%DT=/(\w+)\t($char*?)(?:\t|$)/go;
-		for(keys%DT){
-			if(!defined$CK{$_}||$CK{'lastModified'}<$DT{'lastModified'}){
+	%CK=();
+	if($ENV{'HTTP_COOKIE'}){
+		my$char=MirString->getCharRegexp;
+		for($ENV{'HTTP_COOKIE'}=~/(?:^|; )Mireille=([^;]*)/go){
+			s/%([\dA-Fa-f]{2})/pack('H2',$1)/ego;
+			my%DT=/(\w+)\t($char*?)(?:\t|$)/go;
+			for(keys%DT){
+				defined$CK{$_}&&$CK{'lastModified'}>=$DT{'lastModified'}&&next;
 				$CK{$_}=$DT{$_};
 			}
 		}
 	}
-	%CK||return undef;
-	%CK=%{&checkCookie(\%CK)};
+	%CK=%{&verifyCookie(\%CK)};
 	return%CK;
 }
 
@@ -2079,16 +2076,13 @@ sub getCookie{
 
 =cut
 
-sub checkCookie{
+sub verifyCookie{
 	my%DT=%{shift()};
 	#時間周りを設定
-	$DT{'time'}=0;
-	$DT{'expire'}=0;
 	unless($CK{'expire'}){
 		#新規
-		$DT{'time'}=$^T;
+		$DT{'time'}||=0;
 		$DT{'expire'}=$^T+$CF{'newuc'};
-		$CK{'time'}=$^T-$CF{'newnc'};
 	}elsif($CK{'expire'}>$^T){
 		#期限内
 		$DT{'time'}=$CK{'time'};
@@ -2097,7 +2091,6 @@ sub checkCookie{
 		#期限切れ
 		$DT{'time'}=$CK{'expire'}-$CF{'newuc'};
 		$DT{'expire'}=$^T+$CF{'newuc'};
-		$CK{'time'}=$DT{'time'};
 	}
 	$DT{'lastModified'}=$^T;
 	return\%DT;
@@ -2110,48 +2103,47 @@ sub checkCookie{
 
 =head3 引数
 
-\% Cookieに書き込む内容を持つハッシュのリファレンス
+\% Cookieに書き込む内容を持つハッシュのリファレンス（nameかtimeを持つこと）
 
 =cut
 
 sub setCookie{
 	my%DT=%{shift()};
-	$DT{'name'}||return undef;
+	$DT{'name'}||$DT{'time'}||return undef;
 	unless($DT{'lastModified'}){
 		#本来非Cookie情報な%DT
-		if(%CK){
-			$DT{$_}=$CK{$_}for map{exists$DT{$_}}keys%CK;
-		}else{
-			%DT=%{&checkCookie(\%DT)};
-		}
+		&getCookie unless%CK;
+		$DT{$_}=$CK{$_}for grep{!exists$DT{$_}}keys%CK;
 	}
-	my$setCookie;
+	my$setCookie='';
 	my$expires=$^T+33554432; #33554432=2<<24; #33554432という数字に特に意味はない、ちなみに一年と少し
+	$DT{'time'}||=$^T;
 	if($CF{'ckpath'}){
 		my$cookie='';
-		for("time expire lastModified"=~/\b(\w+)\b/go){
+		for("lastModified time expire"=~/(\w+)/go){
 			$cookie.=sprintf"%s\t%s\t",$_,defined$DT{$_}?$DT{$_}:'';
 		}
 		$cookie=~s/(\W)/'%'.unpack('H2',$1)/ego;
-		$setCookie="Mireille=$cookie; expires=".&datef($expires,'cookie');
-		for("name pass lastModified $CF{'cokitm'}"=~/\b(\w+)\b/go){
+		$setCookie.=sprintf'Mireille=%s; expires=%s',$cookie,&datef($expires,'cookie');
+		$setCookie.="\n";
+		for("lastModified name pass $CF{'cokitm'}"=~/(\w+)/go){
 			$cookie.=sprintf"%s\t%s\t",$_,defined$DT{$_}?$DT{$_}:'';
 		}
 		$cookie=~s/(\W)/'%'.unpack('H2',$1)/ego;
-		$setCookie.="\nMireille=$cookie; expires=".&datef($expires,'cookie')."; $CF{'ckpath'}";
+		$setCookie.=sprintf'Mireille=%s; expires=%s; %s',$cookie,&datef($expires,'cookie'),$CF{'ckpath'};
 	}else{
-		for("name pass time expire lastModified $CF{'cokitm'}"=~/\b(\w+)\b/go){
+		for("lastModified time expire name pass $CF{'cokitm'}"=~/(\w+)/go){
 			$cookie.=sprintf"%s\t%s\t",$_,defined$DT{$_}?$DT{$_}:'';
 		}
 		$cookie=~s/(\W)/'%'.unpack('H2',$1)/ego;
-		$setCookie="Mireille=$cookie; expires=".&datef($expires,'cookie');
+		$setCookie.=sprintf'Mireille=%s; expires=%s',$cookie,&datef($expires,'cookie');
 	}
-	$CF{'set_cookie_by_meta_tags'}=1if!defined$CF{'set_cookie_by_meta_tags'}&&index($ENV{'SERVER_NAME'},'tok2.com')+1;
-	if($CF{'set_cookie_by_meta_tags'}){
+	if(!defined$CF{'set_cookie_by_meta_tags'}&&index($ENV{'SERVER_NAME'},'tok2.com')+1){
 		#tok2対策
+		$CF{'set_cookie_by_meta_tags'}=1;
 		$CF{'-setCookie'}=$setCookie;
 	}else{
-		print map{qq(Set-Cookie: $_\n)}split("\n",$setCookie);
+		print"Set-Cookie: $_\n"for split("\n",$setCookie);
 	}
 	return$setCookie;
 }
@@ -2525,6 +2517,9 @@ sub iptico{
 		$isDisabled=1;
 	}elsif($_[0]and$iconlist=~s/^(.*value=(["'])$_[0]\2)(.*)$/$1 selected$3/imo){
 		$iconlist="$1 selected$3"if$isEconomy;
+#	}elsif($_[0]and$canUseUnlistedCookieIcon){
+#		#Cookieに保存されいるアイコンがアイコンリストに無いとき
+#		$iconlist=($isEconomy?$iconlist:'').qq(<OPTION value="$_[0]" selected>COOKIE</OPTION>\n);
 	}elsif($iconlist=~s/value=(["'])(.+?)\1/value=$1$2$1 selected/io){
 		$_[0]=$2;
 	}
@@ -2979,7 +2974,7 @@ BEGIN{
 	unless($CF{'program'}){
 		$CF{'program'}=__FILE__;
 		$SIG{'__DIE__'}=$ENV{'REQUEST_METHOD'}?sub{
-			$_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/&&return;
+			index($_[0],'flock')+1 and index($_[0],'unimplemented')+1 and return;
 			print "Status: 200 OK\nContent-Language: ja-JP\nContent-type: text/html; charset=$CF{'encoding'}\n\n"
 				. "<HTML>\n<HEAD>\n"
 				.qq(<META http-equiv="Content-type" content="text/html; charset=$CF{'encoding'}">\n)
@@ -2998,7 +2993,7 @@ BEGIN{
 			print "\n+#      Airemix Mireille     #+\n+#  http://www.airemix.com/  #+\n</PRE>\n</BODY>\n</HTML>\n";
 			exit;
 		}:sub{
-			if($_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/o){return}
+			index($_[0],'flock')+1 and index($_[0],'unimplemented')+1 and return;
 			print@_?"ERROR: $_[0]":'ERROR';
 			exit;
 		};
