@@ -131,7 +131,7 @@ function autosaveBodyData(){
 	if(bodyObj.value.length>100){
 		switch(saveBodyData('MireilleAutosave')){
 		case'DeleteBodyData':
-			status='Something Wicked happened!';
+			status='as0: Something Wicked happened!';
 			break;
 		case'SavedBodyDataIE':
 			status="現在の本文データをIE式で自動保存しました。";
@@ -143,7 +143,7 @@ function autosaveBodyData(){
 			status="自動保存に失敗しました。保存可能な最大文字数(約4KB)を超えたからかもしれません。";
 			break;
 		default:
-			status='Something Wicked happened!';
+			status='as1: Something Wicked happened!';
 		}
 	}
 	autosaveId=setTimeout(autosaveBodyData,60000);
@@ -152,7 +152,6 @@ function autosaveBodyData(){
 
 /*========================================================*/
 // Quick Save Body Data
-saveBodyCk=quicksaveBodyData;
 function quicksaveBodyData(){
 	if(!bodyObj)return false;
 	if(!confirm("新しい本文を保存すると、古い本文データは消えてしまいます\nそれでも保存してよろしいですか？"))
@@ -173,8 +172,9 @@ function quicksaveBodyData(){
 				+'本文をファイルに保存しながら書いた方がよいかと思われます。');
 			break;
 	default:
-		alert('Something Wicked happened!');
+		alert('qs: Something Wicked happened!');
 	}
+	return true;
 }
 
 /*========================================================*/
@@ -213,11 +213,11 @@ function saveBodyData(key){
 			return'FailedToSave';
 		}
 	}
+	return true;
 }
 
 /*========================================================*/
 // Load Body Data
-loadBodyCk=loadBodyData;
 function loadBodyData(key){
 	if(!bodyObj)return false;
 	if(!confirm("Cookieから本文データを読み出すと、現在の本文は消えてしまいます\nそれでも読み出してよろしいですか？"))
@@ -240,6 +240,7 @@ function loadBodyData(key){
 	}else{
 		alert('読み込みに失敗しました');
 	}
+	return true;
 }
 
 
@@ -296,6 +297,27 @@ if(document.getElementsByTagName){
 			tags[i].className='blur';
 			tags[i].onfocus=function()	{this.className='focus';};
 			tags[i].onblur=function()	{this.className='blur';};
+		}
+	}
+	tags=document.getElementsByTagName('BUTTON');
+	for(var i in tags){
+		if('button'==tags[i].className){
+			tags[i].className='button';
+			tags[i].onfocus=function()		{this.className='buttonover'};
+			tags[i].onmouseover=function()	{this.className='buttonover'};
+			tags[i].onblur=function()		{this.className='button'};
+			tags[i].onmouseout=function()	{this.className='button'};
+		}else if(tags[i].className&&tags[i].className.substr(0,6)=='button'){
+			tags[i].onfocus=
+				function(){if(this.className.substr(this.className.length-4)!='Over')this.className+='Over'}
+			tags[i].onmouseover=
+				function(){if(this.className.substr(this.className.length-4)!='Over')this.className+='Over'}
+			tags[i].onblur=
+				function(){if(this.className.substr(this.className.length-4)=='Over')
+					this.className=this.className.substring(0,this.className.length-4)};
+			tags[i].onmouseout=
+				function(){if(this.className.substr(this.className.length-4)=='Over')
+					this.className=this.className.substring(0,this.className.length-4)};
 		}
 	}
 	tags=document.getElementsByTagName('TEXTAREA');
@@ -486,12 +508,12 @@ sub artfot{
 
 _HTML_
 	}elsif($CF{'readOnly'}||$DT{'-isLocked'}||$DT{'-isOverflowed'}){
-		#何らかの理由で表示のみ
+		#何らかの理由で閲覧専用
 		my$message=sprintf
-			+($CF{'readOnly'}?'読み込み専用モードなのでこの記事スレッドNo.%dの表示のみです'
-			:$DT{'-isLocked'}?'この記事スレッドNo.%dはロックされているので表示のみです'
-			:$DT{'-isOverflowed'}?'この記事スレッドNo.%dは子記事数制限に達したので表示のみです'
-			 :'とりあえずこの記事スレッドNo.%dは表示のみです'),$DT{'i'};
+			+($CF{'readOnly'}?'読み込み専用モードなのでこの記事スレッドNo.%dの閲覧専用です'
+			:$DT{'-isLocked'}?'この記事スレッドNo.%dはロックされているので閲覧専用です'
+			:$DT{'-isOverflowed'}?'この記事スレッドNo.%dは子記事数制限に達したので閲覧専用です'
+			 :'なにはともあれとりあえずこの記事スレッドNo.%dは閲覧専用です'),$DT{'i'};
 		print<<"_HTML_";
 <TABLE border="0" cellspacing="0" class="foot" summary="ArticleFooter" width="100%"><TR>
 <TH align="right" width="100%"><P align="right"><A accesskey="$DT{'ak'}" name="res$DT{'i'}" class="warning"
@@ -543,6 +565,7 @@ sub prtfrm{
 	
 	#項目の初期設定
 	$DT{'home'}='http://'unless$DT{'home'}; #http://だけ入れておく
+	$DT{'cook'}=$DT{'cook'}||!exists$DT{'cook'}?' checked':'';
 	
 	print<<"_HTML_";
 <FORM accept-charset="euc-jp" id="artform" method="post" action="index.cgi">
@@ -565,14 +588,14 @@ sub prtfrm{
 <TD class="input"><INPUT type="text" name="subject" id="subject" maxlength="70" value="$DT{'subject'}"></TD>
 <TH class="iconInputLabel" title="Icon&#10;アイコンを選択します">
 <LABEL accesskey="i" for="icon">■ <A href="index.cgi?icct" title="アイコンカタログ&#10;新しい窓を開きます"
- target="_blank">アイコン</A>（<KBD class="ak">Ｉ</KBD>）■</LABEL></TH>
+ target="_blank">アイコン</A>（<KBD class="ak">I</KBD>）■</LABEL></TH>
 </TR>
 
 <TR title="Name&#10;名前を入力します（必須）&#10;最高半角40文字までです">
 <TH class="item"><LABEL accesskey="n" for="name">■名前(<SPAN class="ak">N</SPAN>)：</LABEL></TH>
 <TD class="input"><INPUT type="text" name="name" id="name" maxlength="40" value="$DT{'name'}">
 <LABEL accesskey="k" for="cook" title="cooKie&#10;クッキー保存のON/OFF"
- >クッキ保存<INPUT name="cook" id="cook" type="checkbox" checked></LABEL></TD>
+ >クッキ保存<INPUT name="cook" id="cook" type="checkbox"$DT{'cook'}></LABEL></TD>
 <TD rowspan="4" class="iconPreview" title="Icon Preview"
  ><IMG name="Preview" id="Preview" src="$DT{'icon'}" alt="" title="$DT{'icon'}"></TD>
 </TR>
@@ -612,12 +635,15 @@ sub prtfrm{
  title="Body:記事の本文を入力します&#10;全角約10000文字までです&#10;使用できるタグはヘルプを参照"
 ><LABEL accesskey="b" for="body">■ 本文(<SPAN class="ak">B</SPAN>) ■</LABEL></TH>
 <TD class="rightColumn">
-<INPUT type="button" accesskey="," class="buttonQuicksave"  title="本文データをQuickSaveします"
- value="Save," onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()">
-<INPUT type="button" accesskey="." class="buttonLoadQuicksave" title="Quicksaveしたデータを読み込みます"
- value="Load." onclick="loadBodyData('MireilleQuicksave')" onkeypress="loadBodyData('MireilleQuicksave')">
-<INPUT type="button" accesskey="/" class="buttonLoadAutosave" title="Autosaveしたデータを読み込みます"
- value="Load/" onclick="loadBodyData('MireilleAutosave')" onkeypress="loadBodyData('MireilleAutosave')">
+<BUTTON accesskey="," class="buttonQuicksave"  title="本文データをQuickSaveします"
+ onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()"
+ >QSave(<KBD class="ak">,</KBD>)</BUTTON>
+<BUTTON accesskey="." class="buttonLoadQuicksave" title="Quicksaveしたデータを読み込みます"
+ onclick="loadBodyData('MireilleQuicksave')" onkeypress="loadBodyData('MireilleQuicksave')"
+ >QLoad(<KBD class="ak">.</KBD>)</BUTTON>
+<BUTTON accesskey="/" class="buttonLoadAutosave" title="Autosaveしたデータを読み込みます"
+ onclick="loadBodyData('MireilleAutosave')" onkeypress="loadBodyData('MireilleAutosave')"
+ >ALoad(<KBD class="ak">/</KBD>)</BUTTON>
 </TD></TR>
 <TR><TD colspan="3"><TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD></TR>
 </TABLE>
@@ -664,10 +690,13 @@ sub chdfrm{
 	
 	#項目の初期設定
 	$DT{'home'}='http://'unless$DT{'home'}; #http://だけ入れておく
+	$DT{'cook'}=$DT{'cook'}||!exists$DT{'cook'}?' checked':'';
 	#note01:Resは題名ないことも
 	if($CF{'chditm'}!~/\bsubject\b/o){
 		$DT{'subject'}='disabled';
-		$resfm=~s/name="subject"/name="subject" disabled="disabled"/io;
+		$DT{'_isSubjectDisabled'}=' disabled';
+	}else{
+		$DT{'_isSubjectDisabled'}='';
 	}
 	
 	print<<"_HTML_";
@@ -685,12 +714,15 @@ sub chdfrm{
  title="Body:記事の本文を入力します&#10;全角約10000文字までです&#10;使用できるタグはヘルプを参照"
 ><LABEL accesskey="b" for="body">■ 本文(<SPAN class="ak">B</SPAN>) ■</LABEL></TH>
 <TD class="rightColumn">
-<INPUT type="button" accesskey="," class="buttonQuicksave"  title="本文データをQuickSaveします"
- value="Save," onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()">
-<INPUT type="button" accesskey="." class="buttonLoadQuicksave" title="Quicksaveしたデータを読み込みます"
- value="Load." onclick="loadBodyData('MireilleQuicksave')" onkeypress="loadBodyData('MireilleQuicksave')">
-<INPUT type="button" accesskey="/" class="buttonLoadAutosave" title="Autosaveしたデータを読み込みます"
- value="Load/" onclick="loadBodyData('MireilleAutosave')" onkeypress="loadBodyData('MireilleAutosave')">
+<BUTTON accesskey="," class="buttonQuicksave"  title="本文データをQuickSaveします"
+ onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()"
+ >QSave(<KBD class="ak">,</KBD>)</BUTTON>
+<BUTTON accesskey="." class="buttonLoadQuicksave" title="Quicksaveしたデータを読み込みます"
+ onclick="loadBodyData('MireilleQuicksave')" onkeypress="loadBodyData('MireilleQuicksave')"
+ >QLoad(<KBD class="ak">.</KBD>)</BUTTON>
+<BUTTON accesskey="/" class="buttonLoadAutosave" title="Autosaveしたデータを読み込みます"
+ onclick="loadBodyData('MireilleAutosave')" onkeypress="loadBodyData('MireilleAutosave')"
+ >ALoad(<KBD class="ak">/</KBD>)</BUTTON>
 </TD></TR>
 <TR><TD colspan="3"><TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD></TR>
 </TABLE>
@@ -699,17 +731,17 @@ sub chdfrm{
 <TABLE class="inputOthers">
 <TR title="subJect&#10;記事の題名を入力します&#10;最高半角70文字までです">
 <TH class="item"><LABEL accesskey="j" for="subject">■題名(<SPAN class="ak">J</SPAN>)：</LABEL></TH>
-<TD class="input"><INPUT type="text" name="subject" id="subject" maxlength="70" value="$DT{'subject'}"></TD>
+<TD class="input"><INPUT type="text" name="subject" id="subject" maxlength="70" value="$DT{'subject'}"$DT{'_isSubjectDisabled'}></TD>
 <TH class="iconInputLabel" title="Icon&#10;アイコンを選択します">
 <LABEL accesskey="i" for="icon">■ <A href="index.cgi?icct" title="アイコンカタログ&#10;新しい窓を開きます"
- target="_blank">アイコン</A>（<KBD class="ak">Ｉ</KBD>）■</LABEL></TH>
+ target="_blank">アイコン</A>（<KBD class="ak">I</KBD>）■</LABEL></TH>
 </TR>
 
 <TR title="Name&#10;名前を入力します（必須）&#10;最高半角40文字までです">
 <TH class="item"><LABEL accesskey="n" for="name">■名前(<SPAN class="ak">N</SPAN>)：</LABEL></TH>
 <TD class="input"><INPUT type="text" name="name" id="name" maxlength="40" value="$DT{'name'}">
 <LABEL accesskey="k" for="cook" title="cooKie&#10;クッキー保存のON/OFF"
- >クッキ保存<INPUT name="cook" id="cook" type="checkbox" checked></LABEL></TD>
+ >クッキ保存<INPUT name="cook" id="cook" type="checkbox"$DT{'cook'}></LABEL></TD>
 <TD rowspan="4" class="iconPreview" title="Icon Preview"
  ><IMG name="Preview" id="Preview" src="$DT{'icon'}" alt="" title="$DT{'icon'}"></TD>
 </TR>
@@ -912,7 +944,7 @@ _HTML_
 	sub ArtNavi::addThreadHead{
 		my$class=shift;
 		my%DT=%{shift()};
-		my$subject=$DT{'subject'}; #&::getTruncated($DT{'subject'},45);
+		my$subject=$DT{'subject'}; #MirString->getTruncated($DT{'subject'},45);
 		$ArtNaviBody.=<<"_HTML_";
 <DIV class="navithre">
 <DIV class="navisubj">
