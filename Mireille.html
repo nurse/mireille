@@ -8,809 +8,476 @@
 <LINK rel="start" href="/">
 <LINK rel="index" href=".">
 <LINK rev="made" href="mailto:naruse&#64;airemix.com" title="Mireille">
-<TITLE>: The Intoroduction to Mireille :</TITLE>
+<TITLE>: Intoroduction to Mireille :</TITLE>
+<LINK rel="stylesheet" href="D:\Web\Airemix\airemix.css">
 <STYLE type="text/css" media="screen">
 <!--
-/* Mireille Style Sheet */
-/* Default Style Sheet for Mireille */
-/* "This file is written in euc-jp, CRLF." ‹ó */
-/* $StyleId: style.css,v 1.8 2003/01/13 03:24:50 naruse Exp $ */
+@charset "Shift_JIS";
+/* Airemix General Style Sheet */
+/* "This file is written in shift_jis, CRLF." ‹ó */
+/* $Id$ */
 
-/* note.
-Emargin‚ðmargin:auto;margin-top:10px;margin-bottom:10px;‚Æ•ª‚¯‚Ä‚¢‚é
-Opera6‘Îô‚Ì‚½‚ß‚Å‚·
-Ecursol‚ðhand,pointer‚Æ•ª‚¯‚Ä‚¢‚é
-MSIE6–¢–ž‘Îô‚Ì‚½‚ß‚Å‚·
-Einput,textare‚È‚Ç‚ð@media‚Å‚­‚­‚Á‚Ä‚¢‚é
-	Netscape4‘Îô‚Ì‚½‚ß‚Å‚·
 
-*/
 
-/* ===================== ‘S‘Ì‚Ì•W€ƒXƒ^ƒCƒ‹ ===================== */
-/* ’Êí‚ÌƒŠƒ“ƒN•¶Žš */
-A:link		{color:#44f;text-decoration:none;}
-A:visited	{color:#44f;text-decoration:none;}
+/* ==================== —v‘f‚Ì•W€ƒXƒ^ƒCƒ‹ ==================== */
+
+/* ========== ƒŠƒ“ƒN‚ÌƒXƒ^ƒCƒ‹ ========== */
+/* ’Êí‚ÌƒŠƒ“ƒN */
+A:link		{color:#44f}
+A:visited	{color:#c6f}
 A:link:hover,A:visited:hover
 {color:#fa8;text-decoration:underline;}
 A:link:active,A:visited:active
 {color:#f00;text-decoration:underline;}
 
-/* V‚µ‚¢‚à‚Ì‚Ö‚ÌƒŠƒ“ƒN•¶Žš */
-A.new:link		{color:#f00;font-weight:bold;text-decoration:none;}
-A.new:visited	{color:#f00;font-weight:bold;text-decoration:none;}
-A.new:link:hover,A.new:visited:hover
-{color:#f55;font-weight:bold;text-decoration:underline;}
-A.new:link:active,A.new:visited:active
-{color:#f00;font-weight:bold;text-decoration:underline;}
 
-/* ’ˆÓ‚ÈƒŠƒ“ƒN•¶Žš */
-A.warning:link		{color:#f00;font-weight:bold;text-decoration:none;}
-A.warning:visited	{color:#f00;font-weight:bold;text-decoration:none;}
-A.warning:link:hover,A.warning:visited:hover
-{color:#f55;font-weight:bold;text-decoration:underline;}
-A.warning:link:active,A.warning:visited:active
-{color:#f00;font-weight:bold;text-decoration:underline;}
-
-/* ‹LŽ–”Ô†‚ÌƒŠƒ“ƒN•¶Žš */
-A.number:link		{color:#06e;text-decoration:none;}
-A.number:visited	{color:#06e;text-decoration:none;}
-A.number:link:hover,A.number:visited:hover
-{color:#fa8;text-decoration:underline;}
-A.number:link:active,A.number:visited:active
-{color:#f50;text-decoration:underline;}
-
-/* –{•¶Ž©“®ƒŠƒ“ƒN‹@”\‚ÌƒŠƒ“ƒN•¶Žš */
-A.autolink:link		{border-bottom: dashed 1px #88f;color:#44f;text-decoration:none;}
-A.autolink:visited	{border-bottom: dashed 1px #b9f;color:#97d;text-decoration:none;}
-A.autolink:link:hover,A.autolink:visited:hover
-{border-bottom: dashed 1px #fa8;color:#fa8;text-decoration:none;}
-A.autolink:link:active,A.autolink:visited:active
-{border-bottom: dashed 1px #f00;color:#f00;text-decoration:none;}
-
-HTML{
-	overflow-y: scroll;/*WinIE6‚Ì•W€ƒ‚[ƒh‘Îô*/
-}
-ABBR,ACRONYM{
-	border-bottom: dotted 1px #66c;
-	cursor: help;
-}
-BODY{
-/*	background-attachment: scroll;*/
-	background-color: #fff;
-/*	background-image: url('/HP_img/bakimg.png');
-	background-position: left;
-	background-repeat: repeat; */
-	border-style: none;
-	border-width: 0;
-	color: #355;
-	font-family: '‚l‚r ‚oƒSƒVƒbƒN',sans-serif;
-	font-size: 15px;
-	margin: 3px 0;
+/* ========== ‚»‚Ì‘¼‚Ì—v‘f ========== */
+body{
+	background-image:url('/HP_img/bakimg.png');
+	color:#88f;
+	font-family: 'MS UI Gothic',Osaka,sans-serif;
+	font-size: 95%;
+	line-height: 1.2em;
+	margin: 0 auto;
 	padding: 0;
-	text-align: center;
+	text-align:center;
 }
-BUTTON{
-	background-color: #ffb;
-	border: #355 solid 2px;
-	color: #355;
-	cursor: pointer; cursor: hand;
+abbr, acronym{
+	font-variant: small-caps;
+	letter-spacing: 0.1em;
 }
-BUTTON:hover{
-	background-color: #eea;
-	border: #355 solid 2px;
-	color: #355;
-	cursor: pointer; cursor: hand;
+dd{ margin-left: 40px }
+del{ text-decoration: line-through }
+form{margin:0;}
+h1{
+	font-weight: bolder;
+	font-size: 2em;
+	margin: .67em 0;
 }
-DFN{
-	border-bottom-color: #3aa;
-	border-bottom-style: dashed;
-	border-bottom-width: 1px;
-	cursor: help;
-/*	font-family: Verdana,sans-serif;*/
-	font-style: normal;
+h2{
+	font-weight: bolder;
+	font-size: 1.5em;
+	margin: .83em 0;
 }
-EM{
-	border-bottom: solid 1px #333;
-/*	font-family: Verdana,sans-serif;*/
-	font-style: normal;
+h3{
+	font-weight: bolder;
+	font-size: 1.17em;
+	margin: 1em 0;
 }
-FORM{
-	margin: 0;
+h4{
+	font-weight: bolder;
+	margin: 1.33em 0;
 }
-IMG{
-	border-style: none;
-	margin: 0;
+h5{
+	font-weight: bolder;
+	font-size: .83em;
+	line-height: 1.17em;
+	margin: 1.67em 0;
 }
-INPUT,TEXTAREA{
-	font-family: '‚l‚r ‚oƒSƒVƒbƒN',sans-serif;
+h6{
+	font-weight: bolder;
+	font-size: .67em;
+	margin: 2.33em 0;
 }
-OPTGROUP{
-	font-size: 90%;
-	font-style: normal;
-	font-weight: bold;
+hr{ border: 1px inset }
+img{ border-style: none; }
+a:link img, a:visited img
+{border: 1px dashed #00f}
+a:link:hover img, a:link:active img,a:visited:hover img, a:visited:active img
+{border: 1px dotted #f88}
+p{ margin: 1em 0 }
+small{
+	font-size: 75%;
 }
-PRE{
-	background-color: #eee;
-	font-family: monospace;
-	font-size: 85%;
-	font-weight: normal;
-	margin: 0.2em 1em;
+dl{
+	margin: 1.33em 0;
+}
+ul{
+	margin: 1.33em 0;
+	margin-left: 40px;
+}
+ol{
+	list-style-type: decimal;
+	margin: 1.33em 0;
+	margin-left: 40px
+}
+dl dl, dl ol, dl ul, ol dl, ol ol, ul dl, ul ol{
+	margin-top: 0;
+	margin-bottom: 0;
+}
+ol ul, ul ul{
+	list-style-type: circle;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+ol ol ul, ol ul ul, ul ul ul{
+	list-style-type: square;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+li{
 	text-align: left;
-	white-space: pre;
-	word-break: break-all;
-	word-wrap: break-word;
 }
-Q{
-	border-bottom-color: #f77;
-	border-bottom-style: solid;
-	border-bottom-width: 1px;
-}
-SELECT{
-/*	background-color: transparent;*/
-	color: #355;
-	font-size: 90%;
-}
-TABLE{
-	color: #355;
-	font-family: '‚l‚r ‚oƒSƒVƒbƒN',sans-serif;
+strong{ font-weight: bolder }
+
+i, cite, em, dfn,
+var, address{ font-family: serif; font-style: italic }
+pre, tt, code,
+kbd, samp{ font-family: monospace }
+pre{ white-space: pre }
+table{
+	border-collapse: separate;
+	border-spacing: 0; 
+	font-family: 'MS UI Gothic',Osaka,sans-serif;
 	font-size: 100%;
-	margin: 1em auto;
-	text-align: center;
-	margin-top:1em;margin-bottom:1em;
+	margin: 0 auto;
+	padding: 0;
+	text-align:center;
 }
-
-TH,TD{
-	text-align: left;
-}
-OL,UL{
-	margin-top: 0.5em;
-	margin-bottom: 0.5em;
-	text-align: left;
-}
-LI{
-	line-height: 120%;
-	margin-bottom: 3px;
-	text-align: left;
-}
-DT{
-	background-color: #eef;
-	color: #55f;
-	font-size: 100%;
-	font-weight: normal;
-	margin: 0.5em auto 0em auto;
-	padding: 1px;
-	position: relative;
-	bottom: 2px;
-	text-align: left;
-	vertical-align: middle;
-	width: 100%;
-	margin-top:0.3em;margin-bottom:0em;
+th,td{
+	margin: 0;
+	padding: 0;
 }
 
 
-/* ===================== ‘S‘Ì‚É‹¤’Ê‚ÌƒNƒ‰ƒX ===================== */
-/* ƒAƒNƒZƒXƒL[ */
-.ak{
-	text-decoration: underline;
-}
-/* V‚µ‚¢‹LŽ–‚Ì“úŽž */
-.new{
-	color: #f00;
-}
+
+/* ==================== ‘S‘Ì‚É‹¤’Ê‚ÌƒNƒ‰ƒX ==================== */
 /* ‰½‚ç‚©‚Ì’ˆÓ‚âŒx */
 .warning, .caution{
 	color: #f00;
 }
-/* N4’²®—pˆê‘µ‚¦ƒNƒ‰ƒX */
-DIV.center{
-	margin: auto;
-	text-align: center;
-}
-DIV.right{
-	margin-left:5%;
-	text-align: right;
-}
-
-/* Netscape4‘Îô‚Ì‚½‚ßˆÍ‚¢ž‚Ý */
-@media all{
-	/* Mozilla‚Å‚Í‘®«ƒZƒŒƒNƒ^‚Æ‹[Ž—ƒNƒ‰ƒX‚ÅAIE‚Å‚ÍJScript‚Åó‘Ô‚ðØ‚è‘Ö‚¦‚é */
-	
-	/* •W€“Iƒ{ƒ^ƒ“ */
-	.button{
-		background-color: #dfe;
-		border: #6ca solid 2px;
-		cursor: pointer; cursor: hand;
-	}
-	INPUT[type="button"]{
-		background-color: #dfe;
-		border: #6ac solid 2px;
-		cursor: pointer;
-	}
-	/* •W€“Iƒ{ƒ^ƒ“iƒ}ƒEƒX‚ªd‚È‚Á‚½Žžj */
-	.button:hover,.buttonover{
-		background-color: #aeb;
-		border: #6ac solid 2px;
-		cursor: pointer; cursor: hand;
-	}
-	INPUT[type="button"]:hover,INPUT[type="button"]:focus{
-		background-color: #aeb;
-	}
-	/* —¹‰ðƒ{ƒ^ƒ“i“Še/C³/íœj */
-	.submit{
-		background-color: #dde;
-		border: #355 solid 2px;
-		color: #355;
-		cursor: pointer; cursor: hand;
-		width: 7em;
-	}
-	INPUT[type="submit"]{
-		background-color: #dde;
-		border: #355 solid 2px;
-		color: #355;
-		cursor: pointer;
-		width: 7em;
-	}
-	/* —¹‰ðƒ{ƒ^ƒ“iƒ}ƒEƒX‚ªd‚È‚Á‚½Žžj */
-	.submit:hover,.submitover,{
-		background-color: #bbe;
-		border: #355 solid 2px;
-		color: #355;
-		cursor: pointer; cursor: hand;
-		width: 7em;
-	}
-	INPUT[type="submit"]:hover,INPUT[type="submit"]:focus{
-		background-color: #bbe;
-	}
-	/* ŽæÁƒ{ƒ^ƒ“ */
-	.reset{
-		background-color: #edd;
-		border: #355 solid 2px;
-		color: #355;
-		cursor: pointer; cursor: hand;
-		width: 7em;
-	}
-	INPUT[type="reset"]{
-		background-color: #edd;
-		border: #355 solid 2px;
-		color: #355;
-		cursor: pointer;
-		width: 7em;
-	}
-	/* ŽæÁƒ{ƒ^ƒ“iƒ}ƒEƒX‚ªd‚È‚Á‚½Žžj */
-	.reset:hover,.resetover{
-		background-color: #ebb;
-		border: #355 solid 2px;
-		color: #355;
-		cursor: pointer; cursor: hand;
-		width: 7em;
-	}
-	INPUT[type="reset"]:hover,INPUT[type="reset"]:focus{
-		background-color: #ebb;
-	}
-	/* ƒtƒH[ƒ€‚ÉƒtƒH[ƒJƒX‚ª–³‚¢Žž */
-	.blur,TEXTAREA{
-		background-color: #fff;
-		border: #ccc solid 1px;
-		color: #355;
-		font-size: 14px;
-		padding: 1px;
-		margin: 0;
-	}
-	INPUT[type="text"],INPUT[type="password"]{
-		background-color: #fff;
-		border: #ccc solid 1px;
-		color: #355;
-		font-size: 14px;
-		padding: 1px;
-		margin: 0;
-	}
-	/* ƒtƒH[ƒ€‚ÉƒtƒH[ƒJƒX‚ª‚ ‚éŽž */
-	.focus{
-		background-color: #dfd;
-		border: #9cf dashed 1px;
-		color: #355;
-		font-size: 14px;
-		padding: 1px;
-		margin: 0;
-	}
-	TEXTAREA:focus,INPUT[type="text"]:focus,INPUT[type="password"]:focus{
-		background-color: #dfd;
-	}
-	INPUT[disabled]{
-		color:#777;
-	}
-}
-
-
-/* ===================== ƒƒjƒ…[•” ===================== */
-/* ========== LastPost ========== */
-P.lastpost{
-	margin: 0;
-	text-align: right;
-	text-decoration: underline;
-}
-P.lastpost A{
-	background-color: #cdf;
-	color: #05a;
-	font-size: 13px;
-}
-/* ========== ƒy[ƒWƒwƒbƒ_[ƒe[ƒuƒ‹ ========== */
-TABLE.head{
-	background: #6ac;
-	color: #fff;
-	margin: auto;
-	width: 90%;
-}
-TABLE.head TH{
-	padding: 3px 5px;
-	text-align: left;
-	white-space: nowrap;
-}
-H1.head,H1.head A:link{
-	color: #fff;
-	font-family: 'Comic Sans MS','‚l‚r ‚oƒSƒVƒbƒN',sans-serif;
-	font-size: 19px;
-	font-weight: normal;
-	width: 100%;
-}
-H1.head{margin: 0;}
-H1.head A:visited{color: #fff;}
-TABLE.head TD{
-	letter-spacing: 1em;
-	padding: 3px 5px;
-	text-align: right;
-	white-space: nowrap;
-}
-/* ========== Œ©o‚µiMode•\Ž¦‚ÅŽå‚ÉŽg—pj ========== */
-H2.mode{
-	background-color: #ace;
-	color: #fff;
-	font-family: 'Comic Sans MS','‚l‚r ‚oƒSƒVƒbƒN',sans-serif;
-	font-size: 17px;
-	font-weight: bold;
-	margin: 10px auto;
-	padding: 3px;
-	text-align: center;
-	width: 80%;
-	margin-top:10px;margin-bottom:10px;
-}
-/* ========== ƒƒjƒ…[ ========== */
-TABLE.menu{
-	border-style: none;
-	margin: auto;
-	margin-top:10px;margin-bottom:10px;
-	text-align: center;
-}
-TD.menu{
-	border: #6ac solid 2px;
-	font-size: 14px;
-	padding: 5px;
-	text-align: center;
-}
-/* ========== ƒy[ƒW‘I‘ð ========== */
-TABLE.pgsl{
-	border: #6ac solid 2px;
-	margin: auto;
-	padding: 1px;
-	text-align: center;
-	vertical-align: middle;
-	margin-top:4px;margin-bottom:4px;
-}
-TABLE.pgsl TD{
-	border-style: none;
-	padding: 1px;
-	text-align: center;
-	vertical-align: middle;
-}
-/* ¡Œ©‚Ä‚¢‚éƒy[ƒW”Ô†‚Ì‹­’² */
-STRONG.pgsl{
-	font-size: 130%;
-}
-
-/* ========== ’ˆÓ‘‚« ========== */
-TABLE.note{
-	margin: auto;
-	text-align: center;
-	margin-top:10px;margin-bottom:10px;
-}
-DIV.note{
-	border: #6ac solid 5px;
-	margin: 0 auto;
-	padding: 0;
-	margin-top:0;margin-bottom:0;
-}
-UL.note{
-	border: #6ac solid 5px;
-	margin: 0 auto;
-	padding: 5px 0 5px 20px;
-	margin-top:0;margin-bottom:0;
-}
-P.note{
+/* note */
+.note{
 	background-color: #eef;
 	border: #6ac solid 2px;
+	margin: 1em auto;
 	padding: 0.5em;
 	width: 60%;
 }
-.note LI{
-	list-style-type: square;
-}
-/* ========== ‹LŽ–î•ñ•” ========== */
-DIV.artinfo{
-	margin: 0 auto;
+
+
+/* ========== PAGE HEAD/FOOT ========== */
+.PageHead,.PageFoot{
+	background-color: #6ac;
+	clear: both;
+	color: #fff;
+	margin: 0.3em auto;
+	padding: 0.3em;
 	text-align: center;
+	width: 90%;
 }
-P.artinfo{
-	margin: 0 auto;
+.PageHead H1,.PageFoot P{
+	font-family: 'Comic Sans MS', sans-serif;
+	font-size: 1.2em;
+	font-weight: normal;
+	margin: 0;
 }
+.PageHead H1{float: left;text-align: left}
+.PageFoot P{text-align: right}
+.PageFoot A:link,.PageFoot A:visited{color:#fff;text-decoration: none}
+.PageFoot A:hover{color:#fff;text-decoration: underline}
+.PageHead DIV,.PageFoot DIV{
+	letter-spacing: 1em;
+	line-height: 1.5em;
+	margin: 0;
+}
+.PageHead DIV{text-align: right}
+.PageFoot DIV{float: left;text-align: left}
+
+
+/* ========== Skyline ========== */
+.Skyline{
+	font-size: 80%;
+	margin: 0 0.2em;
+	text-align: right;
+}
+.Skyline SPAN{
+	background-color: #cdf;
+	color: #05a;
+	padding: 0.1em 0.2em;
+}
+
 
 /* ========== ’˜ìŒ •\Ž¦ ========== */
 .AiremixCopy{
-	font-family: Verdana,sans-serif;
-	font-size: 16px;
+	font-family: Tahoma,sans-serif;
+	font-size: 115%;
 	font-style: normal;
 	font-weight: normal;
 	text-align: right;
 }
-
-
-
-/* ===================== ‹LŽ–•\Ž¦•” ===================== */
-/* ‹LŽ–ƒXƒŒƒbƒh */
-.thread{
-	border: #6ac solid 5px;
-	margin: 20px auto;
-	padding: 3px;
-	text-align: right;
-	width: 90%;
-	margin-top:20px;margin-bottom:20px;
-}
-/* e‹LŽ–‚Ìƒ^ƒCƒgƒ‹ƒe[ƒuƒ‹ */
-.thread TABLE.subject{
-	background-color: #6ac;
-	color: #fff;
-	margin: 0;
-	width: 100%;
-}
-/* ‹LŽ–ƒXƒŒƒbƒhˆÚ“®‚Ì–îˆó */
-.thread .arrow{
-	font-size: 20px;
-	text-align: right;
-}
-/* e‹LŽ–‚Ìƒ^ƒCƒgƒ‹ƒZƒ‹ */
-.thread TH.subject{
-}
-/* e‹LŽ–‚Ìƒ^ƒCƒgƒ‹ */
-.thread H2.subject{
-	color: #fff;
-	font-size: 21px;
-	font-weight: bold;
-	margin: 1px 3px;
-	text-align: left;
+.Copyright{
+	font-family: Tahoma,sans-serif;
+	font-size: 100%;
+	font-style: normal;
+	font-weight: normal;
+	text-align: center;
 }
 
-/* e‹LŽ–ƒe[ƒuƒ‹ */
-.thread .parent{
-	margin: 4px 0;
-/*	table-layout: fixed;*/
-	width: 100%;
-}
-/* Žq‹LŽ–ƒe[ƒuƒ‹ */
-.thread .child{
-	margin: 4px 0;
-/*	table-layout: fixed;*/
-	width: 100%;
-}
-/* –‹LŽ–ƒe[ƒuƒ‹COL */
-.thread COL.space	{width: 5%;}
-.thread COL.number	{width: 120px;}
-.thread COL.name	{}
-.thread COL.date	{}
-/* Žq‹LŽ–‚Ìƒ^ƒCƒgƒ‹ƒZƒ‹ */
-.thread .child .subject{
-	background-color: #6ac;
-	color: #fff;
-}
-/* Žq‹LŽ–‚Ìƒ^ƒCƒgƒ‹ */
-.thread .child H3.subject{
+
+/* ========== Œ©o‚µ ========== */
+.heading2{
 	background-color: #ace;
 	color: #fff;
+	font-family: 'Comic Sans MS','‚l‚r ‚oƒSƒVƒbƒN',sans-serif;
 	font-size: 17px;
 	font-weight: bold;
-	text-align: left;
-	margin: 0px 3px;
-}
-
-/* “ŠeŽÒî•ñ—“ */
-.thread .info TD{
-	background-color: #ace;
-	color: #355;
-	font-size: 13px;
-	font-weight: bold;
-	padding: 0.1em 0.5em;
-	text-align: left;
-	vertical-align: bottom;
-}
-/* –‹LŽ–‚Ì•ÔM”Ô† */
-.thread .info TH.number,TH.number{text-align: center; vertical-align: middle;white-space: nowrap;}
-/* e‹LŽ–‚Ì‹LŽ–”Ô† */
-.thread .parent .info .number{font-size: 15px; font-weight: bold;}
-/* Žq‹LŽ–‚Ì•ÔM”Ô† */
-.thread .child  .info .number{font-size: 13px; font-weight: normal;}
-
-/* “ŠeŽÒ–¼ */
-.thread .info TD.name{text-align: left; white-space: nowrap;}
-.thread .info SPAN.name{font-size: 17px;}
-/* HOME */
-@media all{.thread .info SPAN.home{margin-left:3em}}
-/* “Še“úŽž */
-.thread .info TD.date{
-	text-align: right;
-}
-.thread .info SPAN.date{}
-/* yC³z */
-@media all{.thread .info SPAN.revise{margin-left:3em}}
-/* infos‚Å‚Ì—]”’ */
-.thread .info SPAN.nbsp{letter-spacing: 30px;}
-
-/* ƒAƒCƒRƒ“•\Ž¦—“ */
-.thread .icon{
+	margin: 1em auto;
+	padding: 3px;
 	text-align: center;
-	vertical-align: top;
+	width: 80%;
 }
-/* ‹LŽ––{•¶ */
-.thread .body{
-	color: #355;
+.heading3{
+	background-color: #cdf;
+	color: #05a;
 	font-size: 15px;
-	line-height: 115%;
-	overflow: auto;
-	padding-top: 4px;
-	padding-left: 5px;
-	text-align: left;
-	vertical-align: top;
-	word-break: break-all;
-	word-wrap: break-word;
-	width: 100%;
-}
-/* ‹LŽ––{•¶“à‚ÌƒR[ƒh*/
-.body CODE{
-	font-family: monospace;
 	font-weight: normal;
+	margin: 0.4em auto 0 auto;
+	padding: 0.1em;
+	text-align: center;
+	vertical-align: middle;
+	width: 60%;
+}
+.heading4{
+	background-color: #eef;
+	color: #59f;
+	font-size: 15px;
+	font-weight: normal;
+	margin: 0.4em auto 0 auto;
+	padding: 0.1em;
+	text-align: center;
+	vertical-align: middle;
+}
+
+
+/* ========== ”Ä—pÍ•ª‚¯ ========== */
+/* First Level */
+.section{
+	border: #6ac solid 5px;
+	color: #246;
+	margin: 2em auto;
+	text-align: left;
+	width: 90%;
+}
+.section .h{
+	background-color: #6ac;
+	color: #fff;
+	font-size: 1.3em;
+	font-weight: bold;
+	margin: 0.2em;
+	padding: 0.2em 0.3em;
+	text-align: left;
+}
+/* Second Level */
+.section .section{
+	border: 1px solid #cdf;
+	margin: 1em 2em;
+}
+.section .section .h{
+	background-color: #cdf;
+	color: #05a;
+	font-size: 1.1em;
+	font-weight: normal;
+}
+/* ThirdLevel */
+.section .section .section{
+	border: 1px solid #aaf;
+}
+.section .section .section .h{
+	background-color: #ccf;
+	color: #55f;
+	font-size: 100%;
+}
+/* Forth Level */
+.section .section .section .section{
+	border: 1px solid #55f;
+}
+.section .section .section .section .h{
+	background-color: #eef;
+	color: #59f;
+}
+/* Paragraph in Sections */
+.section P{
+	line-height: 1.3em;
+	margin: 1em 2em;
+}
+/* PRE in Sections */
+.section PRE{
+	background-color: #eee;
+	font-family: monospace;
+	font-size: 85%;
+	font-weight: normal;
+	margin: 1em 4em;
+	padding: 0.5em;
 	text-align: left;
 	white-space: pre;
 	word-break: break-all;
 	word-wrap: break-word;
 }
-/* ‹LŽ–ƒXƒŒƒbƒh‚Ìƒtƒbƒ^—“ */
-.thread TABLE.foot{
-	background-color: #cdf;
-	color: #05a;
-	font-size: 16px;
-	font-weight: bold;
-	padding: 1px 5px;
-	margin: 0;
-	text-align: right;
-	width: 100%;
+/* List in Sections */
+.section OL,.section UL{
+	line-height: 1.3em;
+	margin: 0.5em 4em;
 }
-.thread TABLE.foot TH P{
-	margin: 3px;
+.section DL{
+	line-height: 1.3em;
+	margin: 0.5em 2em;
 }
-
-
-/* ===================== “Še‰æ–Ê ===================== */
-/* “ŠeƒtƒH[ƒ€‚Ìƒe[ƒuƒ‹ */
-TABLE.write{
-	border: #6ac solid 2px;
-	font-size: 14px;
-	margin: 30px auto;
-	margin-top:30px;margin-bottom:30px;
-	text-align: center;
-}
-/* “ŠeƒtƒH[ƒ€‚Ìƒ^ƒCƒgƒ‹—“ */
-.write TH.caption{
-	background-color: #6ac;
-	color: #fff;
-	font-size: 18px;
-	font-weight: bold;
-	text-align: center;
-	vertical-align: middle;
-}
-.write TH,.write TD{border:none;}
-/* €–Ú–¼ */
-.write TH.item{
-	font-weight: normal;
-	text-align: left;
-}
-/* “ü—Í—“ƒZƒ‹ˆÊ’u */
-.write TD.input{
-	text-align: left;
-}
-/* “ŠeƒtƒH[ƒ€‚Ìƒtƒbƒ^—“ */
-.write TD.foot{
-	background-color: #6ac;
-	text-align: center;
-}
-#name	{width:220px;ime-mode:active;}
-#cook	{}
-#icon	{width:160px;}
-#icon OPTGROUP{color: #6ac;font-style: normal;}
-#icon OPTION{color:#333;}
-#email	{width:300px;ime-mode:inactive;}
-#home	{width:300px;ime-mode:inactive;}
-#subject{width:300px;ime-mode:active;}
-#color	{width:100px;}
-#pass	{width:90px;ime-mode:disabled;}
-#cmd	{width:300px;ime-mode:inactive;}
-#body	{width:500px;ime-mode:active;}
-
-/* ===================== íœEC³ƒ‚[ƒh ===================== */
-TABLE.list{
-	border: #6ac solid 4px;
-	margin: 2em auto;
-	border-collapse: collapse;
-	text-align: center;
-	width: 90%;
-	margin-top:2em;margin-bottom:2em;
-}
-TABLE.list TH,TABLE.list TD{
-	border: #aaf solid 1px;
-}
-TABLE.list TR.parent TH,TABLE.list TR.parent TD{
-	border-top: #aaf solid 5px;
-}
-TABLE.list TR.child th,TABLE.list TR.child TD{
-	border-top: #aaf solid 3px;
-}
-
-
-/* ===================== ƒAƒCƒRƒ“ƒŠƒXƒg ===================== */
-/* ƒAƒCƒRƒ“ƒOƒ‹[ƒv‚Ìƒe[ƒuƒ‹ */
-TABLE.icon{
-	border: #6ac solid 2px;
-	font-size: 14px;
-	padding: 3px;
-	text-align: center;
-}
-/* ƒAƒCƒRƒ“ƒOƒ‹[ƒv‚Ì–¼‘O */
-TABLE.icon CAPTION{
-	background-color: #6ac;
-	color: #fff;
-	font-size: 18px;
-	font-weight: bold;
-	margin: 0 auto;
-	padding: 0.2em;
-	text-align: left;
-	white-space: nowrap;
-	margin-top:0;margin-bottom:0;
-}
-TABLE.icon TD{
-	text-align: center;
-}
-/* ƒAƒCƒRƒ“ƒOƒ‹[ƒv‚Ìƒtƒbƒ^ */
-TABLE.icon TH.foot{
-	background-color: #cdf;
-	color: #05a;
-	font-size: 15px;
-	font-weight: bold;
-	padding: 0.2em;
-	text-align: right;
-	white-space: nowrap;
-}
-
-/* ===================== ƒwƒ‹ƒvƒtƒ@ƒCƒ‹ ===================== */
-/* ƒwƒ‹ƒvƒtƒ@ƒCƒ‹“™‚ÌƒXƒŒƒbƒh */
-DIV.hthread{
-	border: #6ac solid 5px;
-	margin: 2em 5%;
-	padding: 3px;
-	text-align: left;
-	width: 90%;
-}
-@media all{DIV.hthread{margin: 2em auto;}}
-/* ƒŠƒXƒg€–Ú‚Ì‘åŒ©o‚µ */
-H2.list{
-	background-color: #6ac;
-	color: #fff;
-	font-size: 21px;
-	font-weight: bold;
-	margin: 0 0 0.3em 0;
-	padding: 0px 3px;
-	text-align: left;
-	width: 100%;
-}
-/* ƒŠƒXƒg€–Ú‚Ì¬Œ©o‚µ */
-H3.list{
-	background-color: #cdf;
-	color: #05a;
-	font-size: 15px;
-	font-weight: normal;
-	margin: 0.3em auto 0em auto;
-	padding: 1px;
-	position: relative;
-	bottom: 2px;
-	text-align: left;
-	vertical-align: middle;
-	width: 100%;
-	margin-top:0.3em;margin-bottom:0em;
-}
-H4.list{
+.section DT{
 	background-color: #eef;
-	color: #55f;
+	color: #444;
 	font-size: 100%;
 	font-weight: normal;
-	margin: 0.5em auto 0em auto;
-	padding: 1px;
-	position: relative;
-	bottom: 2px;
+	margin: 0.2em;
+	padding: 0.2em 0.3em;
 	text-align: left;
-	vertical-align: middle;
-	width: 100%;
-	margin-top:0.3em;margin-bottom:0em;
+}
+.section DD{
+	font-size: 100%;
+	margin: 0 2em;
+	text-align: left;
+}
+/* Table in Sections*/
+.section table{
+	border-collapse: collapse;
+	border-color: #99a;
+	border-spacing: 0; 
+	border-style: solid;
+	border-width: 1px;
+	font-family: 'MS UI Gothic',Osaka,sans-serif;
+	font-size: 100%;
+	margin-left: 4em;
+	text-align: left;
+}
+.section td, .section th{
+	border-color: #aaf;
+	border-style: solid;
+	border-width: 1px;
+	padding: 0.1em;
 }
 
-/* ===================== ‹LŽ–ƒiƒr ===================== */
-/* ‹LŽ–ƒiƒrƒEƒBƒ“ƒhƒE */
-DIV#naviwind{
-	background-color: #fff;
-	border: #379 solid 2px;
+
+
+/* ==================== Airemix/ ==================== */
+/* —š—ð */
+.history{
 	font-size:12px;
+	height:100px;
+	padding:3px;
+	text-align:left;
+	width:330px;
+}
+@media screen{.history{border:1px dashed #ccf}}
+/* hoge */
+#hoge{
+	display: none;
+	visibility: hidden;
+}
+
+
+
+/* ==================== Airemix Navigation ==================== */
+#Navigation{
+	table-layout: fixed;
+	height: 64px;
+	margin: 0 auto;
+	width: 90%;
+}
+#Navigation #AiremixLogo{
+	height: 64px;
+	line-height:0;
 	margin: 0;
 	padding: 0;
-	text-align: left;
-	width:300px;
-	-moz-opacity: 0.6;
+	text-align:left;
+	vertical-align:top;
+	width:258px;
 }
-DIV#naviwind:hover{
-	/* Mozilla1.0‚Ì:hover-MozOpacity-overflowƒRƒ“ƒ{‰ñ”ð‚Ì‚½‚ßA1.0‚Å‚È‚­0.9 */
-	-moz-opacity: 0.9;
-	/* IE‚àAˆÈŠO‚Åhover‚ðŽg‚¦‚ê‚Î‚¢‚¢‚Ì‚¾‚¯‚Ç */
+#Navigation #NaviBgmBox{
+	font-size: 12px;
+	height: 66px;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	vertical-align: middle;
+	width: auto;
 }
-/* ‹LŽ–ƒiƒrƒwƒbƒ_ */
-#navihead{
-	background-color: #6ac;
-	color: #fff;
-	cursor: default;
+#Navigation #NaviInfo{
+	background-image: url('/image/notice.png');
+	background-repeat: no-repeat;
+	background-position: top left;
+	color: #000;
 	font-size: 13px;
-	font-weight: bold;
-	margin: 0;
-	padding: 0;
-	text-align: left;
-	width: 100%;
-}
-/* ‹LŽ–ƒiƒrƒ^ƒCƒgƒ‹ */
-#navititl{
-	font-size: 100%;
-	margin: 0;
-	overflow: hidden;
-	padding: 0;
-} 
-/* ‹LŽ–ƒiƒrk¬E•Â‚¶‚éƒ{ƒ^ƒ“ */
-#navibutt{
-	font-size: 100%;
-	text-align: right;
-	white-space: nowrap;
-}
-/* ‹LŽ–ƒiƒr–{•¶ */
-#navibody{
-	height: 180px;
+	height: 66px;
 	margin: 0;
 	overflow: auto;
-	padding: 0px 1px;
+	text-align: left;
+	vertical-align: top;
+	width: 500px;
 }
-/* ‹LŽ–ƒiƒrƒXƒŒƒbƒh */
-.navithre{
-}
-/* ‹LŽ–ƒiƒrƒXƒŒƒbƒh‘è–¼ */
-.navisubj{
-	background-color: #cdf;
-	height: 16px;
-	padding: 2px;
-}
-/* ‹LŽ–ƒiƒrƒXƒŒƒbƒh‹LŽ–”Ô† */
-.navinums{
-	margin-left: 1em;
+#NaviInfoBox{
+	height: 60px;
+	line-height: 13px;
+	margin: 0;
+	overflow: auto;
+	padding: 3px 5px;
+	text-align: left;
+	width: 490px;
 }
 
-/* ===================== Œê‹å‹­’² ===================== */
+
+
+/* ==================== Airemix Navigation Bar ==================== */
+#NaviBar{
+	background-color: transparent;
+	height: 20px;
+	margin: 0 auto;
+	width: 90%;
+}
+#NaviBar a:link,#NaviBar a:visited{
+	color:#fff;
+	text-decoration: none;
+}
+#NaviBar a:link:hover,	#NaviBar a:visited:hover,
+#NaviBar a:link:active,	#NaviBar a:visited:active{
+	color:#f88;
+	text-decoration: underline;
+}
+#NaviBar #NaviBarCap{
+	background-color: transparent;
+	background-image: url('/image/barCap.png');
+	background-repeat: no-repeat;
+	background-position: right;
+	width: 10%;
+}
+#NaviBar td{
+	background-color: transparent;
+	text-align:right;
+}
+#NaviBar th{
+	background-color:#ccf;
+	background-image: url('/image/barBody.png');
+	background-repeat: repeat-x;
+	background-position: right;
+	font-size:16px;
+	text-align:center;
+	width: 10%;
+}
+th.NaviItem a{font-size:16px;}
+
+#NaviBar td#AiremixNaviVersion{
+	background-color:#ccf;
+	background-image: url('/image/barBody.png');
+	background-repeat: repeat-x;
+	background-position: right;
+	font-size:10px;
+	letter-spacing:2px;
+	padding-right:10px;
+	width: 10%;
+}
+
+
+
+/* ==================== Œê‹å‹­’² ==================== */
 /* //‚Ì‹­’² */
 STRONG.s2f2f{
 	color: #080;
@@ -821,6 +488,11 @@ STRONG.s8184{
 	background-color: #ddf;
 	font-weight:normal;
 }
+/* ˜‚Ì‹­’² */
+STRONG.s8198{
+	background-color: #fea;
+	font-weight:bold;
+}
 /* ž‚Ì‹­’² */
 STRONG.s819e{
 	background-color: #ddf;
@@ -828,401 +500,459 @@ STRONG.s819e{
 }
 /*  ‚Ì‹­’² */
 STRONG.s81a0{
-	font-weight:bold;
+	background-color: #dfd;
+	font-weight:normal;
 }
 /* ¦‚Ì‹­’² */
 STRONG.s81a6{
 	color: #f00;
 	font-weight:bold;
 }
+
+
+
+/* ============================================================ */
+BODY{
+	color: #333;
+}
 -->
 </STYLE>
 </HEAD>
 
 <BODY>
-<P style="font-size:13px;margin:0 0.2em;text-align:right">
-<SPAN style="background-color: #cdf;color:#05a">
-&nbsp;<A href="http://www.airemix.com/">Airemix</A>/<A href="http://www.airemix.com/HP_CGI/">HP_CGI</A>/<A href="http://www.airemix.com/HP_CGI/Mireille.html">Mireille</A>
-</SPAN></P>
+<P class="Skyline">
+<P class="Skyline"><SPAN><A href="http://www.airemix.com/">Airemix</A>/<A
+ href="http://www.airemix.com/HP_CGI/">HP_CGI</A>/</SPAN></P>
 
-<DIV class="center"><TABLE align="center" border="0" cellspacing="0" class="head" summary="Header" width="90%"><TR>
-<TH width="100%"><H1 class="head" align="left">Airemix Mireille Board System</H1></TH>
-<TD nowrap>¡¡¡¡¡¡¡</TD>
-</TR></TABLE></DIV>
+<DIV class="PageHead"><H1>Intoroduction to Mireille</H1><DIV>¡¡¡¡¡¡¡</DIV></DIV>
 
-<H2 class="mode">: The Intoroduction to Mireille :</H2>
 
-<DIV class="hthread" style="text-align:left">
-<H2 class="list">ž<A name="Mireille‚Ì“Á’¥">Mireille‚Ì“Á’¥</A></H2>
+
+<DIV class="section">
+<H2 class="h">ž<A name="Mireille‚Ì“Á’¥">Mireille‚Ì“Á’¥</A></H2>
+
+
+<DIV class="section">
+<H3 class="h"><A name="Mireille‚Æ‚Í">Mireille‚Æ‚Í</A></H3>
+<P>Šî–{“I‚É‚ÍAƒŒƒXƒAƒCƒRƒ“ŒfŽ¦”Â‚Å‚·<BR>
+CSS‚ð•ÒW‚·‚ê‚ÎŠy‚ÉF‚ð•Ï‚¦‚½‚è‚Å‚«A‹LŽ–•”•ª‚ÌƒfƒUƒCƒ“‚ð‚»‚±‚»‚±•ÏX‰Â”\‚Å‚·<BR>
+‚³‚ç‚ÉHTML‚Ì’mŽ¯‚ª‚ ‚ê‚ÎŠÇ—CGIã‚©‚çƒfƒUƒCƒ“‚ð‚©‚È‚è‚Ì•”•ª‚Ü‚ÅD‚Ý‚Ç‚¨‚è‚É‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA<BR>
+ƒAƒCƒRƒ“‚ðŽg‚í‚È‚©‚Á‚½‚èAF‚ð‘I‚×‚È‚­‚µ‚½‚èA‚Æ‚¢‚¤‚±‚Æ‚Ü‚Åo—ˆ‚é‚Ì‚ÅŽ©—R“x‚Í‚‚¢‚Ù‚¤‚Å‚·<BR>
+‘¼‚É‚àd•ó‚·‚é‚Å‚ ‚ë‚¤ˆÈ‰º‚Ì‹@”\‚ð”õ‚¦‚Ä‚¢‚Ü‚·</P>
+</DIV>
+
+
+<DIV class="section">
+<H3 class="h"><A name="Mireille‚ÌŽ‚Â‹@”\i—˜—pŽÒ‚©‚çŒ©‚½ê‡j">Mireille‚ÌŽ‚Â‹@”\i—˜—pŽÒ‚©‚çŒ©‚½ê‡j</A></H3>
 <UL>
-	<LI><H3 class="list"><A name="Mireille‚Æ‚Í">Mireille‚Æ‚Í</A></H3>
-		Šî–{“I‚É‚ÍAƒŒƒXƒAƒCƒRƒ“ŒfŽ¦”Â‚Å‚·<BR>
-		CSS‚ð•ÒW‚·‚ê‚ÎŠy‚ÉF‚ð•Ï‚¦‚½‚è‚Å‚«A‹LŽ–•”•ª‚ÌƒfƒUƒCƒ“‚ð‚»‚±‚»‚±•ÏX‰Â”\‚Å‚·<BR>
-		‚³‚ç‚ÉHTML‚Ì’mŽ¯‚ª‚ ‚ê‚ÎŠÇ—CGIã‚©‚çƒfƒUƒCƒ“‚ð‚©‚È‚è‚Ì•”•ª‚Ü‚ÅD‚Ý‚Ç‚¨‚è‚É‚·‚é‚±‚Æ‚ª‰Â”\‚ÅA<BR>
-		ƒAƒCƒRƒ“‚ðŽg‚í‚È‚©‚Á‚½‚èAF‚ð‘I‚×‚È‚­‚µ‚½‚èA‚Æ‚¢‚¤‚±‚Æ‚Ü‚Åo—ˆ‚é‚Ì‚ÅŽ©—R“x‚Í‚‚¢‚Ù‚¤‚Å‚·<BR>
-		‘¼‚É‚àd•ó‚·‚é‚Å‚ ‚ë‚¤ˆÈ‰º‚Ì‹@”\‚ð”õ‚¦‚Ä‚¢‚Ü‚·</LI>
-	
-	<LI><H3 class="list"><A name="Mireille‚ÌŽ‚Â‹@”\i—˜—pŽÒ‚©‚çŒ©‚½ê‡j">Mireille‚ÌŽ‚Â‹@”\i—˜—pŽÒ‚©‚çŒ©‚½ê‡j</A></H3>
-	<UL>
-		<LI><STRONG>‹LŽ–ƒiƒrI</STRONG>‚ªV’…‹LŽ–Eƒy[ƒW“à‚ÌƒXƒŒƒbƒh‚Ìˆê——‚ð‚³‚­‚Á‚Æ•\Ž¦‚µ‚Ä‚­‚ê‚é</LI>
-		<LI>e‹LŽ–‚ÉŽq‹LŽ–‚ª‚Ô‚ç‰º‚ª‚éA‚¢‚í‚ä‚éƒŒƒXŽ®ŒfŽ¦”Â</LI>
-		<LI>—˜—pŽÒ‚É‚æ‚é‹LŽ–‚ÌC³Eíœ‹@”\</LI>
-		<LI>ƒL[ƒ[ƒh‚É‚æ‚éƒƒOŒŸõ‹@”\</LI>
-		<LI><A href="http://www.koizuka.jp/wwwd/">WWWD</A>‚â<A href="http://www.nakka.com/wwwc/">WWWC</A>‚ÌLastModifiedŒ^XVƒ`ƒFƒbƒN‚É‘Î‰ž</LI>
-		<LI>ˆê”Ô‰Eã‚ÉÅŒã‚É“Še‚³‚ê‚½“à—e‚Ìî•ñ‚ðˆê•”•\Ž¦</LI>
-		<LI>ˆê‚Âˆê‚Â‚Ì“Še‚ÉƒAƒCƒRƒ“‚ð‚Â‚¯‚ç‚ê‚Ü‚· *</LI>
-		<LI>“ŠeŽž‚ÌƒAƒCƒRƒ“‚ÌƒvƒŒƒrƒ…[‹@”\ *</LI>
-		<LI>Žw’èŽžŠÔˆÈ“à‚Ì“Še‚ÉNewƒ}[ƒN•\Ž¦ *</LI>
-		<LI>ƒNƒbƒL[‚ðŽg‚Á‚ÄA–¢“Ç‚ÆŽv‚í‚ê‚é‹LŽ–‚Ì“ú•t‚¯‚ðF‚Ã‚¯ *</LI>
-		<LI>ƒAƒNƒZƒXƒL[‚ª‚»‚±‚»‚±Ý’è‚³‚ê‚Ä‚¢‚é *</LI>
-		<LI>‚»‚±‚»‚±HTML4.01Strict‚É€‹’ *</LI>
-		<LI>‚»‚±‚»‚±CSS2‚É€‹’ *</LI>
-		<LI>WinIE4ˆÈ~, MacIE5ˆÈ~, Netscape4ˆÈ~, Netscape6ˆÈ~, Mozilla1.0ˆÈ~, Opera6ˆÈ~‚ÅŒ©‚ê‚Ü‚· *</LI>
-	</UL>
-		<P style="margin:0 0 0 25px">*‚Í‰ŠúƒfƒUƒCƒ“‚Ìê‡‚ÅAƒfƒUƒCƒ“‚ð‰ü‘¢‚µ‚Ä‚¢‚éê‡‚Í‚±‚ÌŒÀ‚è‚Å‚Í‚ ‚è‚Ü‚¹‚ñ</P>
-	</LI>
-	<LI><H3 class="list"><A name="Mireille‚ÌŽ‚Â‹@”\iŠÇ—ŽÒ‚©‚çŒ©‚½ê‡j">Mireille‚ÌŽ‚Â‹@”\iŠÇ—ŽÒ‚©‚çŒ©‚½ê‡j</A></H3>
-	<UL>
-		<LI>‹LŽ–‚Ì•À‚Ñ‡‚ðAƒXƒŒƒbƒh”Ô†‡‚Æ“Še“úŽž‡‚©‚ç‘I‚×‚é</LI>
-		<LI>‘‚«ž‚Ý‚ª‚ ‚é‚ÆŽw’èƒ[ƒ‹ƒAƒhƒŒƒX‚Éƒ[ƒ‹‚ð‘—‚é<BR>
-		iœŠOƒAƒhƒŒƒXÝ’è‰Â”\:ŠÇ—l‚Ì‘‚«ž‚Ý‚Í’m‚ç‚¹‚È‚¢‚Æ‚©j</LI>
-		<LI>ŠÇ—lƒpƒXƒ[ƒh‚É‚æ‚é‹LŽ–íœE•ÒW‹@”\</LI>
-		<LI>1ƒXƒŒƒbƒh‚ ‚½‚è‚ÌŽq‹LŽ–‚ÌÅ‘å”‚ðŒˆ‚ß‚ÄA‚»‚ê‚ð’´‚¦‚½‚ç‚»‚êˆÈã“Še‚Å‚«‚È‚¢‚æ‚¤‚É‚Å‚«‚é</LI>
-		<LI>ƒƒO‚ÌÅ‘å”‚ðŒˆ‚ß‚ÄA‚»‚ê‚ð’´‚¦‚½‚çAƒXƒŒƒbƒhƒtƒ@ƒCƒ‹‚ÌíœE•ÏXEGZIPˆ³k‚É‚æ‚Á‚Ä‹LŽ–‚ðíœ‚Å‚«‚é</LI>
-		<LI>ƒƒO‚ÌƒoƒbƒNƒAƒbƒv‚ª‚µ‚â‚·‚¢i1ƒXƒŒƒbƒh1ƒtƒ@ƒCƒ‹‚È‚Ì‚ÅƒoƒbƒNƒAƒbƒv‚ª”äŠr“I‚¨ŽèŒy‚É‰Â”\j<BR>
-		‰ß‹ŽƒƒO‚àAuƒtƒ@ƒCƒ‹–¼•ÏXv‚È‚çŠg’£Žq.bak‚É‚È‚Á‚½‚Ì‚à‚Ì‚¾‚¯‰ñŽû‚·‚ê‚Î‘åä•v‚Å‚·<BR>
-		Å‹ß‚Ìƒo[ƒWƒ‡ƒ“‚Å‚Íugzipv‚ÅAŒÃ‚¢ƒƒO‚ðGZIPˆ³k‚µ‚½ã‚Å*.gzip.cgi‚Æ‚¢‚¤ƒtƒ@ƒCƒ‹‚Éo—ˆ‚é‚Ì‚ÅA<BR>
-		‰ß‹ŽƒƒO‚Ì‰ñŽû‚ª‚³‚ç‚ÉŠy‚É‚È‚è‚Ü‚µ‚½i’x‚¢‰ñü‚Å‚àˆÀSj
-		‚¿‚È‚Ý‚ÉÝ’èŽŸ‘æ‚Ågzip‚Å‚È‚­bzip2‚Åˆ³k‚·‚é‚±‚Æ‚à‚Å‚«‚Ü‚·</LI>
-		<LI>‚»‚±‚»‚±‚‹@”\‚ÈŠÇ——pCGI‚ª•t‘®‚µ‚Ä‚¢‚é</LI>
-		<LI>ŠÇ—CGI‚©‚çCSS‚ð“Ç‚Ýž‚ÝA•ÒW‚Å‚«‚é</LI>
-		<LI>ŠÇ—CGI‚©‚çÝ’èƒtƒ@ƒCƒ‹‚ðÝ’è‚Å‚«‚é</LI>
-		<LI>ŠÇ—CGI‚©‚çƒAƒCƒRƒ“ƒŠƒXƒg‚ð2’Ê‚è‚Ì•û–@‚©‚ç‘I‚ñ‚Å•ÒW‚Å‚«‚é</LI>
-		<LI>ŠÇ—CGI‚ÅƒAƒCƒRƒ“ƒŠƒXƒg‚©‚çAƒAƒCƒRƒ“Œ©–{‚ÌHTML‚ð¶¬‚Å‚«‚é</LI>
-		<LI>ŠÇ—CGI‚©‚çƒƒOíœEƒƒO‹l‚ß‚ª‚Å‚«‚é</LI>
-		<LI>HTML/CSS‚Ì’mŽ¯‚ª‚ ‚ê‚ÎAstyle.css‚Ì‰ü‘¢‚É‚æ‚è‹LŽ–•\Ž¦‚â“Še‰æ–Ê‚È‚Ç‚ÌƒfƒUƒCƒ“‚ª•Ï‚¦‚ç‚êA<BR>
-		Perl‚Ì’mŽ¯‚ª‚ ‚ê‚ÎAstyle.pl‚©‚çƒTƒuƒ‹[ƒ`ƒ“‚ðƒI[ƒo[ƒ‰ƒCƒh‚µ‚½‚è‚·‚é‚±‚Æ‚Å‚³‚ç‚É‘å•‚É‰ü‘¢‚Å‚«‚é</LI>
-	</UL>
-	</LI>
+	<LI><STRONG>‹LŽ–ƒiƒrI</STRONG>‚ªV’…‹LŽ–Eƒy[ƒW“à‚ÌƒXƒŒƒbƒh‚Ìˆê——‚ð‚³‚­‚Á‚Æ•\Ž¦‚µ‚Ä‚­‚ê‚é</LI>
+	<LI>e‹LŽ–‚ÉŽq‹LŽ–‚ª‚Ô‚ç‰º‚ª‚éA‚¢‚í‚ä‚éƒŒƒXŽ®ŒfŽ¦”Â</LI>
+	<LI>—˜—pŽÒ‚É‚æ‚é‹LŽ–‚ÌC³Eíœ‹@”\</LI>
+	<LI>ƒL[ƒ[ƒh‚É‚æ‚éƒƒOŒŸõ‹@”\</LI>
+	<LI><A href="http://www.koizuka.jp/wwwd/">WWWD</A>‚â<A href="http://www.nakka.com/wwwc/">WWWC</A>‚ÌLastModifiedŒ^XVƒ`ƒFƒbƒN‚É‘Î‰ž</LI>
+	<LI>ˆê”Ô‰Eã‚ÉÅŒã‚É“Še‚³‚ê‚½“à—e‚Ìî•ñ‚ðˆê•”•\Ž¦</LI>
+	<LI>éx‚è–hŽ~‚Ì‚½‚ß‚Ì–¼‹@”\</LI>
+	<LI>•\Ž¦‚·‚éŽq‹LŽ–”‚ð§ŒÀ‚Å‚«‚é</LI>
+	<LI>ˆê‚Âˆê‚Â‚Ì“Še‚ÉƒAƒCƒRƒ“‚ð‚Â‚¯‚ç‚ê‚Ü‚·(ƒAƒCƒRƒ“‚È‚µƒXƒ^ƒCƒ‹‚à“¯«) <SPAN class="warning">*</SPAN></LI>
+	<LI>“ŠeŽž‚ÌƒAƒCƒRƒ“‚ÌƒvƒŒƒrƒ…[‹@”\ <SPAN class="warning">*</SPAN></LI>
+	<LI>Žw’èŽžŠÔˆÈ“à‚Ì“Še‚ÉNewƒ}[ƒN•\Ž¦ <SPAN class="warning">*</SPAN></LI>
+	<LI>ƒNƒbƒL[‚ðŽg‚Á‚ÄA–¢“Ç‚ÆŽv‚í‚ê‚é‹LŽ–‚Ì“ú•t‚¯‚ðF‚Ã‚¯ <SPAN class="warning">*</SPAN></LI>
+	<LI>ƒAƒNƒZƒXƒL[‚ª‚»‚±‚»‚±Ý’è‚³‚ê‚Ä‚¢‚é <SPAN class="warning">*</SPAN></LI>
+	<LI>‚»‚±‚»‚±HTML4.01Strict‚É€‹’ <SPAN class="warning">*</SPAN></LI>
+	<LI>‚»‚±‚»‚±CSS2‚É€‹’ <SPAN class="warning">*</SPAN></LI>
+	<LI>WinIE4ˆÈ~, MacIE5ˆÈ~, Netscape4ˆÈ~, Mozilla1.0ˆÈ~, Opera6ˆÈ~‚ÅŒ©‚ê‚Ü‚· <SPAN class="warning">*</SPAN></LI>
+</UL>
+<P><SPAN class="warning">*</SPAN>‚Í‰ŠúƒfƒUƒCƒ“‚Ìê‡‚ÅAƒfƒUƒCƒ“‚ð‰ü‘¢‚µ‚Ä‚¢‚éê‡‚Í‚±‚ÌŒÀ‚è‚Å‚Í‚ ‚è‚Ü‚¹‚ñB</P>
+</DIV>
+
+<DIV class="section">
+<H3 class="h"><A name="Mireille‚ÌŽ‚Â‹@”\iŠÇ—ŽÒ‚©‚çŒ©‚½ê‡j">Mireille‚ÌŽ‚Â‹@”\iŠÇ—ŽÒ‚©‚çŒ©‚½ê‡j</A></H3>
+<UL>
+	<LI>‹LŽ–‚Ì•À‚Ñ‡‚ðAƒXƒŒƒbƒh”Ô†‡‚Æ“Še“úŽž‡‚©‚ç‘I‚×‚é</LI>
+	<LI>‘‚«ž‚Ý‚ª‚ ‚é‚ÆŽw’èƒ[ƒ‹ƒAƒhƒŒƒX‚Éƒ[ƒ‹‚ð‘—‚éiœŠOƒAƒhƒŒƒXÝ’è‰Â”\:ŠÇ—l‚Ì‘‚«ž‚Ý‚Í’m‚ç‚¹‚È‚¢‚Æ‚©j</LI>
+	<LI>ŠÇ—lƒpƒXƒ[ƒh‚É‚æ‚é‹LŽ–íœE•ÒW‹@”\</LI>
+	<LI>1ƒXƒŒƒbƒh‚ ‚½‚è‚ÌŽq‹LŽ–‚ÌÅ‘å”‚ðŒˆ‚ß‚ÄA‚»‚ê‚ð’´‚¦‚½‚ç‚»‚êˆÈã“Še‚Å‚«‚È‚¢‚æ‚¤‚É‚Å‚«‚é</LI>
+	<LI>ƒXƒŒƒbƒh‚ÌƒƒbƒN‚ª‚Å‚«‚é</LI>
+	<LI>NGƒ[ƒh‚ÌÝ’è‚ª‚Å‚«‚é</LI>
+	<LI>Žg—p‰Â”\‚Èƒ^ƒO‚ÌÝ’è‚ª‚Å‚«‚é</LI>
+	<LI>ƒƒO‚ÌÅ‘å”‚ðŒˆ‚ß‚ÄA‚»‚ê‚ð’´‚¦‚½‚çAƒXƒŒƒbƒhƒtƒ@ƒCƒ‹‚ÌíœE•ÏXEGZIPˆ³k‚É‚æ‚Á‚Ä‹LŽ–‚ðíœ‚Å‚«‚é</LI>
+	<LI>ƒƒO‚ÌƒoƒbƒNƒAƒbƒv‚ª‚µ‚â‚·‚¢i1ƒXƒŒƒbƒh1ƒtƒ@ƒCƒ‹‚È‚Ì‚ÅƒoƒbƒNƒAƒbƒv‚ª”äŠr“I‚¨ŽèŒy‚É‰Â”\j</LI>
+	<LI>ƒƒO‚ÌƒoƒbƒNƒAƒbƒv‚ðgzipˆ³k‚Å‚«‚é</LI>
+	<LI>‚»‚±‚»‚±‚‹@”\‚ÈŠÇ——pCGI‚ª•t‘®‚µ‚Ä‚¢‚é</LI>
+	<LI>ŠÇ—CGI‚©‚çCSS‚ð“Ç‚Ýž‚ÝA•ÒW‚Å‚«‚é</LI>
+	<LI>ŠÇ—CGI‚©‚çÝ’èƒtƒ@ƒCƒ‹‚ðÝ’è‚Å‚«‚é</LI>
+	<LI>ŠÇ—CGI‚©‚çƒAƒCƒRƒ“ƒŠƒXƒg‚ð2’Ê‚è‚Ì•û–@‚©‚ç‘I‚ñ‚Å•ÒW‚Å‚«‚é</LI>
+	<LI>ŠÇ—CGI‚ÅƒAƒCƒRƒ“ƒŠƒXƒg‚©‚çAƒAƒCƒRƒ“Œ©–{‚ÌHTML‚ð¶¬‚Å‚«‚é</LI>
+	<LI>ŠÇ—CGI‚©‚çƒƒOíœEƒƒO‹l‚ß‚ª‚Å‚«‚é</LI>
+	<LI>HTML/CSS‚Ì’mŽ¯‚ª‚ ‚ê‚ÎAstyle.css‚Ì‰ü‘¢‚É‚æ‚è‹LŽ–•\Ž¦‚â“Še‰æ–Ê‚È‚Ç‚ÌƒfƒUƒCƒ“‚ª•Ï‚¦‚ç‚êA<BR>
+	Perl‚Ì’mŽ¯‚ª‚ ‚ê‚ÎAstyle.pl‚©‚çƒTƒuƒ‹[ƒ`ƒ“‚ðƒI[ƒo[ƒ‰ƒCƒh‚µ‚½‚è‚·‚é‚±‚Æ‚Å‚³‚ç‚É‘å•‚É‰ü‘¢‚Å‚«‚é</LI>
+</UL>
+</DIV>
+</DIV>
+
+
+
 <!-- BEGIN_Mireille‚Ì—˜—p‹K’è -->
-	<LI><H3 class="list"><A name="Mireille‚Ì—˜—p‹K’è">Mireille‚Ì—˜—p‹K’èi2002-05-26”Åj</A></H3>
-	<OL>
-		<LI><STRONG>Mireille‚ð‚»‚Ì‚Ü‚ÜA‚Ü‚½‚Í‰ü‘¢‚µ‚ÄAŽ©•ª‚ÌƒTƒCƒg‚ÅŽg‚¤ê‡</STRONG><BR>
-		•W€‚Å‘¶Ý‚·‚éAŒfŽ¦”Â‰E‰º‚Ì’˜ìŒ •\‹L‚ÆƒŠƒ“ƒN‚ðŽc‚µ‚Ä‚¢‚éê‡‚ÍA‚»‚êˆÈã‰½‚à‚·‚é•K—v‚ ‚è‚Ü‚¹‚ñ<BR>
-		’˜ìŒ •\‹L‚ðƒfƒUƒCƒ“ã‚Ì“s‡‚È‚Ç‚Åíœ‚µ‚½ê‡‚ÍA‚»‚±‚»‚±–Ú—§‚ÂŒfŽ¦”Â‚Ì•Ê‚ÌêŠ‚É•\‹L‚·‚é‚©A<BR>
-		Mireille‚ðŽg‚¤ƒTƒCƒg“à‚Ì‚»‚±‚»‚±–Ú—§‚ÂêŠ‚ÉuŒfŽ¦”Â‚Í<A href="http://www.airemix.com/">Airemix</A>‚ÌMireille‚ðŽg‚Á‚Ä‚¢‚Ü‚·v‚Æ‚¢‚¤ˆÓ–¡‚Ì•¶Í‚ÆA<BR>
-		<A href="http://www.airemix.com/">Airemix</A>‚Ö‚ÌƒŠƒ“ƒN‚ð‘‚¢‚Ä‚­‚¾‚³‚¢</LI>
-		<LI><STRONG>Mireille‚Ìˆ³kƒtƒ@ƒCƒ‹‚ð‚ð‚»‚Ì‚Ü‚Ü“ñŽŸ”z•z‚·‚éê‡</STRONG><BR>
-		ˆ³kƒtƒ@ƒCƒ‹‚ðˆêØ•ÏX‚¹‚¸i‰ð“€Äˆ³k‚âƒtƒ@ƒCƒ‹–¼•ÏX‚à•s‰ÂjA<BR>
-		‚Í‚Á‚«‚è‚Æ‚í‚©‚éŒ`‚ÅA<A href="http://www.airemix.com/">Airemix</A>‚Å“üŽè‚Å‚«‚é‚à‚Ì‚Å‚ ‚éA‚Æ“`‚¦‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñ<BR>
-		‚±‚ê‚ð–ž‚½‚¹‚ÎAÄ”z•z‚Ì‰ß’ö‚Å•K—vˆÈã‚Ì—˜‰v‚ð“¾‚Ä‚à‚©‚Ü‚¢‚Ü‚¹‚ñ</LI>
-		<LI><STRONG>Mireille‚ð‰ü‘¢‚µ‚½‚à‚Ì‚ð”z•z‚·‚éê‡</STRONG><BR>
-		‚Ü‚¸A<A href="http://www.airemix.com/">Airemix</A>‚ÌMireille‚ðƒx[ƒX‚ÉA‰ü‘¢‚ðŽ{‚µ‚½‚à‚Ì‚Å‚ ‚éA‚Æ–¾Ž¦‚·‚é•K—v‚ª‚ ‚èA<BR>‚ ‚½‚©‚àMireille‚Ìˆ³kƒtƒ@ƒCƒ‹‚ð‚ð‚»‚Ì‚Ü‚Ü“ñŽŸ”z•z‚µ‚Ä‚¢‚é‚©‚Ì‚æ‚¤‚É‚µ‚Ä‚Í‚¢‚¯‚Ü‚¹‚ñ<BR>
-		ŽŸ‚ÉA‰ü‘¢Œã‚ÌCGI‚Å‚à<A href="http://www.airemix.com/">Airemix</A>‚Ì’˜ìŒ •\‹L‚ðŽc‚·‚©A<BR>
-		ŒfŽ¦”Â‚É—˜—pŽÒ‚ªƒAƒNƒZƒX‚µ‚½‚Æ‚«AÅ‰‚ÉŒ©‚éƒy[ƒW‚Ì‚»‚±‚»‚±–Ú—§‚Â‚Æ‚±‚ë‚É<A href="http://www.airemix.com/">Airemix</A>‚Ö‚ÌƒŠƒ“ƒN‚ð’£‚Á‚Ä‚­‚¾‚³‚¢<BR>
-		’A‚µAª–{‚©‚çì‚è’¼‚µAŒ´Œ^‚ð‚Æ‚Ç‚ß‚Ä‚¢‚È‚¢ê‡‚Í‚±‚ÌŒÀ‚è‚Å‚Í‚ ‚è‚Ü‚¹‚ñ<BR>
-		‚»‚ê‚Å‚àAƒwƒ‹ƒv‚ ‚½‚è‚ÉuŽQl‚É‚µ‚½‚Æ‚±‚ëv‚Æ‚µ‚ÄƒŠƒ“ƒN‚ð‚Í‚Á‚Ä‚¢‚½‚¾‚¯‚ê‚ÎK‚¢‚Å‚·OO<BR>
-		‚±‚ê‚ç‚É‚Ì‚Á‚Æ‚Á‚Ä‚¢‚éŒÀ‚èŽ©—R‚É‰ü‘¢E”z•z‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·</LI>
-		<LI><STRONG>¤—p—˜—p‚·‚éê‡</STRONG><BR>
-		ƒŒƒ“ƒ^ƒ‹ŒfŽ¦”Â‚ð‰^—p‚µ‚½‚èA¤—pƒTƒCƒg‚ÌŒfŽ¦”Â‚Æ‚µ‚ÄŽg‚¤ê‡‚Å‚à‚±‚ê‚Ü‚Å‚É•\‹L‚µ‚½’Ê‚è‚ÅA<BR>
-		u¤—p‚¾‚Á‚½‚çAv‚Æ‚¢‚¤¤—p‚¾‚¯‚Ì“Á•Ê‚È§ŒÀ‚È‚Ç‚Í‚ ‚è‚Ü‚¹‚ñ<BR>
-		‰½‚©‚­‚¾‚³‚é‚Æ‚¢‚¤‚Ì‚È‚çŠì‚ñ‚Å’¸‚«‚Ü‚·‚ªGj</LI>
-		<LI><STRONG>Žg—p‚·‚é‚±‚Æ‚ªo—ˆ‚È‚¢l</STRONG><BR>
-		“ú–{‘‚Ìi–@—¥bð—áb‹K‘¥j‚Ü‚½‚Í‰½‚ª‚µ‚©‚Ì‘Ûð–ñ‚É‚æ‚Á‚ÄMireille‚ÌŽg—p‚ð‹Ö‚¶‚ç‚ê‚Ä‚¢‚él‚ÍŽg‚¦‚Ü‚¹‚ñ<BR>
-		i‚»‚ñ‚Èl‚¢‚é‚©‚¢‚ÈHj<BR>
-		@‹³‚É‹~‚¢‚ð‹‚ß‚éˆ£‚ê‚ÈŽq—r‚ÍŽg‚Á‚¿‚áƒ_ƒA‚Æ‚©‚ÍŒ¾‚¢‚Ü‚¹‚ñi“ä</LI>
-		<LI><STRONG>‚¢‚í‚ä‚é–ÆÓ</STRONG><BR>
-		‚±‚ÌƒXƒNƒŠƒvƒg‹y‚Ñ‚±‚ÌƒXƒNƒŠƒvƒg‚ÌŠÖ˜A•i‚ðŽg‚Á‚Ä•s—˜‰v‚ð”í‚Á‚Ä‚à‚í‚½‚µ‚Í’m‚è‚Ü‚¹‚ñ<BR>
-		‚¤‚¿‚ÌŒfŽ¦”Â‚ð’Ê‚µ‚ÄŽÀs‰Â”\‚ÈŒ`‚ÅˆË—Š‚³‚ê‚ê‚ÎA‚È‚ñ‚ç‚©‚Ì•‚¯‚Í‚·‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñ‚ªA<BR>
-		Šî–{“I‚É‚Í‰½‚à‚µ‚È‚¢A‚Æ‚¢‚¤Œ`‚ÅŠoŒå‚µ‚½ã‚ÅŽg‚Á‚Ä‚­‚¾‚³‚¢<BR>
-		ƒoƒO•ñ‚â‹@”\’Ç‰Á—v–]AŒëA‚Ì”­Œ©‚Í<A href="http://www.airemix.com/bbs/">AiremixŒfŽ¦”Â</A>‚Ü‚Å‚Ç‚¤‚¼</LI>
-		<LI><STRONG>‚±‚Ì‹K’èŽ©‘Ì‚É‚Â‚¢‚Ä</STRONG><BR>
-		‚±‚Ì‹K’è‚ÍMireille‹y‚ÑAMireille‚Ì–¼‚Ì‰º‚É\¬‚³‚ê‚½ŠÖ˜A•¨‚É‘Î‚µ‚ÄŒø—Í‚ðŽ‚¿‚Ü‚·<BR>
-		‚Ü‚½A—˜—pŽÒ‚ªŽg—p‚µ‚Ä‚¢‚éMireille‚Ìƒo[ƒWƒ‡ƒ“Žž‚Ì‹K’è‚ÆAÅV‚Ì‹K’è‚Æ‚ªˆÙ‚È‚éê‡A<BR>
-		—˜—pŽÒ‚Í‚Ç‚¿‚ç‚Ì‹K’è‚ðŽg‚¤‚©‘I‘ð‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·<BR>
-		‚ ‚é“Á’è‚ÌŽžŠú‚Ì‹K’è‚É“Á•Ê‚ÈŽv‚¢“ü‚ê‚ª‚ ‚é‚È‚ç‚ÎA‚»‚Ì‹K’è‚ðŒf‚°‚Ä‚¨‚¯‚Î‚»‚ê‚ª“K—p‚³‚ê‚é‚Å‚µ‚å‚¤</LI>
-	</OL>
-	<PRE><STRONG> ŠÈ’P‚È‚Ü‚Æ‚ß</STRONG>
-EMireille‚ð’Ê‚µ‚ÄAAiremix‚Ì’m–¼“x‚ðã‚°‚æ‚¤‚ÆŠé‚ñ‚Å‚¢‚é‚Ì‚ÅAƒŠƒ“ƒN‚ð’£‚Á‚Ä‚­‚¾‚³‚¢
-EƒŠƒ“ƒN‚³‚¦’£‚Á‚Ä‚­‚ê‚ê‚ÎA‚»‚ê‚Ù‚Ç×‚©‚¢‚±‚Æ‚ÍŒ¾‚¢‚Ü‚¹‚ñ
-E×‚©‚¢‚±‚Æ‚ðŒ¾‚í‚È‚¢‚Ì‚¾‚©‚çAŒã‚ÍŽ©ŒÈÓ”C‚ÅŽg‚Á‚Ä‚­‚¾‚³‚¢
-E‰ü‘¢‚µ‚½‚à‚Ì‚ð”z•z‚·‚éŽž‚ÍAAiremixMireille‚Ì‚Ü‚Ü‚¾‚Æ‚¤‚¿‚É–À˜f‚ª‚©‚©‚é‚Ì‚ÅA‰ü‘¢‚µ‚½‚à‚Ì‚¾‚Æ–¾‹L‚µ‚Ä‚­‚¾‚³‚¢
-EƒoƒO•ñ‚ð‚µ‚Ä‚¢‚Ä‚¢‚½‚¾‚¯‚é‚Æ•‚©‚è‚Ü‚·i‚«‚¿‚ñ‚Æ‚µ‚½à–¾‚Æˆê‚ÉIj
-E‚í‚©‚è‚É‚­‚©‚Á‚½‚èA•\Œ»‚ªžB–†‚¾‚Á‚½‚èA”»’f‚É–À‚¤ê‡‚ÍA‚¨‹CŒy‚É¬£‚É–â‚¢‡‚í‚¹‚­‚¾‚³‚¢</PRE>
-	</LI>
-<!-- END_Mireille‚Ì—˜—p‹K’è -->
-<!-- errata/³Œë•\
-u‚ ‚½‚©‚àMireille‚Ìˆ³kƒtƒ@ƒCƒ‹‚ð<DEL>‚ð</DEL>‚»‚Ì‚Ü‚Ü“ñŽŸ”z•zv
--->
+<DIV class="section">
+<H2 class="h">ž<A name="Mireille‚Ì—˜—p‹K’è">Mireille‚Ì—˜—p‹K’èi2003-05-16”Åj</A></H2>
+
+
+<DIV class="section">
+<H3 class="h">1. Mireille‚ð‚»‚Ì‚Ü‚ÜA‚Ü‚½‚Í‰ü‘¢‚µ‚ÄAŽ©•ª‚ÌƒTƒCƒg‚ÅŽg‚¤ê‡</H3>
+<P>‚²Ž©—R‚É‚¨Žg‚¢‚­‚¾‚³‚¢B<BR>
+Airemix/Mireille‚Ì•\Ž¦‚ÆƒŠƒ“ƒN‚ÍŽc‚µ‚Ä‚¨‚¢‚Ä‚¢‚½‚¾‚¢‚½•û‚ª‚ ‚è‚ª‚½‚¢‚Ì‚Å‚·‚ªAíœ‚µ‚Ä‚à\‚¢‚Ü‚¹‚ñB</P>
+</DIV>
+
+
+<DIV class="section">
+<H3 class="h">2. Mireille‚Ìˆ³kƒtƒ@ƒCƒ‹‚ð‚ð‚»‚Ì‚Ü‚Ü“ñŽŸ”z•z‚·‚éê‡</H3>
+<P>ˆÈ‰º‚ÌðŒ‚ð–ž‚½‚·ŒÀ‚è‚É‚¨‚¢‚ÄAŽ©—R‚É”z•z‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B<BR>
+‚±‚ÌÛA•K—vˆÈã‚Ì—˜‰v‚ð“¾‚Ä‚à\‚¢‚Ü‚¹‚ñB</P>
+<UL>
+	<LI>ˆ³kƒtƒ@ƒCƒ‹‚ðˆêØ•ÏX‚µ‚È‚¢‚±‚ÆBi‰ð“€Äˆ³k‚âƒtƒ@ƒCƒ‹–¼•ÏX‚à•s‰Âj</LI>
+	<LI><A href="http://www.airemix.com/">Airemix</A>‚Å“üŽè‚Å‚«‚é‚à‚Ì‚Å‚ ‚é‚Æ–¾Ž¦‚·‚é‚±‚ÆB</LI>
 </UL>
 </DIV>
 
-<DIV class="hthread" style="text-align:left">
-<H2 class="list">ž<A name="Ý’u‚Ìà–¾‘">Ý’u‚Ìà–¾‘</A></H2>
-<OL start="0">
-	<LI><H3 class="list"><A name="‚Ü‚¸‚Í‚¶‚ß‚É">‚Ü‚¸‚Í‚¶‚ß‚É</A></H3>
-	‚±‚Ìà–¾ƒtƒ@ƒCƒ‹‚ÍAHTML‚Ì‚Ý‚Å\¬‚³‚ê‚½ƒTƒCƒg‚Íì‚ê‚é•ûA<BR>
-	‚Æ‚è‚ ‚¦‚¸ˆ³k‰ð“€AFTP‚É‚æ‚éƒAƒbƒvƒ[ƒh‚Í’m‚Á‚Ä‚¢‚él‚É‘‚©‚ê‚Ä‚¢‚Ü‚·<BR>
-	uƒz[ƒ€ƒy[ƒW‚Á‚Ä‰½H‚Ç‚¤‚â‚Á‚Äì‚é‚ÌHv‚Æ‚¢‚¤•û‚Í‘z’è‚µ‚Ä‚¢‚Ü‚¹‚ñ<BR>
-	‚»‚±‚Ü‚Å”ÍˆÍ‚ðL‚°‚é‚ÆuÝ’u‚Ìà–¾‘v‚ÌƒŒƒxƒ‹‚ð‰z‚¦‚Ä‚µ‚Ü‚¤‚½‚ßA‚²—¹³‚­‚¾‚³‚¢<BR>
-	‚Ü‚½A‚±‚ÌCGI‚Å‚ÍŠ¿ŽšƒR[ƒh‚ÉEUC-JP‚ðŽg—p‚µ‚Ä‚¢‚é‚½‚ßAWindows•W€‚Ìƒƒ‚’ ‚Å‚Í“Ç‚ß‚Ü‚¹‚ñ<BR>
-	<A href="http://www2s.biglobe.ne.jp/~t-susumu/toclip/">TeraPad</A>A<A href="http://hidemaru.xaxon.co.jp/">GŠÛƒGƒfƒBƒ^</A>A<A href="http://sakura-editor.sourceforge.net/index-j.html">‚³‚­‚çƒGƒfƒBƒ^</A>‚È‚Ç‚ÌEUC-JP‚à“Ç‚ß‚éƒGƒfƒBƒ^‚ð‚¨Žg‚¢‚­‚¾‚³‚¢<BR>
-	CGIŽ©‘Ì‚ð•ÒW‚·‚éê‡‚ÍAˆÈã‚É‹“‚°‚½ƒGƒfƒBƒ^‚É“‹Ú‚³‚ê‚Ä‚¢‚éA<BR>
-	uF‚Ã‚¯‹@”\v‚ðŽg‚¤‚ÆŒø—¦‚ªŠi’i‚Éã‚ª‚é‚Æ‚¨‚à‚¢‚Ü‚·<BR>
-	<BR>
-	‚¿‚È‚Ý‚ÉAˆÈã‚É‹“‚°‚½ƒGƒfƒBƒ^‚ðŽg‚Á‚Ä‚àA•¶Žš‰»‚¯‚µ‚Ä•\Ž¦‚³‚ê‚éê‡‚ÍA<BR>
-	ƒƒjƒ…[ƒo[‚Ìuƒtƒ@ƒCƒ‹v¨uŠ¿ŽšŽw’èƒR[ƒhŽw’èÄ“Ç‚Ýž‚Ýv¨uEUCviTeraPad‚Ìê‡j<BR>
-	‚Æ‚µ‚½‚èAuƒtƒ@ƒCƒ‹v¨uŠJ‚­v‚ÅAuŠ¿ŽšƒR[ƒhv‚ðuEUCv‚É‚µ‚ÄŠJ‚¢‚½‚è‚µ‚Ä‚­‚¾‚³‚¢<BR>
-	<BR>
-	TeraPad‚Ìê‡‚É‚ÍAƒIƒvƒVƒ‡ƒ“Ý’èŽ©‘Ì‚ð•ÏX‚µ‚ÄA<BR>
-	u•\Ž¦v¨u ƒIƒvƒVƒ‡ƒ“v¨uƒEƒBƒ“ƒhƒE/Š¿ŽšƒR[ƒhvƒ^ƒu¨uŠ¿ŽšƒR[ƒhvƒOƒ‹[ƒv‚ÅA<BR>
-	EŠ¿Žš/‰üsƒR[ƒh‚ðŽ©“®”FŽ¯‚·‚é@‚Éƒ`ƒFƒbƒN‚ð‚Â‚¯‚é<BR>
-	E‰º‚Ì“ñ‚Â‚Å—¼•ûu“Ç‚Ýž‚ÝŽž‚Ì››ƒR[ƒh‚Æ“¯‚¶v‚ð‘I‚Ô<BR>
-	‚Æ‚·‚ê‚ÎAŽ©“®‚Å•¶Žš‰»‚¯‚µ‚È‚¢‚æ‚¤‚É‚µ‚Ä‚­‚ê‚Ü‚·</LI>
-	
-	<LI><H3 class="list"><A name="DL‚©‚ç‰ð“€‚Ü‚Å">DL‚©‚ç‰ð“€‚Ü‚Å</A></H3>
-	‚Ü‚¸ƒ_ƒEƒ“ƒ[ƒh‚µ‚½ˆ³kƒtƒ@ƒCƒ‹i—á‚¦‚ÎMirR1233.ZIPj‚ð“K“–‚ÈƒtƒHƒ‹ƒ_“à‚É‰ð“€‚µ‚Ü‚·<BR>
-	‚±‚ÌŽžƒtƒHƒ‹ƒ_“à‚É‚Í
-	<TABLE cellspacing="2" summary="ƒT[ƒo[‚Å‚ÌÝ’u‚ÌŽd•û" style="margin:0.5em auto 0.5em 1em">
-		<THEAD>
-		<TR><TH scope="row">ƒpƒX</TH><TH scope="row">”õl</TH></TR>
-		</THEAD>
-		<TBODY>
-		<TR><TH scope="col">/Mireille.txt</TH>		<TD>Mireille‚ÌReadme</TD></TR>
-		<TR><TH scope="col">/Mireille.html</TH>		<TD>Mireille‚Ìà–¾‘</TD></TR>
-		<TR><TH scope="col">/init/log/</TH>			<TD>ƒƒO•Û‘¶ƒtƒHƒ‹ƒ_</TD></TR>
-		<TR><TH scope="col">/init/log/0.cgi</TH>	<TD>‹LŽ–î•ñƒtƒ@ƒCƒ‹</TD></TR>
-		<TR><TH scope="col">/init/</TH>				<TD>Å‰Ý’u‚·‚é‚Æ‚«‚ÉŽg‚¤ƒtƒ@ƒCƒ‹ŒQ</TD></TR>
-		<TR><TH scope="col">/init/index.cgi</TH>	<TD>CGI‹N“®ƒtƒ@ƒCƒ‹Œ“Ý’è</TD></TR>
-		<TR><TH scope="col">/init/icon.txt</TH>		<TD>ƒAƒCƒRƒ“ƒŠƒXƒg</TD></TR>
-		<TR><TH scope="col">/init/iconctlg.cgi</TH>	<TD>ƒAƒCƒRƒ“Œ©–{</TD></TR>
-		<TR><TH scope="col">/init/style.css</TH>	<TD>ƒXƒ^ƒCƒ‹ƒV[ƒg</TD></TR>
-		<TR><TH scope="col">/scpt/</TH>				<TD>ƒXƒNƒŠƒvƒg–{‘Ì‚Ìƒtƒ@ƒCƒ‹ŒQ</TD></TR>
-		<TR><TH scope="col">/scpt/core.cgi</TH>		<TD>Mireille–{‘Ì</TD></TR>
-		<TR><TH scope="col">/scpt/style.pl</TH>		<TD>MireilleƒXƒ^ƒCƒ‹Ý’è</TD></TR>
-		<TR><TH scope="col">/scpt/help.pl</TH>		<TD>ƒwƒ‹ƒv</TD></TR>
-		<TR><TH scope="col">/scpt/artnavi.js</TH>	<TD>‹LŽ–ƒiƒrJavaScript</TD></TR>
-		<TR><TH scope="col">/opti/</TH>				<TD>Ý’u‚µ‚Ä‚à‚µ‚È‚­‚Ä‚à‚¢‚¢ƒtƒ@ƒCƒ‹ŒQ</TD></TR>
-		<TR><TH scope="col">/opti/manage.cgi</TH>	<TD>ŠÇ—CGI</TD></TR>
-		<TR><TH scope="col">/opti/convert12.cgi</TH><TD>ƒƒOƒtƒ@ƒCƒ‹‚ð‘¼Œ`Ž®‚©‚ç1.2Œ`Ž®‚É•ÏŠ·‚·‚é</TD></TR>
-		<TR><TH scope="col">/opti/notify.pl</TH>	<TD>ƒ[ƒ‹‚É‚æ‚é‚¨’m‚ç‚¹‹@”\‚ðŽg‚¤‚Æ‚«‚ÉÝ’u‚·‚é</TD></TR>
-		<TR><TH scope="col">/opti/.htaccess</TH>	<TD>.htaccessƒtƒ@ƒCƒ‹</TD></TR>
-		</TBODY>
-	</TABLE>
-	‚Æ‚È‚Á‚Ä‚¢‚é‚Í‚¸‚Å‚·</LI>
 
-	<LI><H3 class="list"><A name="‰ŠúÝ’è">‰ŠúÝ’è</A></H3>
-	‚Ü‚¸index.cgi‚ðŠJ‚¢‚Äˆê”ÔÅ‰‚Ìˆês‚ðÝ’è‚µ‚Ü‚·<BR>
-	<CODE>#!/usr/local/bin/perl</CODE><BR>
-	<CODE>#!/usr/bin/perl</CODE><BR>
-	‚Ì‚Ç‚¿‚ç‚©‚Å‘å•”•ª‚Í“®‚­‚ÆŽv‚¢‚Ü‚·<BR>
-	iBiglobe‚Å‚Í <CODE>#!/usr/local/bin/perl5</CODE> ‚Å‚·j<BR>
-	Ý’è€–Ú‚Í‘¼‚É‚à‚ ‚è‚Ü‚·‚ªA‚Æ‚è‚ ‚¦‚¸‚Ü‚¸‚±‚±‚¾‚¯Ý’è‚µ‚Ä‚¿‚á‚ñ‚Æ“®‚­‚©ŽŽ‚µ‚Ä‚­‚¾‚³‚¢</LI>
+<DIV class="section">
+<H3 class="h">3. Mireille‚ð‰ü‘¢‚µ‚½‚à‚Ì‚ð”z•z‚·‚éê‡</H3>
+<P>ˆÈ‰º‚ÌðŒ‚ð–ž‚½‚·ŒÀ‚è‚É‚¨‚¢‚ÄAŽ©—R‚É‰ü‘¢‚µA”z•z‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B</P>
+<UL>
+	<LI><A href="http://www.airemix.com/">Airemix</A>‚ÌMireille‚ðƒx[ƒX‚ÉA‰ü‘¢‚ðŽ{‚µ‚½‚à‚Ì‚Å‚ ‚éA‚Æ–¾Ž¦‚·‚é‚±‚ÆBiƒIƒŠƒWƒiƒ‹‚ÌMireille‚ð“ñŽŸ”z•z‚µ‚Ä‚¢‚é‚Ì‚Å‚Í‚È‚¢‚±‚Æ‚ª‚í‚©‚é‚æ‚¤‚É‚·‚éj</LI>
+	<LI>‰ü‘¢Œã‚ÌCGI‚Å‚à<A href="http://www.airemix.com/">Airemix</A>‚Ì’˜ìŒ •\‹L‚ðŽc‚·‚©A<BR>
+	ŒfŽ¦”Â‚É—˜—pŽÒ‚ªƒAƒNƒZƒX‚µ‚½‚Æ‚«AÅ‰‚ÉŒ©‚éƒy[ƒW‚Ì‚»‚±‚»‚±–Ú—§‚Â‚Æ‚±‚ë‚ÉA<A
+	 href="http://www.airemix.com/">Airemix</A>‚Ö‚ÌƒŠƒ“ƒN‚ð’£‚é‚±‚ÆB</LI>
+</UL>
+<P>’A‚µAª–{‚©‚çì‚è’¼‚µAŒ´Œ^‚ð‚Æ‚Ç‚ß‚Ä‚¢‚È‚¢ê‡‚Í‚±‚ÌŒÀ‚è‚Å‚Í‚ ‚è‚Ü‚¹‚ñB<BR>
+‚»‚ê‚Å‚àAƒwƒ‹ƒv‚ ‚½‚è‚ÉuŽQl‚É‚µ‚½‚Æ‚±‚ëv‚Æ‚µ‚ÄƒŠƒ“ƒN‚ð‚Í‚Á‚Ä‚¢‚½‚¾‚¯‚ê‚ÎK‚¢‚Å‚·B</P>
+</DIV>
 
-	<LI><H3 class="list"><A name="FTP‚©‚çƒAƒbƒvƒ[ƒh">FTP‚©‚çƒAƒbƒvƒ[ƒh</A></H3>
-	Ý’u‚µ‚½‚¢ƒT[ƒo[‚ÌƒfƒBƒŒƒNƒgƒŠi—á‚¦‚Î<CODE>bbs/</CODE>j‚É<BR>
-	<TABLE cellspacing="2" summary="ƒT[ƒo[‚Å‚ÌÝ’u‚ÌŽd•û" style="margin:0.5em auto 0.5em 1em">
-		<THEAD>
-		<TR><TH scope="row">ƒpƒX</TH><TH scope="row">‘®«</TH><TH scope="row">—p“r</TH></TR>
-		</THEAD>
-		<TBODY>
-		<TR><TH scope="col">/bbs</TH>			<TD>777(755)</TD><TD>ŒfŽ¦”Â‚ÌƒfƒBƒŒƒNƒgƒŠ</TD></TR>
-		<TR><TH scope="col">/bbs/log</TH>		<TD>777(755)</TD><TD>ƒƒO•Û‘¶ƒfƒBƒŒƒNƒgƒŠ</TD></TR>
-		<TR><TH scope="col">/bbs/log/0.cgi</TH> <TD>666</TD><TD>‹LŽ–î•ñƒtƒ@ƒCƒ‹</TD></TR>
-		<TR><TH scope="col">/bbs/index.cgi</TH> <TD>755(700)</TD><TD>CGI‹N“®ƒtƒ@ƒCƒ‹Œ“Ý’è</TD></TR>
-		<TR><TH scope="col">/bbs/core.cgi</TH>	<TD>644</TD><TD>Mireille–{‘Ì</TD></TR>
-		<TR><TH scope="col">/bbs/style.pl</TH>	<TD>644</TD><TD>MireilleƒXƒ^ƒCƒ‹Ý’è</TD></TR>
-		<TR><TH scope="col">/bbs/artnavi.js</TH><TD>644</TD><TD>‹LŽ–ƒiƒr</TD></TR>
-		<TR><TH scope="col">/bbs/icon.txt</TH>	<TD>666</TD><TD>ƒAƒCƒRƒ“ƒŠƒXƒg</TD></TR>
-		<TR><TH scope="col">/bbs/iconctlg.cgi</TH> <TD>666</TD><TD>ƒAƒCƒRƒ“Œ©–{</TD></TR>
-		<TR><TH scope="col">/bbs/help.pl</TH>	<TD>644</TD><TD>ƒwƒ‹ƒv</TD></TR>
-		<TR><TH scope="col">/bbs/style.css</TH> <TD>666</TD><TD>ƒXƒ^ƒCƒ‹ƒV[ƒg</TD></TR>
-		</TBODY>
-	</TABLE>
-	‚Ì‚æ‚¤‚ÉÝ’u‚µ‚Ü‚·<BR>
-	‚¿‚È‚Ý‚ÉA
-	<UL>
-		<LI>‚±‚±‚É‹“‚°‚½ƒp[ƒ~ƒbƒVƒ‡ƒ“‚Íˆê”Ê“I‚ÈƒT[ƒo[‚Å‚Ìê‡‚Å‚·<BR>
-		CGI‚âƒf[ƒ^ƒtƒ@ƒCƒ‹‚Ìƒp[ƒ~ƒbƒVƒ‡ƒ“‚ªƒT[ƒo[‘¤‚©‚çŽw’è‚³‚ê‚Ä‚¢‚ê‚ÎA‚»‚¿‚ç‚ðÅ—Dæ‚µ‚Ä‚­‚¾‚³‚¢</LI>
-		<LI>ErrorScreen‚ª‚Å‚Ä‚àAu<SAMP>Can't write...</SAMP>vŒn‚Å‚È‚¯‚ê‚Îƒp[ƒ~ƒbƒVƒ‡ƒ“‚Í‚ ‚Á‚Ä‚¢‚Ü‚·</LI>
-		<LI>u<SAMP>500InternalServerError</SAMP>v‚©u<SAMP>Can't write...</SAMP>vŒn‚ÌƒGƒ‰[‚ª‚Å‚½‚çAƒp[ƒ~ƒbƒVƒ‡ƒ“‚ªŒ´ˆö‚©‚à‚µ‚ê‚Ü‚¹‚ñ</LI>
-		<LI>ErrorScreen‚Ì‚Å‚È‚¢ƒGƒ‰[‚Å‚ÍAFTP‚Å‚Ì“]‘—ƒ‚[ƒh‚ªƒeƒLƒXƒgƒ‚[ƒh‚Å‚È‚­AƒoƒCƒiƒŠƒ‚[ƒh‚Å“]‘—‚µ‚Ä‚µ‚Ü‚Á‚½‰Â”\«‚à‚ ‚è‚Ü‚·<BR>
-		ƒeƒLƒXƒgƒ‚[ƒh‚Å“]‘—‚µ‚È‚¨‚µ‚Ä‚Ý‚Ä‚­‚¾‚³‚¢</LI>
-	</UL>
-	<BR>
-	‚³‚ÄA‚±‚ê‚ÅA‚¨‚»‚ç‚­A‚à‚¤“®ì‚·‚éó‘Ô‚É‚È‚Á‚Ä‚¢‚é‚Í‚¸‚Å‚·<BR>
-	Å‰‚Í0.cgi‚Ì“à—e‚ª•\Ž¦‚³‚ê‚Ä‚¢‚Ü‚·‚ªA‚±‚ê‚Í‰½‚©V‚µ‚¢‘‚«ž‚Ý‚ª‚ ‚é‚ÆA<BR>
-	Ž©“®“I‚É•\Ž¦‚³‚ê‚È‚¢‚æ‚¤‚É‚È‚é‚Ì‚Å‚²ˆÀS‚ð<BR>
-	‚³‚Á‚»‚­AƒeƒXƒg‘‚«ž‚Ý‚ð‚µ‚Ä‚Ý‚Ü‚µ‚å‚¤<BR>
-	<BR>
-	‚à‚µ“®‚©‚È‚©‚Á‚½ê‡‚Í <A href="#Mireille‚ÌÝ’u‚Å‚Â‚Ü‚Ã‚¢‚½‚ç">Mireille‚ÌÝ’u‚Å‚Â‚Ü‚Ã‚¢‚½‚ç</A> ‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢<BR>
-	<BR>
-	ƒeƒXƒg‚ª‚¿‚á‚ñ‚Æ‚Å‚«‚é‚æ‚¤‚É‚È‚ê‚ÎA‚±‚ÌŒfŽ¦”Â‚ðÝ’u‚·‚é‚Ì‚ÉÅ’áŒÀ•K—v‚È‚±‚Æ‚ÍI‚í‚è‚Å‚·<BR>
-	ƒTƒCƒg–{‘Ì‚©‚çƒŠƒ“ƒN‚ð‚Í‚Á‚ÄŽg—p‚µ‚Ä‚­‚¾‚³‚¢ô<BR>
-	<BR>
-	‚½‚¾A‚±‚Ìó‘Ô‚Å‚ÍƒAƒCƒRƒ“‚ÌÝ’è‚Ís‚Á‚Ä‚¢‚È‚¢‚½‚ßA“–‘RƒAƒCƒRƒ“‚Í•\Ž¦‚³‚ê‚Ü‚¹‚ñ<BR>
-	ƒAƒCƒRƒ“‚ÌÝ’è‚É‚Â‚¢‚Ä‚Ìà–¾‚Í <A href="#ƒAƒCƒRƒ“">Mireille‚Ì’ˆÓŽ–€ - ƒAƒCƒRƒ“</A> ‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢<BR>
-	‚Ü‚½CSS‚ðŽg‚Á‚½ƒfƒUƒCƒ“‚Ì•ÏX‚âAstyle.pl‚É‚Ü‚Å“¥‚Ýž‚ñ‚¾×‚©‚¢‰ü‘¢‚É‚Â‚¢‚Ä‚ÍA<BR>
-	Mireille.html‚âMireille.txt‚ð‹÷X‚Ü‚ÅŒ©‚é‚Æƒqƒ“ƒg‚ªÚ‚Á‚Ä‚¢‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñ</LI>
 
-	<LI><H3 class="list"><A name="ƒAƒCƒRƒ“‚ÌÝ’è•û–@">ƒAƒCƒRƒ“‚ÌÝ’è•û–@</A></H3>
-	<P>Mireille‚ÌÝ’uƒeƒXƒg‚ª¬Œ÷‚µ‚½‚çƒAƒCƒRƒ“‚ðÝ’è‚µ‚Ü‚µ‚å‚¤<BR>
-	—á‚¦‚ÎMireille‚ðhttp://www.server.jp/~username/mireille_directory/index.cgi‚ÉÝ’u‚µ‚½‚Æ‚µ‚Ü‚·<BR>
-	<EM>www.server.jp</EM>‚ÍŽg‚Á‚Ä‚¢‚éƒvƒƒoƒCƒ_‚âƒŒƒ“ƒ^ƒ‹ƒT[ƒo[‚ÌƒhƒƒCƒ“‚ÉA<BR>
-	<EM>~username</EM>‚Í‚»‚ÌƒT[ƒo[‚Å‚Ìƒ†[ƒU[–¼‚ÉA<BR>
-	<EM>mireille_directory</EM>‚ÍÝ’u‚µ‚½Mireille‚ÌƒfƒBƒŒƒNƒgƒŠ‚ÉA<BR>
-	“K‹X’u‚«Š·‚¦‚Ä‚­‚¾‚³‚¢i“ÆŽ©ƒhƒƒCƒ“‚Ìê‡‚Åƒ†[ƒU[–¼‚ª•K—v‚È‚¢‚Æ‚«‚ÍÈ—ª‚·‚é‚±‚Æj<BR>
-	<BR>
-	ŽÀÛ‚ÌŽè‡‚ÍˆÈ‰º‚Ì’Ê‚è‚Å‚·</P>
-	<OL>
-		<LI><H4 class="list">ƒAƒCƒRƒ“ƒtƒHƒ‹ƒ_‚Ì€”õ</H4>
-		‚Ü‚¸Ž©•ª‚ÌƒRƒ“ƒsƒ…[ƒ^ã‚ÅAƒAƒCƒRƒ“‚Ì“ü‚Á‚½ƒtƒHƒ‹ƒ_‚ðì¬‚µ‚Ü‚·<BR>
-		‚Ç‚±‚©‚Éuiconv‚È‚Ç‚Æ–¼‚Ã‚¯‚½ƒtƒHƒ‹ƒ_‚ðì¬‚µA‚»‚Ì’†‚ÉƒAƒCƒRƒ“‚Æ‚µ‚ÄŽg‚¢‚½‚¢‰æ‘œƒtƒ@ƒCƒ‹i‰æ‘œŒ`Ž®‚Í‰½‚Å‚àOKj‚ð•ú‚èž‚Ý‚Ü‚µ‚å‚¤</LI>
-		
-		<LI><H4 class="list">ƒAƒCƒRƒ“ƒtƒHƒ‹ƒ_‚ÌƒAƒbƒvƒ[ƒh</H4>
-		ƒAƒCƒRƒ“‚Ì“ü‚Á‚½ƒtƒHƒ‹ƒ_‚ðƒAƒbƒvƒ[ƒh‚µ‚Ü‚·<BR>
-		êŠ‚Í‚Ç‚±‚Å‚à\‚¢‚Ü‚¹‚ñ‚ªAuhttp://www.server.jp/~username/icon/v‚É’u‚­‚Ì‚ª–³“ï‚Å‚µ‚å‚¤</LI>
-		
-		<LI><H4 class="list">ŠÇ—CGI‚ðƒAƒbƒvƒ[ƒh</H4>
-		Ž©•ª‚ÌƒRƒ“ƒsƒ…[ƒ^“à‚ÅAƒGƒfƒBƒ^‚ðŽg‚Á‚Äindex.cgi‚ð•ÒW‚µ‚Ä‚à‚æ‚¢‚Ì‚Å‚·‚ªA<BR>
-		‚±‚±‚Å‚ÍŠÇ—CGI‚ðŽg‚Á‚Äindex.cgi‚ð•ÒW‚µ‚Ä‚Ý‚Ü‚µ‚å‚¤<BR>
-		iƒGƒfƒBƒ^‚Å’¼Ú•ÒW‚·‚é•û‚ªŠy‚Èl‚ÍAŠÇ—CGI‚ðŽg‚í‚È‚­‚Ä‚à‚à‚¿‚ë‚ñOK‚Å‚·j<BR>
-		<EM>manage.cgi</EM>‚ðFTPƒNƒ‰ƒCƒAƒ“ƒg‚ÅAMireille‚Æ“¯‚¶ƒfƒBƒŒƒNƒgƒŠ‚ÉƒAƒbƒvƒ[ƒh‚µ‚Ü‚µ‚å‚¤<BR>
-		‚±‚Ì‚Æ‚«<STRONG class="warning">•K‚¸manage.cgi‚ð‘¼‚Ìl‚É‚Í—\‘ª‚Ì‚Â‚©‚È‚¢–¼‘O‚É•Ï‚¦‚Ä‚­‚¾‚³‚¢</STRONG><BR>
-		ŠÇ—CGI‚ÌŠÇ—‹@”\‚Í•Ö—˜‚È”½–ÊA<STRONG class="warning">”ñí‚ÉŠëŒ¯</STRONG>‚Å‚·<BR>
-		<BR>
-		ŠÇ—CGI‚É‚Â‚¢‚Ä‚Í<a href="#ŠÇ—CGI‚ÌÝ’u">ŠÇ—CGI‚ÌÝ’u</A>‚àŽQÆ‚µ‚Ä‚­‚¾‚³‚¢</LI>
-		
-		<LI><H4 class="list">ŠÇ—CGI‚Åindex.cgi‚ð•ÒW‚·‚é</H4>
-		http://www.server.jp/~username/mireille_directory/ŠÇ—CGI.cgiiuŠÇ—CGIv‚Ì•”•ª‚Í“K‹X’u‚«Š·‚¦‚Ä‚­‚¾‚³‚¢j‚ÉƒAƒNƒZƒX‚µ‚Ü‚µ‚å‚¤<BR>
-		uindex.cgi•ÒWv‚ð‘I‘ð‚µ‚ÄŽŸ‚Öi‚Ý‚Ü‚·<BR>
-		ƒAƒCƒRƒ“‚ÌƒfƒBƒŒƒNƒgƒŠv‚Ì€–Ú‚ð’T‚µAƒAƒCƒRƒ“ƒtƒHƒ‹ƒ_‚Ì’u‚¢‚Ä‚ ‚éêŠ‚ð‘‚«‚Ü‚µ‚å‚¤<BR>
-		i‚±‚ÌŽžAhttp://www.server.jp/~username/icon/ ‚ÌÅŒã‚Ì/‚ð‘‚«–Y‚ê‚È‚¢‚Å‰º‚³‚¢j<BR>
-		‘‚¯‚½‚çuOKv‚ð‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢</LI>
-		
-		<LI><H4 class="list">ŠÇ—CGI‚Åicon.txt‚ð•ÒW‚·‚é</H4>
-		uIconƒŠƒXƒg•ÒWiƒ^ƒOjv‚ð‘I‘ð‚µ‚ÄŽŸ‚Öi‚Ý‚Ü‚·<BR>
-		Mireille‚Ìˆ³kƒtƒ@ƒCƒ‹‚É‚Â‚¢‚Ä‚«‚½icon.txt‚ðƒAƒbƒvƒ[ƒh‚µ‚½ê‡A<BR>
-		‘å—Ê‚É‚¢‚ë‚¢‚ë‚Æ‘‚©‚ê‚Ä‚¢‚é‚Ì‚ÅA‚Æ‚è‚ ‚¦‚¸‘S‚Äíœ‚µ‚Ä‚µ‚Ü‚¢‚Ü‚µ‚å‚¤<BR>
-		‚»‚¤‚µ‚½‚çˆÈ‰º‚Ì‚æ‚¤‚É‘‚«Š·‚¦‚Ü‚·<BR>
+<DIV class="section">
+<H3 class="h">4. ¤—p—˜—p‚·‚éê‡</H3>
+<P>ƒŒƒ“ƒ^ƒ‹ŒfŽ¦”Â‚ð‰^—p‚µ‚½‚èA¤—pƒTƒCƒg‚ÌŒfŽ¦”Â‚Æ‚µ‚ÄŽg‚¤ê‡‚Å‚à‚±‚ê‚Ü‚Å‚É•\‹L‚µ‚½’Ê‚è‚ÅA<BR>
+u¤—p‚¾‚Á‚½‚çAv‚Æ‚¢‚¤¤—p‚¾‚¯‚Ì“Á•Ê‚È§ŒÀ‚È‚Ç‚Í‚ ‚è‚Ü‚¹‚ñB<BR>
+‰½‚©‚­‚¾‚³‚é‚Æ‚¢‚¤‚Ì‚È‚çŠì‚ñ‚Å’¸‚«‚Ü‚·‚ªGj</P>
+</DIV>
+
+
+<DIV class="section">
+<H3 class="h">5. Žg—p‚·‚é‚±‚Æ‚ªo—ˆ‚È‚¢l</H3>
+<P>‰½‚ç‚©‚Ì—¥—ßŠiŽ®‚Ì—Þ‚É‚æ‚Á‚ÄMireille‚ÌŽg—p‚ð‹Ö‚¶‚ç‚ê‚Ä‚¢‚él‚ÍŽg‚¦‚Ü‚¹‚ñB</P>
+</DIV>
+
+
+<DIV class="section">
+<H3 class="h">6. ‚¢‚í‚ä‚é–ÆÓ</H3>
+<P>‚±‚ÌƒXƒNƒŠƒvƒg‹y‚Ñ‚±‚ÌƒXƒNƒŠƒvƒg‚ÌŠÖ˜A•i‚ðŽg‚Á‚Ä•s—˜‰v‚ð”í‚Á‚Ä‚à‚í‚½‚µ‚Í’m‚è‚Ü‚¹‚ñB<BR>
+‚¤‚¿‚ÌŒfŽ¦”Â‚ð’Ê‚µ‚ÄŽÀs‰Â”\‚ÈŒ`‚ÅˆË—Š‚³‚ê‚ê‚ÎA‚È‚ñ‚ç‚©‚Ì•‚¯‚Í‚·‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñ‚ªA<BR>
+Šî–{“I‚É‚Í‰½‚à‚µ‚È‚¢A‚Æ‚¢‚¤Œ`‚ÅŠoŒå‚µ‚½ã‚ÅŽg‚Á‚Ä‚­‚¾‚³‚¢B<BR>
+ƒoƒO•ñ‚â‹@”\’Ç‰Á—v–]AŒëA‚Ì”­Œ©‚Í<A href="http://www.airemix.com/bbs/">AiremixŒfŽ¦”Â</A>‚Ü‚Å‚Ç‚¤‚¼</P>
+</DIV>
+
+
+<DIV class="section">
+<H3 class="h">7. ‚±‚Ì‹K’èŽ©‘Ì‚É‚Â‚¢‚Ä</H3>
+<P>‚±‚Ì‹K’è‚ÍMireille‹y‚ÑAMireille‚Ì–¼‚Ì‰º‚É\¬‚³‚ê‚½ŠÖ˜A•¨‚É‘Î‚µ‚ÄŒø—Í‚ðŽ‚¿‚Ü‚·B<BR>
+‚Ü‚½A—˜—pŽÒ‚ªŽg—p‚µ‚Ä‚¢‚éMireille‚Ìƒo[ƒWƒ‡ƒ“Žž‚Ì‹K’è‚ÆAÅV‚Ì‹K’è‚Æ‚ªˆÙ‚È‚éê‡A<BR>
+—˜—pŽÒ‚Í‚Ç‚¿‚ç‚Ì‹K’è‚ðŽg‚¤‚©‘I‘ð‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B<BR>
+‚ ‚é“Á’è‚ÌŽžŠú‚Ì‹K’è‚É“Á•Ê‚ÈŽv‚¢“ü‚ê‚ª‚ ‚é‚È‚ç‚ÎA‚»‚Ì‹K’è‚ðŒf‚°‚Ä‚¨‚¯‚Î‚»‚ê‚ª“K—p‚³‚ê‚é‚Å‚µ‚å‚¤B</P>
+</DIV>
+</DIV>
+<!-- END_Mireille‚Ì—˜—p‹K’è -->
+
+
+
+<DIV class="section">
+<H2 class="h">ž<A name="Ý’u‚Ìà–¾‘">Ý’u‚Ìà–¾‘</A></H2>
+
+
+<DIV class="section">
+<H3 class="h">0. <A name="‚Ü‚¸‚Í‚¶‚ß‚É">‚Ü‚¸‚Í‚¶‚ß‚É</A></H3>
+<P>‚±‚Ìà–¾ƒtƒ@ƒCƒ‹‚ÍAHTML‚Ì‚Ý‚Å\¬‚³‚ê‚½ƒTƒCƒg‚Íì‚ê‚é•ûA<BR>
+‚Æ‚è‚ ‚¦‚¸ˆ³k‰ð“€AFTP‚É‚æ‚éƒAƒbƒvƒ[ƒh‚Í’m‚Á‚Ä‚¢‚él‚É‘‚©‚ê‚Ä‚¢‚Ü‚·B<BR>
+uƒz[ƒ€ƒy[ƒW‚Á‚Ä‰½H‚Ç‚¤‚â‚Á‚Äì‚é‚ÌHv‚Æ‚¢‚¤•û‚Í‘z’è‚µ‚Ä‚¢‚Ü‚¹‚ñB<BR>
+‚»‚±‚Ü‚Å”ÍˆÍ‚ðL‚°‚é‚ÆuÝ’u‚Ìà–¾‘v‚ÌƒŒƒxƒ‹‚ð‰z‚¦‚Ä‚µ‚Ü‚¤‚½‚ßA‚²—¹³‚­‚¾‚³‚¢B</P>
+<P>‚Ü‚½A‚±‚ÌCGI‚Å‚ÍŠ¿ŽšƒR[ƒh‚ÉEUC-JP‚ðŽg—p‚µ‚Ä‚¢‚é‚½‚ßAWindows•W€‚Ìƒƒ‚’ ‚Å‚Í“Ç‚ß‚Ü‚¹‚ñB<BR>
+<A href="http://www2s.biglobe.ne.jp/~t-susumu/toclip/">TeraPad</A>A
+<A href="http://hidemaru.xaxon.co.jp/">GŠÛƒGƒfƒBƒ^</A>A
+<A href="http://sakura-editor.sourceforge.net/index-j.html">‚³‚­‚çƒGƒfƒBƒ^</A>‚È‚Ç‚ÌA
+EUC-JP‚à“Ç‚ß‚éƒGƒfƒBƒ^‚ð‚¨Žg‚¢‚­‚¾‚³‚¢B<BR>
+CGIŽ©‘Ì‚ð•ÒW‚·‚éê‡‚ÍAˆÈã‚É‹“‚°‚½ƒGƒfƒBƒ^‚É“‹Ú‚³‚ê‚Ä‚¢‚éA<BR>
+uF‚Ã‚¯‹@”\v‚ðŽg‚¤‚ÆŒø—¦‚ªŠi’i‚Éã‚ª‚é‚Æ‚¨‚à‚¢‚Ü‚·B</P>
+<P>‚¿‚È‚Ý‚ÉAˆÈã‚É‹“‚°‚½ƒGƒfƒBƒ^‚ðŽg‚Á‚Ä‚àA•¶Žš‰»‚¯‚µ‚Ä•\Ž¦‚³‚ê‚éê‡‚ÍA<BR>
+ƒƒjƒ…[ƒo[‚Ìuƒtƒ@ƒCƒ‹v¨uŠ¿ŽšŽw’èƒR[ƒhŽw’èÄ“Ç‚Ýž‚Ýv¨uEUCviTeraPad‚Ìê‡j<BR>
+‚Æ‚µ‚½‚èAuƒtƒ@ƒCƒ‹v¨uŠJ‚­v‚ÅAuŠ¿ŽšƒR[ƒhv‚ðuEUCv‚É‚µ‚ÄŠJ‚¢‚½‚è‚µ‚Ä‚­‚¾‚³‚¢B</P>
+<P>TeraPad‚Ìê‡‚É‚ÍAƒIƒvƒVƒ‡ƒ“Ý’èŽ©‘Ì‚ð•ÏX‚µ‚ÄA<BR>
+u•\Ž¦v¨u ƒIƒvƒVƒ‡ƒ“v¨uƒEƒBƒ“ƒhƒE/Š¿ŽšƒR[ƒhvƒ^ƒu¨uŠ¿ŽšƒR[ƒhvƒOƒ‹[ƒv‚ÅA<BR>
+Š¿Žš/‰üsƒR[ƒh‚ðŽ©“®”FŽ¯‚·‚é@‚Éƒ`ƒFƒbƒN‚ð‚Â‚¯‚é‚©A<BR>
+‰º‚Ì“ñ‚Â‚Å—¼•ûu“Ç‚Ýž‚ÝŽž‚Ì››ƒR[ƒh‚Æ“¯‚¶v‚ð‘I‚Ô‚©A<BR>
+‚·‚ê‚ÎAŽ©“®‚Å•¶Žš‰»‚¯‚µ‚È‚¢‚æ‚¤‚É‚µ‚Ä‚­‚ê‚Ü‚·B</P>
+</DIV>
+
+
+<DIV class="section">
+<H3 class="h">1. <A name="DL‚©‚ç‰ð“€‚Ü‚Å">DL‚©‚ç‰ð“€‚Ü‚Å</A></H3>
+<P>‚Ü‚¸ƒ_ƒEƒ“ƒ[ƒh‚µ‚½ˆ³kƒtƒ@ƒCƒ‹i—á‚¦‚ÎMirR1233.ZIPj‚ð“K“–‚ÈƒtƒHƒ‹ƒ_“à‚É‰ð“€‚µ‚Ü‚·B<BR>
+‚±‚ÌŽžƒtƒHƒ‹ƒ_“à‚É‚Í</P>
+<TABLE summary="ƒT[ƒo[‚Å‚ÌÝ’u‚ÌŽd•û">
+	<THEAD>
+	<TR><TH scope="row">ƒpƒX</TH><TH scope="row">”õl</TH></TR>
+	</THEAD>
+	<TBODY>
+	<TR><TH scope="col">/Mireille.txt</TH>		<TD>Mireille‚ÌReadme</TD></TR>
+	<TR><TH scope="col">/Mireille.html</TH>		<TD>Mireille‚Ìà–¾‘</TD></TR>
+	<TR><TH scope="col">/init/log/</TH>			<TD>ƒƒO•Û‘¶ƒtƒHƒ‹ƒ_</TD></TR>
+	<TR><TH scope="col">/init/log/0.cgi</TH>	<TD>‹LŽ–î•ñƒtƒ@ƒCƒ‹</TD></TR>
+	<TR><TH scope="col">/init/</TH>				<TD>Å‰Ý’u‚·‚é‚Æ‚«‚ÉŽg‚¤ƒtƒ@ƒCƒ‹ŒQ</TD></TR>
+	<TR><TH scope="col">/init/index.cgi</TH>	<TD>CGI‹N“®ƒtƒ@ƒCƒ‹Œ“Ý’è</TD></TR>
+	<TR><TH scope="col">/init/icon.txt</TH>		<TD>ƒAƒCƒRƒ“ƒŠƒXƒg</TD></TR>
+	<TR><TH scope="col">/init/iconctlg.cgi</TH>	<TD>ƒAƒCƒRƒ“Œ©–{</TD></TR>
+	<TR><TH scope="col">/init/style.css</TH>	<TD>ƒXƒ^ƒCƒ‹ƒV[ƒg</TD></TR>
+	<TR><TH scope="col">/scpt/</TH>				<TD>ƒXƒNƒŠƒvƒg–{‘Ì‚Ìƒtƒ@ƒCƒ‹ŒQ</TD></TR>
+	<TR><TH scope="col">/scpt/core.cgi</TH>		<TD>Mireille–{‘Ì</TD></TR>
+	<TR><TH scope="col">/scpt/style.pl</TH>		<TD>MireilleƒXƒ^ƒCƒ‹Ý’è</TD></TR>
+	<TR><TH scope="col">/scpt/help.pl</TH>		<TD>ƒwƒ‹ƒv</TD></TR>
+	<TR><TH scope="col">/scpt/artnavi.js</TH>	<TD>‹LŽ–ƒiƒrJavaScript</TD></TR>
+	<TR><TH scope="col">/opti/</TH>				<TD>Ý’u‚µ‚Ä‚à‚µ‚È‚­‚Ä‚à‚¢‚¢ƒtƒ@ƒCƒ‹ŒQ</TD></TR>
+	<TR><TH scope="col">/opti/manage.cgi</TH>	<TD>ŠÇ—CGI</TD></TR>
+	<TR><TH scope="col">/opti/convert12.cgi</TH><TD>ƒƒOƒtƒ@ƒCƒ‹‚ð‘¼Œ`Ž®‚©‚ç1.2Œ`Ž®‚É•ÏŠ·‚·‚é</TD></TR>
+	<TR><TH scope="col">/opti/notify.pl</TH>	<TD>ƒ[ƒ‹‚É‚æ‚é‚¨’m‚ç‚¹‹@”\‚ðŽg‚¤‚Æ‚«‚ÉÝ’u‚·‚é</TD></TR>
+	<TR><TH scope="col">/opti/.htaccess</TH>	<TD>.htaccessƒtƒ@ƒCƒ‹</TD></TR>
+	</TBODY>
+</TABLE>
+<P>‚Æ‚È‚Á‚Ä‚¢‚é‚Í‚¸‚Å‚·</P>
+</DIV>
+
+
+<DIV class="section">
+<H3 class="h">2. <A name="‰ŠúÝ’è">‰ŠúÝ’è</A></H3>
+<P>‚Ü‚¸index.cgi‚ðŠJ‚¢‚Äˆê”ÔÅ‰‚Ìˆês‚ðÝ’è‚µ‚Ü‚·B<BR>
+u<CODE>#!/usr/local/bin/perl</CODE>v‚©u<CODE>#!/usr/bin/perl</CODE>v‚Ì‚Ç‚¿‚ç‚©‚Å‘å•”•ª‚Í“®‚­‚ÆŽv‚¢‚Ü‚·B</P>
+iBiglobe‚Å‚Í <CODE>#!/usr/local/bin/perl5</CODE> ‚Å‚·j<BR>
+<P>Ý’è€–Ú‚Í‘¼‚É‚à‚ ‚è‚Ü‚·‚ªA‚Æ‚è‚ ‚¦‚¸‚Ü‚¸‚±‚±‚¾‚¯Ý’è‚µ‚Ä‚¿‚á‚ñ‚Æ“®‚­‚©ŽŽ‚µ‚Ä‚­‚¾‚³‚¢B</P>
+</DIV>
+
+
+<DIV class="section">
+<H3 class="h">3. <A name="FTP‚©‚çƒAƒbƒvƒ[ƒh">FTP‚©‚çƒAƒbƒvƒ[ƒh</A></H3>
+<P>Ý’u‚µ‚½‚¢ƒT[ƒo[‚ÌƒfƒBƒŒƒNƒgƒŠi—á‚¦‚Î<CODE>bbs/</CODE>j‚É</P>
+<TABLE summary="ƒT[ƒo[‚Å‚ÌÝ’u‚ÌŽd•û">
+	<THEAD>
+	<TR><TH scope="row">ƒpƒX</TH><TH scope="row">‘®«</TH><TH scope="row">—p“r</TH></TR>
+	</THEAD>
+	<TBODY>
+	<TR><TH scope="col">/bbs</TH>			<TD>777(755)</TD><TD>ŒfŽ¦”Â‚ÌƒfƒBƒŒƒNƒgƒŠ</TD></TR>
+	<TR><TH scope="col">/bbs/log</TH>		<TD>777(755)</TD><TD>ƒƒO•Û‘¶ƒfƒBƒŒƒNƒgƒŠ</TD></TR>
+	<TR><TH scope="col">/bbs/log/0.cgi</TH> <TD>666</TD><TD>‹LŽ–î•ñƒtƒ@ƒCƒ‹</TD></TR>
+	<TR><TH scope="col">/bbs/index.cgi</TH> <TD>755(700)</TD><TD>CGI‹N“®ƒtƒ@ƒCƒ‹Œ“Ý’è</TD></TR>
+	<TR><TH scope="col">/bbs/core.cgi</TH>	<TD>644</TD><TD>Mireille–{‘Ì</TD></TR>
+	<TR><TH scope="col">/bbs/style.pl</TH>	<TD>644</TD><TD>MireilleƒXƒ^ƒCƒ‹Ý’è</TD></TR>
+	<TR><TH scope="col">/bbs/artnavi.js</TH><TD>644</TD><TD>‹LŽ–ƒiƒr</TD></TR>
+	<TR><TH scope="col">/bbs/icon.txt</TH>	<TD>666</TD><TD>ƒAƒCƒRƒ“ƒŠƒXƒg</TD></TR>
+	<TR><TH scope="col">/bbs/iconctlg.cgi</TH> <TD>666</TD><TD>ƒAƒCƒRƒ“Œ©–{</TD></TR>
+	<TR><TH scope="col">/bbs/help.pl</TH>	<TD>644</TD><TD>ƒwƒ‹ƒv</TD></TR>
+	<TR><TH scope="col">/bbs/style.css</TH> <TD>666</TD><TD>ƒXƒ^ƒCƒ‹ƒV[ƒg</TD></TR>
+	</TBODY>
+</TABLE>
+<P>‚Ì‚æ‚¤‚ÉÝ’u‚µ‚Ü‚·B</P>
+<P>‚¿‚È‚Ý‚ÉA</P>
+<UL>
+	<LI>‚±‚±‚É‹“‚°‚½ƒp[ƒ~ƒbƒVƒ‡ƒ“‚Íˆê”Ê“I‚ÈƒT[ƒo[‚Å‚Ìê‡‚Å‚·B<BR>
+	CGI‚âƒf[ƒ^ƒtƒ@ƒCƒ‹‚Ìƒp[ƒ~ƒbƒVƒ‡ƒ“‚ªƒT[ƒo[‘¤‚©‚çŽw’è‚³‚ê‚Ä‚¢‚ê‚ÎA‚»‚¿‚ç‚ðÅ—Dæ‚µ‚Ä‚­‚¾‚³‚¢B</LI>
+	<LI>ErrorScreen‚ª‚Å‚Ä‚àAu<SAMP>Can't write...</SAMP>vŒn‚Å‚È‚¯‚ê‚Îƒp[ƒ~ƒbƒVƒ‡ƒ“‚Í‚ ‚Á‚Ä‚¢‚Ü‚·B</LI>
+	<LI>u<SAMP>500InternalServerError</SAMP>v‚©u<SAMP>Can't write...</SAMP>vŒn‚ÌƒGƒ‰[‚ª‚Å‚½‚çAƒp[ƒ~ƒbƒVƒ‡ƒ“‚ªŒ´ˆö‚©‚à‚µ‚ê‚Ü‚¹‚ñB</LI>
+	<LI>ErrorScreen‚Ì‚Å‚È‚¢ƒGƒ‰[‚Å‚ÍAFTP‚Å‚Ì“]‘—ƒ‚[ƒh‚ªƒeƒLƒXƒgƒ‚[ƒh‚Å‚È‚­AƒoƒCƒiƒŠƒ‚[ƒh‚Å“]‘—‚µ‚Ä‚µ‚Ü‚Á‚½‰Â”\«‚à‚ ‚è‚Ü‚·B<BR>
+	ƒeƒLƒXƒgƒ‚[ƒh‚Å“]‘—‚µ‚È‚¨‚µ‚Ä‚Ý‚Ä‚­‚¾‚³‚¢B</LI>
+</UL>
+<P>‚³‚ÄA‚±‚ê‚ÅA‚¨‚»‚ç‚­A‚à‚¤“®ì‚·‚éó‘Ô‚É‚È‚Á‚Ä‚¢‚é‚Í‚¸‚Å‚·B<BR>
+Å‰‚Í0.cgi‚Ì“à—e‚ª•\Ž¦‚³‚ê‚Ä‚¢‚Ü‚·‚ªA‚±‚ê‚Í‰½‚©V‚µ‚¢‘‚«ž‚Ý‚ª‚ ‚é‚ÆA<BR>
+Ž©“®“I‚É•\Ž¦‚³‚ê‚È‚¢‚æ‚¤‚É‚È‚é‚Ì‚Å‚²ˆÀS‚ðB<BR>
+‚³‚Á‚»‚­AƒeƒXƒg‘‚«ž‚Ý‚ð‚µ‚Ä‚Ý‚Ü‚µ‚å‚¤B<BR>
+<P>‚à‚µ“®‚©‚È‚¢‚Æ‚«‚Í <A href="#Mireille‚ÌÝ’u‚Å‚Â‚Ü‚Ã‚¢‚½‚ç">Mireille‚ÌÝ’u‚Å‚Â‚Ü‚Ã‚¢‚½‚ç</A> ‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢B</P>
+<P>ƒeƒXƒg‚ª‚¿‚á‚ñ‚Æ‚Å‚«‚é‚æ‚¤‚É‚È‚ê‚ÎA‚±‚ÌŒfŽ¦”Â‚ðÝ’u‚·‚é‚Ì‚ÉÅ’áŒÀ•K—v‚È‚±‚Æ‚ÍI‚í‚è‚Å‚·B<BR>
+ƒTƒCƒg–{‘Ì‚©‚çƒŠƒ“ƒN‚ð‚Í‚Á‚ÄŽg—p‚µ‚Ä‚­‚¾‚³‚¢ô</P>
+</DIV>
+
+
+<DIV class="section">
+<H3 class="h">4D<A name="ƒAƒCƒRƒ“‚ÌÝ’è•û–@">ƒAƒCƒRƒ“‚ÌÝ’è•û–@</A></H3>
+<P>Mireille‚ÌÝ’uƒeƒXƒg‚ª¬Œ÷‚µ‚½‚çƒAƒCƒRƒ“‚ðÝ’è‚µ‚Ü‚µ‚å‚¤B<BR>
+—á‚¦‚ÎMireille‚ðhttp://www.server.jp/~username/mireille_directory/index.cgi‚ÉÝ’u‚µ‚½‚Æ‚µ‚Ü‚·B<BR>
+<EM>www.server.jp</EM>‚ÍŽg‚Á‚Ä‚¢‚éƒvƒƒoƒCƒ_‚âƒŒƒ“ƒ^ƒ‹ƒT[ƒo[‚ÌƒhƒƒCƒ“‚ÉA<BR>
+<EM>~username</EM>‚Í‚»‚ÌƒT[ƒo[‚Å‚Ìƒ†[ƒU[–¼‚ÉA<BR>
+<EM>mireille_directory</EM>‚ÍÝ’u‚µ‚½Mireille‚ÌƒfƒBƒŒƒNƒgƒŠ‚ÉA<BR>
+“K‹X’u‚«Š·‚¦‚Ä‚­‚¾‚³‚¢Bi“ÆŽ©ƒhƒƒCƒ“‚Ìê‡‚Åƒ†[ƒU[–¼‚ª•K—v‚È‚¢‚Æ‚«‚ÍÈ—ª‚·‚é‚±‚Æj</P>
+<P>ŽÀÛ‚ÌŽè‡‚ÍˆÈ‰º‚Ì’Ê‚è‚Å‚·</P>
+
+<DIV class="section">
+<H4 class="h">ƒAƒCƒRƒ“ƒtƒHƒ‹ƒ_‚Ì€”õ</H4>
+<P>‚Ü‚¸Ž©•ª‚ÌƒRƒ“ƒsƒ…[ƒ^ã‚ÅAƒAƒCƒRƒ“‚Ì“ü‚Á‚½ƒtƒHƒ‹ƒ_‚ðì¬‚µ‚Ü‚·B<BR>
+‚Ç‚±‚©‚Éuiconv‚È‚Ç‚Æ–¼‚Ã‚¯‚½ƒtƒHƒ‹ƒ_‚ðì¬‚µA<BR>
+‚»‚Ì’†‚ÉƒAƒCƒRƒ“‚Æ‚µ‚ÄŽg‚¢‚½‚¢‰æ‘œƒtƒ@ƒCƒ‹i‰æ‘œŒ`Ž®‚Í‰½‚Å‚àOKj‚ð•ú‚èž‚Ý‚Ü‚µ‚å‚¤B</P>
+</DIV>
+
+<DIV class="section">
+<H4 class="h">ƒAƒCƒRƒ“ƒtƒHƒ‹ƒ_‚ÌƒAƒbƒvƒ[ƒh</H4>
+<P>ƒAƒCƒRƒ“‚Ì“ü‚Á‚½ƒtƒHƒ‹ƒ_‚ðƒAƒbƒvƒ[ƒh‚µ‚Ü‚·B<BR>
+êŠ‚Í‚Ç‚±‚Å‚à\‚¢‚Ü‚¹‚ñ‚ªAuhttp://www.server.jp/~username/icon/v‚É’u‚­‚Ì‚ª–³“ï‚Å‚µ‚å‚¤B</P>
+</DIV>
+
+<DIV class="section">
+<H4 class="h">ŠÇ—CGI‚ðƒAƒbƒvƒ[ƒh</H4>
+<P>Ž©•ª‚ÌƒRƒ“ƒsƒ…[ƒ^“à‚ÅAƒGƒfƒBƒ^‚ðŽg‚Á‚Äindex.cgi‚ð•ÒW‚µ‚Ä‚à‚æ‚¢‚Ì‚Å‚·‚ªA<BR>
+‚±‚±‚Å‚ÍŠÇ—CGI‚ðŽg‚Á‚Äindex.cgi‚ð•ÒW‚µ‚Ä‚Ý‚Ü‚µ‚å‚¤B<BR>
+iƒGƒfƒBƒ^‚Å’¼Ú•ÒW‚·‚é•û‚ªŠy‚Èl‚ÍAŠÇ—CGI‚ðŽg‚í‚È‚­‚Ä‚à‚à‚¿‚ë‚ñOK‚Å‚·j<BR>
+<EM>manage.cgi</EM>‚ðFTPƒNƒ‰ƒCƒAƒ“ƒg‚ÅAMireille‚Æ“¯‚¶ƒfƒBƒŒƒNƒgƒŠ‚ÉƒAƒbƒvƒ[ƒh‚µ‚Ü‚µ‚å‚¤B<BR>
+‚±‚Ì‚Æ‚«<STRONG class="warning">•K‚¸manage.cgi‚ð‘¼‚Ìl‚É‚Í—\‘ª‚Ì‚Â‚©‚È‚¢–¼‘O‚É•Ï‚¦‚Ä‚­‚¾‚³‚¢B</STRONG><BR>
+ŠÇ—CGI‚ÌŠÇ—‹@”\‚Í•Ö—˜‚È”½–ÊA<STRONG class="warning">”ñí‚ÉŠëŒ¯</STRONG>‚Å‚·B</P>
+<P>ŠÇ—CGI‚É‚Â‚¢‚Ä‚Í<a href="#ŠÇ—CGI‚ÌÝ’u">ŠÇ—CGI‚ÌÝ’u</A>‚àŽQÆ‚µ‚Ä‚­‚¾‚³‚¢</P>
+</DIV>
+
+<DIV class="section">
+<H4 class="h">ŠÇ—CGI‚Åindex.cgi‚ð•ÒW‚·‚é</H4>
+<P>http://www.server.jp/~username/mireille_directory/ŠÇ—CGI.cgiiuŠÇ—CGIv‚Ì•”•ª‚Í“K‹X’u‚«Š·‚¦‚Ä‚­‚¾‚³‚¢j‚ÉƒAƒNƒZƒX‚µ‚Ü‚µ‚å‚¤B<BR>
+uindex.cgi•ÒWv‚ð‘I‘ð‚µ‚ÄŽŸ‚Öi‚Ý‚Ü‚·B<BR>
+ƒAƒCƒRƒ“‚ÌƒfƒBƒŒƒNƒgƒŠv‚Ì€–Ú‚ð’T‚µAƒAƒCƒRƒ“ƒtƒHƒ‹ƒ_‚Ì’u‚¢‚Ä‚ ‚éêŠ‚ð‘‚«‚Ü‚µ‚å‚¤B<BR>
+i‚±‚ÌŽžAhttp://www.server.jp/~username/icon/ ‚ÌÅŒã‚Ì/‚ð‘‚«–Y‚ê‚È‚¢‚Å‰º‚³‚¢j<BR>
+‘‚¯‚½‚çuOKv‚ð‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B</P>
+</DIV>
+
+<DIV class="section">
+<H4 class="h">ŠÇ—CGI‚Åicon.txt‚ð•ÒW‚·‚é</H4>
+<P>uIconƒŠƒXƒg•ÒWiƒ^ƒOjv‚ð‘I‘ð‚µ‚ÄŽŸ‚Öi‚Ý‚Ü‚·B<BR>
+Mireille‚Ìˆ³kƒtƒ@ƒCƒ‹‚É‚Â‚¢‚Ä‚«‚½icon.txt‚ðƒAƒbƒvƒ[ƒh‚µ‚½ê‡A<BR>
+‘å—Ê‚É‚¢‚ë‚¢‚ë‚Æ‘‚©‚ê‚Ä‚¢‚é‚Ì‚ÅA‚Æ‚è‚ ‚¦‚¸‘S‚Äíœ‚µ‚Ä‚µ‚Ü‚¢‚Ü‚µ‚å‚¤B<BR>
+‚»‚¤‚µ‚½‚çˆÈ‰º‚Ì‚æ‚¤‚É‘‚«Š·‚¦‚Ü‚·B</P>
 <PRE><CODE>&lt;OPTGROUP label=&quot;iƒOƒ‹[ƒv‚Ìƒ‰ƒxƒ‹A—á‚¦‚ÎuƒAƒCƒRƒ“iƒ‚ƒ“ƒXƒ^[jv‚Æ‚©j&quot;&gt;
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;OPTION value=&quot;i‰æ‘œƒtƒ@ƒCƒ‹‚ÌƒpƒXA—á‚¦‚Îudragon.gifvj&quot;&gt;i‰æ‘œ‚Ì–¼‘OA—á‚¦‚Îuƒhƒ‰ƒSƒ“vj&lt;/OPTION&gt;
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;OPTION value=&quot;i‰½‚Æ‚©.pngj&quot;&gt;iuƒXƒ‰ƒCƒ€vj&lt;/OPTION&gt;
+&nbsp;&nbsp;&lt;OPTION value=&quot;i‰æ‘œƒtƒ@ƒCƒ‹‚ÌƒpƒXA—á‚¦‚Îudragon.gifvj&quot;&gt;i‰æ‘œ‚Ì–¼‘OA—á‚¦‚Îuƒhƒ‰ƒSƒ“vj&lt;/OPTION&gt;
+&nbsp;&nbsp;&lt;OPTION value=&quot;i‰½‚Æ‚©.pngj&quot;&gt;iuƒXƒ‰ƒCƒ€vj&lt;/OPTION&gt;
 &lt;/OPTGROUP&gt;</CODE></PRE>
-		Š‡ŒÊ“à‚ðŽ©•ª‚ÌÝ’è‚É‡‚í‚¹‚Ä‘‚«Š·‚¦‚Ä‰º‚³‚¢B<BR>
-		‚½‚¾‚µA‚±‚±‚Å‚¢‚­‚Â‚©’ˆÓ‚·‚é‚±‚Æ‚ª‚ ‚è‚Ü‚·<BR>
-		<UL>
-			<LI>OPTION value ‚Ì‚Æ‚±‚ë‚É‘‚­u‰æ‘œƒtƒ@ƒCƒ‹‚Ì’u‚¢‚Ä‚ ‚éêŠv<BR>
-			uindex.cgi•ÒWv‚ð‚µ‚½‚Æ‚«‚ÉŽw’è‚µ‚½uƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠv‚ÌƒpƒX‚Æ‡‚í‚¹‚ÄA<BR>
-			‚«‚¿‚ñ‚Æ‰æ‘œ‚ÌÝ‚è‚©‚ðŽ¦‚·URL‚É‚È‚Á‚Ä‚¢‚È‚­‚Ä‚Í‚È‚è‚Ü‚¹‚ñ<BR>
-			—á‚¦‚ÎA<BR>
-			"http://www.A.or.jp/B/icon/" + "D.gif" = uhttp://www.A.or.jp/B/icon/D.gifv‚Æ‚È‚èA<BR>
-			‚±‚Ì‚t‚q‚k‚É‰æ‘œƒtƒ@ƒCƒ‹‚ª‚ ‚ê‚ÎOK‚Å‚·<BR>
-			‚à‚µAƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚ÌƒpƒX‚ªuhttp://www.A.or.jp/B/iconv‚Æ‚È‚Á‚Ä‚¢‚½ê‡A<BR>
-		"http://www.A.or.jp/B/icon" + "D.gif" = uhttp://www.A.or.jp/B/iconD.gifv‚Æ‚È‚èA‚¨‚©‚µ‚­‚È‚Á‚Ä‚µ‚Ü‚¢‚Ü‚·<BR>
-			‚±‚ÌŽž‚ÍƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚ÌƒpƒX‚Ì––”ö‚É / ‚ð‰Á‚¦‚é‚©AuD.gifv¨u/D.gifv‚É•ÏX‚·‚ê‚ÎA³‚µ‚­‚È‚è‚Ü‚·</LI>
-			
-			<LI>&lt;OPTION value=&quot;&quot;&gt;c&lt;/OPTION&gt;‚ð‚QŒÂˆÈã‘±‚¯‚éê‡<BR>
-			&lt;OPTION value=&quot;&quot;&gt;c&lt;/OPTION&gt;i’–Új&lt;OPTION value=&quot;&quot;&gt;c&lt;/OPTION&gt;<BR>
-			‚Æ‚·‚éê‡i’–Új‚ÌêŠ‚Í‘±‚¯‚¸A‰üs‚ð“ü‚ê‚Ä‚­‚¾‚³‚¢<BR>
-			‰üs‚Å‚È‚¢‚ÆAŒã‚ÅƒAƒCƒRƒ“ƒJƒ^ƒƒOiƒAƒCƒRƒ“Œ©–{/ƒAƒCƒRƒ“ˆê——j‚É•\Ž¦‚³‚ê‚éƒAƒCƒRƒ“‚ª‚¨‚©‚µ‚­‚È‚Á‚½‚èA<BR>
-			ŠÇ—CGI‚Ìƒ^ƒOƒ‚[ƒhˆÈŠO‚ÅƒAƒCƒRƒ“ƒŠƒXƒg‚ð•ÒW‚Å‚«‚È‚­‚È‚Á‚½‚è‚µ‚Ü‚·</LI>
-			<LI>ˆê‚Â‚ÌƒOƒ‹[ƒv‚É‰½ŒÂ‚à‚ÌƒAƒCƒRƒ“‚ðŽg‚¢‚½‚¢ê‡<BR>
-			&lt;OPTION value=&quot;i‰æ‘œƒtƒ@ƒCƒ‹‚ÌêŠj&quot;j&gt;i‰æ‘œƒtƒ@ƒCƒ‹‚Ì–¼‘Oj&lt;/OPTION&gt;
-			‚ð•K—v‚È”‚¾‚¯‘‚¯‚Î‚¢‚¢‚Å‚·B<BR>
-			‚Ü‚½AƒOƒ‹[ƒv‚ª‰½ŒÂ‚à—~‚µ‚¢‚Æ‚¢‚¤ê‡‚Í<BR>
-<PRE><CODE>&lt;OPTGROUP label=&quot;iƒOƒ‹[ƒv‚Ìƒ‰ƒxƒ‹j&quot;&gt;
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;OPTION value=&quot;i‰æ‘œƒtƒ@ƒCƒ‹‚ÌêŠ‚Pj&quot;&gt;i‰æ‘œƒtƒ@ƒCƒ‹‚Ì–¼‘O‚Pj&lt;/OPTION&gt;
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;OPTION value=&quot;i‰æ‘œƒtƒ@ƒCƒ‹‚ÌêŠ‚Qj&quot;&gt;i‰æ‘œƒtƒ@ƒCƒ‹‚Ì–¼‘O‚Qj&lt;/OPTION&gt;
-&lt;/OPTGROUP&gt;</CODE></PRE>
-@‚Ì•”•ª‚ð—~‚µ‚¢ƒOƒ‹[ƒv‚Ì”‚Ì•ª‚¾‚¯‘‚â‚¹‚Î‚¢‚¢‚Å‚·B
-		</UL>
-		
-		COPY1–½—ß‚âVENDOR–½—ß‚È‚ÇA‚æ‚èÚ‚µ‚¢ƒAƒCƒRƒ“ƒŠƒXƒg‚Ìà–¾‚ÍA<BR>
-		<A href="#ƒAƒCƒRƒ“">Mireille‚Ì’ˆÓŽ–€ - ƒAƒCƒRƒ“</A>‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢<BR>
-		<BR>
-		•ÒW‚ªI‚í‚Á‚½‚çA‚n‚j‚ð‰Ÿ‚µ‚ÄŠ®—¹‚Å‚·B<BR>
-		ÅŒã‚ÉAŠÇ—CGI‚ðWebã‚©‚çíœ‚µ‚Ü‚µ‚å‚¤B<BR>
-		•ú’u‚µ‚Ä‚¨‚­‚Æ<STRONG class="warning">ƒLƒPƒ“</STRONG>‚Å‚·B</LI>
-	</OL>
-	
-	<P>ã‚Ì‘€ì‚ªãŽè‚­‚¢‚Á‚½‚çAƒAƒCƒRƒ“‚ª–³Ž–•\Ž¦‚³‚ê‚é‚Í‚¸‚Å‚·<BR>
-	‚à‚µA•\Ž¦‚³‚ê‚È‚¢ê‡‚ÍAƒ~ƒX‚ðƒ`ƒFƒbƒN‚µ‚Ä<BR>
-	‚Ç‚¤‚µ‚Ä‚à‚í‚©‚ç‚È‚¢ê‡‚ÍAƒ\ƒtƒgƒEƒFƒAŠÖŒW‚ÉÚ‚µ‚¢—Fl‚É•·‚­‚©A¬£‚ÉŒfŽ¦”Â‚Å•·‚¢‚Ä‚­‚¾‚³‚¢<BR>
-	5ŽžŠÔ‚à”Y‚Þ‚Ì‚Í“¾ô‚Å‚Í‚ ‚è‚Ü‚¹‚ñi”š</P>
-	
-	<P><STRONG class="warning">¦ŒxI<BR>
-	ƒAƒCƒRƒ“‚Ì’˜ìŒ ‚É‚Í\•ª’ˆÓ‚ð•¥‚Á‚Ä‚­‚¾‚³‚¢B<BR>
-	ƒQ[ƒ€‚Ì‰æ‘œ‚ðØ‚èo‚µ‚ÄŽg‚Á‚½‚èAWebƒTƒCƒg‚ÅŽg‚í‚ê‚Ä‚¢‚é‰æ‘œ‚ðŸŽè‚ÉE‚Á‚Ä‚«‚½ê‡A<BR>
-	’˜ìŽÒ‚ÌŒ —˜‚ðNŠQ‚µ‚Ä‚µ‚Ü‚¤‚±‚Æ‚ª‚ ‚è‚Ü‚·B</STRONG></P>
-	</LI>
+<P>Š‡ŒÊ“à‚ðŽ©•ª‚ÌÝ’è‚É‡‚í‚¹‚Ä‘‚«Š·‚¦‚Ä‰º‚³‚¢B</P>
+<P>‚½‚¾‚µA‚±‚±‚Å‚¢‚­‚Â‚©’ˆÓ‚·‚é‚±‚Æ‚ª‚ ‚è‚Ü‚·B</P>
 
-	<LI><H3 class="list"><A name="‚à‚¤‚¿‚å‚Á‚Æ×‚©‚­Ý’è‚Æ‚©A‚³‚ç‚É‚Í‰ü‘¢‚Æ‚©">‚à‚¤‚¿‚å‚Á‚Æ×‚©‚­Ý’è‚Æ‚©A‚³‚ç‚É‚Í‰ü‘¢‚Æ‚©</A></H3>
-	Mireille‚ð‚æ‚è×‚©‚­ƒJƒXƒ^ƒ}ƒCƒY‚µ‚½‚¢‚Æ‚«‚ÍAMireille.txt‚Ì“à—e‚àŽQÆ‚µ‚Ä‚­‚¾‚³‚¢<BR>
-	Mireille‚Å‚Ìˆ—‚ÉŠÖ‚·‚éî•ñ‚È‚Ç‚ÍMireille.txt‚É‚µ‚©‘‚¢‚Ä‚È‚¢‚à‚Ì‚à‘½‚¢‚Å‚·<BR>
-	core.cgi‚É‘Î‚µ‚Ä‚Ì—v–]‚ÍMireille.txt‚ðŒ©‚Ä‚©‚ç‚É‚µ‚Ä‚¢‚½‚¾‚¯‚é‚ÆA¬£‘¤‚à‚â‚è‚â‚·‚¢‚Ì‚Å<BR>
-	<BR>
-	ˆê”Ê“I‚ÈŽ–—á‚ÉŠÖ‚µ‚Ä‚ÍˆÈ‰º‚Ì‚Æ‚¨‚è‚Å‚·
-	<UL>
-		<LI><H4 class="list">ƒAƒCƒRƒ“‚Ü‚í‚è</H4>
-		ƒAƒCƒRƒ“ƒŠƒXƒg(icon.txt)‚ÉŠÖ‚µ‚Ä‚Í <A href="#ƒAƒCƒRƒ“">Mireille‚Ì’ˆÓŽ–€ - ƒAƒCƒRƒ“</A> ‚âA<BR>
-		Mireille.txt‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢<BR>
-		ƒAƒCƒRƒ“ƒŠƒXƒg(icon.txt)‚©‚çƒAƒCƒRƒ“Œ©–{(icon.html)‚ð¶¬‚·‚é‚É‚ÍA<BR>
-		ŠÇ—CGI‚ÌuƒAƒCƒRƒ“Œ©–{‚ÌXVv‚ðŽg‚¢‚Ü‚·<BR>
-		i1.2.3.5‚©‚ç‚Íiconctlg.cgi‚ðŽg‚¤‚æ‚¤‚É‚È‚Á‚½‚Ì‚ÅAicon.html‚ð¶¬‚·‚é•K—v‚Í‚ ‚è‚Ü‚¹‚ñj<BR>
-		<BR>
-		<STRONG class="warning">¦ŒxI</STRONG><BR>
-		ƒAƒCƒRƒ“‚ð’²’B‚·‚éÛ‚É‚ÍA•K‚¸»ìŽÒ‚ÌƒTƒCƒg‚©‚ç’¸‚¢‚Ä‚«‚Ä‚­‚¾‚³‚¢B<BR>
-		‘¼‚ÌŒfŽ¦”Â‚ÌƒAƒCƒRƒ“‚ð‚»‚Ì‚Ü‚Ü”qŽØ‚·‚é‚Ì‚ÍD‚Ü‚µ‚¢‚±‚Æ‚Å‚Í‚ ‚è‚Ü‚¹‚ñ‚µA<BR>
-		‚»‚ÌŒfŽ¦”Â‚ÌŠÇ—ŽÒ‚³‚ñ‚É‚à–À˜f‚ð‚©‚¯‚é‚±‚Æ‚É‚È‚è‚Ü‚·B<BR>
-		‚Ü‚½—~‚µ‚¢ƒAƒCƒRƒ“‚ªŠù‚É”z•z‚ªI—¹‚³‚ê‚Ä‚¢‚éê‡‚ÍŒ‰‚­‚ ‚«‚ç‚ß‚Ä‚­‚¾‚³‚¢OOGG</LI>
-		
-		<LI><H4 class="list">ŠO•”CSS‚Ü‚í‚è</H4>
-		core.cgi,style.plŽ©‘Ì‚Ìƒ\[ƒX‚âAMireille‚Ì¶¬‚µ‚½HTMLƒ\[ƒXAHTML‚¨‚æ‚ÑCSS‚ÌƒŠƒtƒ@ƒŒƒ“ƒX‚È‚Ç‚ÆA<BR>
-		‚É‚ç‚ß‚Á‚±‚µ‚È‚ª‚ç‚ª‚ñ‚Î‚Á‚Ä‚­‚¾‚³‚¢i‚§<BR>
-		core.cgi‚âstyle.pl‚ÌCSS‚ÌƒNƒ‰ƒX\‘¢‚ª•s–¾—Ä‚¾‚Á‚½‚è‚¨‚©‚µ‚¢AC³‚·‚é‚×‚«‚¾‚Æ‚¢‚¤ê‡‚ÍA<BR>
-		¬£‚Éà–¾‚ð‹‚ß‚é‚©A‰ü‘P‚µ‚½‚à‚Ì‚ð‹³‚¦‚Ä‚­‚¾‚³‚¢<BR>
-		‚»‚ê‚ðŒ³‚É‚±‚¿‚ç‘¤‚Å‚àC³‚µ‚Ü‚·</LI>
-		
-		<LI><H4 class="list">style.pl‚Á‚Ä‚È‚É</H4>
-		Mireille‚ÌPerlƒXƒNƒŠƒvƒg‚Ì’†‚ÅAƒfƒUƒCƒ“‚ÉŠÖ˜A‚·‚é‚à‚Ì‚ð’Šo‚µ‚½ƒtƒ@ƒCƒ‹‚Å‚·<BR>
-		‚¨D‚Ý‚É‡‚í‚¹‚Ä‰ü‘¢‚µA”z•z‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·<BR>
-		‚Ü‚½Aindex.cgi“à‚Åcore.cgi‚æ‚èŒã‚É“Ç‚Ýž‚ñ‚Å‚¢‚é‚½‚ßA<BR>
-		core.cgi‚ÌƒTƒuƒ‹[ƒ`ƒ“‚ðã‘‚«iƒI[ƒo[ƒ‰ƒCƒhj‚·‚é‚±‚Æ‚à‰Â”\‚È‚½‚ßA<BR>
-		‰ž—pŽŸ‘æ‚Å‘S‚­ˆá‚¤ŒfŽ¦”Â‚Ì‚æ‚¤‚É‚É‚µ‚Ä‚µ‚Ü‚¤‚±‚Æ‚à‚Å‚«‚Ü‚·</LI>
-		
-		<LI><H4 class="list">index.cgiŒã”¼‚Ìˆ—•”Acore.cgiAhelp.plAmanage.cgi‚È‚Ç</H4>
-		‰ü‘¢‚·‚é‚Ì‚ÍŽ©—R‚Å‚·‚µA‹K’è‚Ì”ÍˆÍ“à‚Å‰ü‘¢‚µ‚½‚à‚Ì‚ð”z•z‚·‚é‚±‚Æ‚à‚Å‚«‚Ü‚·<BR>
-		‚½‚¾A‘½‚­‚Ì—˜—pŽÒ‚ª‚±‚ê‚ç‚ÌCGI‚ð•ÏX‚µ‚½‚¢‚ÆŽv‚¤A‚Æ‚¢‚¤ó‘Ô‚ÍA<BR>
-		uƒoƒO‚¾v‚Æ”»’f‚µ‚Ä‚¢‚é‚Ì‚ÅA•ÏX“_‚ð‹³‚¦‚Ä‚­‚¾‚³‚ê‚ÎA•W€‚Å•ÏX‚·‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñ</LI>
-		
-		<LI><H4 class="list"><A name="Mireille‚ÌƒRƒAƒtƒ@ƒCƒ‹ŒQ‚ð•¡”‚ÌŒfŽ¦”Â‚Å‹¤—L‚·‚é">Mireille‚ÌƒRƒAƒtƒ@ƒCƒ‹ŒQ‚ð•¡”‚ÌŒfŽ¦”Â‚Å‹¤—L‚·‚é</A></H4>
-		ˆê‚Â‚Ìcore.cgi, style.pl, style.css, help.pl, artnavi.js‚ð•¡”‚ÌŒfŽ¦”Â‚Å‹¤—L‚·‚é‚±‚Æ‚ªo—ˆ‚Ü‚·<BR>
-	<TABLE cellspacing="2" summary="•¡”Ý’uŽž‚Ì‰¡’…‚ÌŽd•û" style="margin:0.5em auto 0.5em 1em">
-		<THEAD>
-		<TR><TH scope="row">ƒpƒX</TH><TH scope="row">‘®«</TH><TH scope="row">—p“r</TH></TR>
-		</THEAD>
-		<TBODY>
-		<TR><TH scope="col">/bbs</TH>			<TD>755(777)</TD><TD>ŒfŽ¦”Â‚ÌƒfƒBƒŒƒNƒgƒŠ</TD></TR>
-		<TR><TH scope="col">/bbs/log</TH>		<TD>755(777)</TD><TD>ƒƒO•Û‘¶ƒfƒBƒŒƒNƒgƒŠ</TD></TR>
-		<TR><TH scope="col">/bbs/log/0.cgi</TH> <TD>666</TD><TD>‹LŽ–î•ñƒtƒ@ƒCƒ‹</TD></TR>
-		<TR><TH scope="col">/bbs/index.cgi</TH> <TD>755(700)</TD><TD>CGI‹N“®ƒtƒ@ƒCƒ‹Œ“Ý’è</TD></TR>
-		<TR><TH scope="col">/bbs/core.cgi</TH>	<TD>644</TD><TD>Mireille–{‘Ì</TD></TR>
-		<TR><TH scope="col">/bbs/style.pl</TH>	<TD>644</TD><TD>MireilleƒXƒ^ƒCƒ‹Ý’è</TD></TR>
-		<TR><TH scope="col">/bbs/artnavi.js</TH><TD>644</TD><TD>‹LŽ–ƒiƒr</TD></TR>
-		<TR><TH scope="col">/bbs/icon.txt</TH>	<TD>666</TD><TD>ƒAƒCƒRƒ“ƒŠƒXƒg</TD></TR>
-		<TR><TH scope="col">/bbs/iconctlg.cgi</TH> <TD>666</TD><TD>ƒAƒCƒRƒ“Œ©–{</TD></TR>
-		<TR><TH scope="col">/bbs/help.pl</TH>	<TD>644</TD><TD>ƒwƒ‹ƒv</TD></TR>
-		<TR><TH scope="col">/bbs/style.css</TH> <TD>666</TD><TD>ƒXƒ^ƒCƒ‹ƒV[ƒg</TD></TR>
-		</TBODY>
-		<TBODY>
-		<TR><TH scope="col">/bbs2</TH>			<TD>755(777)</TD><TD>ŒfŽ¦”Â‚ÌƒfƒBƒŒƒNƒgƒŠ</TD></TR>
-		<TR><TH scope="col">/bbs2/log</TH>		<TD>755(777)</TD><TD>ƒƒO•Û‘¶ƒfƒBƒŒƒNƒgƒŠ</TD></TR>
-		<TR><TH scope="col">/bbs2/log/0.cgi</TH><TD>666</TD>			<TD>‹LŽ–î•ñƒtƒ@ƒCƒ‹</TD></TR>
-		<TR><TH scope="col">/bbs2/index.cgi</TH><TD>755(700)</TD><TD>CGI‹N“®ƒtƒ@ƒCƒ‹Œ“Ý’è</TD></TR>
-		</TBODY>
-	</TABLE>
-		—á‚¦‚Îã‚Ì‚æ‚¤‚ÉÝ’u‚µ‚½ã‚ÅA/bbs2/index.cgi“à‚ÌÝ’è‚ð<BR>
+<DIV class="section">
+<H5 class="h">OPTION value ‚Ì‚Æ‚±‚ë‚É‘‚­u‰æ‘œƒtƒ@ƒCƒ‹‚Ì’u‚¢‚Ä‚ ‚éêŠv</H5>
+<P>uindex.cgi•ÒWv‚ð‚µ‚½‚Æ‚«‚ÉŽw’è‚µ‚½uƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠv‚ÌƒpƒX‚Æ‡‚í‚¹‚ÄA<BR>
+‚«‚¿‚ñ‚Æ‰æ‘œ‚ÌÝ‚è‚©‚ðŽ¦‚·URL‚É‚È‚Á‚Ä‚¢‚È‚­‚Ä‚Í‚È‚è‚Ü‚¹‚ñB</P>
+<P>—á‚¦‚ÎAƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚ÌƒpƒX‚ªuhttp://www.A.or.jp/B/iconv‚ÅA<BR>
+ƒAƒCƒRƒ“ƒŠƒXƒg‚Ìvalue‚ªuD.gifv‚Æ‚È‚Á‚Ä‚¢‚½ê‡A<BR>
+<CODE>"http://www.A.or.jp/B/icon/" + "D.gif" = uhttp://www.A.or.jp/B/icon/D.gifv</CODE><BR>
+‚Æ‚È‚èA‚±‚ÌURL‚É‰æ‘œƒtƒ@ƒCƒ‹‚ª‚ ‚ê‚ÎOK‚Å‚·B</P>
+<P>‚à‚µAƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚ÌƒpƒX‚ªuhttp://www.A.or.jp/B/iconv‚Æ‚È‚Á‚Ä‚¢‚½ê‡A<BR>
+<CODE>"http://www.A.or.jp/B/icon" + "D.gif" = uhttp://www.A.or.jp/B/iconD.gifv</CODE>‚Æ‚È‚èA
+‚¨‚©‚µ‚­‚È‚Á‚Ä‚µ‚Ü‚¢‚Ü‚·B<BR>
+‚±‚ÌŽž‚ÍƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚ÌƒpƒX‚Ì––”ö‚É / ‚ð‰Á‚¦‚é‚©AuD.gifv¨u/D.gifv‚É•ÏX‚·‚ê‚ÎA³‚µ‚­‚È‚è‚Ü‚·B</P>
+</DIV>
+<DIV class="section">
+<H5 class="h">&lt;OPTION value=&quot;&quot;&gt;c&lt;/OPTION&gt;‚ð‚QŒÂˆÈã‘±‚¯‚éê‡</H5>
+<P>&lt;OPTION value=&quot;&quot;&gt;c&lt;/OPTION&gt;i’–Új&lt;OPTION value=&quot;&quot;&gt;c&lt;/OPTION&gt;<BR>
+‚Æ‚·‚éê‡i’–Új‚ÌêŠ‚Í‘±‚¯‚¸A‰üs‚ð“ü‚ê‚Ä‚­‚¾‚³‚¢B<BR>
+‰üs‚Å‚È‚¢‚ÆAŒã‚ÅƒAƒCƒRƒ“ƒJƒ^ƒƒOiƒAƒCƒRƒ“Œ©–{/ƒAƒCƒRƒ“ˆê——j‚É•\Ž¦‚³‚ê‚éƒAƒCƒRƒ“‚ª‚¨‚©‚µ‚­‚È‚Á‚½‚èA<BR>
+ŠÇ—CGI‚Ìƒ^ƒOƒ‚[ƒhˆÈŠO‚ÅƒAƒCƒRƒ“ƒŠƒXƒg‚ð•ÒW‚Å‚«‚È‚­‚È‚Á‚½‚è‚µ‚Ü‚·B</P>
+</DIV>
+<DIV class="section">
+<H5 class="h">ˆê‚Â‚ÌƒOƒ‹[ƒv‚É‰½ŒÂ‚à‚ÌƒAƒCƒRƒ“‚ðŽg‚¢‚½‚¢ê‡</H5>
+<P>&lt;OPTION value=&quot;i‰æ‘œƒtƒ@ƒCƒ‹‚ÌêŠj&quot;j&gt;i‰æ‘œƒtƒ@ƒCƒ‹‚Ì–¼‘Oj&lt;/OPTION&gt;
+‚ð•K—v‚È”‚¾‚¯‘‚¯‚Î‚¢‚¢‚Å‚·B<BR>
+‚Ü‚½AƒOƒ‹[ƒv‚ª‰½ŒÂ‚à—~‚µ‚¢‚Æ‚¢‚¤ê‡‚Í<BR>
+<PRE><CODE>&lt;OPTGROUP label=&quot;iƒOƒ‹[ƒv‚Ìƒ‰ƒxƒ‹j&quot;&gt;
+&nbsp;&nbsp;&lt;OPTION value=&quot;i‰æ‘œƒtƒ@ƒCƒ‹‚ÌêŠ‚Pj&quot;&gt;i‰æ‘œƒtƒ@ƒCƒ‹‚Ì–¼‘O‚Pj&lt;/OPTION&gt;
+&nbsp;&nbsp;&lt;OPTION value=&quot;i‰æ‘œƒtƒ@ƒCƒ‹‚ÌêŠ‚Qj&quot;&gt;i‰æ‘œƒtƒ@ƒCƒ‹‚Ì–¼‘O‚Qj&lt;/OPTION&gt;
+&lt;/OPTGROUP&gt;</CODE></PRE>
+<P>‚Ì•”•ª‚ð—~‚µ‚¢ƒOƒ‹[ƒv‚Ì”‚Ì•ª‚¾‚¯‘‚â‚¹‚Î‚¢‚¢‚Å‚·B</P>
+</DIV>
+</DIV>
+<P>COPY1–½—ß‚âVENDOR–½—ß‚È‚ÇA‚æ‚èÚ‚µ‚¢ƒAƒCƒRƒ“ƒŠƒXƒg‚Ìà–¾‚ÍA<BR>
+<A href="#ƒAƒCƒRƒ“">Mireille‚Ì’ˆÓŽ–€ - ƒAƒCƒRƒ“</A>‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢B</P>
+<P>•ÒW‚ªI‚í‚Á‚½‚çA‚n‚j‚ð‰Ÿ‚µ‚ÄŠ®—¹‚Å‚·B<BR>
+ÅŒã‚ÉAŠÇ—CGI‚ðWebã‚©‚çíœ‚µ‚Ü‚µ‚å‚¤B<BR>
+•ú’u‚µ‚Ä‚¨‚­‚Æ<STRONG class="warning">ƒLƒPƒ“</STRONG>‚Å‚·B</P>
+<P>ã‚Ì‘€ì‚ªãŽè‚­‚¢‚Á‚½‚çAƒAƒCƒRƒ“‚ª–³Ž–•\Ž¦‚³‚ê‚é‚Í‚¸‚Å‚·B<BR>
+‚à‚µA•\Ž¦‚³‚ê‚È‚¢ê‡‚ÍAƒ~ƒX‚ðƒ`ƒFƒbƒN‚µ‚ÄA<BR>
+‚Ç‚¤‚µ‚Ä‚à‚í‚©‚ç‚È‚¢ê‡‚ÍAƒ\ƒtƒgƒEƒFƒAŠÖŒW‚ÉÚ‚µ‚¢—Fl‚É•·‚­‚©A¬£‚ÉŒfŽ¦”Â‚Å•·‚¢‚Ä‚­‚¾‚³‚¢B<BR>
+5ŽžŠÔ‚à”Y‚Þ‚Ì‚Í“¾ô‚Å‚Í‚ ‚è‚Ü‚¹‚ñi”š</P>
+<P><STRONG class="warning">¦ŒxI<BR>
+ƒAƒCƒRƒ“‚Ì’˜ìŒ ‚É‚Í\•ª’ˆÓ‚ð•¥‚Á‚Ä‚­‚¾‚³‚¢B<BR>
+ƒQ[ƒ€‚Ì‰æ‘œ‚ðØ‚èo‚µ‚ÄŽg‚Á‚½‚èAWebƒTƒCƒg‚ÅŽg‚í‚ê‚Ä‚¢‚é‰æ‘œ‚ðŸŽè‚ÉE‚Á‚Ä‚«‚½ê‡A<BR>
+’˜ìŽÒ‚ÌŒ —˜‚ðNŠQ‚µ‚Ä‚µ‚Ü‚¤‚±‚Æ‚ª‚ ‚è‚Ü‚·B</STRONG></P>
+</DIV>
+
+
+<DIV class="section">
+<H3 class="h">5. <A name="‚à‚¤‚¿‚å‚Á‚Æ×‚©‚­Ý’è‚Æ‚©A‚³‚ç‚É‚Í‰ü‘¢‚Æ‚©">‚à‚¤‚¿‚å‚Á‚Æ×‚©‚­Ý’è‚Æ‚©A‚³‚ç‚É‚Í‰ü‘¢‚Æ‚©</A></H3>
+<P>Mireille‚ð‚æ‚è×‚©‚­ƒJƒXƒ^ƒ}ƒCƒY‚µ‚½‚¢‚Æ‚«‚ÍAMireille.txt‚Ì“à—e‚àŽQÆ‚µ‚Ä‚­‚¾‚³‚¢B<BR>
+Mireille‚Å‚Ìˆ—‚ÉŠÖ‚·‚éî•ñ‚È‚Ç‚ÍMireille.txt‚É‚µ‚©‘‚¢‚Ä‚È‚¢‚à‚Ì‚à‘½‚¢‚Å‚·B</P>
+<P>ˆê”Ê“I‚ÈŽ–—á‚ÉŠÖ‚µ‚Ä‚ÍˆÈ‰º‚Ì‚Æ‚¨‚è‚Å‚·B</P>
+
+<DIV class="section">
+<H4 class="h">ƒAƒCƒRƒ“‚Ü‚í‚è</H4>
+<P>ƒAƒCƒRƒ“ƒŠƒXƒg(icon.txt)‚ÉŠÖ‚µ‚Ä‚Í <A href="#ƒAƒCƒRƒ“">Mireille‚Ì’ˆÓŽ–€ - ƒAƒCƒRƒ“</A> ‚âA<BR>
+Mireille.txt‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢B<BR>
+ƒAƒCƒRƒ“ƒŠƒXƒg(icon.txt)‚©‚çƒAƒCƒRƒ“Œ©–{(icon.html)‚ð¶¬‚·‚é‚É‚ÍA<BR>
+ŠÇ—CGI‚ÌuƒAƒCƒRƒ“Œ©–{‚ÌXVv‚ðŽg‚¢‚Ü‚·B<BR>
+i1.2.3.5‚©‚ç‚Íiconctlg.cgi‚ðŽg‚¤‚æ‚¤‚É‚È‚Á‚½‚Ì‚ÅAicon.html‚ð¶¬‚·‚é•K—v‚Í‚ ‚è‚Ü‚¹‚ñj</P>
+<P><STRONG class="warning">¦ŒxI</STRONG><BR>
+ƒAƒCƒRƒ“‚ð’²’B‚·‚éÛ‚É‚ÍA•K‚¸»ìŽÒ‚ÌƒTƒCƒg‚©‚ç’¸‚¢‚Ä‚«‚Ä‚­‚¾‚³‚¢B<BR>
+‘¼‚ÌŒfŽ¦”Â‚ÌƒAƒCƒRƒ“‚ð‚»‚Ì‚Ü‚Ü”qŽØ‚·‚é‚Ì‚ÍD‚Ü‚µ‚¢‚±‚Æ‚Å‚Í‚ ‚è‚Ü‚¹‚ñ‚µA<BR>
+‚»‚ÌŒfŽ¦”Â‚ÌŠÇ—ŽÒ‚³‚ñ‚É‚à–À˜f‚ð‚©‚¯‚é‚±‚Æ‚É‚È‚è‚Ü‚·B<BR>
+‚Ü‚½—~‚µ‚¢ƒAƒCƒRƒ“‚ªŠù‚É”z•z‚ªI—¹‚³‚ê‚Ä‚¢‚éê‡‚ÍŒ‰‚­‚ ‚«‚ç‚ß‚Ä‚­‚¾‚³‚¢OOGG</P>
+</DIV>
+
+<DIV class="section">
+<H4 class="h">ŠO•”CSS‚Ü‚í‚è</H4>
+<P>core.cgi,style.plŽ©‘Ì‚Ìƒ\[ƒX‚âAMireille‚Ì¶¬‚µ‚½HTMLƒ\[ƒXAHTML‚¨‚æ‚ÑCSS‚ÌƒŠƒtƒ@ƒŒƒ“ƒX‚È‚Ç‚ÆA<BR>
+‚É‚ç‚ß‚Á‚±‚µ‚È‚ª‚ç‚ª‚ñ‚Î‚Á‚Ä‚­‚¾‚³‚¢i‚§<BR>
+core.cgi‚âstyle.pl‚ÌCSS‚ÌƒNƒ‰ƒX\‘¢‚ª•s–¾—Ä‚¾‚Á‚½‚è‚¨‚©‚µ‚¢AC³‚·‚é‚×‚«‚¾‚Æ‚¢‚¤ê‡‚ÍA<BR>
+à–¾‚ð‹‚ß‚é‚©A‰ü‘P‚µ‚½‚à‚Ì‚ð‹³‚¦‚Ä‚­‚¾‚³‚¢B<BR>
+‚»‚ê‚ðŒ³‚É‚±‚¿‚ç‘¤‚Å‚àC³‚µ‚Ü‚·B</P>
+</DIV>
+
+<DIV class="section">
+<H4 class="h">style.pl‚Á‚Ä‚È‚É</H4>
+<P>Mireille‚ÌPerlƒXƒNƒŠƒvƒg‚Ì’†‚ÅAƒfƒUƒCƒ“‚ÉŠÖ˜A‚·‚é‚à‚Ì‚ð’Šo‚µ‚½ƒtƒ@ƒCƒ‹‚Å‚·B<BR>
+‚¨D‚Ý‚É‡‚í‚¹‚Ä‰ü‘¢‚µA”z•z‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B<BR>
+‚Ü‚½Aindex.cgi“à‚Åcore.cgi‚æ‚èŒã‚É“Ç‚Ýž‚ñ‚Å‚¢‚é‚½‚ßA<BR>
+core.cgi‚ÌƒTƒuƒ‹[ƒ`ƒ“‚ðã‘‚«iƒI[ƒo[ƒ‰ƒCƒhj‚·‚é‚±‚Æ‚à‰Â”\‚È‚½‚ßA<BR>
+‰ž—pŽŸ‘æ‚Å‘S‚­ˆá‚¤ŒfŽ¦”Â‚Ì‚æ‚¤‚É‚É‚µ‚Ä‚µ‚Ü‚¤‚±‚Æ‚à‚Å‚«‚Ü‚·B</P>
+</DIV>
+
+<DIV class="section">
+<H4 class="h">index.cgiŒã”¼‚Ìˆ—•”Acore.cgiAhelp.plAmanage.cgi‚È‚Ç</H4>
+<P>‰ü‘¢‚·‚é‚Ì‚ÍŽ©—R‚Å‚·‚µA‹K’è‚Ì”ÍˆÍ“à‚Å‰ü‘¢‚µ‚½‚à‚Ì‚ð”z•z‚·‚é‚±‚Æ‚à‚Å‚«‚Ü‚·B<BR>
+‚½‚¾A‘½‚­‚Ì—˜—pŽÒ‚ª‚±‚ê‚ç‚ÌCGI‚ð•ÏX‚µ‚½‚¢‚ÆŽv‚¤A‚Æ‚¢‚¤ó‘Ô‚ÍA<BR>
+uƒoƒO‚¾v‚Æ”»’f‚µ‚Ä‚¢‚é‚Ì‚ÅA•ÏX“_‚ð‹³‚¦‚Ä‚­‚¾‚³‚ê‚ÎA•W€‚Å•ÏX‚·‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñB</P>
+</DIV>
+
+<DIV class="section">
+<H4 class="h"><A name="Mireille‚ÌƒRƒAƒtƒ@ƒCƒ‹ŒQ‚ð•¡”‚ÌŒfŽ¦”Â‚Å‹¤—L‚·‚é">Mireille‚ÌƒRƒAƒtƒ@ƒCƒ‹ŒQ‚ð•¡”‚ÌŒfŽ¦”Â‚Å‹¤—L‚·‚é</A></H4>
+<P>ˆê‚Â‚Ìcore.cgi, style.pl, style.css, help.pl, artnavi.js‚ð•¡”‚ÌŒfŽ¦”Â‚Å‹¤—L‚·‚é‚±‚Æ‚ªo—ˆ‚Ü‚·B</P>
+<TABLE summary="•¡”Ý’uŽž‚Ì‰¡’…‚ÌŽd•û">
+	<THEAD>
+	<TR><TH scope="row">ƒpƒX</TH><TH scope="row">‘®«</TH><TH scope="row">—p“r</TH></TR>
+	</THEAD>
+	<TBODY>
+	<TR><TH scope="col">/bbs</TH>			<TD>755(777)</TD><TD>ŒfŽ¦”Â‚ÌƒfƒBƒŒƒNƒgƒŠ</TD></TR>
+	<TR><TH scope="col">/bbs/log</TH>		<TD>755(777)</TD><TD>ƒƒO•Û‘¶ƒfƒBƒŒƒNƒgƒŠ</TD></TR>
+	<TR><TH scope="col">/bbs/log/0.cgi</TH> <TD>666</TD><TD>‹LŽ–î•ñƒtƒ@ƒCƒ‹</TD></TR>
+	<TR><TH scope="col">/bbs/index.cgi</TH> <TD>755(700)</TD><TD>CGI‹N“®ƒtƒ@ƒCƒ‹Œ“Ý’è</TD></TR>
+	<TR><TH scope="col">/bbs/core.cgi</TH>	<TD>644</TD><TD>Mireille–{‘Ì</TD></TR>
+	<TR><TH scope="col">/bbs/style.pl</TH>	<TD>644</TD><TD>MireilleƒXƒ^ƒCƒ‹Ý’è</TD></TR>
+	<TR><TH scope="col">/bbs/artnavi.js</TH><TD>644</TD><TD>‹LŽ–ƒiƒr</TD></TR>
+	<TR><TH scope="col">/bbs/icon.txt</TH>	<TD>666</TD><TD>ƒAƒCƒRƒ“ƒŠƒXƒg</TD></TR>
+	<TR><TH scope="col">/bbs/iconctlg.cgi</TH> <TD>666</TD><TD>ƒAƒCƒRƒ“Œ©–{</TD></TR>
+	<TR><TH scope="col">/bbs/help.pl</TH>	<TD>644</TD><TD>ƒwƒ‹ƒv</TD></TR>
+	<TR><TH scope="col">/bbs/style.css</TH> <TD>666</TD><TD>ƒXƒ^ƒCƒ‹ƒV[ƒg</TD></TR>
+	</TBODY>
+	<TBODY>
+	<TR><TH scope="col">/bbs2</TH>			<TD>755(777)</TD><TD>ŒfŽ¦”Â‚ÌƒfƒBƒŒƒNƒgƒŠ</TD></TR>
+	<TR><TH scope="col">/bbs2/log</TH>		<TD>755(777)</TD><TD>ƒƒO•Û‘¶ƒfƒBƒŒƒNƒgƒŠ</TD></TR>
+	<TR><TH scope="col">/bbs2/log/0.cgi</TH><TD>666</TD>			<TD>‹LŽ–î•ñƒtƒ@ƒCƒ‹</TD></TR>
+	<TR><TH scope="col">/bbs2/index.cgi</TH><TD>755(700)</TD><TD>CGI‹N“®ƒtƒ@ƒCƒ‹Œ“Ý’è</TD></TR>
+	</TBODY>
+</TABLE>
+<P>—á‚¦‚Îã‚Ì‚æ‚¤‚ÉÝ’u‚µ‚½ã‚ÅA/bbs2/index.cgi“à‚ÌÝ’è‚ð</P>
 <PRE><CODE>use lib '../bbs/';
 #ƒAƒCƒRƒ“ƒŠƒXƒg
 $CF{'icls'}='../bbs/icon.txt';
@@ -1231,42 +961,45 @@ $CF{'style'}='../bbs/style.css';
 #‹LŽ–ƒiƒrJavaScript
 $CF{'navjs'}='../bbs/artnavi.js';
 </CODE></PRE>
-		‚È‚Ç‚Æ‚·‚ê‚ÎACGIƒo[ƒWƒ‡ƒ“ƒAƒbƒvŽž‚É‚Í/bbs/‚É‚ ‚écore.cgi‚È‚Ç‚ð“ü‚ê‘Ö‚¦‚ê‚Î‚¢‚¢‚¾‚¯‚É‚È‚è‚Ü‚·<BR>
-		ŽÀÛ‚ÉAiremix‚Å‚à/bbs/‚É‚ ‚éCGI‚ðƒTƒCƒg“à‚Ì‰½ƒ–Š‚©‚ÅA‚±‚Ì•û–@‚É‚æ‚Á‚Ä‹¤—L‚µ‚ÄŽg‚Á‚Ä‚¢‚Ü‚·</LI>
-	</UL>
-	</LI>
-
-	<LI><H3 class="list"><A name="ŠÇ—CGI‚ÌÝ’u">ŠÇ—CGI‚ÌÝ’u</A></H3>
-	‚æ‚èMireille‚ð—LŒø‚ÉŽg‚¤‚½‚ß‚ÌCGIAManage.cgi‚Ìà–¾‚Å‚·<BR>
-	•K{‚Å‚Í‚È‚¢‚Ì‚ÅAŽg‚¢‚½‚¢l‚¾‚¯Ý’u‚µ‚Ü‚µ‚å‚¤<BR>
-	<BR>
-	‚Ü‚¸manage.cgi‚ðŠJ‚¢‚ÄAˆês–Ú‚ðÝ’è‚µ‚Ü‚·<BR>
-	‚»‚ÌŒã21s–Ú‚Ì$AM{'pass'}‚ðÝ’è‚µ‚Ä‚­‚¾‚³‚¢<BR>
-	Ý’è‚µ‚½‚çFTP‚ÅˆÈ‰º‚Ì‚æ‚¤‚ÉÝ’u‚µ‚Ü‚·<BR>
-	‚±‚ÌÛ<STRONG class="warning">•K‚¸ƒtƒ@ƒCƒ‹–¼‚ð•ÏX‚µ‚ÄƒAƒbƒvƒ[ƒh</STRONG>‚µ‚Ä‚­‚¾‚³‚¢<BR>
-		<PRE>/bbs/E36Vj4tGiHQ.cgi 755(700) ŠÇ—CGIi'E36Vj4tGiHQ.cgi'‚Éƒtƒ@ƒCƒ‹–¼‚ð•ÏX‚µ‚½ê‡j</PRE>
-	Žg—p–@‚Í•\Ž¦‚É‚µ‚½‚ª‚Á‚Ä‚­‚¾‚³‚¢<BR>
-	‚í‚©‚è‚É‚­‚¢‚Æ‚±‚ë‚ª‚ ‚ê‚ÎAŒ¾‚Á‚Ä‚­‚¾‚³‚¢<BR>
-	•\‹L‚ð•Ï‚¦‚é‚È‚èA‚±‚ê‚É‘‚«‰Á‚¦‚é‚È‚è‚µ‚Ü‚·<BR>
-	<BR>
-	‚¿‚È‚Ý‚ÉAŠÇ—CGI‚ÌÝ’è‹@”\‚ðŽg‚Á‚Ä‚¢‚Äu<SAMP>Can't write...</SAMP>v‚Æ‚¢‚¤ƒGƒ‰[‚ªo‚½ê‡‚ÍA<BR>
-	ŠY“–‚·‚éƒtƒ@ƒCƒ‹‚Ìƒp[ƒ~ƒbƒVƒ‡ƒ“‚ðAã‚Ì‚Ù‚¤‚Ìà–¾‚ÌAŠ‡ŒÊ“à‚Ì‚à‚Ì‚É•Ï‚¦‚Ý‚Ä‚­‚¾‚³‚¢<BR>
-	‚¿‚á‚ñ‚Æ‘‚«ž‚ß‚ê‚ÎÝ’è‚ª‚ ‚Á‚Ä‚¢‚é‚Æ’f’è‚µ‚Ä‚æ‚¢‚Å‚µ‚å‚¤<BR>
-	<BR>
-	<STRONG class="warning">¦ŒxI<BR>
-	ƒAƒbƒvƒ[ƒh‚·‚éÛ‚É‚ÍAƒtƒ@ƒCƒ‹‚Ì–¼‘O‚ð—\‘ª‚Ì‚Â‚©‚È‚¢–¼‘OA<BR>
-	i—á‚¦‚ÎE36Vj4tGiHQ.cgi‚Ì‚æ‚¤‚Èj‚É•ÏX‚µ‚Ä‚©‚çƒAƒbƒvƒ[ƒh‚µ‚Ä‚­‚¾‚³‚¢<BR>
-	‚±‚ÌCGI‚Í”j‰ó“I‚È‹@”\iindex.cgi‚ÌÝ’è‚âƒƒO‚Ìíœ‚È‚ÇjŽ‚Á‚Ä‚¢‚é‚Ì‚ÅA<BR>
-	ˆ«ˆÓ‚ðŽ‚Á‚½l‚ÉêŠ‚ð’m‚ç‚ê‚é‚Æ”ñí‚ÉŠëŒ¯‚Å‚·</STRONG><BR>
-	‚¿‚È‚Ý‚ÉAƒtƒ@ƒCƒ‹–¼‚ð•Ï‚¦‚é‚Æ“®‚©‚È‚­‚È‚é‚Ì‚Å‚Í‚È‚¢‚©A‚ÆŽv‚¤•û‚à‚¢‚é‚Å‚µ‚å‚¤‚ªA<BR>
-	ŠÇ—CGI‚Íƒtƒ@ƒCƒ‹–¼‚ð•Ï‚¦‚Ä‚à‘åä•v‚È‚æ‚¤‚Éì‚Á‚Ä‚¢‚é‚Ì‚ÅA‚²ˆÀS‚­‚¾‚³‚¢</LI>
-</OL>
+<P>‚È‚Ç‚Æ‚·‚ê‚ÎACGIƒo[ƒWƒ‡ƒ“ƒAƒbƒvŽž‚É‚Í/bbs/‚É‚ ‚écore.cgi‚È‚Ç‚ð“ü‚ê‘Ö‚¦‚ê‚Î‚¢‚¢‚¾‚¯‚É‚È‚è‚Ü‚·B<BR>
+ŽÀÛ‚ÉAiremix‚Å‚à/bbs/‚É‚ ‚éCGI‚ðƒTƒCƒg“à‚Ì‰½ƒ–Š‚©‚ÅA‚±‚Ì•û–@‚É‚æ‚Á‚Ä‹¤—L‚µ‚ÄŽg‚Á‚Ä‚¢‚Ü‚·</P>
+</DIV>
 </DIV>
 
-<DIV class="hthread" style="text-align:left">
-<H2 class="list">ž<A name="Ý’u‚Ìà–¾‘">Ý’u‚µ‚½Œã‚Ì‰^—p</A></H2>
-<DIV style="border:1px solid #cdf;margin-left:1.5em;margin-bottom:1em;padding:5px">
-<H3 class="list"><A name="Mireille‚ðƒo[ƒWƒ‡ƒ“ƒAƒbƒv‚·‚éŽž">Mireille‚ðƒo[ƒWƒ‡ƒ“ƒAƒbƒv‚·‚éŽž</A></H3>
+
+<DIV class="section">
+<H3 class="h">6. <A name="ŠÇ—CGI‚ÌÝ’u">ŠÇ—CGI‚ÌÝ’u</A></H3>
+<P>‚æ‚èMireille‚ð—LŒø‚ÉŽg‚¤‚½‚ß‚ÌCGIAManage.cgi‚Ìà–¾‚Å‚·B<BR>
+•K{‚Å‚Í‚È‚¢‚Ì‚ÅAŽg‚¢‚½‚¢l‚¾‚¯Ý’u‚µ‚Ü‚µ‚å‚¤B</P>
+<P>‚Ü‚¸manage.cgi‚ðŠJ‚¢‚ÄAˆês–Ú‚ðÝ’è‚µ‚Ü‚·B<BR>
+‚»‚ÌŒã21s–Ú‚Ì$AM{'pass'}‚ðÝ’è‚µ‚Ä‚­‚¾‚³‚¢B<BR>
+Ý’è‚µ‚½‚çFTP‚ÅˆÈ‰º‚Ì‚æ‚¤‚ÉÝ’u‚µ‚Ü‚·B<BR>
+‚±‚ÌÛ<STRONG class="warning">•K‚¸ƒtƒ@ƒCƒ‹–¼‚ð•ÏX‚µ‚ÄƒAƒbƒvƒ[ƒh</STRONG>‚µ‚Ä‚­‚¾‚³‚¢B</P>
+<PRE>/bbs/E36Vj4tGiHQ.cgi 755(700) ŠÇ—CGIi'E36Vj4tGiHQ.cgi'‚Éƒtƒ@ƒCƒ‹–¼‚ð•ÏX‚µ‚½ê‡j</PRE>
+<P>Žg—p–@‚Í•\Ž¦‚É‚µ‚½‚ª‚Á‚Ä‚­‚¾‚³‚¢B<BR>
+‚í‚©‚è‚É‚­‚¢‚Æ‚±‚ë‚ª‚ ‚ê‚ÎAŒ¾‚Á‚Ä‚­‚¾‚³‚¢B<BR>
+•\‹L‚ð•Ï‚¦‚é‚È‚èA‚±‚ê‚É‘‚«‰Á‚¦‚é‚È‚è‚µ‚Ü‚·B</P>
+<P>‚¿‚È‚Ý‚ÉAŠÇ—CGI‚ÌÝ’è‹@”\‚ðŽg‚Á‚Ä‚¢‚Äu<SAMP>Can't write...</SAMP>v‚Æ‚¢‚¤ƒGƒ‰[‚ªo‚½ê‡‚ÍA<BR>
+ŠY“–‚·‚éƒtƒ@ƒCƒ‹‚Ìƒp[ƒ~ƒbƒVƒ‡ƒ“‚ðAã‚Ì‚Ù‚¤‚Ìà–¾‚ÌAŠ‡ŒÊ“à‚Ì‚à‚Ì‚É•Ï‚¦‚Ý‚Ä‚­‚¾‚³‚¢B<BR>
+‚¿‚á‚ñ‚Æ‘‚«ž‚ß‚ê‚ÎÝ’è‚ª‚ ‚Á‚Ä‚¢‚é‚Æ’f’è‚µ‚Ä‚æ‚¢‚Å‚µ‚å‚¤B</P>
+<P><STRONG class="warning">¦ŒxI<BR>
+ƒAƒbƒvƒ[ƒh‚·‚éÛ‚É‚ÍAƒtƒ@ƒCƒ‹‚Ì–¼‘O‚ð—\‘ª‚Ì‚Â‚©‚È‚¢–¼‘OA<BR>
+i—á‚¦‚ÎE36Vj4tGiHQ.cgi‚Ì‚æ‚¤‚Èj‚É•ÏX‚µ‚Ä‚©‚çƒAƒbƒvƒ[ƒh‚µ‚Ä‚­‚¾‚³‚¢B<BR>
+‚±‚ÌCGI‚Í”j‰ó“I‚È‹@”\iindex.cgi‚ÌÝ’è‚âƒƒO‚Ìíœ‚È‚ÇjŽ‚Á‚Ä‚¢‚é‚Ì‚ÅA<BR>
+ˆ«ˆÓ‚ðŽ‚Á‚½l‚ÉêŠ‚ð’m‚ç‚ê‚é‚Æ”ñí‚ÉŠëŒ¯‚Å‚·B</STRONG></P>
+<P>‚¿‚È‚Ý‚ÉAƒtƒ@ƒCƒ‹–¼‚ð•Ï‚¦‚é‚Æ“®‚©‚È‚­‚È‚é‚Ì‚Å‚Í‚È‚¢‚©A‚ÆŽv‚¤•û‚à‚¢‚é‚Å‚µ‚å‚¤‚ªA<BR>
+ŠÇ—CGI‚Íƒtƒ@ƒCƒ‹–¼‚ð•Ï‚¦‚Ä‚à‘åä•v‚È‚æ‚¤‚Éì‚Á‚Ä‚¢‚é‚Ì‚ÅA‚²ˆÀS‚­‚¾‚³‚¢B</P>
+</DIV>
+</DIV>
+
+
+
+<DIV class="section">
+<H2 class="h">ž<A name="Ý’u‚Ìà–¾‘">Ý’u‚µ‚½Œã‚Ì‰^—p</A></H2>
+
+
+<DIV class="section">
+<H3 class="h"><A name="Mireille‚ðƒo[ƒWƒ‡ƒ“ƒAƒbƒv‚·‚éŽž">Mireille‚ðƒo[ƒWƒ‡ƒ“ƒAƒbƒv‚·‚éŽž</A></H3>
 <P>Šî–{“I‚É‚ÍAcore.cgi, style.pl, artnavi.js, iconctlg.cgi‚ðã‘‚«‚·‚ê‚ÎOK‚Å‚·B</P>
 <P>style.css‚ðŽ©•ª‚Å‰ü‘¢‚µ‚Ä‚¢‚È‚¢‚Ì‚È‚çAstyle.css‚àã‘‚«‚µ‚½•û‚ª—Ç‚¢‚Å‚·‚ªA<BR>
 style.css‚Í‘½­ŒÃ‚¢‚à‚Ì‚Å‚à“®ì‚·‚é‚æ‚¤‚Éì‚Á‚Ä‚ ‚é‚Ì‚ÅAã‘‚«‚µ‚È‚­‚Ä‚à‘åä•v‚Å‚·B<BR>
@@ -1283,8 +1016,9 @@ core.cgi‚âstyle.pl‚È‚Ç‚ÉŽè‚ð“ü‚ê‚Ä‚¢‚éê‡‚ÍAŒ»Ýl—¶‚É“ü‚ê‚Ä‚Ü‚¹‚ñB<BR>
 ‚à‚µindex.cgi‚Æstyle.cssˆÈŠO‚ð‰ü‘¢‚µ‚Ä‚¢‚é•û‚Í–¼æ‚èo‚Ä‚­‚¾‚³‚ê‚ÎAl—¶‚µ‚ÄŠJ”­‚·‚é‚æ‚¤‚É‚µ‚Ü‚·B</P>
 </DIV>
 
-<DIV style="border:1px solid #cdf;margin-left:1.5em;margin-bottom:1em;padding:5px">
-<H3 class="list"><A name="‰ß‹ŽƒƒO‚Ìˆµ‚¢">‰ß‹ŽƒƒO‚Ìˆµ‚¢</A></H3>
+
+<DIV class="section">
+<H3 class="h"><A name="‰ß‹ŽƒƒO‚Ìˆµ‚¢">‰ß‹ŽƒƒO‚Ìˆµ‚¢</A></H3>
 <P>Mireille‚Å‚Í‰ß‹ŽƒƒO‚ðˆ³k‚µ‚Ä•Û‘¶‚·‚é‚æ‚¤‚É‚µ‚Ä‚¢‚é‚Ì‚ÅAƒtƒ@ƒCƒ‹ƒXƒy[ƒX‚Ö‚Ì•‰’S‚Í”äŠr“IŒy‚¢‚Ì‚Å‚·‚ªA<BR>
 ‚»‚ê‚Å‚à’·‚¢ŠÔ‚Ù‚Á‚½‚ç‚©‚µ‚É‚µ‚Ä‚¢‚é‚ÆAŽv‚í‚ÊƒTƒCƒY‚É‚È‚Á‚Ä‚µ‚Ü‚¤‚±‚Æ‚ª‚ ‚è‚Ü‚·B<BR>
 ‚È‚Ì‚ÅA’èŠú“I‚É®—‚·‚é‚æ‚¤‚É‚µ‚Ü‚µ‚å‚¤Bi‰ß‹ŽƒƒO‚ª100ƒtƒ@ƒCƒ‹‚ð’´‚¦‚½‚çA‚­‚ç‚¢‚©‚Èj</P>
@@ -1310,8 +1044,9 @@ FTPƒ\ƒtƒg‚Ígz‚ÍƒoƒCƒiƒŠƒtƒ@ƒCƒ‹‚¾‚Æ’m‚Á‚Ä‚¢‚é‚Ì‚ÅA”j‰ó‚³‚ê‚é‚±‚Æ‚Í‚È‚¢‚Å‚·B<BR
 i“]‘—ƒ‚[ƒh‚ÌŽ©“®”»’è‚ðOFF‚É‚µ‚ÄAƒoƒCƒiƒŠƒ‚[ƒh‚ð‹­§‚µ‚ÄAƒ_ƒEƒ“ƒ[ƒh‚µ‚Ä‚àOK‚Å‚·B)</P>
 </DIV>
 
-<DIV style="border:1px solid #cdf;margin-left:1.5em;margin-bottom:1em;padding:5px">
-<H3 class="list"><A name="r‚ç‚µ‚ª—ˆ‚½‚ç">r‚ç‚µ‚ª—ˆ‚½‚ç</A></H3>
+
+<DIV class="section">
+<H3 class="h"><A name="r‚ç‚µ‚ª—ˆ‚½‚ç">r‚ç‚µ‚ª—ˆ‚½‚ç</A></H3>
 <P>ur‚ç‚µ‚É‚È‚è‚»‚¤‚Èl‚É‚ÍƒTƒCƒg‚ÌURL‚ð‹³‚¦‚È‚¢vAur‚ç‚³‚ê‚»‚¤‚ÈƒRƒ“ƒeƒ“ƒc‚ðˆµ‚í‚È‚¢vA<BR>
 ‚Æ‚¢‚Á‚½Ž–‘Oô‚ª‚ ‚é‚Ì‚Å‚·‚ªA—ˆ‚Ä‚µ‚Ü‚Á‚½‚à‚Ì‚ÍŽd•û‚ª‚ ‚è‚Ü‚¹‚ñB<BR>
 ‘‘¬Œ‚‘Þô‚ð—û‚è‚Ü‚µ‚å‚¤B</P>
@@ -1350,44 +1085,44 @@ FTPƒ\ƒtƒg‚Ígz‚ÍƒoƒCƒiƒŠƒtƒ@ƒCƒ‹‚¾‚Æ’m‚Á‚Ä‚¢‚é‚Ì‚ÅA”j‰ó‚³‚ê‚é‚±‚Æ‚Í‚È‚¢‚Å‚·B<BR
 <P>r‚ç‚³‚ê‚é‚±‚Æ‚ÆA‚»‚ê‚É‘Å‚¿Ÿ‚Â‚±‚Æ‚Í‚ÍA—L–¼ƒy[ƒW‚Ö‚Æã‚è‹l‚ß‚é‚½‚ß‚É‚Í•K—v•s‰ÂŒ‡‚ÈƒXƒeƒbƒv‚Å‚·B<BR>
 Web‚Ì¯‚ð–ÚŽw‚·‚½‚ßAd‚¢ƒRƒ“ƒ_ƒ‰‚ð‚Ð‚«‚Ð‚«AŽŽ—û‚Ì“¹‚ðs‚Á‚ÄA‚Çª«‚ðŒ©‚¹‚Ä‚­‚¾‚³‚¢Bi“ä</P>
 </DIV>
-<!--
-‚±‚ÌÍ‚¾‚¯ƒfƒUƒCƒ“‚ªˆá‚¤‚¯‚ÇA‚«‚É‚µ‚È‚¢A‚«‚É‚µ‚È‚¢BB
-<DIV style="border:1px solid #cdf;margin-left:1.5em;margin-bottom:1em;padding:5px">
-<H3 class="list"><A name=""></A></H3>
-</DIV>
--->
 </DIV>
 
 
-<DIV class="hthread" style="text-align:left">
-<H2 class="list">ž<A name="Mireille‚Ì’ˆÓŽ–€">Mireille‚Ì’ˆÓŽ–€</A></H2>
-<UL>
-	<LI><H3 class="list"><A name="Š¿ŽšƒR[ƒh">Š¿ŽšƒR[ƒh</A></H3>
-	Mireille‚ÍA‚±‚ÌMireille.txt‚Æ‚»‚Ì‚Ù‚©ˆê•”‚Ìƒtƒ@ƒCƒ‹‚ðœ‚¢‚Ä‘S‚ÄA<BR>
-	EUC-JP‚Æ‚¢‚¤Š¿ŽšƒR[ƒh‚Å‘‚©‚ê‚Ä‚¢‚Ü‚·<BR>
-	‚»‚Ì‚½‚ßAƒƒ‚’ ‚ð•M“ª‚Æ‚·‚éAEUC-JP”ñ‘Î‰ž‚ÌƒGƒfƒBƒ^‚Å‚Í•ÒW‚·‚é‚±‚Æ‚ªo—ˆ‚Ü‚¹‚ñ<BR>
-	EUC-JP‘Î‰ž‚ÌƒGƒfƒBƒ^‚ð‚²Žg—p‚­‚¾‚³‚¢ˆÈ‰º‚Í„§‚·‚éƒGƒfƒBƒ^‚Å‚·<BR>
-	TeraPad
-	<A href="http://www2s.biglobe.ne.jp/~t-susumu/toclip/">http://www2s.biglobe.ne.jp/~t-susumu/toclip/</A><BR>
-	GŠÛƒGƒfƒBƒ^
-	<A href="http://hidemaru.xaxon.co.jp/">http://hidemaru.xaxon.co.jp/</A><BR>
-	‚³‚­‚çƒGƒfƒBƒ^
-	<A href="http://sakura-editor.sourceforge.net/">http://sakura-editor.sourceforge.net/</A><BR>
-	‘¼‚É‚àEmEditor‚âWZEdiotr‚È‚Ç‚ª‘Î‰ž‚µ‚Ä‚¢‚Ü‚·<BR>
-	“Á‚É–{Ši“I‚É‚â‚é‚È‚ç‚ÎAF•ª‚¯‚ð‚µ‚Ä‚­‚ê‚éƒGƒfƒBƒ^‚¾‚ÆŠi’i‚ÉA<BR>
-	Œø—¦‚ªã‚ª‚èA‚©‚Âƒ~ƒX‚àŒ¸‚é‚ÆŽv‚¢‚Ü‚·<BR>
-	<BR>
-	‚¿‚È‚Ý‚É¬£‚Í2001”N’†‚²‚ë‚©‚ç<A href="http://www2.noritz.co.jp/anchor/">ƒAƒ“ƒJ[ƒVƒXƒeƒ€ƒYŠ”Ž®‰ïŽÐ</A>‚ÌPeggyPro‚ðŽg‚Á‚Ä‚¢‚Ü‚·<BR>
-	PerlŒ¾Œê‚ÌF•t‚¯‚Ì¸“x‚Å‚ÍAƒgƒbƒvƒNƒ‰ƒX‚Ì³Šm‚³‚Å‚µ‚å‚¤<BR>
-	PeggyPro‚Í—L—¿‚Å‚·‚ªAPeggyPad‚Í–³—¿‚Å‚·<BR>
-	<BR>
-	‘¼‚É‚à<A href="http://www.airemix.com/info/">Airemix/info.</A>‚©‚ç‚¢‚ë‚¢‚ë‚ÈƒeƒLƒXƒgƒGƒfƒBƒ^‚Ì”z•zƒTƒCƒg‚Ö”ò‚Ô‚±‚Æ‚ª‚Å‚«‚Ü‚·</LI>
-	
-	<LI><H3 class="list"><A name="ƒAƒCƒRƒ“">ƒAƒCƒRƒ“</A></H3>
-	<UL>
-		<LI><H4 class="list">ƒAƒCƒRƒ“ƒŠƒXƒg</H4>
-		Šî–{“I‚É‚ÍOPTGROUP—v‘f‚ÆOPTION—v‘f‚ð‚ ‚í‚¹‚ÄŽg‚¤‚±‚Æ‚ð‚¨Š©‚ß‚µ‚Ü‚·<BR>
-		‹ï‘Ì“I‚ÈŒ`Ž®‚Æ‚µ‚Ä‚Í
+
+<DIV class="section">
+<H2 class="h">ž<A name="Mireille‚Ì’ˆÓŽ–€">Mireille‚Ì’ˆÓŽ–€</A></H2>
+
+
+<DIV class="section">
+<H3 class="h"><A name="Š¿ŽšƒR[ƒh">Š¿ŽšƒR[ƒh</A></H3>
+<P>Mireille‚ÍA‚±‚ÌMireille.txt‚Æ‚»‚Ì‚Ù‚©ˆê•”‚Ìƒtƒ@ƒCƒ‹‚ðœ‚¢‚Ä‘S‚ÄA<BR>
+EUC-JP‚Æ‚¢‚¤Š¿ŽšƒR[ƒh‚Å‘‚©‚ê‚Ä‚¢‚Ü‚·B<BR>
+‚»‚Ì‚½‚ßAƒƒ‚’ ‚ð•M“ª‚Æ‚·‚éAEUC-JP”ñ‘Î‰ž‚ÌƒGƒfƒBƒ^‚Å‚Í•ÒW‚·‚é‚±‚Æ‚ªo—ˆ‚Ü‚¹‚ñB<BR>
+EUC-JP‘Î‰ž‚ÌƒGƒfƒBƒ^‚ð‚²Žg—p‚­‚¾‚³‚¢ˆÈ‰º‚Í„§‚·‚éƒGƒfƒBƒ^‚Å‚·B<BR>
+TeraPad
+<A href="http://www2s.biglobe.ne.jp/~t-susumu/toclip/">http://www2s.biglobe.ne.jp/~t-susumu/toclip/</A><BR>
+GŠÛƒGƒfƒBƒ^
+<A href="http://hidemaru.xaxon.co.jp/">http://hidemaru.xaxon.co.jp/</A><BR>
+‚³‚­‚çƒGƒfƒBƒ^
+<A href="http://sakura-editor.sourceforge.net/">http://sakura-editor.sourceforge.net/</A><BR>
+‘¼‚É‚àEmEditor‚âWZEdiotr‚È‚Ç‚ª‘Î‰ž‚µ‚Ä‚¢‚Ü‚·B<BR>
+“Á‚É–{Ši“I‚É‚â‚é‚È‚ç‚ÎAF•ª‚¯‚ð‚µ‚Ä‚­‚ê‚éƒGƒfƒBƒ^‚¾‚ÆŠi’i‚ÉA<BR>
+Œø—¦‚ªã‚ª‚èA‚©‚Âƒ~ƒX‚àŒ¸‚é‚ÆŽv‚¢‚Ü‚·B</P>
+<P>‚¿‚È‚Ý‚É¬£‚Í2001”N’†‚²‚ë‚©‚çA
+<A href="http://www2.noritz.co.jp/anchor/">ƒAƒ“ƒJ[ƒVƒXƒeƒ€ƒYŠ”Ž®‰ïŽÐ</A>‚ÌPeggyPro‚ðŽg‚Á‚Ä‚¢‚Ü‚·B<BR>
+PerlŒ¾Œê‚ÌF•t‚¯‚Ì¸“x‚Å‚ÍAƒgƒbƒvƒNƒ‰ƒX‚Ì³Šm‚³‚Å‚µ‚å‚¤B<BR>
+PeggyPro‚Í—L—¿‚Å‚·‚ªAPeggyPad‚Í–³—¿‚Å‚·B</P>
+<P>‘¼‚É‚à<A href="http://www.airemix.com/info/">Airemix/info.</A>‚©‚ç‚¢‚ë‚¢‚ë‚ÈƒeƒLƒXƒgƒGƒfƒBƒ^‚Ì”z•zƒTƒCƒg‚Ö”ò‚Ô‚±‚Æ‚ª‚Å‚«‚Ü‚·B</P>
+</DIV>
+
+
+<DIV class="section">
+<H3 class="h"><A name="ƒAƒCƒRƒ“">ƒAƒCƒRƒ“</A></H3>
+
+<DIV class="section">
+<H4 class="h">ƒAƒCƒRƒ“ƒŠƒXƒg</H4>
+<P>Šî–{“I‚É‚ÍOPTGROUP—v‘f‚ÆOPTION—v‘f‚ð‚ ‚í‚¹‚ÄŽg‚¤‚±‚Æ‚ð‚¨Š©‚ß‚µ‚Ü‚·B<BR>
+‹ï‘Ì“I‚ÈŒ`Ž®‚Æ‚µ‚Ä‚ÍA</P>
 <PRE><CODE>&lt;OPTGROUP label=&quot;ƒOƒ‹[ƒv‚P&quot;&gt;
 &ensp;&lt;OPTION value=&quot;11.png&quot;&gt;ƒAƒCƒRƒ“1&lt;/option&gt;
 &ensp;&lt;OPTION value=&quot;12.png&quot;&gt;ƒAƒCƒRƒ“2&lt;/option&gt;
@@ -1398,94 +1133,92 @@ Web‚Ì¯‚ð–ÚŽw‚·‚½‚ßAd‚¢ƒRƒ“ƒ_ƒ‰‚ð‚Ð‚«‚Ð‚«AŽŽ—û‚Ì“¹‚ðs‚Á‚ÄA‚Çª«‚ðŒ©‚¹‚Ä‚­‚
 &lt;/OPTGROUP&gt;
 &lt;OPTION value=&quot;1.png&quot;&gt;ƒAƒCƒRƒ“ˆë&lt;/option&gt;
 &lt;OPTION value=&quot;2.png&quot;&gt;ƒAƒCƒRƒ““ó&lt;/option&gt;</CODE></PRE>
-		‚Ì‚æ‚¤‚ÈŒ`‚É‚È‚è‚Ü‚·<BR>
-		OPTGOUPƒ^ƒOŠO‚ÌOPTION‚Í‘S‘Ì‚Ì––”ö‚É‘¶Ý‚µ‚È‚¢‚Æ‚¢‚¯‚Ü‚¹‚ñ<BR>
-		‚Å‚«‚ê‚Î‚±‚¤‚·‚é‚æ‚è‚àAOPTGROUP‚É‘®‚³‚È‚¢‚æ‚¤‚ÈOPTION‚ÍA<BR>
-		ƒOƒ‹[ƒv–¼‚ðu‚»‚Ì‘¼v‚È‚Ç‚É‚µ‚ÄA‰½‚ç‚©‚ÌŒ`‚ÅOPTROUPƒ^ƒO“à‚É“ü‚ê‚Ä‚µ‚Ü‚Á‚½‚Ù‚¤‚ª‚¢‚¢‚Å‚·<BR>
-		i‹ï‘Ì“I‚ÉŒ¾‚¦‚ÎAicon.txt‚Ì“à—e‚ªŠÛ‚²‚ÆSELECTƒ^ƒO‚Ì’†g‚Æ‚È‚è‚Ü‚·j<BR>
-		<BR>
-		‚¿‚È‚Ý‚ÉOPTGROUP—v‘f‚ÍHTML4‚ÅV‚µ‚­’Ç‰Á‚³‚ê‚½—v‘f‚ÅA<BR>
-		InternetExplorer6forWindowsAInternetExplorer5forMacintoshANetscape6AMozillaAOpera7‚È‚Ç‚ª‘Î‰ž‚µ‚Ä‚¢‚Ü‚·<BR>
-		‚±‚ê‚çˆÈŠO‚Å‚Í–³Ž‹‚³‚ê‚Ü‚·‚ªAŒ©ˆÕ‚³E•ª—Þ‚Ì‚µ‚â‚·‚³‚ð‚ðl—¶‚·‚é‚ÆA<BR>
-		¡‚Ì‚¤‚¿‚©‚ç‚Â‚¯‚Ä‚¨‚¢‚½‚Ù‚¤‚ª‚¢‚¢‚ÆŽv‚¢‚Ü‚·<BR>
-		‚¿‚È‚Ý‚ÉAOPTGROUP‚ÍHTML4‚Ì‹KŠiã“ü‚êŽq‚É‚Å‚«‚È‚¢‚æ‚¤‚É‚È‚Á‚Ä‚¢‚Ü‚·</LI>
-		
-		<LI><H4 class="list">index.cgi‚ÌƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚ÌÝ’è‚ÆƒAƒCƒRƒ“ƒŠƒXƒg‚ÌŽg‚¢•ª‚¯</H4>
-		—á‚¦‚ÎA<CODE>http://www.airemix.com/</CODE>‚Ì‰º‚ÉAÝ’u‚µA<BR>
-		FTPƒT[ƒo[‚Å‚ÌƒfƒBƒŒƒNƒgƒŠ‚Ì\‘¢‚ªA<BR>
-	<TABLE cellspacing="2" summary="ƒAƒCƒRƒ“‚ÌURL" style="margin:0.5em auto 0.5em 1em">
-		<THEAD>
-		<TR><TH scope="col">ƒpƒX</TH><TH scope="col">‘®«</TH><TH scope="col">—p“r</TH></TR>
-		</THEAD>
-		<TBODY>
-		<TR><TH scope="col">/</TH>				<TD>755</TD><TD>FTP‚Ìƒ‹[ƒgƒfƒBƒŒƒNƒgƒŠ</TD></TR>
-		<TR><TH scope="col">/public_html/</TH>	<TD>755</TD><TD>FTP‚ÌHTTP‚ÉŒöŠJ‚·‚éƒ‹[ƒg</TD></TR>
-		<TR><TH scope="col">/public_html/icon/</TH><TD>755</TD><TD>ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ</TD></TR>
-		<TR><TH scope="col">/public_html/icon/hoe/icon1.png</TH><TD>644</TD><TD>ƒAƒCƒRƒ“1</TD></TR>
-		<TR><TH scope="col">/public_html/icon/hoe/icon2.png</TH><TD>644</TD><TD>ƒAƒCƒRƒ“2</TD></TR>
-		<TR><TH scope="col">/public_html/icon/icon3.png</TH><TD>644</TD><TD>ƒAƒCƒRƒ“3</TD></TR>
-		</TBODY>
-		<TBODY>
-		<TR><TH scope="col">/public_html/bbs</TH><TD>777(755)</TD><TD>ŒfŽ¦”Â‚ÌƒfƒBƒŒƒNƒgƒŠ</TD></TR>
-		<TR><TH scope="col">/public_html/bbs/index.cgi</TH><TD>755(700)</TD><TD>CGI‹N“®ƒtƒ@ƒCƒ‹Œ“Ý’è</TD></TR>
-		<TR><TH scope="col">/public_html/bbs/icon.txt</TH><TD>666</TD><TD>ƒAƒCƒRƒ“ƒŠƒXƒg</TD></TR>
-		<TR><TH scope="col">/public_html/bbs/icon.html</TH><TD>666</TD><TD>ƒAƒCƒRƒ“Œ©–{</TD></TR>
-		</TBODY>
-	</TABLE>
-		‚Ì‚æ‚¤‚Èó‘Ô‚É‚È‚Á‚Ä‚¢‚éŽžiŒfŽ¦”Â‚Ì‚Ù‚©‚Ìƒtƒ@ƒCƒ‹‚ÍÈ—ªj‚É‚ÍA<BR>
-		<UL>
-			<LI>ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚ÉHTTP‘Š‘ÎƒpƒX<BR>
-			ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚Í <CODE>$CF{'icon'}='../icon/';</CODE> ‚Æ‚µA<BR>
-			icon.txt‚Å‚Í <CODE>&lt;OPTION value="hoe/icon1.png"&gt;</CODE> ‚È‚Ç‚Æ‚·‚é<BR>
-			¨ ƒAƒCƒRƒ“‚Í <CODE>&lt;IMG src="../icon/hoe/icon1.png"&gt;</CODE> ‚É‚È‚é</LI>
-			<LI>ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚ÉHTTPƒT[ƒo[“àâ‘ÎƒpƒX<BR>
-			ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚Í <CODE>$CF{'icon'}='/icon/';</CODE> ‚Æ‚µA<BR>
-			icon.txt‚Å‚Í <CODE>&lt;OPTION value="hoe/icon1.png"&gt;</CODE> ‚È‚Ç‚Æ‚·‚é<BR>
-			¨ ƒAƒCƒRƒ“‚Í <CODE>&lt;IMG src="/icon/hoe/icon1.png"&gt;</CODE> ‚É‚È‚é</LI>
-			<LI>ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚ÉHTTPâ‘ÎƒpƒX<BR>
-			ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚Í <CODE>$CF{'icon'}='http://www.airemix.com/icon/';</CODE> ‚Æ‚µA<BR>
-			icon.txt‚Å‚Í <CODE>&lt;OPTION value="hoe/icon1.png"&gt;</CODE> ‚È‚Ç‚Æ‚·‚é<BR>
-			¨ ƒAƒCƒRƒ“‚Í <CODE>&lt;IMG src="http://www.airemix.com/icon/hoe/icon1.png"&gt;</CODE> ‚É‚È‚é</LI>
-			<LI>ƒAƒCƒRƒ“ƒŠƒXƒg‚¾‚¯‚ÅHTTP‘Š‘ÎƒpƒX<BR>
-			ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚Í <CODE>$CF{'icon'}='';</CODE> ‚Æ‚µA<BR>
-			icon.txt‚Å‚Í <CODE>&lt;OPTION value="../icon/hoe/icon1.png"&gt;</CODE> ‚È‚Ç‚Æ‚·‚é<BR>
-			¨ ƒAƒCƒRƒ“‚Í <CODE>&lt;IMG src="../icon/hoe/icon1.png"&gt;</CODE> ‚É‚È‚é</LI>
-			<LI>ƒAƒCƒRƒ“ƒŠƒXƒg‚¾‚¯‚ÅHTTPƒT[ƒo[“àâ‘ÎƒpƒX<BR>
-			ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚Í <CODE>$CF{'icon'}='';</CODE> ‚Æ‚µA<BR>
-			icon.txt‚Å‚Í <CODE>&lt;OPTION value="/icon/hoe/icon1.png"&gt;</CODE> ‚È‚Ç‚Æ‚·‚é<BR>
-			¨ ƒAƒCƒRƒ“‚Í <CODE>&lt;IMG src="/icon/hoe/icon1.png"&gt;</CODE> ‚É‚È‚é</LI>
-			<LI>ƒAƒCƒRƒ“ƒŠƒXƒg‚¾‚¯‚ÅHTTPâ‘ÎƒpƒX<BR>
-			ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚Í <CODE>$CF{'icon'}='';</CODE> ‚Æ‚µA<BR>
-			icon.txt‚Å‚Í <CODE>&lt;OPTION value="http://www.airemix.com/icon/hoe/icon1.png"&gt;</CODE> ‚È‚Ç‚Æ‚·‚é<BR>
-			¨ ƒAƒCƒRƒ“‚Í <CODE>&lt;IMG src="http://www.airemix.com/icon/hoe/icon1.png"&gt;</CODE> ‚É‚È‚é</LI>
-		</UL>
-		‚Ì‚æ‚¤‚ÈŽw’è‚ÌŽd•û‚ª‚ ‚è‚Ü‚·<BR>
-		Œ‹‹Ç‚ÍAuƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚ÌŽw’è{ƒAƒCƒRƒ“ƒŠƒXƒg‚ÌŽw’èv¨‚«‚¿‚ñ‚Æ‚µ‚½u‘Š‘Î/â‘ÎURLv<BR>
-		‚Æ‚È‚Á‚Ä‚¢‚ê‚Î‚¢‚¢‚í‚¯‚Å‚·<BR>
-		<BR>
-		‚±‚Ì——R‚©‚çA<BR>
-		ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚ð<CODE>$CF{'icon'}='../icon/';</CODE>‚Æ‚µA<BR>
-		icon.txt‚ð<CODE>&lt;OPTION value="/hoe/icon1.png"&gt;</CODE>‚È‚Ç‚Æ‚·‚éê‡‚ÍA<BR>
-		‘«‚·‚Æ<CODE>&lt;IMG src="../icon//hoe/icon1.png"&gt;</CODE>‚Æ‚È‚Á‚Ä‚µ‚Ü‚¢A‚¨‚©‚µ‚¢‚í‚¯‚Å‚·</LI>
-		
-		<LI><H4 class="list">ƒAƒCƒRƒ“ƒŠƒXƒg‚Ì’˜ìŒ •\Ž¦‹@\</H4>
-		Mireille‚ÌƒAƒCƒRƒ“ƒŠƒXƒgŒ`Ž®‚ÍAŠî–{“I‚É‚ÍOPTGROUP‚ÆOPTION‚ðŽg‚Á‚ÄASELECTƒ^ƒO‚Ì’†g‚ð‘‚­A<BR>
-		‚Æ‚¢‚Á‚½‚à‚Ì‚Å‚·‚ªAHTML‚ÌƒRƒƒ“ƒg‚ðŽg‚Á‚ÄŠg’£î•ñ‚ð–„‚ßž‚Þ‚±‚Æ‚ª‚Å‚«‚Ü‚·<BR>
-		‚±‚Ì€‚Å‚Í‚»‚ÌŠg’£î•ñ‚Ìˆê‚ÂA’˜ìŒ •\Ž¦‹@\‚ðà–¾‚µ‚Ü‚·<BR>
-		<BR>
-		’˜ìŒ •\Ž¦‹@\—p‚ÌŠg’£–½—ß‚É‚ÍAˆêŽŸ’˜ìŒ ŽÒ‚ðŽw’è‚·‚é‚½‚ß‚ÌCOPY1‚ÆA»ìŽÒ‚ðŽw’è‚·‚éVENDOR‚ª‚ ‚è‚Ü‚·<BR>
-		ˆêŽŸ’˜ìŒ ŽÒ‚ÍƒAƒCƒRƒ“‚ÉŽg‚í‚ê‚Ä‚¢‚é‰æ‘œ‚Ì‚»‚à‚»‚à‚ÌƒIƒŠƒWƒiƒ‹‚ð‘‚¢‚½l‚Ü‚½‚Í’c‘Ì‚Å‚ ‚èA<BR>
-		»ìŽÒ‚Í‚»‚ÌƒAƒCƒRƒ“‚ð”z•z‚µ‚Ä‚¢‚él‚Ü‚½‚Í’c‘Ì‚Å‚·<BR>
-		<BR>
-		—á‚¦‚ÎA¬£‚ªDRAGON QUEST‚ÌƒXƒ‰ƒCƒ€‚ðƒAƒCƒRƒ“‚É‚µ‚Ä”z•z‚µ‚Ä‚¢‚½‚Æ‚µ‚Ü‚·<BR>
-		‚»‚Ìê‡AˆêŽŸ’˜ìŒ ŽÒ(COPY1)‚ÍDRAGON QUEST‚Ì”­”„Œ³‚Å‚ ‚éENIX‚É‚È‚èA<BR>
-		»ìŽÒ(VENDOR)‚Í¬£‚É‚È‚è‚Ü‚·<BR>
-		<BR>
-		‚³‚ÄACOPY1–½—ß‚ÆVENDOR–½—ß‚É‚ÍNAME,URL,LNK‚Æ‚¢‚¤ƒIƒvƒVƒ‡ƒ“‚ª‚ ‚è‚Ü‚·<BR>
-		NAME‚Å‚ÍCOPY1‚âVENDOR‚Ì–¼‘O‚ðAURL‚Å‚ÍƒTƒCƒg‚ÌURL‚ðŽw’è‚µ‚Ü‚·<BR>
-		LINK‚É‚Â‚¢‚Ä‚Í‚±‚±‚Å‚ÍÈ—ª‚µ‚Ü‚·<BR>
-		<BR>
-		‚³‚ÄAŽÀÛ‚ÉŽg‚Á‚Ä‚Ý‚Ü‚µ‚å‚¤<BR>
+<P>‚Ì‚æ‚¤‚ÈŒ`‚É‚È‚è‚Ü‚·B</P>
+<P>OPTGOUPƒ^ƒOŠO‚ÌOPTION‚Í‘S‘Ì‚Ì––”ö‚É‘¶Ý‚µ‚È‚¢‚Æ‚¢‚¯‚Ü‚¹‚ñB<BR>
+‚Å‚«‚ê‚Î‚±‚¤‚·‚é‚æ‚è‚àAOPTGROUP‚É‘®‚³‚È‚¢‚æ‚¤‚ÈOPTION‚ÍA<BR>
+ƒOƒ‹[ƒv–¼‚ðu‚»‚Ì‘¼v‚È‚Ç‚É‚µ‚ÄA‰½‚ç‚©‚ÌŒ`‚ÅOPTROUPƒ^ƒO“à‚É“ü‚ê‚Ä‚µ‚Ü‚Á‚½‚Ù‚¤‚ª‚¢‚¢‚Å‚·B<BR>
+i‹ï‘Ì“I‚ÉŒ¾‚¦‚ÎAicon.txt‚Ì“à—e‚ªŠÛ‚²‚ÆSELECTƒ^ƒO‚Ì’†g‚Æ‚È‚è‚Ü‚·j</P>
+<P>‚¿‚È‚Ý‚ÉOPTGROUP—v‘f‚ÍHTML4‚ÅV‚µ‚­’Ç‰Á‚³‚ê‚½—v‘f‚ÅA<BR>
+InternetExplorer6forWindowsAInternetExplorer5forMacintoshANetscape6AMozillaAOpera7‚È‚Ç‚ª‘Î‰ž‚µ‚Ä‚¢‚Ü‚·B<BR>
+‚±‚ê‚çˆÈŠO‚Å‚Í–³Ž‹‚³‚ê‚Ü‚·‚ªAŒ©ˆÕ‚³E•ª—Þ‚Ì‚µ‚â‚·‚³‚ð‚ðl—¶‚·‚é‚ÆA<BR>
+¡‚Ì‚¤‚¿‚©‚ç‚Â‚¯‚Ä‚¨‚¢‚½‚Ù‚¤‚ª‚¢‚¢‚ÆŽv‚¢‚Ü‚·B<BR>
+‚¿‚È‚Ý‚ÉAOPTGROUP‚ÍHTML4‚Ì‹KŠiã“ü‚êŽq‚É‚Å‚«‚È‚¢‚æ‚¤‚É‚È‚Á‚Ä‚¢‚Ü‚·B</P>
+</DIV>
+
+<DIV class="section">
+<H4 class="h">index.cgi‚ÌƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚ÌÝ’è‚ÆƒAƒCƒRƒ“ƒŠƒXƒg‚ÌŽg‚¢•ª‚¯</H4>
+<P>—á‚¦‚ÎA<CODE>http://www.airemix.com/</CODE>‚Ì‰º‚ÉAÝ’u‚µA<BR>
+FTPƒT[ƒo[‚Å‚ÌƒfƒBƒŒƒNƒgƒŠ‚Ì\‘¢‚ªA</P>
+<TABLE summary="ƒAƒCƒRƒ“‚ÌURL">
+	<THEAD>
+	<TR><TH scope="col">ƒpƒX</TH><TH scope="col">‘®«</TH><TH scope="col">—p“r</TH></TR>
+	</THEAD>
+	<TBODY>
+	<TR><TH scope="col">/</TH>				<TD>755</TD><TD>FTP‚Ìƒ‹[ƒgƒfƒBƒŒƒNƒgƒŠ</TD></TR>
+	<TR><TH scope="col">/public_html/</TH>	<TD>755</TD><TD>FTP‚ÌHTTP‚ÉŒöŠJ‚·‚éƒ‹[ƒg</TD></TR>
+	<TR><TH scope="col">/public_html/icon/</TH><TD>755</TD><TD>ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ</TD></TR>
+	<TR><TH scope="col">/public_html/icon/hoe/icon1.png</TH><TD>644</TD><TD>ƒAƒCƒRƒ“1</TD></TR>
+	<TR><TH scope="col">/public_html/icon/hoe/icon2.png</TH><TD>644</TD><TD>ƒAƒCƒRƒ“2</TD></TR>
+	<TR><TH scope="col">/public_html/icon/icon3.png</TH><TD>644</TD><TD>ƒAƒCƒRƒ“3</TD></TR>
+	</TBODY>
+	<TBODY>
+	<TR><TH scope="col">/public_html/bbs</TH><TD>777(755)</TD><TD>ŒfŽ¦”Â‚ÌƒfƒBƒŒƒNƒgƒŠ</TD></TR>
+	<TR><TH scope="col">/public_html/bbs/index.cgi</TH><TD>755(700)</TD><TD>CGI‹N“®ƒtƒ@ƒCƒ‹Œ“Ý’è</TD></TR>
+	<TR><TH scope="col">/public_html/bbs/icon.txt</TH><TD>666</TD><TD>ƒAƒCƒRƒ“ƒŠƒXƒg</TD></TR>
+	<TR><TH scope="col">/public_html/bbs/icon.html</TH><TD>666</TD><TD>ƒAƒCƒRƒ“Œ©–{</TD></TR>
+	</TBODY>
+</TABLE>
+<P>‚Ì‚æ‚¤‚Èó‘Ô‚É‚È‚Á‚Ä‚¢‚éŽžiŒfŽ¦”Â‚Ì‚Ù‚©‚Ìƒtƒ@ƒCƒ‹‚ÍÈ—ªj‚É‚ÍA</P>
+<UL>
+	<LI>ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚ÉHTTP‘Š‘ÎƒpƒX<BR>
+	ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚Í <CODE>$CF{'icon'}='../icon/';</CODE> ‚Æ‚µA<BR>
+	icon.txt‚Å‚Í <CODE>&lt;OPTION value="hoe/icon1.png"&gt;</CODE> ‚È‚Ç‚Æ‚·‚é<BR>
+	¨ ƒAƒCƒRƒ“‚Í <CODE>&lt;IMG src="../icon/hoe/icon1.png"&gt;</CODE> ‚É‚È‚é</LI>
+	<LI>ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚ÉHTTPƒT[ƒo[“àâ‘ÎƒpƒX<BR>
+	ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚Í <CODE>$CF{'icon'}='/icon/';</CODE> ‚Æ‚µA<BR>
+	icon.txt‚Å‚Í <CODE>&lt;OPTION value="hoe/icon1.png"&gt;</CODE> ‚È‚Ç‚Æ‚·‚é<BR>
+	¨ ƒAƒCƒRƒ“‚Í <CODE>&lt;IMG src="/icon/hoe/icon1.png"&gt;</CODE> ‚É‚È‚é</LI>
+	<LI>ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚ÉHTTPâ‘ÎƒpƒX<BR>
+	ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚Í <CODE>$CF{'icon'}='http://www.airemix.com/icon/';</CODE> ‚Æ‚µA<BR>
+	icon.txt‚Å‚Í <CODE>&lt;OPTION value="hoe/icon1.png"&gt;</CODE> ‚È‚Ç‚Æ‚·‚é<BR>
+	¨ ƒAƒCƒRƒ“‚Í <CODE>&lt;IMG src="http://www.airemix.com/icon/hoe/icon1.png"&gt;</CODE> ‚É‚È‚é</LI>
+	<LI>ƒAƒCƒRƒ“ƒŠƒXƒg‚¾‚¯‚ÅHTTP‘Š‘ÎƒpƒX<BR>
+	ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚Í <CODE>$CF{'icon'}='';</CODE> ‚Æ‚µA<BR>
+	icon.txt‚Å‚Í <CODE>&lt;OPTION value="../icon/hoe/icon1.png"&gt;</CODE> ‚È‚Ç‚Æ‚·‚é<BR>
+	¨ ƒAƒCƒRƒ“‚Í <CODE>&lt;IMG src="../icon/hoe/icon1.png"&gt;</CODE> ‚É‚È‚é</LI>
+	<LI>ƒAƒCƒRƒ“ƒŠƒXƒg‚¾‚¯‚ÅHTTPƒT[ƒo[“àâ‘ÎƒpƒX<BR>
+	ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚Í <CODE>$CF{'icon'}='';</CODE> ‚Æ‚µA<BR>
+	icon.txt‚Å‚Í <CODE>&lt;OPTION value="/icon/hoe/icon1.png"&gt;</CODE> ‚È‚Ç‚Æ‚·‚é<BR>
+	¨ ƒAƒCƒRƒ“‚Í <CODE>&lt;IMG src="/icon/hoe/icon1.png"&gt;</CODE> ‚É‚È‚é</LI>
+	<LI>ƒAƒCƒRƒ“ƒŠƒXƒg‚¾‚¯‚ÅHTTPâ‘ÎƒpƒX<BR>
+	ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚Í <CODE>$CF{'icon'}='';</CODE> ‚Æ‚µA<BR>
+	icon.txt‚Å‚Í <CODE>&lt;OPTION value="http://www.airemix.com/icon/hoe/icon1.png"&gt;</CODE> ‚È‚Ç‚Æ‚·‚é<BR>
+	¨ ƒAƒCƒRƒ“‚Í <CODE>&lt;IMG src="http://www.airemix.com/icon/hoe/icon1.png"&gt;</CODE> ‚É‚È‚é</LI>
+</UL>
+<P>‚Ì‚æ‚¤‚ÈŽw’è‚ÌŽd•û‚ª‚ ‚è‚Ü‚·B</P>
+<P>Œ‹‹Ç‚ÍAuƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚ÌŽw’è{ƒAƒCƒRƒ“ƒŠƒXƒg‚ÌŽw’èv¨‚«‚¿‚ñ‚Æ‚µ‚½u‘Š‘Î/â‘ÎURLv<BR>
+‚Æ‚È‚Á‚Ä‚¢‚ê‚Î‚¢‚¢‚í‚¯‚Å‚·B</P>
+<P>‚±‚Ì——R‚©‚çA<BR>
+ƒAƒCƒRƒ“ƒfƒBƒŒƒNƒgƒŠ‚ð<CODE>$CF{'icon'}='../icon/';</CODE>‚Æ‚µA<BR>
+icon.txt‚ð<CODE>&lt;OPTION value="/hoe/icon1.png"&gt;</CODE>‚È‚Ç‚Æ‚·‚éê‡‚ÍA<BR>
+‘«‚·‚Æ<CODE>&lt;IMG src="../icon//hoe/icon1.png"&gt;</CODE>‚Æ‚È‚Á‚Ä‚µ‚Ü‚¢A‚¨‚©‚µ‚¢‚í‚¯‚Å‚·B</P>
+</DIV>
+
+<DIV class="section">
+<H4 class="h">ƒAƒCƒRƒ“ƒŠƒXƒg‚Ì’˜ìŒ •\Ž¦‹@\</H4>
+<P>Mireille‚ÌƒAƒCƒRƒ“ƒŠƒXƒgŒ`Ž®‚ÍAŠî–{“I‚É‚ÍOPTGROUP‚ÆOPTION‚ðŽg‚Á‚ÄASELECTƒ^ƒO‚Ì’†g‚ð‘‚­A<BR>
+‚Æ‚¢‚Á‚½‚à‚Ì‚Å‚·‚ªAHTML‚ÌƒRƒƒ“ƒg‚ðŽg‚Á‚ÄŠg’£î•ñ‚ð–„‚ßž‚Þ‚±‚Æ‚ª‚Å‚«‚Ü‚·B<BR>
+‚±‚Ì€‚Å‚Í‚»‚ÌŠg’£î•ñ‚Ìˆê‚ÂA’˜ìŒ •\Ž¦‹@\‚ðà–¾‚µ‚Ü‚·B<BR>
+<P>’˜ìŒ •\Ž¦‹@\—p‚ÌŠg’£–½—ß‚É‚ÍAˆêŽŸ’˜ìŒ ŽÒ‚ðŽw’è‚·‚é‚½‚ß‚ÌCOPY1‚ÆA»ìŽÒ‚ðŽw’è‚·‚éVENDOR‚ª‚ ‚è‚Ü‚·B<BR>
+ˆêŽŸ’˜ìŒ ŽÒ‚ÍƒAƒCƒRƒ“‚ÉŽg‚í‚ê‚Ä‚¢‚é‰æ‘œ‚Ì‚»‚à‚»‚à‚ÌƒIƒŠƒWƒiƒ‹‚ð‘‚¢‚½l‚Ü‚½‚Í’c‘Ì‚Å‚ ‚èA<BR>
+»ìŽÒ‚Í‚»‚ÌƒAƒCƒRƒ“‚ð”z•z‚µ‚Ä‚¢‚él‚Ü‚½‚Í’c‘Ì‚Å‚·B</P>
+<P>—á‚¦‚ÎA¬£‚ªDRAGON QUEST‚ÌƒXƒ‰ƒCƒ€‚ðƒAƒCƒRƒ“‚É‚µ‚Ä”z•z‚µ‚Ä‚¢‚½‚Æ‚µ‚Ü‚·B<BR>
+‚»‚Ìê‡AˆêŽŸ’˜ìŒ ŽÒ(COPY1)‚ÍDRAGON QUEST‚Ì”­”„Œ³‚Å‚ ‚éENIX‚É‚È‚èA<BR>
+»ìŽÒ(VENDOR)‚Í¬£‚É‚È‚è‚Ü‚·B</P>
+<P>‚³‚ÄACOPY1–½—ß‚ÆVENDOR–½—ß‚É‚ÍNAME,URL,LNK‚Æ‚¢‚¤ƒIƒvƒVƒ‡ƒ“‚ª‚ ‚è‚Ü‚·B<BR>
+NAME‚Å‚ÍCOPY1‚âVENDOR‚Ì–¼‘O‚ðAURL‚Å‚ÍƒTƒCƒg‚ÌURL‚ðŽw’è‚µ‚Ü‚·B<BR>
+LINK‚É‚Â‚¢‚Ä‚Í‚±‚±‚Å‚ÍÈ—ª‚µ‚Ü‚·B</P>
+<P>‚³‚ÄAŽÀÛ‚ÉŽg‚Á‚Ä‚Ý‚Ü‚µ‚å‚¤B</P>
 <PRE><CODE>&lt;!-- %BEGIN_VENDOR --&gt; <STRONG class="s2f2f">#VENDORÝ’è‚ðŽn‚ß‚é</STRONG>
 &lt;!-- %VENDOR_NAME ¬£ --&gt; <STRONG class="s2f2f">#VENDOR‚Ì–¼‘O‚Íu¬£v</STRONG>
 
@@ -1494,293 +1227,322 @@ Web‚Ì¯‚ð–ÚŽw‚·‚½‚ßAd‚¢ƒRƒ“ƒ_ƒ‰‚ð‚Ð‚«‚Ð‚«AŽŽ—û‚Ì“¹‚ðs‚Á‚ÄA‚Çª«‚ðŒ©‚¹‚Ä‚­‚
 &lt;!-- %COPY1_URL http://www.enix.co.jp/ --&gt; <STRONG class="s2f2f">ENIX‚ÌURL‚Íuhttp://www.enix.co.jp/v</STRONG>
 
 &lt;OPTGROUP label=&quot;DRAGON QUEST&quot;&gt; <STRONG class="s2f2f">ƒAƒCƒRƒ“ƒOƒ‹[ƒvuDRAGON QUESTvŠJŽn</STRONG>
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;OPTION value=&quot;dq/suraimu.png&quot;&gt;ƒXƒ‰ƒCƒ€&lt;/OPTION&gt; <STRONG class="s2f2f">ƒXƒ‰ƒCƒ€‚ÌƒAƒCƒRƒ“</STRONG>
+&nbsp;&nbsp;&lt;OPTION value=&quot;dq/suraimu.png&quot;&gt;ƒXƒ‰ƒCƒ€&lt;/OPTION&gt; <STRONG class="s2f2f">ƒXƒ‰ƒCƒ€‚ÌƒAƒCƒRƒ“</STRONG>
 &lt;/OPTGROUP&gt; <STRONG class="s2f2f">ƒAƒCƒRƒ“ƒOƒ‹[ƒvI—¹</STRONG>
 &lt;!-- %END_COPY1 --&gt; <STRONG class="s2f2f">COPY1Ý’è‚ÌI—¹</STRONG>
 &lt;!-- %END_VENDOR --&gt; <STRONG class="s2f2f">VENDORÝ’è‚ÌI—¹</STRONG></CODE></PRE>
-		ˆÈã‚Ì‚æ‚¤‚È‹ï‡‚É‚È‚è‚Ü‚·<BR>
-		HTML‚Å‚¢‚¤‚ÆABEGIN_VENDOR‚ªŠJŽnƒ^ƒOAEND_VENDOR‚ªI—¹ƒ^ƒO‚É‚ ‚½‚éA‚ÆŒ¾‚¦‚Î‚í‚©‚è‚â‚·‚¢‚©‚à‚µ‚ê‚Ü‚¹‚ñ<BR>
-		<BR>
-		ã‚Ì—á‚Ì%BEGIN_COPY1‚Æ‚Ì“ñs‚É’–Ú‚µ‚Ä‚­‚¾‚³‚¢A‚±‚±‚ÍˆÈ‰º‚Ì‚æ‚¤‚Éˆês‚Å‘‚«Š·‚¦‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·<BR>
+<P>ˆÈã‚Ì‚æ‚¤‚È‹ï‡‚É‚È‚è‚Ü‚·B</P>
+<P>HTML‚Å‚¢‚¤‚ÆABEGIN_VENDOR‚ªŠJŽnƒ^ƒOAEND_VENDOR‚ªI—¹ƒ^ƒO‚É‚ ‚½‚éA‚ÆŒ¾‚¦‚Î‚í‚©‚è‚â‚·‚¢‚©‚à‚µ‚ê‚Ü‚¹‚ñB</P>
+<P>ã‚Ì—á‚Ì%BEGIN_COPY1‚Æ‚Ì“ñs‚É’–Ú‚µ‚Ä‚­‚¾‚³‚¢A‚±‚±‚ÍˆÈ‰º‚Ì‚æ‚¤‚Éˆês‚Å‘‚«Š·‚¦‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B</P>
 <PRE><CODE>&lt;!-- %BEGIN_COPY1 ENIX --&gt; <STRONG class="s2f2f">#COPY1‚ÌÝ’è‚ðŽn‚ß‚éACOPY1‚Ì–¼‘O‚ÍuENIXv</STRONG></CODE></PRE>
-		‚±‚Ì‚æ‚¤‚ÈÈ—ª‹L–@‚ðŽg‚¤‚ÆA‘½­ƒAƒCƒRƒ“ƒŠƒXƒg‚ªŒ©‚â‚·‚­‚È‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñ<BR>
-		</LI>
-		
-		<LI><H4 class="list">ƒAƒCƒRƒ“‚ÌÅ‘å”</H4>
-		—˜_ã‚Í–³ŒÀ‚É‚È‚Á‚Ä‚¢‚Ü‚·<BR>
-		‚½‚¾ACGIˆ—‚Ì•‰‰×‚âHTTP“]‘—‚Ì•‰‰×‚ðl‚¦‚é‚ÆA<BR>
-		‚Ù‚Ç‚Ù‚Ç‚Ì”‚É‚µ‚Ä‚¨‚¢‚½‚Ù‚¤‚ª‚¢‚¢‚©‚à‚µ‚ê‚Ü‚¹‚ñ<BR>
-		‚í‚½‚µ‚Ì‘¤‚Å‚ÍƒAƒCƒRƒ“”800‚Å‚»‚±‚»‚±‚ÌƒXƒs[ƒh‚Å“®ì‚·‚é‚±‚Æ‚ðŠm”F‚µ‚Ä‚¢‚Ü‚·<BR>
-		ƒAƒCƒRƒ“Œ©–{(icon.html)‚ðŒ©‚éŽž‚Íˆê“x‚É‘S‚Ä‚ÌƒAƒCƒRƒ“‚ð•\Ž¦‚³‚¹‚éA‚Æ‚¢‚¤‚±‚Æ‚à—¯ˆÓ‚·‚é•K—v‚ª‚ ‚é‚Å‚µ‚å‚¤</LI>
-		
-		<LI><H4 class="list">ê—pƒAƒCƒRƒ“</H4>
-		ŠÇ—CGI‚ÌuCONFIGÝ’èv‚ÅÝ’è‚Å‚«‚Ü‚·<BR>
-		‚Ü‚½‚ÍA<BR>
-		<CODE>$CF{'cmic'}='1';</CODE><BR>
-		‚Æ‚µ‚½‚¤‚¦‚Å<BR>
-		’¼ÚÝ’èƒtƒ@ƒCƒ‹‚ð•ÒW‚µ‚Ä‚àÝ’è‰Â”\‚Å‚·<BR>
-		Ý’è‚ÌŒ`Ž®‚Í
+<P>‚±‚Ì‚æ‚¤‚ÈÈ—ª‹L–@‚ðŽg‚¤‚ÆA‘½­ƒAƒCƒRƒ“ƒŠƒXƒg‚ªŒ©‚â‚·‚­‚È‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñB</P>
+</DIV>
+
+<DIV class="section">
+<H4 class="h">ƒAƒCƒRƒ“‚ÌÅ‘å”</H4>
+<P>—˜_ã‚Í–³ŒÀ‚É‚È‚Á‚Ä‚¢‚Ü‚·B<BR>
+‚½‚¾ACGIˆ—‚Ì•‰‰×‚âHTTP“]‘—‚Ì•‰‰×‚ðl‚¦‚é‚ÆA<BR>
+‚Ù‚Ç‚Ù‚Ç‚Ì”‚É‚µ‚Ä‚¨‚¢‚½‚Ù‚¤‚ª‚¢‚¢‚©‚à‚µ‚ê‚Ü‚¹‚ñB<BR>
+‚í‚½‚µ‚Ì‘¤‚Å‚ÍƒAƒCƒRƒ“”800‚Å‚»‚±‚»‚±‚ÌƒXƒs[ƒh‚Å“®ì‚·‚é‚±‚Æ‚ðŠm”F‚µ‚Ä‚¢‚Ü‚·B<BR>
+ƒAƒCƒRƒ“Œ©–{(icon.html)‚ðŒ©‚éŽž‚Íˆê“x‚É‘S‚Ä‚ÌƒAƒCƒRƒ“‚ð•\Ž¦‚³‚¹‚éA‚Æ‚¢‚¤‚±‚Æ‚à—¯ˆÓ‚·‚é•K—v‚ª‚ ‚é‚Å‚µ‚å‚¤B</P>
+</DIV>
+
+<DIV class="section">
+<H4 class="h">ê—pƒAƒCƒRƒ“</H4>
+<P>ŠÇ—CGI‚ÌuCONFIGÝ’èv‚ÅÝ’è‚Å‚«‚Ü‚·B<BR>
+‚Ü‚½‚ÍA<BR>
+<CODE>$CF{'cmic'}='1';</CODE><BR>
+‚Æ‚µ‚½‚¤‚¦‚Å’¼ÚÝ’èƒtƒ@ƒCƒ‹‚ð•ÒW‚µ‚Ä‚àÝ’è‰Â”\‚Å‚·B</P>
+<P>Ý’è‚ÌŒ`Ž®‚Í</P>
 <PRE><CODE>$IC{'hae'}='mae.png'; #•c
 $IC{'hie'}='mie.png'; #æÑ
 $IC{'hue'}='mue.png'; #êK
 $IC{'hee'}='mee.png'; #ˆ·
 $IC{'hoe'}='moe.png'; #”TŠG</CODE></PRE>
-		‚±‚Ì‚æ‚¤‚É‚È‚Á‚Ä‚¢‚Ü‚·<BR>
-		ŽÀÛ‚ÉŽg‚¤ê‡‚ÍuƒRƒ}ƒ“ƒhv—“‚ðŽg—p‚µ‚Ü‚·<BR>
-		ã‚Ì—á‚Ì‚æ‚¤‚ÉÝ’è‚³‚ê‚Ä‚¢‚é‚Æ‚·‚é‚ÆA<BR>
-		<DIV><LABEL accesskey="m" for="cmd">¡ƒRƒ}ƒ“ƒh(<SPAN class="ak">M</SPAN>)F</LABEL>
-		<INPUT type="text" name="cmd" value="icon=hoe" id="cmd" style="ime-mode:inactive;width:200px;"></DIV>
-		‚±‚Ì‚æ‚¤‚É“ü—Í‚·‚ê‚ÎƒAƒCƒRƒ“‚É&quot;moe.png&quot;‚ªÝ’è‚³‚ê‚Ü‚·<BR>
-		’ˆÓFƒAƒCƒRƒ“ƒpƒXƒ[ƒh‚É‚Í <CODE>=</CODE> ‚â <CODE>;</CODE> ‚ÍŽg—p‚Å‚«‚Ü‚¹‚ñ<BR>
-		‚È‚é‚×‚­ƒAƒCƒRƒ“ƒpƒXƒ[ƒh‚Í <CODE>[-_a-zA-Z0-9]</CODE> ‚È•¶Žš‚Å\¬‚³‚ê‚Ä‚¢‚é‚Ù‚¤‚ª‚¢‚¢‚ÆŽv‚¢‚Ü‚·</LI>
-	</UL>
-	</LI>
-	
-	<LI><H3 class="list"><A name="ˆÓ–¡‚Ì¬“¯‚µ‚â‚·‚¢Œê‚Ì’è‹`">ˆÓ–¡‚Ì¬“¯‚µ‚â‚·‚¢Œê‚Ì’è‹`</A></H3>
-	Mireille‚â‚»‚Ìà–¾‚ÅˆÓ–¡‚ª‚í‚©‚è‚É‚­‚¢‚ÆŽv‚í‚ê‚éŒê‚Ì‰ðà‚Å‚·<BR>
-	Šî–{“I‚ÉˆÈ‰º‚Ì‚æ‚¤‚É•\‹L‚µ‚Ä‚¢‚é‚Í‚¸‚Å‚·
-	<DL>
-		<DT><DFN>‹LŽ–î•ñƒtƒ@ƒCƒ‹</DFN> ArticleInformationFile, ZeroFile</DT>
-		<DD>
-		ƒƒOŠÇ—ƒtƒ@ƒCƒ‹‚È‚Ç‚Æ‚àŒ¾‚Á‚Ä‚¢‚ÄA0.cgi‚Ì‚±‚Æ‚Å‚·<BR>
-		‚±‚Ìƒtƒ@ƒCƒ‹‚ÉÅI“ŠeŽÒ‚Ìî•ñ‚âuÅI“Še“úŽž‡v‚Ìî•ñ‚ð•Û‘¶‚µ‚Ä‚¢‚é‚Ì‚ÅA<BR>
-		—˜—p’†‚Ì0.cgi‚ª”j‘¹‚µ‚Ä‚µ‚Ü‚¤‚Æ‘å•Ï‚Å‚·<BR>
-		‚Æ‚¢‚Á‚Ä‚àARev:1.2.0.7ˆÈ~‚ÌŠÇ—CGI‚É‚Íu‹LŽ–î•ñƒtƒ@ƒCƒ‹‰ñ•œv‚ª‚Â‚¢‚Ä‚¢‚é‚Ì‚ÅA<BR>
-		‚±‚ê‚Å‚Ù‚Ç‚Ù‚Ç‚É•œ‹Œ‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·<BR>
-		i¡‚Ü‚Å‚É“Še‚³‚ê‚½ƒXƒŒƒbƒh‚Ì•À‚Ñ‡‚ª‹LŽ–”Ô†‡‚É‚È‚Á‚Ä‚µ‚Ü‚¤‚¯‚Çj<BR>
-		iÅ‹ß‚ÌMireille‚¾‚Æ“K“–‚ÉŽ©“®•œ‹Œ‚µ‚Ü‚·j
-		</DD>
-		<DT><DFN>‹LŽ–ƒXƒŒƒbƒh</DFN> ArticleThread</DT>
-		<DD>
-		e‹LŽ–‚ÆŽq‹LŽ–‚ðŠÜ‚ß‚½ˆê‚Â‚ÌƒXƒŒƒbƒh‘S‘Ì‚ðŽw‚µ‚Ü‚·<BR>
-		u‹LŽ–v‚Æ‚Í•Ê‚ÌˆÓ–¡‚ÅŽg‚Á‚Ä‚¢‚é‚Ì‚Å’ˆÓ‚µ‚Ä‚­‚¾‚³‚¢
-		</DD>
-		<DT><DFN>‹LŽ–ƒXƒŒƒbƒhƒtƒ@ƒCƒ‹</DFN> ArticleThreadFile</DT>
-		<DD>
-		‹LŽ–ƒXƒŒƒbƒh‚ð•Û‘¶‚µ‚Ä‚¢‚éƒtƒ@ƒCƒ‹‚Ì‚±‚Æ‚Å‚·<BR>
-		ˆê‚Â‚Ì‹LŽ–ƒXƒŒƒbƒh‚É‘Î‚µ‚ÄAˆê‚Â‚Ì‹LŽ–ƒXƒŒƒbƒhƒtƒ@ƒCƒ‹‚ª‘Î‰ž‚µ‚Ü‚·<BR>
-		—á‚¦‚Î‹LŽ–ƒXƒŒƒbƒh”Ô†‚ª123‚¾‚Á‚½‚çA123.cgi‚ª‘Î‰ž‚·‚é‹LŽ–ƒXƒŒƒbƒhƒtƒ@ƒCƒ‹‚Å‚·
-		</DD>
-		<DT><DFN>e‹LŽ–</DFN> ParentArticle</DT>
-		<DD>
-		ƒXƒŒƒbƒh“à‹LŽ–”Ô†0AV‹K“Še‚Å“Še‚³‚ê‚½‹LŽ–‚Ì‚±‚Æ‚Å‚·
-		</DD>
-		<DT><DFN>Žq‹LŽ–</DFN> ChildArticle, Response, Follow-up, Reply</DT>
-		<DD>
-		•ÔM‚Æ‚µ‚Ä“Še‚³‚ê‚½‹LŽ–‚ÅAu•ÔMv‚âuƒŒƒX‹LŽ–v‚Æ“¯‚¶ˆÓ–¡‚Å‚·<BR>
-		ƒXƒŒƒbƒh“à‹LŽ–”Ô†‚ª1,2,3,EE‚Ì‚à‚Ì‚Å‚·
-		</DD>
-		<DT><DFN>‹LŽ–</DFN> Article</DT>
-		<DD>
-		’P“Æ‚Åu‹LŽ–v‚Æ‚¢‚Á‚½‚çA‘Oq‚Ìe‹LŽ–‚âŽq‹LŽ–‚Ìˆê‚Â‚Ì‚±‚Æ‚Å‚·<BR>
-		u“Šev‚Æ‚¢‚¤Œ¾—t‚ðŽg‚Á‚½‚è‚à‚µ‚Ä‚¢‚Ü‚·
-		</DD>
-		<DT><DFN>ê—pƒAƒCƒRƒ“</DFN> ExclusiveIcon</DT>
-		<DD>
-		•’Ê‚ÉSELECT‚Å‘I‚×‚È‚¢ƒAƒCƒRƒ“‚Ì‚±‚Æ‚ÅAƒAƒCƒRƒ“ƒpƒXƒ[ƒh‚ð“ü—Í‚·‚é‚±‚Æ‚ÅŽg‚¤‚±‚Æ‚ª‚Å‚«‚Ü‚·<BR>
-		ƒpƒXƒ[ƒh‚È‚Ç‚Å—˜—p‚Å‚«‚él‚ð§ŒÀA‘½‚­‚Ìê‡ŒÂl‚É‘Î‚µê—p‚Æ‚·‚é‚Ì‚ÅA<BR>
-		uê—pƒAƒCƒRƒ“v‚Æ‚¢‚¤Œê‚ð—p‚¢‚Ä‚¢‚Ü‚·<BR>
-		<SAMP>ê—pŠÇ—lê—p</SAMP><BR>
-		‚ª•K‚¸‚µ‚à¬‚è—§‚Â‚í‚¯‚Å‚Í‚ ‚è‚Ü‚¹‚ñ‚Ì‚ÅA”O‚Ì‚½‚ß<BR>
-		Private‚Å‚È‚­Exclusive‚ðŽg‚Á‚Ä‚¢‚é‚Ì‚à•K‚¸‚µ‚àŒÂl‚Å‚Í–³‚¢‚©‚ç‚Å‚·
-		</DD>
-		<DT><DFN>ƒƒO</DFN> Log</DT>
-		<DD>
-		”™‘R‚ÆA¡‚Ü‚Å‚É“Še‚³‚ê‚½‹LŽ–‚ÌW‡A‚Æ‚¢‚¤Œ`‚ÅŽg‚Á‚Ä‚¢‚Ü‚·<BR>
-		uƒƒOƒtƒ@ƒCƒ‹v‚Íu‹LŽ–ƒXƒŒƒbƒhƒtƒ@ƒCƒ‹v‚Æ“¯‚¶ˆÓ–¡‚ÅA1.cgi‚â59.cgi‚Ì‚±‚Æ‚Å‚·
-		</DD>
-		<DT><DFN>ƒtƒHƒ‹ƒ_</DFN> Folder / <DFN>ƒfƒBƒŒƒNƒgƒŠ</DFN> Directory</DT>
-		<DD>
-		ƒtƒHƒ‹ƒ_‚ÍWindows—pŒêAƒfƒBƒŒƒNƒgƒŠ‚ÍUNIX—pŒê‚Æ‚¢‚¤‚¾‚¯‚ÅAŽÀÛ‚É‚ ‚ç‚í‚·ˆÓ–¡‚Í‚Ù‚Ú“¯‚¶•¨‚Å‚·<BR>
-		‚±‚Ìà–¾‘‚Å‚ÍuƒtƒHƒ‹ƒ_v‚ÆŒ¾‚Á‚½‚çÝ’uŽÒ‚ÌƒRƒ“ƒsƒ…[ƒ^‚Å‚ÌƒtƒHƒ‹ƒ_A<BR>
-		ƒfƒBƒŒƒNƒgƒŠ‚Æ‚¢‚Á‚½‚çƒT[ƒo[ã‚ÌƒfƒBƒŒƒNƒgƒŠ‚ðŽw‚µ‚Ü‚·
-		</DD>
-		<DT><DFN>ƒAƒCƒRƒ“ƒŠƒXƒg</DFN> IconList</DT>
-		<DD>
-		icon.txt‚Ì‚±‚Æ‚Å‚·<BR>
-		uƒAƒCƒRƒ“ˆê——v‚ð‰pŒê‚É‚·‚ê‚ÎuƒAƒCƒRƒ“ƒŠƒXƒgv‚É‚È‚è‚»‚¤‚Å‚·‚ªA<BR>
-		‚±‚ê‚ÍƒAƒCƒRƒ“Œ©–{‚ÌˆÓ–¡‚ÅŽg‚Á‚Ä‚¢‚é‚±‚Æ‚ª‚±‚Æ‚ª‘½‚¢‚Ì‚Å‚·A‚Ü‚¬‚ç‚í‚µ‚¢‚Å‚·‚Ë
-		</DD>
-		<DT><DFN>ƒAƒCƒRƒ“ƒJƒ^ƒƒOEƒAƒCƒRƒ“Œ©–{</DFN> IconSample, IconCatalog</DT>
-		<DD>
-		iconctlg.cgi‚ª¶¬‚·‚éHTML‚âicon.html‚Ì‚±‚Æ‚Å‚·<BR>
-		ƒAƒCƒRƒ“ƒŠƒXƒg‚Æ•´‚ç‚í‚µ‚¢‚Ì‚ÅŒ¾‚í‚È‚¢—l‚É‚µ‚Ä‚¢‚é‚Â‚à‚è‚È‚Ì‚Å‚·‚ªAuƒAƒCƒRƒ“ˆê——v‚à“¯‚¶ˆÓ–¡‚Å‚·
-		</DD>
-		<DT><DFN>ƒAƒCƒRƒ“ƒvƒŒƒrƒ…[</DFN> IconPreview</DT>
-		<DD>
-		“ŠeƒtƒH[ƒ€‚É‚ ‚éAŽg‚¤ƒAƒCƒRƒ“‚ðJavaScript‚É‚æ‚Á‚Ä‘O‚à‚Á‚ÄŒ©‚ê‚é‹@”\‚ÌŽ–‚Å‚·<BR>
-		ARTEMIS‚³‚ñ‚ÌŒfŽ¦”Â‚ðŽQl‚É‚µ‚ÄŽæ‚è•t‚¯‚Ü‚µ‚½
-		</DD>
-		<DT><DFN>ƒpƒX</DFN> PATH</DT>
-		<DD>
-		Žå‚Éƒtƒ@ƒCƒ‹‚ÌêŠ‚ðŽw’è‚·‚éÛ‚É—p‚¢‚Ü‚·<BR>
-		ŽÀÛ–â‘è‚Æ‚µ‚Ä‚ÍAƒpƒX‚É‚Í“ñ‚Â‚ÌŽí—Þ‚ª‘¶Ý‚µ‚Ü‚·<BR>
-		<BR>
-		ˆê‚Â‚ÍƒRƒ“ƒsƒ…[ƒ^“à‚ÌƒpƒX‚Å‚·<BR>
-		Ž©•ª‚ÌƒRƒ“ƒsƒ…[ƒ^“à‚Ìƒtƒ@ƒCƒ‹‚ðŽw’è‚·‚é‚Æ‚«‚âAƒT[ƒo[ã‚ÌCGI‚ª’¼Úƒtƒ@ƒCƒ‹‚ð“Ç‚Ýž‚Þê‡‚ÉŽg‚¢‚Ü‚·<BR>
-		<BR>
-		‚à‚¤ˆê‚Â‚ªURLƒpƒX‚Å‚·<BR>
-		‚±‚ê‚Íƒuƒ‰ƒEƒU‚Å“Ç‚Ýž‚ÞWebƒy[ƒW‚ðŽw’è‚µ‚½‚èAHTML‚©‚çIMGƒ^ƒO‚âLINKƒ^ƒO‚ðŽg‚Á‚ÄA‰æ‘œƒtƒ@ƒCƒ‹‚âCSSƒtƒ@ƒCƒ‹‚ð“Ç‚Ýž‚ÞÛ‚É—p‚¢‚Ü‚·<BR>
-		<BR>
-		•’i‚Í‚±‚Ì“ñ‚Â‚ð•ÊX‚ÉˆÓŽ¯‚·‚é•K—v‚Í‚ ‚è‚Ü‚¹‚ñ‚ªA<A href="#Mireille‚ÌƒRƒAƒtƒ@ƒCƒ‹ŒQ‚ð•¡”‚ÌŒfŽ¦”Â‚Å‹¤—L‚·‚é">Mireille‚ÌƒRƒAƒtƒ@ƒCƒ‹ŒQ‚ð•¡”‚ÌŒfŽ¦”Â‚Å‹¤—L‚·‚é</A>ê‡‚É‚ÍA<BR>
-		‚±‚Ì“ñ‚Â‚Ìˆá‚¢‚ðˆÓŽ¯‚µ‚Äindex.cgi‚ðÝ’è‚·‚é•K—v‚ª‚ ‚è‚Ü‚·
-		</DD>
-	</DL>
-	‚Æ‚è‚ ‚¦‚¸‚±‚Ì‚æ‚¤‚ÈŠ´‚¶‚Å‚µ‚å‚¤‚©<BR>
-	‘¼‚É‚àˆÓ–¡‚Ì–¾Šm‚Å‚È‚¢Œê‚ª‚ ‚ê‚ÎAŒfŽ¦”Â‚Å‚¨‚Á‚µ‚á‚Á‚Ä‚­‚¾‚³‚¢‚Ü‚µA’Ç‰Á‚µ‚Ü‚·
-	</LI>
-</UL>
+<P>‚±‚Ì‚æ‚¤‚É‚È‚Á‚Ä‚¢‚Ü‚·B<BR>
+ŽÀÛ‚ÉŽg‚¤ê‡‚ÍuƒRƒ}ƒ“ƒhv—“‚ðŽg—p‚µ‚Ü‚·B</P>
+<P>ã‚Ì—á‚Ì‚æ‚¤‚ÉÝ’è‚³‚ê‚Ä‚¢‚é‚Æ‚·‚é‚ÆA</P>
+ƒRƒ}ƒ“ƒh—“‚Éuicon=hoev‚Æ“ü—Í‚·‚ê‚ÎƒAƒCƒRƒ“‚É&quot;moe.png&quot;‚ªÝ’è‚³‚ê‚Ü‚·B<BR>
+’ˆÓFƒAƒCƒRƒ“ƒpƒXƒ[ƒh‚É‚Í <CODE>=</CODE> ‚â <CODE>;</CODE> ‚ÍŽg—p‚Å‚«‚Ü‚¹‚ñB<BR>
+‚È‚é‚×‚­ƒAƒCƒRƒ“ƒpƒXƒ[ƒh‚Í <CODE>[-_a-zA-Z0-9]</CODE> ‚È•¶Žš‚Å\¬‚³‚ê‚Ä‚¢‚é‚Ù‚¤‚ª‚¢‚¢‚ÆŽv‚¢‚Ü‚·B</P>
+</DIV>
 </DIV>
 
-<DIV class="hthread" style="text-align:left">
-<H2 class="list">ž<A name="Mireille‚ÌÝ’u‚Å‚Â‚Ü‚Ã‚¢‚½‚ç">Mireille‚ÌÝ’u‚Å‚Â‚Ü‚Ã‚¢‚½‚ç</A></H2>
-<UL>
-	<LI><H3 class="list"><A name="“®‚©‚È‚¢I‚Æ‚«">“®‚©‚È‚¢I‚Æ‚«</A></H3>
-	‚Ü‚¸A<STRONG>u500 Internal Server Errorv‚Æ•\Ž¦‚³‚ê‚éê‡</STRONG>‚ÍA<BR>
-	<UL>
-		<LI>ƒp[ƒ~ƒbƒVƒ‡ƒ“‚ª³‚µ‚­‚È‚¢<BR>
-		FTP‚©‚çƒAƒbƒvƒ[ƒhv‚É‘‚¢‚½ƒp[ƒ~ƒbƒVƒ‡ƒ“‚Íˆê”Ê“I‚Èê‡‚ÅA<BR>
-		êŠ‚É‚æ‚Á‚Ä‚Í‚±‚ê‚Å“®‚©‚È‚¢ê‡‚ª‚ ‚è‚Ü‚·<BR>
-		ƒvƒƒoƒCƒ_[‚âƒŒƒ“ƒ^ƒ‹ƒT[ƒo[‘¤‚©‚çACGI‚Ìƒp[ƒ~ƒbƒVƒ‡ƒ“‚ð››‚É‚·‚é‚±‚Æ<BR>
-		‚ÆŒ¾‚í‚ê‚Ä‚¢‚éê‡‚Í‚»‚ê‚É]‚Á‚Ä‚­‚¾‚³‚¢<BR>
-		‚¿‚È‚Ý‚Éu500v‚©AuMireille Error Screenv‚Åuwrite/read errorv‚ªo‚éê‡AˆÈŠO‚ÌƒGƒ‰[‚Å‚Í<BR>
-		‚Ü‚¸ƒp[ƒ~ƒbƒVƒ‡ƒ“‚ªŒ´ˆö‚Ì‰Â”\«‚Í‚ ‚è‚Ü‚¹‚ñ</LI>
-		<LI>ƒAƒbƒvƒ[ƒh‚ÌŽ¸”s‚É‚æ‚éƒtƒ@ƒCƒ‹‚Ì”j‘¹<BR>
-		ƒAƒbƒvƒ[ƒhŽž‚Éƒtƒ@ƒCƒ‹‚Ìˆê•”‚ªŒ‡‘¹‚µ‚½‚©‚à‚µ‚ê‚Ü‚¹‚ñ<BR>
-		ƒAƒbƒvƒ[ƒh‚µ‚È‚¨‚µ‚Ä‚Ý‚Ä‚­‚¾‚³‚¢</LI>
-		<LI>uÅ‰‚Ìˆêsv‚ª³‚µ‚­‚È‚¢<BR>
-		‚¢‚í‚ä‚éuÅ‰‚Ìˆêsv‚ª³‚µ‚­‚È‚¢‰Â”\«‚ª‚ ‚è‚Ü‚·<BR>
-		‚Æ‚è‚ ‚¦‚¸<CODE>#!/usr/local/bin/perl</CODE>‚Æ<CODE>#!/usr/bin/perl</CODE>‚ð—¼•ûŽŽ‚µ‚Ä‚Ý‚ÄA<BR>
-		‚¾‚ß‚¾‚Á‚½ê‡‚ÍAƒvƒƒoƒCƒ_[‚âƒŒƒ“ƒ^ƒ‹ƒT[ƒo[‚É•·‚¢‚Ä‚Ý‚Ä‚­‚¾‚³‚¢</LI>
-	</UL>
-	
-	ŽŸ‚É<STRONG>uMireille Error Screenv‚ª•\Ž¦‚³‚ê‚éê‡</STRONG>‚ÍA<BR>
-	<UL><LI>EEE‚»‚ÌƒGƒ‰[ƒXƒNƒŠ[ƒ“‚É•\Ž¦‚³‚ê‚éî•ñ‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢<BR>
-	‚à‚Æ‚à‚Æ¬£‚ªƒTƒ|[ƒg‚·‚é‚Æ‚«‚Ì‚½‚ß‚É‚Â‚¯‚½‚à‚Ì‚È‚Ì‚Åà–¾‚ª•seØ‚Èê‡‚ª‚ ‚èA<BR>
-	‰ðŒˆô‚ª‚í‚©‚ç‚È‚¢‚©‚à‚µ‚ê‚Ü‚¹‚ñ‚ªEEE<BR>
-	‚»‚Ìê‡‚ÍAiremix‚ÌŒfŽ¦”Â‚ÅA‚»‚ÌƒGƒ‰[ƒXƒNƒŠ[ƒ“‚Ìî•ñ‚Æ‹¤‚É•·‚¢‚Ä‚­‚¾‚³‚ê‚ÎA<BR>
-	ƒTƒ|[ƒg‚Å‚«‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñižB–†</LI>
-	<LI>¬£‚É•·‚­Û‚Íu<SAMP>ERROR:...</SAMP>v‚¾‚¯‚Å‚È‚­AƒGƒ‰[ƒXƒNƒŠ[ƒ“‚Å•\Ž¦‚³‚ê‚éî•ñ‘S‚Ä‚ð‹³‚¦‚Ä‚­‚¾‚³‚¢<BR>
-	‚í‚½‚µ‚ÌƒTƒ|[ƒg—p‚É•K—v‚Èî•ñ‚ÍƒGƒ‰[ƒXƒNƒŠ[ƒ“‚Å‚Ù‚Æ‚ñ‚ÇW‚Ü‚é‚æ‚¤‚É‚µ‚Ä‚¢‚é‚Ì‚ÅA<BR>
-	‹t‚Éˆê•”‚¾‚¯‚Å‚Íî•ñ‚ªW‚Ü‚ç‚È‚¢‚Ì‚Å‚·</LI></UL>
-	
-	‚Ü‚½<STRONG>•¶Žš‚Í‚Ü‚Á‚½‚­•\Ž¦‚³‚ê‚¸‚½‚¾‰æ–Ê‚ª^‚Á”’‚É‚È‚éê‡</STRONG>‚â<STRONG>L‚Æ‹¤‚É‰»‚¯‚½•¶Žš‚ª•\Ž¦‚³‚ê‚éê‡</STRONG>‚ÍA<BR>
-	‚½‚¢‚Ä‚¢AGZIPˆ³k“]‘—‹@”\‚Æ–³—¿ƒT[ƒo[‚É‚æ‚­‚ ‚é‹­§L‘}“ü‹@\‚ÌƒRƒ“ƒ{‚ªŒ´ˆö‚Å‚µ‚å‚¤<BR>
-	‘Îô‚Æ‚µ‚Ä‚ÍAindex.cgi‚Ì‚Ç‚±‚©‚É <CODE>undef$ENV{'HTTP_ACCEPT_ENCODING'};</CODE> ‚Æ‚¢‚¤s‚ð’Ç‰Á‚µ‚Ä‰º‚³‚¢<BR>
-	
-	ÅŒã‚É<STRONG>ˆÈã‚ÌŽO‚ÂˆÈŠO‚ÌÇó‚Å“®ì‚µ‚È‚¢ê‡</STRONG>‚ÍA<BR>
-	Œ´ˆö‚ª“Á’è‚Å‚«‚È‚¢‚Ì‚ÅAiremix‚ÌŒfŽ¦”Â‚Å¬£‚É•·‚¢‚Ä‚­‚¾‚³‚¢<BR>
-	‚Ü‚¾Šm”F‚Å‚«‚Ä‚¢‚È‚¢ƒoƒO‚ªŒ´ˆö‚Ì‰Â”\«‚ª‚ ‚è‚Ü‚·</LI>
-	
-	<LI><H3 class="list"><A name="•¶Žš‰»‚¯‚·‚é">•¶Žš‰»‚¯‚·‚é</A></H3>
-	‘‚«ž‚ñ‚¾“à—e‚Í‚¿‚á‚ñ‚Æ•\Ž¦‚³‚ê‚é‚Ì‚ÉAƒƒjƒ…[‚Æ‚©‚ª•¶Žš‰»‚¯‚µ‚Ä‚¢‚éA<BR>
-	‚Ü‚½‚Í‚»‚Ì‹t‚ÉAƒƒjƒ…[‚Æ‚©‚Í‚¿‚á‚ñ‚Æ•\Ž¦‚³‚ê‚é‚Ì‚ÉA‘‚«ž‚ñ‚¾“à—e‚ª•¶Žš‰»‚¯‚µ‚Ä‚¢‚éA<BR>
-	‚Æ‚¢‚¤ê‡‚ÍACGI‚ðƒGƒfƒBƒ^‚Å•ÒW‚·‚éÛ‚ÉEUC-JPˆÈŠO‚ÌŠ¿ŽšƒR[ƒh‚Å•Û‘¶‚µ‚Ä‚µ‚Ü‚Á‚Ä‚¢‚Ü‚·<BR>
-	ˆê”Ô‘½‚¢Œ´ˆö‚ÍAƒGƒfƒBƒ^‚ÌÝ’è‚ÅAu•Û‘¶Žž‚ÉŠ¿ŽšƒR[ƒh‚ðShift_JIS‚É‚µ‚Ä•Û‘¶‚·‚év<BR>
-	‚Æ‚¢‚¤‚æ‚¤‚ÈˆÓ–¡‚ÌÝ’è‚ª ON ‚É‚È‚Á‚Ä‚¢‚ÄAEUC-JPˆÈŠO‚ÌŠ¿ŽšƒR[ƒhi‚±‚Ìê‡‚ÍShift_JISj‚Å<BR>
-	•Û‘¶‚µ‚Ä‚µ‚Ü‚Á‚Ä‚¢‚éA‚Æ‚¢‚¤ê‡‚ª‘½‚¢‚ÆŽv‚¢‚Ü‚·<BR>
-	<BR>
-	‚±‚Ìê‡‚Í‘Oq‚ÌƒGƒfƒBƒ^‚ÌÝ’è‚ðu“Ç‚Ýž‚ñ‚¾‚Æ‚«‚ÌŠ¿ŽšƒR[ƒh‚Æ“¯‚¶‚à‚Ì‚Å•Û‘¶‚·‚év<BR>
-	‚Æ‚¢‚¤‚æ‚¤‚É‚µ‚½‚¤‚¦‚ÅAuŠ¿ŽšƒR[ƒh‚ðŽw’è‚µ‚Ä•Û‘¶‚·‚év‚Æ‚¢‚¤€–Ú‚ð’T‚µA<BR>
-	EUC-JP‚Å•Û‘¶‚µ‚È‚¨‚µ‚½ã‚ÅAÄ“xƒT[ƒo[‚ÉƒAƒbƒvƒ[ƒh‚·‚ê‚ÎA•¶Žš‰»‚¯‚ª‰ðÁ‚³‚ê‚Ä‚¢‚é‚ÆŽv‚¢‚Ü‚·<BR>
-	‚±‚ê‚Å‚à•¶Žš‰»‚¯‚µ‚Ä‚¢‚éê‡‚ÍAiremix‚Ì<A href="http://www.airemix.com/bbs/">ŒfŽ¦”Â</A>‚É‘‚«ž‚ñ‚Å‚­‚¾‚³‚¢<BR>
-	‚Å‚«‚é‚¾‚¯‘Pˆ‚µ‚Ü‚·<BR>
-	<BR>
-	‚¿‚È‚Ý‚ÉATeraPad‚Å‚Í‚±‚Ì–â‘è‚ÉŠ×‚é‚±‚Æ‚ª‚ ‚é‚ÆŽv‚¢‚Ü‚·‚ªA<BR>
-	TeraPad‚Åˆê‚Âˆê‚Â‚Ìƒtƒ@ƒCƒ‹‚ðŠJ‚¢‚ÄA<BR>
-	@•\Ž¦ ¨ ƒIƒvƒVƒ‡ƒ“ ¨ ƒEƒBƒ“ƒhƒE/Š¿ŽšƒR[ƒh ƒ^ƒu ¨ Š¿ŽšƒR[ƒh ƒOƒ‹[ƒv<BR>
-	@ ¨  Š¿Žš/‰üsƒR[ƒh‚ðŽ©“®”FŽ¯‚·‚é@‚Éƒ`ƒFƒbƒN‚ð‚Â‚¯‚é<BR>
-	@ ¨ ‰º‚Ì“ñ‚Â‚Í—¼•ûu“Ç‚Ýž‚ÝŽž‚Ì››ƒR[ƒh‚Æ“¯‚¶v‚ð‘I‚Ô<BR>
-	‚Æ‚·‚é‚±‚Æ‚Å‰ðŒˆ‚·‚é‚ÆŽv‚¢‚Ü‚·<BR>
-	<BR>
-	ƒGƒfƒBƒ^‚Å•Û‘¶Žž‚ÉShift_JIS‚É‚µ‚Ä‚µ‚Ü‚¤ˆÈŠO‚ÉA<BR>
-	FTPƒ\ƒtƒg‚ÅƒAƒbƒvƒ[ƒh‚·‚é‚Æ‚«‚ÉEUC-JP‚©‚çShift_JIS‚É•ÏŠ·‚µ‚Ä‚µ‚Ü‚¤ê‡‚à‚ ‚è‚Ü‚·<BR>
-	uƒAƒbƒvƒ[ƒhŽž‚ÉŠ¿ŽšƒR[ƒh‚ð•ÏŠ·‚µ‚È‚¢v‚Æ‚¢‚¤‚æ‚¤‚ÈˆÓ–¡‚ÌÝ’è‚ð‚µ‚Ä‚¨‚«‚Ü‚µ‚å‚¤<BR>
-	EUC-JP‚Ìƒtƒ@ƒCƒ‹‚ðƒAƒbƒvƒ[ƒh‚µ‚ÄAƒ_ƒEƒ“ƒ[ƒh‚µ‚ÄAƒGƒfƒBƒ^‚ÅŒ©‚Ä‚Ý‚ÄA<BR>
-	Shift_JIS‚É‚È‚Á‚Ä‚¢‚½‚çAFTPƒ\ƒtƒg‚ªŒ´ˆö‚Ì‰Â”\«‚ª‚‚¢‚Å‚·</LI>
-	
-	<LI><H3 class="list"><A name="ƒp[ƒ~ƒbƒVƒ‡ƒ“i‘®«j‚É‚Â‚¢‚Ä">ƒp[ƒ~ƒbƒVƒ‡ƒ“i‘®«j‚É‚Â‚¢‚Ä</A></H3>
-	–³—¿ƒT[ƒo[‚È‚Ç‚¾‚ÆAƒZƒLƒ…ƒŠƒeƒBŠm•Û‚Ì‚½‚ß‚ÉAƒT[ƒo[‘¤‚©‚çA<BR>
-	uCGIƒXƒNƒŠƒvƒg‚Ìƒp[ƒ~ƒbƒVƒ‡ƒ“‚Í 700 ‚É‚µ‚Ä‚­‚¾‚³‚¢v<BR>
-	‚ÆŒ¾‚í‚ê‚é‚±‚Æ‚ª‚ ‚é‚ÆŽv‚¢‚Ü‚·<BR>
-	‚±‚Ìê‡‚ÍA‚±‚Ìà–¾‘‚Ì‹Lq‚ÉŠÖ‚í‚ç‚¸AƒT[ƒo[‘¤‚ÌŽwŽ¦‚É]‚Á‚Ä‚­‚¾‚³‚¢<BR>
-	Šî–{“I‚ÉAƒp[ƒ~ƒbƒVƒ‡ƒ“‚Í‘½­“®ì‚ª‚¨‚©‚µ‚­‚Ä‚àA“®‚¢‚Ä‚³‚¦‚¢‚ê‚Î‚ ‚Á‚Ä‚¢‚Ü‚·<BR>
-	ƒp[ƒ~ƒbƒVƒ‡ƒ“‚ªŒ´ˆö‚ÌƒGƒ‰[‚ÍŠî–{“I‚Éu<SAMP>500 Internal Server Error</SAMP>v‚©Au<SAMP>Can't write...</SAMP>vŒn‚ÌƒGƒ‰[‚Ì‚Ý‚Å‚·</LI>
-	<LI><H3 class="list"><A name="à–¾‘‚É‘‚¢‚Ä‚¢‚È‚¢ƒtƒ@ƒCƒ‹‚ªˆ³kƒtƒ@ƒCƒ‹‚Ì’†‚É“ü‚Á‚Ä‚½">à–¾‘‚É‘‚¢‚Ä‚¢‚È‚¢ƒtƒ@ƒCƒ‹‚ªˆ³kƒtƒ@ƒCƒ‹‚Ì’†‚É“ü‚Á‚Ä‚½</A></H3>
-	‚¨‚»‚ç‚­‚í‚½‚µ‚Ìƒ~ƒX‚Å‚·<BR>
-	\‚µ–ó‚ ‚è‚Ü‚¹‚ñ‚ªA–³‚¢•¨‚ÆŽv‚Á‚Ä‚­‚¾‚³‚¢</LI>
-	<LI><H3 class="list"><A name="‚È‚ñ‚¾‚©Mireille‚Ì“®ì‚ª‚¨‚©‚µ‚¢">‚È‚ñ‚¾‚©Mireille‚Ì“®ì‚ª‚¨‚©‚µ‚¢</A></H3>
-	Ý’èƒ~ƒX‚©Mireille‚ÌƒoƒO‚ªŒÜ•ªŒÜ•ª‚Å‚·<BR>
-	ˆê’Ê‚èà–¾‚ðŒ©‚ÄAÝ’è‚ðŠm”F‚µ‚ÄAŠÔˆá‚¢‚È‚¢‚æ‚¤‚Å‚µ‚½‚çAƒoƒO‚¾‚Æ•ñ‚µ‚Ä‚­‚¾‚³‚¢<BR>
-	‚¿‚È‚Ý‚ÉŽ©•ª‚Ð‚Æ‚è‚Å”Y‚ÞŽžŠÔ‚Í1ŽžŠÔ‚ª–ÚˆÀ‚Å‚·i‰½<BR>
-	‰½ŽžŠÔ‚à”Y‚Þ‚æ‚¤‚Èó‹µ‚ª”­¶‚µ‚½‚çA‚»‚êŽ©‘Ì‚ªuMireille‚ÌƒoƒOv‚Å‚·‚Ì‚ÅA<BR>
-	à–¾‘‚ª‚í‚©‚è‚É‚­‚¢‚Ì‚àuƒoƒOv‚Ì‚¤‚¿‚È‚Ì‚Å‚·</LI>
-</UL>
+
+<DIV class="section">
+<H3 class="h"><A name="ˆÓ–¡‚Ì¬“¯‚µ‚â‚·‚¢Œê‚Ì’è‹`">ˆÓ–¡‚Ì¬“¯‚µ‚â‚·‚¢Œê‚Ì’è‹`</A></H3>
+<P>Mireille‚â‚»‚Ìà–¾‚ÅˆÓ–¡‚ª‚í‚©‚è‚É‚­‚¢‚ÆŽv‚í‚ê‚éŒê‚Ì‰ðà‚Å‚·B<BR>
+Šî–{“I‚ÉˆÈ‰º‚Ì‚æ‚¤‚É•\‹L‚µ‚Ä‚¢‚é‚Í‚¸‚Å‚·B</P>
+<DL class="section">
+	<DT><DFN>‹LŽ–î•ñƒtƒ@ƒCƒ‹</DFN> ArticleInformationFile, ZeroFile</DT>
+	<DD>
+	ƒƒOŠÇ—ƒtƒ@ƒCƒ‹‚È‚Ç‚Æ‚àŒ¾‚Á‚Ä‚¢‚ÄA0.cgi‚Ì‚±‚Æ‚Å‚·B<BR>
+	‚±‚Ìƒtƒ@ƒCƒ‹‚ÉÅI“ŠeŽÒ‚Ìî•ñ‚âuÅI“Še“úŽž‡v‚Ìî•ñ‚ð•Û‘¶‚µ‚Ä‚¢‚é‚Ì‚ÅA<BR>
+	—˜—p’†‚Ì0.cgi‚ª”j‘¹‚µ‚Ä‚µ‚Ü‚¤‚Æ‘å•Ï‚Å‚·B<BR>
+	‚Æ‚¢‚Á‚Ä‚àARev:1.2.0.7ˆÈ~‚ÌŠÇ—CGI‚É‚Íu‹LŽ–î•ñƒtƒ@ƒCƒ‹‰ñ•œv‚ª‚Â‚¢‚Ä‚¢‚é‚Ì‚ÅA<BR>
+	‚±‚ê‚Å‚Ù‚Ç‚Ù‚Ç‚É•œ‹Œ‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B<BR>
+	i¡‚Ü‚Å‚É“Še‚³‚ê‚½ƒXƒŒƒbƒh‚Ì•À‚Ñ‡‚ª‹LŽ–”Ô†‡‚É‚È‚Á‚Ä‚µ‚Ü‚¤‚¯‚Çj<BR>
+	iÅ‹ß‚ÌMireille‚¾‚Æ“K“–‚ÉŽ©“®•œ‹Œ‚µ‚Ü‚·j
+	</DD>
+	<DT><DFN>‹LŽ–ƒXƒŒƒbƒh</DFN> ArticleThread</DT>
+	<DD>
+	e‹LŽ–‚ÆŽq‹LŽ–‚ðŠÜ‚ß‚½ˆê‚Â‚ÌƒXƒŒƒbƒh‘S‘Ì‚ðŽw‚µ‚Ü‚·B<BR>
+	u‹LŽ–v‚Æ‚Í•Ê‚ÌˆÓ–¡‚ÅŽg‚Á‚Ä‚¢‚é‚Ì‚Å’ˆÓ‚µ‚Ä‚­‚¾‚³‚¢B
+	</DD>
+	<DT><DFN>‹LŽ–ƒXƒŒƒbƒhƒtƒ@ƒCƒ‹</DFN> ArticleThreadFile</DT>
+	<DD>
+	‹LŽ–ƒXƒŒƒbƒh‚ð•Û‘¶‚µ‚Ä‚¢‚éƒtƒ@ƒCƒ‹‚Ì‚±‚Æ‚Å‚·B<BR>
+	ˆê‚Â‚Ì‹LŽ–ƒXƒŒƒbƒh‚É‘Î‚µ‚ÄAˆê‚Â‚Ì‹LŽ–ƒXƒŒƒbƒhƒtƒ@ƒCƒ‹‚ª‘Î‰ž‚µ‚Ü‚·B<BR>
+	—á‚¦‚Î‹LŽ–ƒXƒŒƒbƒh”Ô†‚ª123‚¾‚Á‚½‚çA123.cgi‚ª‘Î‰ž‚·‚é‹LŽ–ƒXƒŒƒbƒhƒtƒ@ƒCƒ‹‚Å‚·B
+	</DD>
+	<DT><DFN>e‹LŽ–</DFN> ParentArticle</DT>
+	<DD>
+	ƒXƒŒƒbƒh“à‹LŽ–”Ô†0AV‹K“Še‚Å“Še‚³‚ê‚½‹LŽ–‚Ì‚±‚Æ‚Å‚·B
+	</DD>
+	<DT><DFN>Žq‹LŽ–</DFN> ChildArticle, Response, Follow-up, Reply</DT>
+	<DD>
+	•ÔM‚Æ‚µ‚Ä“Še‚³‚ê‚½‹LŽ–‚ÅAu•ÔMv‚âuƒŒƒX‹LŽ–v‚Æ“¯‚¶ˆÓ–¡‚Å‚·B<BR>
+	ƒXƒŒƒbƒh“à‹LŽ–”Ô†‚ª1,2,3,EE‚Ì‚à‚Ì‚Å‚·B
+	</DD>
+	<DT><DFN>‹LŽ–</DFN> Article</DT>
+	<DD>
+	’P“Æ‚Åu‹LŽ–v‚Æ‚¢‚Á‚½‚çA‘Oq‚Ìe‹LŽ–‚âŽq‹LŽ–‚Ìˆê‚Â‚Ì‚±‚Æ‚Å‚·B<BR>
+	u“Šev‚Æ‚¢‚¤Œ¾—t‚ðŽg‚Á‚½‚è‚à‚µ‚Ä‚¢‚Ü‚·B
+	</DD>
+	<DT><DFN>ê—pƒAƒCƒRƒ“</DFN> ExclusiveIcon</DT>
+	<DD>
+	•’Ê‚ÉSELECT‚Å‘I‚×‚È‚¢ƒAƒCƒRƒ“‚Ì‚±‚Æ‚ÅAƒAƒCƒRƒ“ƒpƒXƒ[ƒh‚ð“ü—Í‚·‚é‚±‚Æ‚ÅŽg‚¤‚±‚Æ‚ª‚Å‚«‚Ü‚·B<BR>
+	ƒpƒXƒ[ƒh‚È‚Ç‚Å—˜—p‚Å‚«‚él‚ð§ŒÀA‘½‚­‚Ìê‡ŒÂl‚É‘Î‚µê—p‚Æ‚·‚é‚Ì‚ÅA<BR>
+	uê—pƒAƒCƒRƒ“v‚Æ‚¢‚¤Œê‚ð—p‚¢‚Ä‚¢‚Ü‚·B<BR>
+	<SAMP>ê—pŠÇ—lê—p</SAMP><BR>
+	‚ª•K‚¸‚µ‚à¬‚è—§‚Â‚í‚¯‚Å‚Í‚ ‚è‚Ü‚¹‚ñ‚Ì‚ÅA”O‚Ì‚½‚ßB<BR>
+	Private‚Å‚È‚­Exclusive‚ðŽg‚Á‚Ä‚¢‚é‚Ì‚à•K‚¸‚µ‚àŒÂl‚Å‚Í–³‚¢‚©‚ç‚Å‚·B
+	</DD>
+	<DT><DFN>ƒƒO</DFN> Log</DT>
+	<DD>
+	”™‘R‚ÆA¡‚Ü‚Å‚É“Še‚³‚ê‚½‹LŽ–‚ÌW‡A‚Æ‚¢‚¤Œ`‚ÅŽg‚Á‚Ä‚¢‚Ü‚·B<BR>
+	uƒƒOƒtƒ@ƒCƒ‹v‚Íu‹LŽ–ƒXƒŒƒbƒhƒtƒ@ƒCƒ‹v‚Æ“¯‚¶ˆÓ–¡‚ÅA1.cgi‚â59.cgi‚Ì‚±‚Æ‚Å‚·B
+	</DD>
+	<DT><DFN>ƒtƒHƒ‹ƒ_</DFN> Folder / <DFN>ƒfƒBƒŒƒNƒgƒŠ</DFN> Directory</DT>
+	<DD>
+	ƒtƒHƒ‹ƒ_‚ÍWindows—pŒêAƒfƒBƒŒƒNƒgƒŠ‚ÍUNIX—pŒê‚Æ‚¢‚¤‚¾‚¯‚ÅAŽÀÛ‚É‚ ‚ç‚í‚·ˆÓ–¡‚Í‚Ù‚Ú“¯‚¶•¨‚Å‚·B<BR>
+	‚±‚Ìà–¾‘‚Å‚ÍuƒtƒHƒ‹ƒ_v‚ÆŒ¾‚Á‚½‚çÝ’uŽÒ‚ÌƒRƒ“ƒsƒ…[ƒ^‚Å‚ÌƒtƒHƒ‹ƒ_A<BR>
+	ƒfƒBƒŒƒNƒgƒŠ‚Æ‚¢‚Á‚½‚çƒT[ƒo[ã‚ÌƒfƒBƒŒƒNƒgƒŠ‚ðŽw‚µ‚Ü‚·B
+	</DD>
+	<DT><DFN>ƒAƒCƒRƒ“ƒŠƒXƒg</DFN> IconList</DT>
+	<DD>
+	icon.txt‚Ì‚±‚Æ‚Å‚·B<BR>
+	uƒAƒCƒRƒ“ˆê——v‚ð‰pŒê‚É‚·‚ê‚ÎuƒAƒCƒRƒ“ƒŠƒXƒgv‚É‚È‚è‚»‚¤‚Å‚·‚ªA<BR>
+	‚±‚ê‚ÍƒAƒCƒRƒ“Œ©–{‚ÌˆÓ–¡‚ÅŽg‚Á‚Ä‚¢‚é‚±‚Æ‚ª‚±‚Æ‚ª‘½‚¢‚Ì‚Å‚·A‚Ü‚¬‚ç‚í‚µ‚¢‚Å‚·‚ËB
+	</DD>
+	<DT><DFN>ƒAƒCƒRƒ“ƒJƒ^ƒƒOEƒAƒCƒRƒ“Œ©–{</DFN> IconSample, IconCatalog</DT>
+	<DD>
+	iconctlg.cgi‚ª¶¬‚·‚éHTML‚âicon.html‚Ì‚±‚Æ‚Å‚·B<BR>
+	ƒAƒCƒRƒ“ƒŠƒXƒg‚Æ•´‚ç‚í‚µ‚¢‚Ì‚ÅŒ¾‚í‚È‚¢—l‚É‚µ‚Ä‚¢‚é‚Â‚à‚è‚È‚Ì‚Å‚·‚ªAuƒAƒCƒRƒ“ˆê——v‚à“¯‚¶ˆÓ–¡‚Å‚·B
+	</DD>
+	<DT><DFN>ƒAƒCƒRƒ“ƒvƒŒƒrƒ…[</DFN> IconPreview</DT>
+	<DD>
+	“ŠeƒtƒH[ƒ€‚É‚ ‚éAŽg‚¤ƒAƒCƒRƒ“‚ðJavaScript‚É‚æ‚Á‚Ä‘O‚à‚Á‚ÄŒ©‚ê‚é‹@”\‚ÌŽ–‚Å‚·B<BR>
+	ARTEMIS‚³‚ñ‚ÌŒfŽ¦”Â‚ðŽQl‚É‚µ‚ÄŽæ‚è•t‚¯‚Ü‚µ‚½B
+	</DD>
+	<DT><DFN>ƒpƒX</DFN> PATH</DT>
+	<DD>Žå‚Éƒtƒ@ƒCƒ‹‚ÌêŠ‚ðŽw’è‚·‚éÛ‚É—p‚¢‚Ü‚·‚ªAƒpƒX‚É‚Í“ñ‚Â‚ÌŽí—Þ‚ª‘¶Ý‚µ‚Ü‚·B</DD>
+	<DD>ˆê‚Â‚ÍƒRƒ“ƒsƒ…[ƒ^“à‚ÌƒpƒX‚ÅAŽ©•ª‚ÌƒRƒ“ƒsƒ…[ƒ^“à‚Ìƒtƒ@ƒCƒ‹‚ðŽw’è‚·‚é‚Æ‚«‚âAƒT[ƒo[ã‚ÌCGI‚ª’¼Úƒtƒ@ƒCƒ‹‚ð“Ç‚Ýž‚Þê‡‚ÉŽg‚¢‚Ü‚·B</DD>
+	<DD>‚à‚¤ˆê‚Â‚ªInternetã‚Å‚ÌƒpƒX‚Å‚·B<BR>
+	‚±‚ê‚Íƒuƒ‰ƒEƒU‚Å“Ç‚Ýž‚ÞWebƒy[ƒW‚ðŽw’è‚µ‚½‚èAHTML‚©‚çIMGƒ^ƒO‚âLINKƒ^ƒO‚ðŽg‚Á‚ÄA‰æ‘œƒtƒ@ƒCƒ‹‚âCSSƒtƒ@ƒCƒ‹‚ð“Ç‚Ýž‚ÞÛ‚É—p‚¢‚Ü‚·B</DD>
+	<DD>•’i‚Í‚±‚Ì“ñ‚Â‚ð•ÊX‚ÉˆÓŽ¯‚·‚é•K—v‚Í‚ ‚è‚Ü‚¹‚ñ‚ªA<A href="#Mireille‚ÌƒRƒAƒtƒ@ƒCƒ‹ŒQ‚ð•¡”‚ÌŒfŽ¦”Â‚Å‹¤—L‚·‚é">Mireille‚ÌƒRƒAƒtƒ@ƒCƒ‹ŒQ‚ð•¡”‚ÌŒfŽ¦”Â‚Å‹¤—L‚·‚é</A>ê‡‚É‚ÍA<BR>
+	‚±‚Ì“ñ‚Â‚Ìˆá‚¢‚ðˆÓŽ¯‚µ‚Äindex.cgi‚ðÝ’è‚·‚é•K—v‚ª‚ ‚è‚Ü‚·B</DD>
+</DL>
+<P>‚Æ‚è‚ ‚¦‚¸‚±‚Ì‚æ‚¤‚ÈŠ´‚¶‚Å‚µ‚å‚¤‚©<BR>
+‘¼‚É‚àˆÓ–¡‚Ì–¾Šm‚Å‚È‚¢Œê‚ª‚ ‚ê‚ÎAŒfŽ¦”Â‚Å‚¨‚Á‚µ‚á‚Á‚Ä‚­‚¾‚³‚¢‚Ü‚µA’Ç‰Á‚µ‚Ü‚·B</P>
+</DIV>
 </DIV>
 
-<DIV class="hthread" style="text-align:left">
-<H2 class="list">ž<A name="‚¨¢˜b‚É‚È‚Á‚½‚Æ‚±‚ë">‚¨¢˜b‚É‚È‚Á‚½‚Æ‚±‚ë</A></H2>
-<UL>
-<LI><H3 class="list"><A href="http://www.tg.rim.or.jp/~hexane/ach/" title="Academic HTML">Academic HTML</A></H3>
-HTML,CSS‚ÉŠÖ‚·‚é“IŠm‚Èî•ñ‚ª‚½‚­‚³‚ñ‚ ‚è‚Ü‚·<BR>
-HTML,CSS‚ðˆê’Ê‚èŠw‚Ñ‚½‚¢ê‡‚Í‚±‚±‚ðŒ©‚é‚¾‚¯‚ÅŽ–‘«‚è‚Ä‚µ‚Ü‚¢‚Ü‚·</LI>
-<LI><H3 class="list"><A href="http://openlab.ring.gr.jp/k16/htmllint/" title="Another HTML-lint">Another HTML-lint</A></H3>
-HTML‚ÌŒŸØ‚ÉÛ‚µ—˜—p‚µ‚Ü‚µ‚½<BR>
-‰‚ß‚Äƒ`ƒFƒbƒN‚·‚é‚ÆA‚Ù‚Æ‚ñ‚Ç‚Ìl‚ªƒVƒ‡ƒbƒN‚ðŽó‚¯‚é‚±‚Æ‚Å‚µ‚å‚¤</LI>
-<LI><H3 class="list"><A href="http://www.artemis.ac/arrange/" title="ARTEMIS">ARTEMIS</A></H3>
-IconPreview‚Í‚±‚±‚©‚ç‚Å‚·A•Ö—˜‚È‚Ì‚Å’¸‚«‚Ü‚µ‚½‚—<BR>
-V‚µ‚¢“Še‚ª‚ ‚é‚Æ‹³‚¦‚Ä‚­‚ê‚é`‚à‚±‚±‚Ì‚ðŒ©‚ÄA‚Å‚·<BR>
-‘¼‚É‚à‚¢‚ë‚¢‚ë‚ÆŽQl‚É‚µ‚Ä‚¢‚Ü‚·<BR>
-ŠÇ—‹@”\‚Å‚±‚±‚ðŒ©K‚¤“_‚Í”‘½‚­‚ ‚è‚Ü‚·</LI>
-<LI><H3 class="list"><A href="http://www.ne.jp/asahi/minazuki/bakera/html/hatomaru" title="HTML”µŠÛ‹äŠy•”">HTML”µŠÛ‹äŠy•”</A></H3>
-ƒcƒbƒRƒ~ƒƒCƒ“‚ÈHTML‰ðàƒTƒCƒgA‚É‚í‚½‚µ‚ÍŒ©‚¦‚Ü‚µ‚½<BR>
-uHTML 4.01 ‚Ì‚Ý‚ðAƒˆ‚ÉŠw–â“I‚È‹»–¡‚©‚çŒ¤‹†v‚µ‚Ä‚¢‚é‚»‚¤‚Å‚·<BR>
-HTML‚Ì\¬‚ÉÛ‚µ‚ÄŽQl‚É‚µ‚Ü‚µ‚½</LI>
-<LI><H3 class="list"><A href="http://www.srekcah.org/jcode/" title="jcode.pl">jcode.pl</A></H3>
-Š¿ŽšƒR[ƒh•ÏŠ·—p‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚Å‚·<BR>
-Mireille–{‘Ì‚Å‚Í‰¡’…‚µ‚Ä‚¢‚é‚Ì‚ÅŽg‚Á‚Ä‚¢‚Ü‚¹‚ñ<BR>
-ŠÇ—CGI‚Å‚Íˆê•”‚ðØ‚èo‚µ‚ÄŽg‚Á‚Ä‚¢‚Ü‚·</LI>
-<LI><H3 class="list"><A href="http://openlab.ring.gr.jp/Jcode/index-j.html" title="Jcode.pm">Jcode.pm</A></H3>
-jcode.pl‚ÌŒãŒp‚ÅPerl5—pPerlModule‚Æ‚È‚Á‚Ä‚¢‚Ü‚·<BR>
-jcode.pl‚Ì‹@”\‚ÉUnicode‚ðˆµ‚¤‹@”\‚ª’Ç‰Á‚³‚ê‚Ä‚¢‚Ü‚·<BR>
-Perl5.8‚Å‚ÍEncodeƒ‚ƒWƒ…[ƒ‹‚É’uŠ·‚³‚ê‚Ä‚¢‚é‚æ‚¤‚Å‚·</LI>
-<LI><H3 class="list"><A href="http://www.kent-web.com/" title="KNET-WEB">KENT-WEB</A></H3>
-‚È‚É‚Í‚Æ‚à‚ ‚ê“ú–{‚ÌCGI/PerlŠE‚É—^‚¦‚½‰e‹¿‚Í­‚È‚­‚Í‚È‚¢‚Í‚¸‚Å‚·<BR>
-Ž„ŒÂl‚Å‚Í“Á‚ÉYYBOARD,YYCHAT‚É‚Í‚¨¢˜b‚É‚È‚è‚Ü‚µ‚½<BR>
-‚«‚í‚ß‚Ä‚Æ‚Á‚Â‚«ˆÕ‚¢CGI‚ª‘½‚¢‚Å‚·</LI>
-<LI><H3 class="list"><A href="http://www.din.or.jp/~ohzaki/perl.htm" title="Perlƒƒ‚">Perlƒƒ‚</A></H3>
-URIŽ©“®ƒŠƒ“ƒN‹@”\‚ð‚Â‚¯‚é‚ÉÛ‚µŽQl‚ÉEEE‚Þ‚µ‚ëŠÛŽÊ‚µ‚Å‚·<BR>
-Perl‚Ì³‹K•\Œ»‚ÉŠÖ‚µ‚Ä‚Æ‚Ä‚à—L—p‚Èî•ñ‚ª‚ ‚è‚Ü‚·</LI>
-<LI><H3 class="list"><A href="http://validator.w3.org/" title="W3C HTML Validation Service">W3C HTML Validation Service</A></H3>
-HTML‹KŠi‚Ìô’è‚ðs‚¤’c‘ÌAW3C‚É‚æ‚éHTMLŒŸØƒT[ƒrƒX‚Å‚·<BR>
-Another HTML-lint‚æ‚èƒ`ƒFƒbƒN€–Ú‚Í­‚È‚ß‚Å‚·</LI>
-<LI><H3 class="list"><A href="http://tohoho.wakusei.ne.jp/" title="‚Æ‚Ù‚Ù‚ÌWWW“ü–å">‚Æ‚Ù‚Ù‚ÌWWW“ü–å</A></H3>
-HTML•”APerl•”‚Æ‚à‚ÉŽžXƒŠƒtƒ@ƒŒƒ“ƒX‘ã‚í‚è‚É‚µ‚Ü‚µ‚½<BR>
-‚È‚©‚È‚©Ú‚Á‚Ä‚¢‚Ä•Ö—˜‚Å‚·</LI>
-<LI><H3 class="list"><A href="http://kano.feena.jp/" title="”Þ‚Ì–ìŒ´">”Þ‚Ì–ìŒ´</A></H3>
-LastPost‚Í‚±‚±‚Ìealis‚Ì^Ž—‚Å‚·<BR>
-‚Ü‚½1.2.2‚Ì‹LŽ–ƒiƒr‚Í_”T‚³‚ñ‚Ì‚à‚Ìƒx[ƒX‚Éì‚è‚Ü‚µ‚½<BR>
-Å‹ß‚Å‚ÍPHP‚ÉˆÚ‚Á‚Ä‚ ‚é‚×‚«Žp‚Æ‚¢‚¤‚à‚Ì‚ð–Íõ‚µ‚Ä‚¢‚ç‚Á‚µ‚á‚é‚æ‚¤‚Å‚·</LI>
-<LI><H3 class="list"><A href="http://www10.plala.or.jp/ryokufuudou/kijindou.html" title="SWORD AND COMMERCE">SWORD AND COMMERCE</A></H3>
-retro‚³‚ñ‚É‚ÍMireille‚Å‚Â‚Ü‚Ã‚­ŠNo.1‚ÆŽv‚í‚ê‚éƒAƒCƒRƒ“Ý’è‚Ì‰ðà‚ð‘‚¢‚Ä‚¢‚½‚¾‚«‚Ü‚µ‚½<BR>
-‘¼‚É‚àMireille‚Ì‰ðà‚Ì•s”õ‚È“_‚ð‘½”‚µ‚Ä‚à‚ç‚¢‚Ü‚µ‚½<BR>
-‚¿‚È‚Ý‚ÉAretro‚³‚ñ‚ÌƒTƒCƒgŽ©‘Ì‚ÍRagnarkOnlineŒnŽG’kƒTƒCƒg‚Å‚·</LI>
-<LI><H3 class="list"><A href="http://snowish.cside8.com/" title="Snowish Hills">Snowish Hills</A></H3>
-Mireille‚ðì‚è‚±‚Þ‚É‚ ‚½‚Á‚ÄA”¼‚ÎƒIƒ“ƒTƒCƒgŒÚ‹q‚Æ‚µ‚ÄA”X‚Ì—L—p‚ÈƒAƒhƒoƒCƒX‚ð’¸‚«‚Ü‚µ‚½<BR>
-“Á‚ÉŠÇ—CGI‚Í¼–¼‚³‚ñ‚ÉŒ¾‚í‚ê‚È‚¯‚ê‚ÎA‚©‚È‚è•nŽã‚È‚à‚Ì‚É‚È‚Á‚Ä‚¢‚½‚Å‚µ‚å‚¤<BR>
-Œ»Ý‚Ì‰Šúó‘Ô‚ÌƒfƒUƒCƒ“‚à¼–¼‚³‚ñ‚ÌƒfƒUƒCƒ“‚ðƒx[ƒX‚É‚µ‚Ä‚¢‚Ü‚·<BR>
-‚¿‚È‚Ý‚ÉA¼–¼‚³‚ñ‚ÌƒTƒCƒgŽ©‘Ì‚ÍKeyŒnCGƒTƒCƒg‚Å‚·</LI>
-<LI>‘¼‚É‚àˆÓŒ©‚ð‰º‚³‚Á‚½•ûXAŽQl‚É‚µ‚½ƒTƒCƒgECGI‚ÌìŽÒ‚³‚ñ‚ÉŠ´ŽÓ‚µ‚Ü‚·</LI>
-</UL>
+
+
+<DIV class="section">
+<H2 class="h">ž<A name="Mireille‚ÌÝ’u‚Å‚Â‚Ü‚Ã‚¢‚½‚ç">Mireille‚ÌÝ’u‚Å‚Â‚Ü‚Ã‚¢‚½‚ç</A></H2>
+
+
+<DIV class="section">
+<H3 class="h"><A name="“®‚©‚È‚¢I‚Æ‚«">“®‚©‚È‚¢I‚Æ‚«</A></H3>
+
+<DIV class="section">
+<H4 class="h">u500 Internal Server Errorv‚Æ•\Ž¦‚³‚ê‚éê‡</H4>
+<DL>
+<DT>ƒp[ƒ~ƒbƒVƒ‡ƒ“‚ª³‚µ‚­‚È‚¢</DT>
+<DD>FTP‚©‚çƒAƒbƒvƒ[ƒhv‚É‘‚¢‚½ƒp[ƒ~ƒbƒVƒ‡ƒ“‚Íˆê”Ê“I‚Èê‡‚ÅA<BR>
+êŠ‚É‚æ‚Á‚Ä‚Í‚±‚ê‚Å“®‚©‚È‚¢ê‡‚ª‚ ‚è‚Ü‚·B<BR>
+ƒvƒƒoƒCƒ_[‚âƒŒƒ“ƒ^ƒ‹ƒT[ƒo[‘¤‚©‚çACGI‚Ìƒp[ƒ~ƒbƒVƒ‡ƒ“‚ð››‚É‚·‚é‚±‚ÆA<BR>
+‚ÆŒ¾‚í‚ê‚Ä‚¢‚éê‡‚Í‚»‚ê‚É]‚Á‚Ä‚­‚¾‚³‚¢B<BR>
+‚¿‚È‚Ý‚Éu500v‚©AuMireille Error Screenv‚Åuwrite/read errorv‚ªo‚éê‡ˆÈŠO‚ÌƒGƒ‰[‚Å‚ÍA<BR>
+‚Ü‚¸ƒp[ƒ~ƒbƒVƒ‡ƒ“‚ªŒ´ˆö‚Ì‰Â”\«‚Í‚ ‚è‚Ü‚¹‚ñB</DD>
+<DT>ƒAƒbƒvƒ[ƒh‚ÌŽ¸”s‚É‚æ‚éƒtƒ@ƒCƒ‹‚Ì”j‘¹</DT>
+<DD>ƒAƒbƒvƒ[ƒhŽž‚Éƒtƒ@ƒCƒ‹‚Ìˆê•”‚ªŒ‡‘¹‚µ‚½‚©‚à‚µ‚ê‚Ü‚¹‚ñB<BR>
+ƒAƒbƒvƒ[ƒh‚µ‚È‚¨‚µ‚Ä‚Ý‚Ä‚­‚¾‚³‚¢B</DD>
+<DT>uÅ‰‚Ìˆêsv‚ª³‚µ‚­‚È‚¢</DT>
+<DD>‚¢‚í‚ä‚éuÅ‰‚Ìˆêsv‚ª³‚µ‚­‚È‚¢‰Â”\«‚ª‚ ‚è‚Ü‚·B<BR>
+‚Æ‚è‚ ‚¦‚¸<CODE>#!/usr/local/bin/perl</CODE>‚Æ<CODE>#!/usr/bin/perl</CODE>‚ð—¼•ûŽŽ‚µ‚Ä‚Ý‚ÄA<BR>
+‚¾‚ß‚¾‚Á‚½ê‡‚ÍAƒvƒƒoƒCƒ_[‚âƒŒƒ“ƒ^ƒ‹ƒT[ƒo[‚É•·‚¢‚Ä‚Ý‚Ä‚­‚¾‚³‚¢B</DD>
+</DL>
+</DIV>
+
+<DIV class="section">
+<H4 class="h">uMireille Error Screenv‚ª•\Ž¦‚³‚ê‚éê‡</H4>
+<P>EEE‚»‚ÌƒGƒ‰[ƒXƒNƒŠ[ƒ“‚É•\Ž¦‚³‚ê‚éî•ñ‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢B</P>
+<P>‚à‚Æ‚à‚Æ¬£‚ªƒTƒ|[ƒg‚·‚é‚Æ‚«‚Ì‚½‚ß‚É‚Â‚¯‚½‚à‚Ì‚È‚Ì‚Åà–¾‚ª•seØ‚Èê‡‚ª‚ ‚èA<BR>
+‰ðŒˆô‚ª‚í‚©‚ç‚È‚¢‚©‚à‚µ‚ê‚Ü‚¹‚ñ‚ªEEEB</P>
+<P>‚»‚Ìê‡‚ÍAiremix‚ÌŒfŽ¦”Â‚ÅA‚»‚ÌƒGƒ‰[ƒXƒNƒŠ[ƒ“‚Ìî•ñ‚Æ‹¤‚É•·‚¢‚Ä‚­‚¾‚³‚ê‚ÎAƒTƒ|[ƒg‚Å‚«‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñižB–†</P>
+<P>¬£‚É•·‚­Û‚Íu<SAMP>ERROR:...</SAMP>v‚¾‚¯‚Å‚È‚­AƒGƒ‰[ƒXƒNƒŠ[ƒ“‚Å•\Ž¦‚³‚ê‚éî•ñ‘S‚Ä‚ð‹³‚¦‚Ä‚­‚¾‚³‚¢B<BR>
+‚í‚½‚µ‚ÌƒTƒ|[ƒg—p‚É•K—v‚Èî•ñ‚ÍƒGƒ‰[ƒXƒNƒŠ[ƒ“‚Å‚Ù‚Æ‚ñ‚ÇW‚Ü‚é‚æ‚¤‚É‚µ‚Ä‚¢‚é‚Ì‚ÅA<BR>
+ˆê•”‚¾‚¯‚Å‚Íî•ñ‚ªW‚Ü‚ç‚È‚¢‚Ì‚Å‚·B</P>
+</DIV>
+
+<DIV class="section">
+<H4 class="h">•¶Žš‚Í‚Ü‚Á‚½‚­•\Ž¦‚³‚ê‚¸‚½‚¾‰æ–Ê‚ª^‚Á”’‚É‚È‚Á‚½‚èAL‚Æ‹¤‚É‰»‚¯‚½•¶Žš‚ª•\Ž¦‚³‚ê‚éê‡</H4>
+<P>‚½‚¢‚Ä‚¢AGZIPˆ³k“]‘—‹@”\‚Æ–³—¿ƒT[ƒo[‚É‚æ‚­‚ ‚é‹­§L‘}“ü‹@\‚ÌƒRƒ“ƒ{‚ªŒ´ˆö‚Å‚µ‚å‚¤B<BR>
+‘Îô‚Æ‚µ‚Ä‚ÍAindex.cgi‚Ì‚Ç‚±‚©‚É <CODE>undef$ENV{'HTTP_ACCEPT_ENCODING'};</CODE> ‚Æ‚¢‚¤s‚ð’Ç‰Á‚µ‚Ä‰º‚³‚¢B</P>
+</DIV>
+
+<DIV class="section">
+<H4 class="h">ˆÈã‚ÌŽO‚ÂˆÈŠO‚ÌÇó‚Å“®ì‚µ‚È‚¢ê‡</H4>
+<P>Œ´ˆö‚ª“Á’è‚Å‚«‚È‚¢‚Ì‚ÅAiremix‚ÌŒfŽ¦”Â‚Å¬£‚É•·‚¢‚Ä‚­‚¾‚³‚¢<BR>
+‚Ü‚¾Šm”F‚Å‚«‚Ä‚¢‚È‚¢ƒoƒO‚ªŒ´ˆö‚Ì‰Â”\«‚ª‚ ‚è‚Ü‚·</P>
+</DIV>
+</DIV>
+
+
+<DIV class="section">
+<H3 class="h"><A name="•¶Žš‰»‚¯‚·‚é">•¶Žš‰»‚¯‚·‚é</A></H3>
+<P>‘‚«ž‚ñ‚¾“à—e‚Í‚¿‚á‚ñ‚Æ•\Ž¦‚³‚ê‚é‚Ì‚ÉAƒƒjƒ…[‚Æ‚©‚ª•¶Žš‰»‚¯‚µ‚Ä‚¢‚éA<BR>
+‚Ü‚½‚Í‚»‚Ì‹t‚ÉAƒƒjƒ…[‚Æ‚©‚Í‚¿‚á‚ñ‚Æ•\Ž¦‚³‚ê‚é‚Ì‚ÉA‘‚«ž‚ñ‚¾“à—e‚ª•¶Žš‰»‚¯‚µ‚Ä‚¢‚éA<BR>
+‚Æ‚¢‚¤ê‡‚ÍACGI‚ðƒGƒfƒBƒ^‚Å•ÒW‚·‚éÛ‚ÉEUC-JPˆÈŠO‚ÌŠ¿ŽšƒR[ƒh‚Å•Û‘¶‚µ‚Ä‚µ‚Ü‚Á‚Ä‚¢‚Ü‚·<BR>
+ˆê”Ô‘½‚¢Œ´ˆö‚ÍAƒGƒfƒBƒ^‚ÌÝ’è‚ÅAu•Û‘¶Žž‚ÉŠ¿ŽšƒR[ƒh‚ðShift_JIS‚É‚µ‚Ä•Û‘¶‚·‚év<BR>
+‚Æ‚¢‚¤‚æ‚¤‚ÈˆÓ–¡‚ÌÝ’è‚ª ON ‚É‚È‚Á‚Ä‚¢‚ÄAEUC-JPˆÈŠO‚ÌŠ¿ŽšƒR[ƒhi‚±‚Ìê‡‚ÍShift_JISj‚Å<BR>
+•Û‘¶‚µ‚Ä‚µ‚Ü‚Á‚Ä‚¢‚éA‚Æ‚¢‚¤ê‡‚ª‘½‚¢‚ÆŽv‚¢‚Ü‚·</P>
+<P>‚±‚Ìê‡‚Í‘Oq‚ÌƒGƒfƒBƒ^‚ÌÝ’è‚ðu“Ç‚Ýž‚ñ‚¾‚Æ‚«‚ÌŠ¿ŽšƒR[ƒh‚Æ“¯‚¶‚à‚Ì‚Å•Û‘¶‚·‚év<BR>
+‚Æ‚¢‚¤‚æ‚¤‚É‚µ‚½‚¤‚¦‚ÅAuŠ¿ŽšƒR[ƒh‚ðŽw’è‚µ‚Ä•Û‘¶‚·‚év‚Æ‚¢‚¤€–Ú‚ð’T‚µA<BR>
+EUC-JP‚Å•Û‘¶‚µ‚È‚¨‚µ‚½ã‚ÅAÄ“xƒT[ƒo[‚ÉƒAƒbƒvƒ[ƒh‚·‚ê‚ÎA•¶Žš‰»‚¯‚ª‰ðÁ‚³‚ê‚Ä‚¢‚é‚ÆŽv‚¢‚Ü‚·<BR>
+‚±‚ê‚Å‚à•¶Žš‰»‚¯‚µ‚Ä‚¢‚éê‡‚ÍAiremix‚Ì<A href="http://www.airemix.com/bbs/">ŒfŽ¦”Â</A>‚É‘‚«ž‚ñ‚Å‚­‚¾‚³‚¢<BR>
+‚Å‚«‚é‚¾‚¯‘Pˆ‚µ‚Ü‚·</P>
+<P>‚¿‚È‚Ý‚ÉATeraPad‚Å‚Í‚±‚Ì–â‘è‚ÉŠ×‚é‚±‚Æ‚ª‚ ‚é‚ÆŽv‚¢‚Ü‚·‚ªA<BR>
+TeraPad‚Åˆê‚Âˆê‚Â‚Ìƒtƒ@ƒCƒ‹‚ðŠJ‚¢‚ÄA<BR>
+@•\Ž¦ ¨ ƒIƒvƒVƒ‡ƒ“ ¨ ƒEƒBƒ“ƒhƒE/Š¿ŽšƒR[ƒh ƒ^ƒu ¨ Š¿ŽšƒR[ƒh ƒOƒ‹[ƒv<BR>
+@ ¨  Š¿Žš/‰üsƒR[ƒh‚ðŽ©“®”FŽ¯‚·‚é@‚Éƒ`ƒFƒbƒN‚ð‚Â‚¯‚é<BR>
+@ ¨ ‰º‚Ì“ñ‚Â‚Í—¼•ûu“Ç‚Ýž‚ÝŽž‚Ì››ƒR[ƒh‚Æ“¯‚¶v‚ð‘I‚Ô<BR>
+‚Æ‚·‚é‚±‚Æ‚Å‰ðŒˆ‚·‚é‚ÆŽv‚¢‚Ü‚·</P>
+<P>ƒGƒfƒBƒ^‚Å•Û‘¶Žž‚ÉShift_JIS‚É‚µ‚Ä‚µ‚Ü‚¤ˆÈŠO‚ÉA<BR>
+FTPƒ\ƒtƒg‚ÅƒAƒbƒvƒ[ƒh‚·‚é‚Æ‚«‚ÉEUC-JP‚©‚çShift_JIS‚É•ÏŠ·‚µ‚Ä‚µ‚Ü‚¤ê‡‚à‚ ‚è‚Ü‚·<BR>
+uƒAƒbƒvƒ[ƒhŽž‚ÉŠ¿ŽšƒR[ƒh‚ð•ÏŠ·‚µ‚È‚¢v‚Æ‚¢‚¤‚æ‚¤‚ÈˆÓ–¡‚ÌÝ’è‚ð‚µ‚Ä‚¨‚«‚Ü‚µ‚å‚¤<BR>
+EUC-JP‚Ìƒtƒ@ƒCƒ‹‚ðƒAƒbƒvƒ[ƒh‚µ‚ÄAƒ_ƒEƒ“ƒ[ƒh‚µ‚ÄAƒGƒfƒBƒ^‚ÅŒ©‚Ä‚Ý‚ÄA<BR>
+Shift_JIS‚É‚È‚Á‚Ä‚¢‚½‚çAFTPƒ\ƒtƒg‚ªŒ´ˆö‚Ì‰Â”\«‚ª‚‚¢‚Å‚·</P>
+</DIV>
+
+
+<DIV class="section">
+<H3 class="h"><A name="Netscape6ˆÈ~‚âMozillaŒnƒuƒ‰ƒEƒU‚ÅCSS‚ª“K—p‚³‚ê‚È‚¢">Netscape6ˆÈ~‚âMozillaŒnƒuƒ‰ƒEƒU‚ÅCSS‚ª“K—p‚³‚ê‚È‚¢</A></H3>
+<P>Netscape6‚ðŽn‚ß‚Æ‚µ‚½MozillaŒn‚Ìƒuƒ‰ƒEƒU‚Å‚ÍA<BR>
+‚ ‚éƒo[ƒWƒ‡ƒ“ˆÈ~‚©‚çMIME-TYPE‚Étext/css‚ªŽw’è‚³‚ê‚Ä‚¢‚È‚¢CSSƒtƒ@ƒCƒ‹‚ðACSSƒtƒ@ƒCƒ‹‚Æ‚µ‚Äˆµ‚Á‚Ä‚­‚ê‚Ü‚¹‚ñB<BR>
+‚»‚Ì‚½‚ßACSS‚ÌMIME-TYPE‚ª³‚µ‚­Ý’è‚³‚ê‚Ä‚¢‚È‚¢ƒT[ƒo[‚Å‚ÍA<BR>
+ŒÂXl‚Å.htaccess‚ðŽw’è‚·‚é‚±‚Æ‚É‚æ‚Á‚ÄAMIME-TYPE‚ðŽw’è‚µ‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñB</P>
+<P>.htaccess‚ÌÝ’u‚ð‹–‰Â‚µ‚Ä‚¢‚éƒT[ƒo[‚È‚çAMireille‚Ìˆ³kƒtƒ@ƒCƒ‹‚É“ü‚Á‚Ä‚¢‚é.htaccess‚ðA<BR>
+‚»‚Ì‚Ü‚Üstyle.css‚Ì‚ ‚éƒfƒBƒŒƒNƒgƒŠ‚ÉƒAƒbƒvƒ[ƒh‚·‚ê‚ÎOK‚Å‚·B</P>
+<P>.htaccess‚ÌÝ’u‚ð‹–‰Â‚µ‚Ä‚¢‚È‚¢ƒT[ƒo[‚Ìê‡‚ÍAƒT[ƒo[‚ÌƒTƒ|[ƒg‚É‘Î‚µ‚ÄA<BR>
+u<A href="http://www.mozilla.gr.jp/standards/webtips0016.html">http://www.mozilla.gr.jp/standards/webtips0016.html</A>‚ÅŒ¾‹y‚³‚ê‚Ä‚¢‚é‚±‚Æ‚ª‹N‚«‚Ä‚¢‚év<BR>
+‚Æ‘Š’k‚µ‚Ä‚­‚¾‚³‚¢B</P>
+<P>‚±‚Ì–â‘è‚É‚Â‚¢‚Ä‚ÍMireille‘¤‚Å‘Îˆ‚·‚é‚±‚Æ‚Í‚Å‚«‚¸AƒT[ƒo[‘¤‚Å‘Îˆ‚·‚é•K—v‚ª‚ ‚è‚Ü‚·B</P>
+</DIV>
+
+
+<DIV class="section">
+<H3 class="h"><A name="ƒp[ƒ~ƒbƒVƒ‡ƒ“i‘®«j‚É‚Â‚¢‚Ä">ƒp[ƒ~ƒbƒVƒ‡ƒ“i‘®«j‚É‚Â‚¢‚Ä</A></H3>
+<P>–³—¿ƒT[ƒo[‚È‚Ç‚¾‚ÆAƒZƒLƒ…ƒŠƒeƒBŠm•Û‚Ì‚½‚ß‚ÉAƒT[ƒo[‘¤‚©‚çA<BR>
+uCGIƒXƒNƒŠƒvƒg‚Ìƒp[ƒ~ƒbƒVƒ‡ƒ“‚Í 700 ‚É‚µ‚Ä‚­‚¾‚³‚¢v<BR>
+‚ÆŒ¾‚í‚ê‚é‚±‚Æ‚ª‚ ‚é‚ÆŽv‚¢‚Ü‚·B<BR>
+‚±‚Ìê‡‚ÍA‚±‚Ìà–¾‘‚Ì‹Lq‚ÉŠÖ‚í‚ç‚¸AƒT[ƒo[‘¤‚ÌŽwŽ¦‚É]‚Á‚Ä‚­‚¾‚³‚¢B<BR>
+Šî–{“I‚ÉAƒp[ƒ~ƒbƒVƒ‡ƒ“‚Í‘½­“®ì‚ª‚¨‚©‚µ‚­‚Ä‚àA“®‚¢‚Ä‚³‚¦‚¢‚ê‚Î‚ ‚Á‚Ä‚¢‚Ü‚·B<BR>
+ƒp[ƒ~ƒbƒVƒ‡ƒ“‚ªŒ´ˆö‚ÌƒGƒ‰[‚ÍŠî–{“I‚Éu<SAMP>500 Internal Server Error</SAMP>v‚©Au<SAMP>Can't write...</SAMP>vŒn‚ÌƒGƒ‰[‚Ì‚Ý‚Å‚·B</P>
+</DIV>
+
+
+<DIV class="section">
+<H3 class="h"><A name="à–¾‘‚É‘‚¢‚Ä‚¢‚È‚¢ƒtƒ@ƒCƒ‹‚ªˆ³kƒtƒ@ƒCƒ‹‚Ì’†‚É“ü‚Á‚Ä‚½">à–¾‘‚É‘‚¢‚Ä‚¢‚È‚¢ƒtƒ@ƒCƒ‹‚ªˆ³kƒtƒ@ƒCƒ‹‚Ì’†‚É“ü‚Á‚Ä‚½</A></H3>
+<P>‚¨‚»‚ç‚­‚í‚½‚µ‚Ìƒ~ƒX‚Å‚·B<BR>
+\‚µ–ó‚ ‚è‚Ü‚¹‚ñ‚ªA–³‚¢•¨‚ÆŽv‚Á‚Ä‚­‚¾‚³‚¢B</P>
+</DIV>
+
+
+<DIV class="section">
+<H3 class="h"><A name="‚È‚ñ‚¾‚©Mireille‚Ì“®ì‚ª‚¨‚©‚µ‚¢">‚È‚ñ‚¾‚©Mireille‚Ì“®ì‚ª‚¨‚©‚µ‚¢</A></H3>
+<P>Ý’èƒ~ƒX‚©Mireille‚ÌƒoƒO‚ªŒÜ•ªŒÜ•ª‚Å‚·B<BR>
+ˆê’Ê‚èà–¾‚ðŒ©‚ÄAÝ’è‚ðŠm”F‚µ‚ÄAŠÔˆá‚¢‚È‚¢‚æ‚¤‚Å‚µ‚½‚çAƒoƒO‚¾‚Æ•ñ‚µ‚Ä‚­‚¾‚³‚¢B<BR>
+‚¿‚È‚Ý‚ÉŽ©•ª‚Ð‚Æ‚è‚Å”Y‚ÞŽžŠÔ‚Í1ŽžŠÔ‚ª–ÚˆÀ‚Å‚·B<BR>
+‰½ŽžŠÔ‚à”Y‚Þ‚æ‚¤‚Èó‹µ‚ª”­¶‚µ‚½‚çAà–¾‘‚ª‚í‚©‚è‚É‚­‚¢‚Ì‚àuƒoƒOv‚Ì‚¤‚¿‚È‚Ì‚ÅA‚»‚ê‚àuMireille‚ÌƒoƒOv‚Å‚·B</P>
+</DIV>
+</DIV>
+
+
+
+<DIV class="section">
+<H2 class="h">ž<A name="‚¨¢˜b‚É‚È‚Á‚½‚Æ‚±‚ë">‚¨¢˜b‚É‚È‚Á‚½‚Æ‚±‚ë</A></H2>
+<DL>
+<DT>Academic HTML &lt;<a href="http://www.tg.rim.or.jp/~hexane/ach/">http://www.tg.rim.or.jp/~hexane/ach/</A>&gt;</DT>
+<DD>HTML/CSS‚ÉŠÖ‚·‚é“IŠm‚Èî•ñ‚ª‚½‚­‚³‚ñ‚ ‚è‚Ü‚·B<BR>
+HTML/CSS‚ðˆê’Ê‚èŠw‚Ñ‚½‚¢ê‡‚Í‚±‚±‚ðŒ©‚é‚¾‚¯‚ÅŽ–‘«‚è‚Ä‚µ‚Ü‚¢‚Ü‚·B</DD>
+<DT>Another HTML-lint &lt;<a href="http://openlab.ring.gr.jp/k16/htmllint/">http://openlab.ring.gr.jp/k16/htmllint/</A>&gt;</DT>
+<DD>HTML‚ÌŒŸØ‚ÉÛ‚µ—˜—p‚µ‚Ü‚µ‚½B<BR>
+‰‚ß‚Äƒ`ƒFƒbƒN‚·‚é‚ÆA‚Ù‚Æ‚ñ‚Ç‚Ìl‚ªƒVƒ‡ƒbƒN‚ðŽó‚¯‚é‚±‚Æ‚Å‚µ‚å‚¤B</DD>
+<DT>ARTEMIS &lt;<a href="http://www.artemis.ac/arrange/">http://www.artemis.ac/arrange/</A>&gt;</DT>
+<DD>IconPreview‚Í‚±‚±‚©‚ç‚Å‚·A•Ö—˜‚È‚Ì‚Å’¸‚«‚Ü‚µ‚½B<BR>
+V‚µ‚¢“Še‚ª‚ ‚é‚Æ‹³‚¦‚Ä‚­‚ê‚é`‚à‚±‚±‚Ì‚ðŒ©‚ÄA‚Å‚·B<BR>
+‘¼‚É‚à‚¢‚ë‚¢‚ë‚ÆŽQl‚É‚µ‚Ä‚¢‚Ü‚·B<BR>
+ŠÇ—‹@”\‚Å‚±‚±‚ðŒ©K‚¤“_‚Í”‘½‚­‚ ‚è‚Ü‚·B</DD>
+<DT>HTML”µŠÛ‹äŠy•” &lt;<a href="http://www.ne.jp/asahi/minazuki/bakera/html/hatomaru">http://www.ne.jp/asahi/minazuki/bakera/html/hatomaru</A>&gt;</DT>
+<DD>ƒcƒbƒRƒ~ƒƒCƒ“‚ÈHTML‰ðàƒTƒCƒgA‚É‚í‚½‚µ‚ÍŒ©‚¦‚Ü‚µ‚½B<BR>
+uHTML 4.01 ‚Ì‚Ý‚ðAƒˆ‚ÉŠw–â“I‚È‹»–¡‚©‚çŒ¤‹†v‚µ‚Ä‚¢‚é‚»‚¤‚Å‚·B<BR>
+HTML‚Ì\¬‚ÉÛ‚µ‚ÄŽQl‚É‚µ‚Ü‚µ‚½B</DD>
+<DT>jcode.pl &lt;<a href="http://www.srekcah.org/jcode/">http://www.srekcah.org/jcode/</A>&gt;</DT>
+<DD>Š¿ŽšƒR[ƒh•ÏŠ·—p‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚Å‚·B<BR>
+Mireille–{‘Ì‚Å‚Í‰¡’…‚µ‚Ä‚¢‚é‚Ì‚ÅŽg‚Á‚Ä‚¢‚Ü‚¹‚ñB<BR>
+ŠÇ—CGI‚Å‚Íˆê•”‚ðØ‚èo‚µ‚ÄŽg‚Á‚Ä‚¢‚Ü‚·B</DD>
+<DT>Jcode.pm &lt;<a href="http://openlab.ring.gr.jp/Jcode/index-j.html">http://openlab.ring.gr.jp/Jcode/index-j.html</A>&gt;</DT>
+<DD>jcode.pl‚ÌŒãŒp‚ÅPerl5—pPerlModule‚Æ‚È‚Á‚Ä‚¢‚Ü‚·B<BR>
+jcode.pl‚Ì‹@”\‚ÉUnicode‚ðˆµ‚¤‹@”\‚ª’Ç‰Á‚³‚ê‚Ä‚¢‚Ü‚·B<BR>
+Perl5.8‚Å‚ÍEncodeƒ‚ƒWƒ…[ƒ‹‚É’uŠ·‚³‚ê‚Ä‚¢‚é‚æ‚¤‚Å‚·B</DD>
+<DT>KNET-WEB &lt;<a href="http://www.kent-web.com/">http://www.kent-web.com/</A>&gt;</DT>
+<DD>‚È‚É‚Í‚Æ‚à‚ ‚ê“ú–{‚ÌCGI/PerlŠE‚É—^‚¦‚½‰e‹¿‚Í­‚È‚­‚Í‚È‚¢‚Í‚¸‚Å‚·B<BR>
+Ž„ŒÂl‚Å‚Í“Á‚ÉYYBOARD,YYCHAT‚É‚Í‚¨¢˜b‚É‚È‚è‚Ü‚µ‚½B<BR>
+‚«‚í‚ß‚Ä‚Æ‚Á‚Â‚«ˆÕ‚¢CGI‚ª‘½‚¢‚Å‚·B</DD>
+<DT>Perlƒƒ‚ &lt;<a href="http://www.din.or.jp/~ohzaki/perl.htm">http://www.din.or.jp/~ohzaki/perl.htm</A>&gt;</DT>
+<DD>URIŽ©“®ƒŠƒ“ƒN‹@”\‚ð‚Â‚¯‚é‚ÉÛ‚µŽQl‚ÉEEE‚Þ‚µ‚ëŠÛŽÊ‚µ‚Å‚·B<BR>
+Perl‚Ì³‹K•\Œ»‚ÉŠÖ‚µ‚Ä‚Æ‚Ä‚à—L—p‚Èî•ñ‚ª‚ ‚è‚Ü‚·B</DD>
+<DT>W3C HTML Validation Service &lt;<a href="http://validator.w3.org/">http://validator.w3.org/</A>&gt;</DT>
+<DD>HTML‹KŠi‚Ìô’è‚ðs‚¤’c‘ÌAW3C‚É‚æ‚éHTMLŒŸØƒT[ƒrƒX‚Å‚·B<BR>
+Another HTML-lint‚æ‚èƒ`ƒFƒbƒN€–Ú‚Í­‚È‚ß‚Å‚·B</DD>
+<DT>‚Æ‚Ù‚Ù‚ÌWWW“ü–å &lt;<a href="http://tohoho.wakusei.ne.jp/">http://tohoho.wakusei.ne.jp/</A>&gt;</DT>
+<DD>HTML•”APerl•”‚Æ‚à‚ÉŽžXƒŠƒtƒ@ƒŒƒ“ƒX‘ã‚í‚è‚É‚µ‚Ü‚µ‚½B<BR>
+‚È‚©‚È‚©Ú‚Á‚Ä‚¢‚Ä•Ö—˜‚Å‚·B</DD>
+<DT>”Þ‚Ì–ìŒ´ &lt;<a href="http://kano.feena.jp/">http://kano.feena.jp/</A>&gt;</DT>
+<DD>LastPost‚Í‚±‚±‚Ìealis‚Ì^Ž—‚Å‚·B<BR>
+‚Ü‚½1.2.2‚Ì‹LŽ–ƒiƒr‚Í_”T‚³‚ñ‚Ì‚à‚Ìƒx[ƒX‚Éì‚è‚Ü‚µ‚½B<BR>
+Å‹ß‚Å‚ÍPHP‚ÉˆÚ‚Á‚Ä‚ ‚é‚×‚«Žp‚Æ‚¢‚¤‚à‚Ì‚ð–Íõ‚µ‚Ä‚¢‚ç‚Á‚µ‚á‚é‚æ‚¤‚Å‚·B</DD>
+<DT>SWORD AND COMMERCE &lt;<a href="http://www10.plala.or.jp/ryokufuudou/kijindou.html">http://www10.plala.or.jp/ryokufuudou/kijindou.html</A>&gt;</DT>
+<DD>retro‚³‚ñ‚É‚ÍMireille‚Å‚Â‚Ü‚Ã‚­ŠNo.1‚ÆŽv‚í‚ê‚éƒAƒCƒRƒ“Ý’è‚Ì‰ðà‚ð‘‚¢‚Ä‚¢‚½‚¾‚«‚Ü‚µ‚½B<BR>
+‘¼‚É‚àMireille‚Ì‰ðà‚Ì•s”õ‚È“_‚ð‘½”‚µ‚Ä‚à‚ç‚¢‚Ü‚µ‚½B<BR>
+‚¿‚È‚Ý‚ÉAretro‚³‚ñ‚ÌƒTƒCƒgŽ©‘Ì‚ÍRagnarkOnlineŒnŽG’kƒTƒCƒg‚Å‚·B</DD>
+<DT>Snowish Hills &lt;<DEL>http://snowish.cside8.com/</DEL>&gt;</DT>
+<DD>Mireille‚ðì‚è‚±‚Þ‚É‚ ‚½‚Á‚ÄA”¼‚ÎƒIƒ“ƒTƒCƒgŒÚ‹q‚Æ‚µ‚ÄA”X‚Ì—L—p‚ÈƒAƒhƒoƒCƒX‚ð’¸‚«‚Ü‚µ‚½B<BR>
+“Á‚ÉŠÇ—CGI‚Í¼–¼‚³‚ñ‚ÉŒ¾‚í‚ê‚È‚¯‚ê‚ÎA‚©‚È‚è•nŽã‚È‚à‚Ì‚É‚È‚Á‚Ä‚¢‚½‚Å‚µ‚å‚¤B<BR>
+Œ»Ý‚Ì‰Šúó‘Ô‚ÌƒfƒUƒCƒ“‚à¼–¼‚³‚ñ‚ÌƒfƒUƒCƒ“‚ðƒx[ƒX‚É‚µ‚Ä‚¢‚Ü‚·B<BR>
+‚¿‚È‚Ý‚ÉA¼–¼‚³‚ñ‚ÌƒTƒCƒgŽ©‘Ì‚ÍKeyŒnCGƒTƒCƒg‚Å‚·B</DD>
+</DL>
+<P>‘¼‚É‚àˆÓŒ©‚ð‰º‚³‚Á‚½•ûXAŽQl‚É‚µ‚½ƒTƒCƒgECGI‚ÌìŽÒ‚³‚ñ‚ÉŠ´ŽÓ‚µ‚Ü‚·B</P>
 </DIV>
 
 <P class="note">‚±‚Ìà–¾‚Å‚Í&trade;‚â&reg;‚â&copy;ƒ}[ƒN‚ÍÈ—ª‚µ‚Ä‚¢‚Ü‚·<BR>
-‚»‚ê‚¼‚ê‚ÌƒTƒCƒg–¼‚âƒ\ƒtƒgƒEƒFƒA–¼‚È‚Ç‚ÍŠeX‚Ì¤•W‚â“o˜^¤•W‚È‚Ç‚Å‚·</P>
+‚»‚ê‚¼‚ê‚ÌƒTƒCƒg–¼‚âƒ\ƒtƒgƒEƒFƒA–¼‚È‚Ç‚ÍŠeX‚Ì¤•W‚â“o˜^¤•W‚È‚Ç‚Å‚·</DD>
 
-<DIV class="center"><TABLE align="center" border="0" cellspacing="0" class="head" summary="Footer" width="90%"><TR>
-<TD nowrap>¡¡¡¡¡¡¡</TD>
-<TH width="100%"><H1 class="head" align="right"><A href="./">BACK to INDEX</A></H1></TH>
-</TR></TABLE></DIV>
+<DIV class="PageFoot"><DIV>¡¡¡¡¡¡¡</DIV><P><A href="./">BACK to INDEX</A></P></DIV>
 
 <DIV class="AiremixCopy">
 <SMALL>[ $Id$ ]</SMALL><BR>
