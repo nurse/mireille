@@ -18,31 +18,31 @@ MSIE6未満対策のためです
 /* 通常のリンク文字 */
 A:link		{color:#44f;text-decoration:none;}
 A:visited	{color:#44f;text-decoration:none;}
-A:hover		{color:#fa8;text-decoration:underline;}
+A:link:hover{color:#fa8;text-decoration:underline;}
 A:active	{color:#f00;text-decoration:underline;}
 
 /* 新しいものへのリンク文字 */
 A.new:link		{color:#f00;font-weight:bold;text-decoration:none;}
 A.new:visited	{color:#f00;font-weight:bold;text-decoration:none;}
-A.new:hover		{color:#f55;font-weight:bold;text-decoration:underline;}
+A.new:link:hover{color:#f55;font-weight:bold;text-decoration:underline;}
 A.new:active	{color:#f00;font-weight:bold;text-decoration:underline;}
 
 /* 注意なリンク文字 */
 A.warning:link		{color:#f00;font-weight:bold;text-decoration:none;}
 A.warning:visited	{color:#f00;font-weight:bold;text-decoration:none;}
-A.warning:hover		{color:#f55;font-weight:bold;text-decoration:underline;}
+A.warning:link:hover{color:#f55;font-weight:bold;text-decoration:underline;}
 A.warning:active	{color:#f00;font-weight:bold;text-decoration:underline;}
 
 /* 記事番号のリンク文字 */
-A.number:link	{color:#06e;text-decoration:none;}
-A.number:visited{color:#06e;text-decoration:none;}
-A.number:hover	{color:#fa8;text-decoration:underline;}
-A.number:active	{color:#f50;text-decoration:underline;}
+A.number:link		{color:#06e;text-decoration:none;}
+A.number:visited	{color:#06e;text-decoration:none;}
+A.number:link:hover	{color:#fa8;text-decoration:underline;}
+A.number:active		{color:#f50;text-decoration:underline;}
 
 /* 本文自動リンク機能のリンク文字 */
 A.autolink:link		{border-bottom: dashed 1px #88f;color:#44f;text-decoration:none;}
 A.autolink:visited	{border-bottom: dashed 1px #b9f;color:#97d;text-decoration:none;}
-A.autolink:hover	{border-bottom: dashed 1px #fa8;color:#fa8;text-decoration:none;}
+A.autolink:link:hover{border-bottom: dashed 1px #fa8;color:#fa8;text-decoration:none;}
 A.autolink:active	{border-bottom: dashed 1px #f00;color:#f00;text-decoration:none;}
 
 HTML{
@@ -144,6 +144,20 @@ LI{
 	line-height: 120%;
 	margin-bottom: 3px;
 	text-align: left;
+}
+DT{
+	background-color: #eef;
+	color: #55f;
+	font-size: 100%;
+	font-weight: normal;
+	margin: 0.5em auto 0em auto;
+	padding: 1px;
+	position: relative;
+	bottom: 2px;
+	text-align: left;
+	vertical-align: middle;
+	width: 100%;
+	margin-top:0.3em;margin-bottom:0em;
 }
 
 
@@ -370,6 +384,12 @@ UL.note{
 	margin: 0 auto;
 	padding: 5px 0 5px 20px;
 	margin-top:0;margin-bottom:0;
+}
+P.note{
+	background-color: #eef;
+	border: #6ac solid 2px;
+	padding: 0.5em;
+	width: 60%;
 }
 .note LI{
 	list-style-type: square;
@@ -678,6 +698,20 @@ H3.list{
 	width: 100%;
 	margin-top:0.3em;margin-bottom:0em;
 }
+H4.list{
+	background-color: #eef;
+	color: #55f;
+	font-size: 100%;
+	font-weight: normal;
+	margin: 0.5em auto 0em auto;
+	padding: 1px;
+	position: relative;
+	bottom: 2px;
+	text-align: left;
+	vertical-align: middle;
+	width: 100%;
+	margin-top:0.3em;margin-bottom:0em;
+}
 
 /* ===================== 記事ナビ ===================== */
 /* 記事ナビウィンドウ */
@@ -766,4 +800,3 @@ STRONG.s81a6{
 	color: #f00;
 	font-weight:bold;
 }
-
