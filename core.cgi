@@ -466,6 +466,10 @@ _HTML_
 			#許可タグ無しorCommand:notag
 		}
 		
+		#記事番号リンク「>>No.12-6」
+		$str=~s{(\04\04No\.(\d+)(-\d+)?)}{<A class="autolink" href="index.cgi?read=$2#art$2$3">$1</A>}go
+			if$CF{'noartno'}||!$EX{'noartno'};
+		
 		#語句強調
 		if($CF{'strong'}&&!$EX{'nostrong'}){
 			my%ST=map{(my$s=$_)=~tr/"'<>&/\01-\05/;$s}($CF{'strong'}=~/(\S+)\s+(\S+)/go);
@@ -542,10 +546,6 @@ _HTML_
 		}else{
 			#Command:nolink
 		}
-		
-		#記事番号リンク「>>No.12-6」
-		$str=~s{(\04\04No\.(\d+)(-\d+)?)}{<A class="autolink" href="index.cgi?read=$2#art$2$3">$1</A>}go
-			if$CF{'noartno'}||!$EX{'noartno'};
 		
 		$str=~s/&/&#38;/go;
 		$str=~s/\01/&#34;/go;
@@ -941,7 +941,7 @@ _HTML_
 <DIV class="center">$pgslct</DIV>
 
 <FORM id="List" method="post" action="index.cgi">
-<DIV class="center"><TABLE border="1" cellspacing="0" class="section" summary="List" width="80%">
+<DIV class="center"><TABLE border="1" cellspacing="0" class="list" summary="List" width="80%">
 <COL style="width:5em">
 <COL style="width:17em">
 <COL>
@@ -2520,8 +2520,10 @@ sub rvsij{
 =cut
 
 		my$str=$CK{'body'};
+		#記事番号リンク「>>No.12-6」
+		$str=~s{<A class="autolink"[^>]*>&#38;#62;&#38;#62;(No\.(\d+)(-\d+)?)</A>}{&#62;&#62;$1}go;
 		#Aタグ
-		$str=~s{<A class="autolink" [^>]*>([^<]+)</A>}{my$tmp=$1;$tmp=~s/&#38;#38;/&#38;/g;$tmp}eg;
+		$str=~s{<A class="autolink" [^>]*>([^<]+)</A>}{my$tmp=$1;$tmp=~s/&#38;#38;/&#38;/g;$tmp}ego;
 		
 		{ #STRONGタグ
 			my@floor;
