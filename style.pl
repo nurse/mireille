@@ -488,7 +488,7 @@ $	この記事の情報
 	$DT{'-iconTag'}=&getIconTag(\%DT)||'&nbsp;';
 	
 	#署名
-	$DT{'name'}.=&getSignature2($DT{'signature'})if$CF{'signature'}&&$DT{'signature'};
+	$DT{'name'}.=&getSignatureView(\%DT)if$CF{'signature'}&&$DT{'signature'};
 	
 	#未読記事に印
 	$DT{'time'}>$CK{'time'}&&($DT{'date'}=qq(<SPAN class="new">$DT{'date'}</SPAN>));
@@ -544,7 +544,7 @@ $	この記事の情報
 	$DT{'-iconTag'}=&getIconTag(\%DT)||'&nbsp;';
 	
 	#署名
-	$DT{'name'}.=&getSignature2($DT{'signature'})if$CF{'signature'}&&$DT{'signature'};
+	$DT{'name'}.=&getSignatureView(\%DT)if$CF{'signature'}&&$DT{'signature'};
 	
 	#未読記事に印
 	$DT{'time'}>$CK{'time'}&&($DT{'date'}=qq(<SPAN class="new">$DT{'date'}</SPAN>));
