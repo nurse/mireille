@@ -57,7 +57,11 @@ ABBR,ACRONYM{
 	cursor: help;
 }
 BODY{
+/*	background-attachment: scroll;*/
 	background-color: #fff;
+/*	background-image: url('/HP_img/bakimg.png');
+	background-position: left;
+	background-repeat: repeat; */
 	border-style: none;
 	border-width: 0;
 	color: #355;
@@ -70,6 +74,12 @@ BODY{
 }
 BUTTON{
 	background-color: #ffb;
+	border: #355 solid 2px;
+	color: #355;
+	cursor: pointer; cursor: hand;
+}
+BUTTON:hover{
+	background-color: #eea;
 	border: #355 solid 2px;
 	color: #355;
 	cursor: pointer; cursor: hand;
@@ -190,23 +200,23 @@ DIV.right{
 	
 	/* 標準的ボタン */
 	.button{
-		background-color: #eef;
-		border: #6ac solid 2px;
+		background-color: #dfe;
+		border: #6ca solid 2px;
 		cursor: pointer; cursor: hand;
 	}
 	INPUT[type="button"]{
-		background-color: #eef;
+		background-color: #dfe;
 		border: #6ac solid 2px;
 		cursor: pointer;
 	}
 	/* 標準的ボタン（マウスが重なった時） */
 	.button:hover,.buttonover{
-		background-color: #cdf;
+		background-color: #aeb;
 		border: #6ac solid 2px;
 		cursor: pointer; cursor: hand;
 	}
 	INPUT[type="button"]:hover,INPUT[type="button"]:focus{
-		background-color: #cdf;
+		background-color: #aeb;
 	}
 	/* 了解ボタン（投稿/修正/削除） */
 	.submit{
@@ -262,23 +272,29 @@ DIV.right{
 	}
 	/* フォームにフォーカスが無い時 */
 	.blur,TEXTAREA{
-		background-color: transparent;
-		border: #6ac dashed 1px;
+		background-color: #fff;
+		border: #ccc solid 1px;
 		color: #355;
-		font-size: 100%;
+		font-size: 14px;
+		padding: 1px;
+		margin: 0;
 	}
 	INPUT[type="text"],INPUT[type="password"]{
-		background-color: transparent;
-		border: #6ac dashed 1px;
+		background-color: #fff;
+		border: #ccc solid 1px;
 		color: #355;
-		font-size: 100%;
+		font-size: 14px;
+		padding: 1px;
+		margin: 0;
 	}
 	/* フォームにフォーカスがある時 */
 	.focus{
 		background-color: #dfd;
-		border: #6ac dashed 1px;
+		border: #9cf dashed 1px;
 		color: #355;
-		font-size: 100%;
+		font-size: 14px;
+		padding: 1px;
+		margin: 0;
 	}
 	TEXTAREA:focus,INPUT[type="text"]:focus,INPUT[type="password"]:focus{
 		background-color: #dfd;
