@@ -4,7 +4,7 @@
 = Mireille - Bulletin Board System
 # - Mireille Manpage -
 #
-# $Mireille: 1_2_7 $
+# $Mireille: 1_2_8 $
 # $Revision$
 # "This file is written in shift_jis, CRLF." 空
 # http://www.airemix.com/
@@ -51,6 +51,7 @@ Opera7、
 	/bbs/iconctlg.cgi
 	/bbs/style.pl
 	/bbs/style.css
+	/bbs/artnavi.js
 	/bbs/log/      777
 	/bbs/log/0.cgi 666 or そのまま
 広告が自動挿入されるサーバーなどで動かしたときに、画面が真っ白になってしまう場合は、
@@ -71,6 +72,12 @@ index.cgiの中の(({$CF{'conenc'}='|gzip -cfq9';}))という所を(({$CF{'conenc'}='';}
 :ある程度長いスレッドでは、新しい方から指定個数の子記事のみ表示する
   ２ちゃんねるの掲示板システムで実装されている機能、だそうです。
   Mireilleに実装するかは未定。
+  
+  core.cgi:Revision:1.14で実装しました。
+  	$CF{'maxChildsShown'}=「最大表示子記事数」;
+  で設定できます。
+  ただし仮実装/実験扱いです。
+  （いわゆる‘experimental’ってやつですね）
 
 :MireilleIconList規格の強化
   BNFもどきで書くと今はこんな感じ。
@@ -105,8 +112,43 @@ index.cgiの中の(({$CF{'conenc'}='|gzip -cfq9';}))という所を(({$CF{'conenc'}='';}
 
 #------------------------------------------------------------------------------#
 == Mireille History
+=== 2003-03-30 Release 1.2.8
+:core.cgi
+  * 「ZEROがMir12型でない」と明示するようにした
+  * 古いバージョンの後始末「非拡張子cgiのファイルを拡張子cgiにする」を削除
+  * 最大表示子記事数を設定できるようにした
+  * 返信モードで返信先スレッドを囲む枠を広げられるようにした
+  * 返信モードで記事の周りの枠の高さを設定できるようにした
+  * tukaeru.netのHTTPヘッダ問題を回避
+  * HTTPヘッダの調整
+  * readモードの時は、readするスレッドは記事を全て表示するようにした
+:index.cgi
+  * 「一スレッドあたりの最大表示子記事数を制限する」の追加
+  * 使用を許可するタグの初期設定にSPANを追加
+  * 強調する記号と対応するCSSのクラスの初期設定の「#」がバグっていたのを修正
+  * URL指定アイコンコマンドの設定を追加
+:manage.cgi
+  * バックアップファイルの一掃機能で、削除数が大嘘だったのを修正
+  * ログ管理で、ファイル削除の方法が選べなかったのを修正
+  * ログ管理で、「スレッド番号をつめる」場合、確実にログを破壊していたバグを修正
+  * ログ管理で、GZIP削除についての注意書きを載せた
+  * アイコンリスト編集＃にてコメント内に「#」があるとコメントとして扱わないバグを修正
+:style.pl
+  * 「.?」となっていたところを「index.cgi?」に置き換えた
+  * コマンドの説明をもうちょっと細かくした
+:style.css
+  * Opera7で記事の投稿者名の後で時々改行されてしまう現象への対策
+  * INPUTやTEXTAREAのフォントサイズを13pxと明示的に指定
+  * ボタンからcursor指定を削除
+  * background-colorの指定がわかりにくそうなところで、明示的に指定することに
+:help.pl
+  * 語句強調が正規表現でも置換結果が拡張タイプでなければサンプルをクラス指定するようにした
+  * 語句強調を表示するときに、タグやエンティティをエスケープするようにした
+:Mireille.html
+  * 「設置した後の運用」という章を追加
+  * 誤字や間違っている表現の修正、他
 === 2003-01-29 Release 1.2.7
-* リリース版ではuse strict;をコメントアウトするようにした。
+* リリース版ではuse strict;をコメントアウトするようにした
 * Mireille.txtをRD互換にした。
 :core.cgi
   * ログに保存しなくていい項目まで保存していたのを修正
@@ -352,61 +394,80 @@ $CF{'icls'}の最初の一文字が' '（半角空白）だった場合複数リストモードになります。
 タグ方式とSharp方式があります。
 
 :タグ方式
-HTML4に基づいた形で、SELECTタグ内の要素を羅列するだけです。
-管理CGIはその中のOPTGROUPとOPTIONタグを認識して、アイコン見本を作成してくれます。
-とりあえず例を、
-
-	<OPTGROUP label="グループ名">
-		<OPTION value="アイコンファイル名">アイコン名</OPTION>
-		<OPTION value="アイコンファイル名">アイコン名</OPTION>
-	</OPTGROUP>
-	<!-- %BEGIN_COPY1 SQUARE -->
-	<!-- %COPY1_URL http://www.playonline.com/ -->
-	<OPTGROUP label="FINAL FANTASY VII">
-		<OPTION value="cloud.gif">クラウド</OPTION>
-		<OPTION value="tifa.gif">ティファ</OPTION>
-		<OPTION value="aerith.gif">エアリス</OPTION>
-		<OPTION value="yuffie.gif">ユフィ</OPTION>
-		<OPTION value="vin.gif">ヴィンセント</OPTION>
-		<OPTION value="sephi.gif">セフィロス</OPTION>
-		<OPTION value="cid7.gif">シド</OPTION>
-		<OPTION value="red.gif">レッドXIII</OPTION>
-		<OPTION value="barret.gif">バレット</OPTION>
-		<OPTION value="cait.gif">ケットシー</OPTION>
-	</OPTGROUP>
-	<!-- END_COPY1 -->
-
-HTML4の仕様上はOPTIONタグは終了タグを省略できるはずですが、
-Mireilleでは省略した場合の動作は保証しません。
-ちなみに、OPTGROUPタグは入れ子にできない（<OPTGROUP><OPTGROUP>とできない）
-ので注意しましょう。
-これはHTML4の仕様なので、入れ子をサポートする予定は当分ありません。
-HTML4の仕様のせいにしてたりなんかしません（ｗ
+  HTML4に基づいた形で、SELECTタグ内の要素を羅列するだけです。
+  管理CGIはその中のOPTGROUPとOPTIONタグを認識して、アイコン見本を作成してくれます。
+  とりあえず例を、
+  
+  	<OPTGROUP label="グループ名">
+  		<OPTION value="アイコンファイル名">アイコン名</OPTION>
+  		<OPTION value="アイコンファイル名">アイコン名</OPTION>
+  	</OPTGROUP>
+  	<!-- %BEGIN_COPY1 SQUARE -->
+  	<!-- %COPY1_URL http://www.playonline.com/ -->
+  	<OPTGROUP label="FINAL FANTASY VII">
+  		<OPTION value="cloud.gif">クラウド</OPTION>
+  		<OPTION value="tifa.gif">ティファ</OPTION>
+  		<OPTION value="aerith.gif">エアリス</OPTION>
+  		<OPTION value="yuffie.gif">ユフィ</OPTION>
+  		<OPTION value="vin.gif">ヴィンセント</OPTION>
+  		<OPTION value="sephi.gif">セフィロス</OPTION>
+  		<OPTION value="cid7.gif">シド</OPTION>
+  		<OPTION value="red.gif">レッドXIII</OPTION>
+  		<OPTION value="barret.gif">バレット</OPTION>
+  		<OPTION value="cait.gif">ケットシー</OPTION>
+  	</OPTGROUP>
+  	<!-- END_COPY1 -->
+  
+  HTML4の仕様上はOPTIONタグは終了タグを省略できるはずですが、
+  Mireilleでは省略した場合の動作は保証しません。
+  ちなみに、OPTGROUPタグは入れ子にできない（<OPTGROUP><OPTGROUP>とできない）
+  ので注意しましょう。
+  これはHTML4の仕様なので、入れ子をサポートする予定は当分ありません。
+  HTML4の仕様のせいにしてたりなんかしません（ｗ
 
 :Sharp方式
-その名の通り、"#"を使う方式です。
-これも例を見たほうが早いでしょう。
-タグ方式と見比べてみてください。
-	#グループ名
-		アイコンファイル名#アイコン名
-		アイコンファイル名#アイコン名
-	#
-	<!-- %BEGIN_COPY1 SQUARE -->
-	<!-- %COPY1_URL http://www.playonline.com/ -->
-	#FINAL FANTASY VII
-		cloud.gif#クラウド
-		tifa.gif#ティファ
-		aerith.gif#エアリス
-		yuffie.gif#ユフィ
-		vin.gif#ヴィンセント
-		sephi.gif#セフィロス
-		cid7.gif#シド
-		red.gif#レッドXIII
-		barret.gif#バレット
-		cait.gif#ケットシー
-	#
-	<!-- END_COPY1 -->
-という感じです。
+  その名の通り、"#"を使う方式です。
+  これも例を見たほうが早いでしょう。
+  タグ方式と見比べてみてください。
+  	#グループ名
+  		アイコンファイル名#アイコン名
+  		アイコンファイル名#アイコン名
+  	#
+  	<!-- %BEGIN_COPY1 SQUARE -->
+  	<!-- %COPY1_URL http://www.playonline.com/ -->
+  	#FINAL FANTASY VII
+  		cloud.gif#クラウド
+  		tifa.gif#ティファ
+  		aerith.gif#エアリス
+  		yuffie.gif#ユフィ
+  		vin.gif#ヴィンセント
+  		sephi.gif#セフィロス
+  		cid7.gif#シド
+  		red.gif#レッドXIII
+  		barret.gif#バレット
+  		cait.gif#ケットシー
+  	#
+  	<!-- END_COPY1 -->
+  という感じです。
+
+=== ファイル名指定アイコン
+1.2.7からファイル名指定アイコンというコマンドが実装されているのですが、
+ここではこの機能について説明します。
+
+この機能は((%iconfile=hutsuha/shitei/dekinai/icon.png%))とコマンド欄に入力することで使えます。
+利点はアイコンリストに登録されていないものでも使える、ということなのですが、
+当然「わざとアイコンリストに登録していないもの」も使えてしまいます。
+
+そのため、セキュリティホールになりそうにも思えますが、
+実際にはこの機能が追加されたために、セキュリティホールが増える、ということはありません。
+その根拠は以下の三点になります。
+(1)ファイル名指定アイコン機能を使わなくても、DUKEを使えば以前から同じことができる。
+(2)ファイル名指定アイコン機能では((%../%))のようなディレクトリをさかのぼる指定ができない。
+(3)ファイル名指定アイコン機能を実行させるためのコマンドを変えられる。
+どう転んだとしても、いかがわしい目的で本来使えないアイコンを使おうと思ったら、
+ファイル名指定アイコン機能を使うよりも、既存のアイコン指定の枠組み内で、
+フォームを偽装して投稿した方が自由度が上です。
+以上より、この機能の追加によって、Mireilleのセキュリティが下がるということはありません。
 
 
 #------------------------------------------------------------------------------#
@@ -542,7 +603,7 @@ Experiment版の4桁目はcore.cgiのRevisinの2桁目と一致します。
 基本的には、行った変更の重要さ（派手さ）加減によって変わる・・・はず。
 
 === CSSとその動的切り替え
-本来はCSS2の属性セレクタと擬似クラスでやるのが理想なのですが、
+本来はCSS2の属性セレクタ(Attribute selectors)と擬似クラス(Pseudo-classes)でやるのが理想なのですが、
 そうも行かないのでいろいろ知恵をひねることになります。
 
 まず、Mozillaは理想のとおり属性セレクタと擬似クラスで切り替えを行います。
@@ -565,7 +626,7 @@ Experiment版の4桁目はcore.cgiのRevisinの2桁目と一致します。
 
 次にWindowsInternetExplorerです。
 これはMozillaのようには行かないので、フッター直前に置いたJScriptで処理します。
-以下は$CF{'form_jscript'}をはしょったものです。
+以下は$CF{'jscript_AtSe'}をはしょったものです。
 	<SCRIPT language="JScript" defer>
 	<!--
 	/*@cc_on
@@ -585,7 +646,7 @@ Experiment版の4桁目はcore.cgiのRevisinの2桁目と一致します。
 上のスクリプトは速度上の問題からWinIE5以上にのみ対応していますが、WinIE4で動かすこともできます。
 流石に“人類が生み出した三つの最悪なものの一つ”WinIE3では無理ですけど。
 
-さて、残るOperaやNetscape4などですが、これらは無視します（ぉ。
+さて、残るOpera6やNetscape4などですが、これらは無視します（ぉ。
 属性セレクタにも対応しないわ、JavaScriptからのCSS切り替えもできないではどうしようもありません。
 やるべきことはこれらの表示に影響が出ないように、前の二つで表示できるようにする、です。
 
@@ -654,7 +715,7 @@ JavaでいうMVCモデルみたいなものを使うのかな？。
 Shift_JISのエスケープ問題や、Perl自体の日本語対応の不完全さを補うためです。
 例えば検索部のコードは変なところでマッチしないようにEUC-JP決め打ちで処理を行い、
 日本語処理に際しての不具合が出ないようにしています。
-ただ、このままだと多国語化できないので、将来的にはPerl5.8+Unicodeに移行したい。
+ただ、このままだと多国語化できないので、将来的にはPerl5.8+Unicodeに移行したいのですが。。。
 
 
 #------------------------------------------------------------------------------#
@@ -671,19 +732,18 @@ Shift_JISのエスケープ問題や、Perl自体の日本語対応の不完全さを補うためです。
 
 また自動リンクの精度をあげるのも大変です。
 ベースはこのテキストの末尾にも載せてある、Perlメモさんのところの断片なのですが、
-これがよくできたもので、。
-	<STRONG title="http://www.airemix.com/">http:www.airemix.com/</STRONG>
-などという文字列があるとき、ちゃんと「">http:www.airemix.com/</」の部分だけに、
+これがよくできたもので、
+(({<STRONG title="http://www.airemix.com/">http:www.airemix.com/</STRONG>}))
+などという文字列があるとき、ちゃんと(({">http:www.airemix.com/</}))の部分だけに、
 リンクを張ってくれるんです。
  
 ただ、ここでも修正機能が話を複雑にします。
-	<IMG src="http://www.airemix.com/airemixb.png">Airemix
+(({<IMG src="http://www.airemix.com/airemixb.png">Airemix}))
 最初にという文字列があったとすると、IMGタグを許可していない場合にはタグが無効化されて、
-	&#60;IMG src=&#34;http://www.airemix.com/airemixb.png&#34;&#62;Airemix
-となります。
-ここで、
-	http://www.airemix.com/bbs/index.cgi?icct&page=1
-などの「&」とエスケープ後の「.png&#34;&」の区別がつけられなくなります。
+(({&#60;IMG src=&#34;http://www.airemix.com/airemixb.png&#34;&#62;Airemix}))
+となります。ここで、
+(({http://www.airemix.com/bbs/index.cgi?icct&page=1}))
+などの(({&}))とエスケープ後の(({.png&#34;&}))の区別がつけられなくなります。
 
 記事参照機能というのは、
 「>>No.113」などとすると、その掲示板の113番スレッドにリンクが張られ、
@@ -700,18 +760,19 @@ Shift_JISのエスケープ問題や、Perl自体の日本語対応の不完全さを補うためです。
 あくまで潜在的なものであり、直ちに被害が出うるものではありませんが・・・。
 なにはともあれ、管理CGIは危険なのでこまめにWeb上から削除するようにしましょう。
 
-（gzip実行部分は``使うよりsystemの方がいいのかな？）
-（open $fh,"-|" or exec{$cmd}@cmd;はWindowsだと効かないのだ。。）
+（gzip実行部分は(({`...`}))を使うより(({system()}))の方がいいのかな？）
+（(({open $fh,"-|" or exec{$cmd}@cmd;}))はWindowsだと効かないのだ。。）
 
 === ID属性とNAME属性と
 後方互換性のためINPUTやTEXTAREAにはID属性とNAME属性を両方つけています。
 そのため、名称はID属性とNAME属性の両方の制限に縛られます。
-	ID  : /[A-Za-z][-.:\w]*/にマッチするもの
-	NAME: 大文字と小文字を区別しない
-よって、MireilleがHTMLとして出力する時には基本的に英大文字は使わいません。
+	ID  : /[A-Za-z][-.:\w]*/にマッチするもの、大文字小文字を区別する
+	NAME: CDATA、大文字小文字を区別する
+MireilleがHTMLとして出力する時には基本的に英大文字は使わいません。
 
 また%INや%CKでkeyが英大文字から始まるものは内部処理用です。
 FORMから引数を取得する際も英大文字からはじまるものは読み込みません。
+
 === Mireilleは重い？
 簡単に調べてみましたが、重いかもしれません。
 原因は投稿フォームや記事表示にevalを使っているからでも、LogDir方式だからでも、
@@ -734,7 +795,7 @@ FORMから引数を取得する際も英大文字からはじまるものは読み込みません。
 
 === アイコンカタログCGIは重い？
 これは思ったよりも重くありません。
-本来の記事表示よりも軽いくらいですね。（アイコン618個の場合）
+本来の記事表示よりも軽いくらいですね。（アイコン700個の場合でも）
 
 === 文字の範囲
 	 # EUC-JP文字
@@ -773,12 +834,12 @@ Mireilleでは面倒なので基本的にタグの省略、属性引用符の省略などには対応していませ
 CSS2ではこれによって
 	INPUT.submitover → INPUT[type="submit"]:hover
 などとできるのだけど、IE6でも対応していないの。
-今でも IE5+=behavior/N6=AtSe でいける？
+今でも IE5=behavior/N6=属性セレクタ でいける？
 （面倒すぎて事実上いけないようなので諦めました）
 
 === アイコンリスト編集＃
 Marldiaの表情アイコンとの互換性を保つ目的で、
-マッチングを/^\s*([^#]+(?:#\d+)?)\s*\#\s*(.+)$/で行っているため、
+マッチングを(({/^\s*([^#]+(?:#\d+)?)\s*\#\s*(.+)$/}))で行っているため、
 「hoe.png#uso#800」は「<OPTION value="hoe.png#uso">800</OPTION>」になりますが、
 「hoe.png#777#slot」は「<OPTION value="hoe.png#777">slot</OPTION>」になります。
 
@@ -859,15 +920,15 @@ JSTの他にESTとかPSTとかあるけど、LT(LunaTime)やMT(MarsTime)なんてあるのね；）
   1.2.3.1でCSSをN4でも使うようにしました。
   おかげで邪魔なタグがたくさん・・・。
   巨大なスレッド（子記事数が50を超える）だと部分的に記事が見れなくなる。
-:Konqueror, Safari
+:KHTML - Konqueror, Safari
   （たぶん）ほどほどに動きま（す｜した）。
   意図的に弾くようなことはしていないので、記事ナビも動くときは動くことでしょう。
 :iCab
   Macintosh向けです。
   昔はiCabが「第三のブラウザ」と呼ばれていた、と記憶しています。
-  最近は``CSS support badly broken''なので、だめっぽ。。
+  最近は“CSS support badly broken”なので、だめっぽ。。
 :OmniWeb
-  ``Doesn’t support HTML 4 and CSS1!''うーん。。
+  “Doesn’t support HTML 4 and CSS1!”うーん。。
 :Amaya
   あのW3C謹製のWebブラウザです。
   が・・・はっきり言ってヲタブラウザです（ぉ。
@@ -877,6 +938,7 @@ JSTの他にESTとかPSTとかあるけど、LT(LunaTime)やMT(MarsTime)なんてあるのね；）
   次のバージョンではまともに動くのでしょうか。
   （Amaya6.3ではAiremixやMireilleを見れるようになりました、でも数分で落ちます）
   （Amaya7.0でも数分で落ちます）
+  （Windows移植のためのライブラリが不安定なのかも。Linuxとかだとどうなのでしょう？）
 :Lynxとかw3mとか
   勘弁してくださいｗ
   積極的に対応作業をすることはありませんが、変更すべき点のリストをくださればマージはします。
@@ -904,7 +966,8 @@ JSTの他にESTとかPSTとかあるけど、LT(LunaTime)やMT(MarsTime)なんてあるのね；）
   * .htaccess非対応
   * CGIパーミッションは755
   * ディレクトリは777
-  * ディレクトリ丸見え
+  * bbs/ではアクセスできない
+  * perl5.6.1
   * .plはCGIとみなされない
   * cgi-binディレクトリ以下のみCGI動作
   * 広告あり
@@ -932,6 +995,8 @@ JSTの他にESTとかPSTとかあるけど、LT(LunaTime)やMT(MarsTime)なんてあるのね；）
   * #!/usr/bin/perl
   * CGIは700を推奨
   * 広告あり
+:tukaeru.net
+  * Content-type以外のHTTPヘッダをそのまま出力してしまう
 
 === 技術
 :条件分岐コメント
@@ -1110,7 +1175,7 @@ Mireilleを作りこむにあたって、半ばオンサイト顧客として、数々の有用なアドバイスを
 
 === 相談に乗ってもらったり、ツッコミ・要望・バグ報告をもらったり、普及に貢献してくださった方々
 imac零式さん、幽霊猫さん、西名さん、神乃さん、Bさん、TAKE4さん、かろかろさん、xbomさん、retroさん、秋宗さん
-（　ある程度ツッコミを入れるとここに晒されるのです；）　）
+（ある程度ツッコミを入れるとここに晒されるのですｗ）
 === 他にも意見を下さった方々、参考にしたサイト・CGIの作者さんに感謝します
 * MultiX.jp			((<URL:http://multix.jp/>))
 * FANTASTiX			((<URL:http://fantasien.cup.com/perl5/>))
