@@ -44,7 +44,7 @@ BODY{
 	color: #355;
 	font-family: 'ＭＳ Ｐゴシック',sans-serif;
 	font-size: 15px;
-	margin: 3px 0;
+	margin: 0.2em 0;
 	padding: 0;
 	text-align: center;
 }
@@ -108,7 +108,7 @@ Q{
 SELECT{
 /*	background-color: transparent;*/
 	color: #355;
-	font-size: 90%;
+	font-size: 13px;
 }
 SMALL{
 	font-size: 75%;
@@ -232,7 +232,7 @@ DIV.right{
 	font-size: 17px;
 	font-weight: bold;
 	margin: 1em auto;
-	padding: 3px;
+	padding: 0.2em;
 	text-align: center;
 	width: 80%;
 }
@@ -349,16 +349,52 @@ DIV.right{
 /* Table in Sections*/
 .section table{
 	border-collapse: collapse;
-	border: #66c solid 1px;
-	border-spacing: 0;
+	border-color: #99a;
+	border-spacing: 0; 
+	border-style: solid;
+	border-width: 1px;
 	font-family: 'MS UI Gothic',Osaka,sans-serif;
 	font-size: 100%;
 	margin-left: 4em;
 	text-align: left;
 }
-.section td,.section th{
-	border-color: #aaf solid 1px;
+.section td, .section th{
+	border-color: #aaf;
+	border-style: solid;
+	border-width: 1px;
 	padding: 0.1em;
+}
+
+
+/* ========== 汎用BOX ========== */
+/* BOX */
+.box{
+	border: #6ac solid 5px;
+	color: #246;
+	margin: 2em auto;
+	padding: 0.2em;
+	text-align: left;
+}
+/* Heading */
+.box .h{
+	background-color: #6ac;
+	color: #fff;
+	font-size: 1.3em;
+	font-weight: bold;
+	margin: 0;
+	padding: 0.2em;
+	text-align: left;
+}
+/* Footer */
+.box .footer{
+	background-color: #cdf;
+	margin: 0;
+	padding: 0.2em;
+	text-align: right;
+}
+/* Inner Table */
+.iconCatalog .box TABLE{
+	margin: 0.5em auto;
 }
 
 
@@ -369,95 +405,86 @@ DIV.right{
 	
 	/* 標準的ボタン */
 	.button{
-		background-color: #dfe;
+		background-color: #dfd;
 		border: #6ca solid 2px;
 	}
 	INPUT[type="button"]{
-		background-color: #dfe;
+		background-color: #dfd;
 		border: #6ac solid 2px;
 	}
-	/* 標準的ボタン（マウスが重なった時） */
+	/* 標準的ボタン:hover */
 	.button:hover,.buttonover{
-		background-color: #aeb;
+		background-color: #afa;
 		border: #6ac solid 2px;
 	}
 	INPUT[type="button"]:hover,INPUT[type="button"]:focus{
-		background-color: #aeb;
+		background-color: #afa;
 	}
-	/* 了解ボタン（投稿/修正/削除） */
-	.submit{
-		background-color: #ccf;
+	/* ボタン共通 */
+	.submit,.submitover,.reset,.resetover{
 		border: #355 solid 2px;
 		color: #355;
 		width: 7em;
+	}
+	INPUT[type="submit"],INPUT[type="reset"]{
+		border: #355 solid 2px;
+		color: #355;
+		width: 7em;
+	}
+	/* 了解ボタン */
+	.submit{
+		background-color: #ddf;
 	}
 	INPUT[type="submit"]{
-		background-color: #ccf;
-		border: #355 solid 2px;
-		color: #355;
-		width: 7em;
+		background-color: #ddf;
 	}
-	/* 了解ボタン（マウスが重なった時） */
+	/* 了解ボタン:hover */
 	.submit:hover,.submitover{
 		background-color: #aaf;
-		border: #355 solid 2px;
-		color: #355;
-		width: 7em;
 	}
 	INPUT[type="submit"]:hover,INPUT[type="submit"]:focus{
 		background-color: #bbe;
 	}
 	/* 取消ボタン */
 	.reset{
-		background-color: #edd;
-		border: #355 solid 2px;
-		color: #355;
-		width: 7em;
+		background-color: #fdd;
 	}
 	INPUT[type="reset"]{
-		background-color: #edd;
-		border: #355 solid 2px;
-		color: #355;
-		width: 7em;
+		background-color: #fdd;
 	}
-	/* 取消ボタン（マウスが重なった時） */
+	/* 取消ボタン:hover */
 	.reset:hover,.resetover{
-		background-color: #eaa;
-		border: #355 solid 2px;
-		color: #355;
-		width: 7em;
+		background-color: #faa;
 	}
 	INPUT[type="reset"]:hover,INPUT[type="reset"]:focus{
-		background-color: #eaa;
+		background-color: #faa;
 	}
-	/* フォームにフォーカスが無い時 */
+	/* 入力フォーム共通 */
+	.blur,TEXTAREA,.focus{
+		color: #355;
+		font-size: 14px;
+		padding: 0.1em;
+		margin: 0;
+	}
+	INPUT[type="text"],INPUT[type="password"]{
+	}
+	/* 入力フォーム */
 	.blur,TEXTAREA{
 		background-color: #fff;
 		border: #ccc solid 1px;
-		color: #355;
-		font-size: 14px;
-		padding: 1px;
-		margin: 0;
 	}
 	INPUT[type="text"],INPUT[type="password"]{
 		background-color: #fff;
 		border: #ccc solid 1px;
-		color: #355;
-		font-size: 14px;
-		padding: 1px;
-		margin: 0;
 	}
-	/* フォームにフォーカスがある時 */
+	/* 入力フォーム:focus */
 	.focus{
 		background-color: #dfd;
-		border: #aeb dashed 1px;
-		color: #355;
-		font-size: 14px;
-		padding: 1px;
-		margin: 0;
+		border: #afa dashed 1px;
 	}
 	TEXTAREA:focus,INPUT[type="text"]:focus,INPUT[type="password"]:focus{
 		background-color: #dfd;
+		border: #afa dashed 1px;
 	}
 	INPUT[disabled]{
 		color:#777;
@@ -469,6 +496,7 @@ DIV.right{
 /* ========== LastPost ========== */
 P.lastpost{
 	margin: 0;
+	padding: 0;
 	text-align: right;
 	text-decoration: underline;
 }
@@ -511,26 +539,26 @@ TABLE.menu{
 /*	background-color: transparent;*/
 	border-style: none;
 	margin: 1em auto;
+	padding: 0.3em;
 	text-align: center;
 }
 TD.menu{
 /*	background-color: transparent;*/ /*メニューの背景色を変更するならこっち*/
 	border: #6ac solid 2px;
 	font-size: 14px;
-	padding: 5px;
+	padding: 0.4em;
 	text-align: center;
 }
 /* ========== ページ選択 ========== */
 TABLE.pgsl{
 	border: #6ac solid 2px;
 	margin: 0.5em auto;
-	padding: 1px;
 	text-align: center;
 	vertical-align: middle;
 }
 TABLE.pgsl TD{
 	border-style: none;
-	padding: 1px;
+	padding: 0.1em;
 	text-align: center;
 	vertical-align: middle;
 }
@@ -555,7 +583,7 @@ UL.note{
 /*	background-color: transparent;*/ /*注意書きの背景色を変更するならこっち*/
 	border: #6ac solid 5px;
 	margin: 0 auto;
-	padding: 5px 0 5px 20px;
+	padding: 0.3em 0 0.3em 1.5em;
 }
 P.note{
 	background-color: #eef;
@@ -578,14 +606,12 @@ P.artinfo{
 
 
 
-
 /* ==================== 記事表示部 ==================== */
 /* 記事スレッド */
 .thread{
 	border: #6ac solid 5px;
 	margin: 2em auto;
-	padding: 3px;
-	text-align: center;
+	padding: 0.2em;
 	width: 90%;
 }
 /* 親記事のタイトルテーブル */
@@ -607,22 +633,23 @@ P.artinfo{
 	color: #fff;
 	font-size: 21px;
 	font-weight: bold;
-	margin: 1px 3px;
+	margin: 0;
+	padding: 0.2em;
 	text-align: left;
 }
 
 /* 親記事テーブル */
 .thread .parent{
-	margin: 4px 0;
+	margin: 0.2em 0;
 /*	table-layout: fixed;*/
 }
 /* 子記事テーブル */
 .thread .child{
-	margin: 4px 0;
+	margin: 0.2em 0;
 /*	table-layout: fixed;*/
 }
 /* ＊記事テーブルCOL */
-.thread COL.space	{width: 5%;}
+.thread COL.space,.thread TH.space	{width: 5%;}
 .thread COL.number	{width: 120px;}
 .thread COL.name	{}
 .thread COL.date	{}
@@ -637,8 +664,9 @@ P.artinfo{
 	color: #fff;
 	font-size: 17px;
 	font-weight: bold;
+	margin: 0;
+	padding: 0.2em;
 	text-align: left;
-	margin: 0px 3px;
 }
 
 /* 投稿者情報欄 */
@@ -647,7 +675,7 @@ P.artinfo{
 	color: #355;
 	font-size: 13px;
 	font-weight: bold;
-	padding: 0.1em 0.5em;
+	padding: 0.2em 0.5em;
 	text-align: left;
 	vertical-align: bottom;
 }
@@ -671,7 +699,7 @@ P.artinfo{
 /* 【修正】 */
 @media all{.thread .info SPAN.revise{margin-left:1em}}
 /* info行での余白 */
-.thread .info SPAN.nbsp{letter-spacing: 30px;}
+.thread .info SPAN.nbsp{letter-spacing: 2em;}
 
 /* アイコン表示欄 */
 .thread .icon{
@@ -682,11 +710,8 @@ P.artinfo{
 .thread .body{
 	color: #355;
 	font-size: 15px;
-	height: 100%;
 	line-height: 115%;
-	overflow: auto;
-	padding-top: 4px;
-	padding-left: 5px;
+	padding: 0.2em;
 	text-align: left;
 	vertical-align: top;
 	word-break: break-all;
@@ -707,123 +732,85 @@ P.artinfo{
 	color: #05a;
 	font-size: 16px;
 	font-weight: bold;
-	padding: 1px 5px;
 	margin: 0;
 	text-align: right;
 }
 .thread TABLE.foot TH P{
-	margin: 3px;
+	margin: 0.2em;
 }
 
 
 
 /* ==================== 書き込みフォーム ==================== */
-.writingForm{
-	border: #6ac solid 2px;
-	font-size: 14px;
-	margin: 2em auto;
-	padding: 3px;
-	text-align: center;
+#writingForm{
+	text-align:center;
 	width: 600px;
 }
 /* 項目名セル */
-.writingForm TH.item{
+#writingForm TH.item{
 	font-weight: normal;
-	text-align: left;
-}
-/* 入力欄セル */
-.writingForm TD.input{
 	text-align: left;
 }
 /* 投稿フォームのタイトル欄 */
-.writingForm H2{
-	background-color: #6ac;
-	color: #fff;
-	font-size: 18px;
-	font-weight: bold;
-	margin: 0;
-	padding: 0.2em;
+#writingForm .h{
 	text-align: center;
-	vertical-align: middle;
 }
-/* その他の入力欄を収めるTABLE */
-.writingForm TABLE.inputOthers{
-	margin: 0.2em;
+/* TABLE */
+#writingForm TABLE{
+	margin: 0.2em auto;
 }
-/* 本文の入力欄を収めるTABLE */
-.writingForm TABLE.inputBody{
-	margin: 0.2em;
+#writingForm .leftColumn{
+	width: 120px;
 }
-/* 本文の入力欄を収めるTABLEのLABEL */
-.writingForm TABLE.inputBody CAPTION{
-	margin: 0;
-	padding: 0;
+#writingForm .inputBody .item{
+	text-align: center;
+	width: 260px;
 }
-.writingForm TABLE.inputBody TD.bodyCell{
+#writingForm .rightColumn{
 	text-align: right;
-}
-.writingForm TABLE.inputBody TD{
-	text-align: left;
-	width: 35px;
+	width: 120px;
 }
 /* Quicksave/Autosave用のボタン */
 @media all{
-	/* Quicksave書き込みボタン */
-	.writingForm .buttonQuicksave{
-		background-color: #edd;
+	#writingForm .rightColumn INPUT{
 		border: #355 solid 1px;
 		color: #355;
-		width: 30px;
+		width: 2.7em;
 	}
-	.writingForm .buttonQuicksave:hover,.writingForm .buttonQuicksaveOver{
-		background-color: #eaa;
-		border: #355 solid 1px;
-		color: #355;
-		width: 30px;
+	/* Quicksave書き込みボタン */
+	#writingForm .buttonQuicksave{
+		background-color: #fdd;
+	}
+	#writingForm .buttonQuicksave:hover,#writingForm .buttonQuicksaveOver{
+		background-color: #faa;
 	}
 	/* Quicksave読み込みボタン */
-	.writingForm .buttonLoadQuicksave{
-		background-color: #ccf;
-		border: #355 solid 1px;
-		color: #355;
-		width: 30px;
+	#writingForm .buttonLoadQuicksave{
+		background-color: #ddf;
 	}
-	.writingForm .buttonLoadQuicksave:hover,.writingForm .buttonLoadQuicksaveOver{
+	#writingForm .buttonLoadQuicksave:hover,#writingForm .buttonLoadQuicksaveOver{
 		background-color: #aaf;
-		border: #355 solid 1px;
-		color: #355;
-		width: 30px;
 	}
 	/* Autosave読み込みボタン */
-	.writingForm .buttonLoadAutosave{
-		background-color: #dfe;
-		border: #355 solid 1px;
-		color: #355;
-		width: 30px;
+	#writingForm .buttonLoadAutosave{
+		background-color: #dfd;
 	}
-	.writingForm .buttonLoadAutosave:hover,.writingForm .buttonLoadAutosaveOver{
-		background-color: #aeb;
-		border: #355 solid 1px;
-		color: #355;
-		width: 30px;
+	#writingForm .buttonLoadAutosave:hover,#writingForm .buttonLoadAutosaveOver{
+		background-color: #afa;
 	}
 }
 /* アイコン選択のラベル */
-.writingForm .iconInputLabel{
+#writingForm .iconInputLabel{
 	font-weight: normal;
 	text-align: center;
 }
-/* アイコンプレビュー */
-.writingForm TD.iconPreview{
+/* アイコンプレビュー用テーブルセル */
+#writingForm TD.iconPreview{
 	margin: 0;
 	text-align: center;
-	vertical-align: middle;
 }
 /* 書き込みフォームのフッタ */
-.writingForm .footer{
-	background-color: #6ac;
-	margin: 0;
-	padding: 0.2em;
+#writingForm .footer{
 	text-align: center;
 }
 /* 個々の項目 */
@@ -839,6 +826,52 @@ P.artinfo{
 #pass	{width: 90px;ime-mode:active;}
 #cmd	{width:300px;ime-mode:inactive;}
 #body	{width:500px;ime-mode:active;}
+
+
+
+/* ==================== 返信モードでの記事の枠 ==================== */
+#threadBox{
+	border: #333 dashed 1px;
+	height: auto;
+	overflow: visible;
+	width: 99%;
+}
+#paragraphThreadBox{
+	margin: 0 10% 0 auto;
+	text-align: right;
+}
+
+/* ==================== 書き込み後のメッセージ ==================== */
+.writingMessage{
+	text-align: center;
+}
+.writingMessage .box{
+	width: 60%;
+}
+.writingMessage P{
+	width: auto;
+}
+.writingMessage .body{
+	text-align: left;
+}
+
+
+
+/* ==================== アイコンカタログ ==================== */
+.iconCatalog{
+}
+.iconCatalog .box{
+	text-align:center;
+	width: 660px;
+}
+/* テーブルセル */
+.iconCatalog .box TABLE TD{
+	text-align: center;
+}
+/* Footer */
+.iconCatalog .box .footer{
+	font-weight: bold;
+}
 
 
 
@@ -858,41 +891,6 @@ TABLE.list TR.parent TH,TABLE.list TR.parent TD{
 }
 TABLE.list TR.child th,TABLE.list TR.child TD{
 	border-top: #aaf solid 3px;
-}
-
-
-
-/* ==================== アイコンリスト ==================== */
-/* アイコングループのテーブル */
-TABLE.icon{
-	border: #6ac solid 2px;
-	font-size: 14px;
-	padding: 3px;
-	text-align: center;
-}
-/* アイコングループの名前 */
-TABLE.icon CAPTION{
-	background-color: #6ac;
-	color: #fff;
-	font-size: 18px;
-	font-weight: bold;
-	margin: 0 auto;
-	padding: 0.2em;
-	text-align: left;
-	white-space: nowrap;
-}
-TABLE.icon TD{
-	text-align: center;
-}
-/* アイコングループのフッタ */
-TABLE.icon TH.foot{
-	background-color: #cdf;
-	color: #05a;
-	font-size: 15px;
-	font-weight: bold;
-	padding: 0.2em;
-	text-align: right;
-	white-space: nowrap;
 }
 
 
@@ -944,7 +942,7 @@ DIV#naviwind:hover{
 	height: 180px;
 	margin: 0;
 	overflow: auto;
-	padding: 0px 1px;
+	padding: 0 0.1em;
 }
 /* 記事ナビスレッド */
 .navithre{
@@ -953,7 +951,8 @@ DIV#naviwind:hover{
 .navisubj{
 	background-color: #cdf;
 	height: 16px;
-	padding: 2px;
+	overflow: hidden;
+	padding: 0.2em;
 }
 /* 記事ナビスレッド記事番号 */
 .navinums{
@@ -970,7 +969,7 @@ STRONG.s2f2f{
 }
 /* ＞の強調 */
 STRONG.s8184{
-	background-color: #ccf;
+	background-color: #ddf;
 	font-weight:normal;
 }
 /* §の強調 */
@@ -980,7 +979,7 @@ STRONG.s8198{
 }
 /* ◇の強調 */
 STRONG.s819e{
-	background-color: #ccf;
+	background-color: #ddf;
 	font-weight:bold;
 }
 /* □の強調 */
