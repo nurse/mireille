@@ -4,7 +4,7 @@
 = Mireille - Bulletin Board System
 # - Mireille Manpage -
 #
-# $Mireille: 1_2_13 $
+# $Mireille: 1_2_14 $
 # $Revision$
 # "This file is written in shift_jis, CRLF." 空
 # http://www.airemix.com/
@@ -28,6 +28,8 @@
   IIS5.1とApacheで確認、他のものでもCGI/Perlが動けばきっと動くはず
 :Perl
   5.005_03以降
+  JcodeかEncodeモジュールが無いと、RSSがutf-8でなくeuc-jpで出力されます。
+  （EncodeモジュールはPerl5.8で標準添付になっています）
 
 === 対応ブラウザ
 WinIE5.01以上（WinIE6以上を推奨）、
@@ -63,18 +65,6 @@ index.cgiの中の(({$CF{'conenc'}='|gzip -cfq9';}))という所を(({$CF{'conenc'}='';}
 
 #------------------------------------------------------------------------------#
 == Coming soon...?/memo.
-:Mireille 1.3
-  そろそろMireilleも1.3になります。
-  1.3の新機能は、まずプラグイン機能（モジュール機能？）です。
-  当初プラグインとしては、本文をRDとして記述するもの、とかになる予定。
-  スキン機能が1.3に盛り込まれるかどうかは未定です。
-
-:suオプション
-  管理者パスワードが「hoehoe」の時に、投稿時コマンド欄に「(({su=hoehoe;}))」と入れておくと、
-  それ以降Cookieに管理者であることが保存され、いちいち管理者パスワードを入れなくても、
-  記事の削除や修正、 最大子記事数制限に達したスレッドへの返信などができるようになる。
-  セキュリティホールを作りこみかねないので慎重に実装しないと。
-
 :MireilleIconList規格の強化
   BNFもどきで書くと今はこんな感じ。
   	( 'BEGIN' | 'END' ) '_' ( 'VENDOR' | COPY1' ) (#x20 |#x9)+ <VALUE>?
@@ -108,7 +98,19 @@ index.cgiの中の(({$CF{'conenc'}='|gzip -cfq9';}))という所を(({$CF{'conenc'}='';}
 
 #------------------------------------------------------------------------------#
 == Mireille History
-=== 2003-09-13 Release 1.2.13
+=== 2004-10-01 Release 1.2.14
+インデント幅をPerlStyle推奨の4にしました
+:core.cgi
+  * PageSelectorのバグ修正
+  * RSS対応
+  * RSS出力はEncodeかJcodeモジュールがあればUTF-8にする
+  * 半角空白を&nbsp;に基本的に変換することに
+:style.pl
+  * アイコン周りのバグ修正
+  * RSSをLINK
+:style.css
+  * Macintoshで文字化けするのを修正
+=== 2003-11-07 Release 1.2.13
 index.cgiは1.2.2.21以降でなければなりません。
 :core.cgi
   * 一度Cookieにコマンド欄の内容が保存されると、消えなかったバグを修正
@@ -1092,7 +1094,7 @@ JSTの他にESTとかPSTとかあるけど、LT(LunaTime)やMT(MarsTime)なんてあるのね；）
   ブラウザの名称も"NetscapeNavigator6"でなく、"Netscape6"です。
   ちょっと付録が多すぎて邪魔、特にAOLIMを強制添付するのはMSより悪質。
   表示機能はMozillaに準ずるので省略します。
-:Phoenix, K-meleon, Chimera, Galeonなどなど
+:Firefox(Phoenix), K-meleon, Chimera, Galeonなどなど
   Geckoエンジンのブラウザ、NetscapeやMozillaオリジナルよりも、
   これらを使ったほうが使い勝手が良い場合が多いです。
   表示機能はMozillaと同じ。
@@ -1144,7 +1146,7 @@ suEXECが有効になっているApache、suEXECが無効になっているApache、そしてその他。
   * CGIファイルのパーミッションは700
   * 書き込むファイルは644
   * 読み書きするCGIファイルのパーミッションは700
-:Apache with suEXEC
+:Apache without suEXEC
   * ディレクトリのパーミッションは777
   * CGIファイルのパーミッションは755
   * 書き込むファイルは666
@@ -1154,6 +1156,12 @@ suEXECが有効になっているApache、suEXECが無効になっているApache、そしてその他。
   Windowsはパーミッションの概念が曖昧なので、特に気にしなくても何とかなります。
 
 === サーバー別情報
+:sakura.ne.jp
+  * #!/usr/local/bin/perl
+  * .htaccess対応
+  * ディレクトリ、CGI共に755（777は不可）
+  * suEXEC
+  * Perl5.8
 :ccsnet.ne.jp
   * #!/usr/bin/perl
   * .htaccess非対応
