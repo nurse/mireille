@@ -61,7 +61,7 @@ _CONFIG_
 #-----------------------------
 # Page Footer
 sub getPageFooter{
-	return<<"_HTML_";
+    return<<"_HTML_";
 <DIV class="center"><TABLE align="center" border="0" cellspacing="0" class="head" summary="PageFooter" width="90%"><TR>
 <TD nowrap>■■■■■■■</TD>
 <TH width="100%"><DIV class="head"><A href="@{[
@@ -429,19 +429,19 @@ _CONFIG_
 #-----------------------------
 # ヘッダーの生成
 sub getHeader{
-	my%DT=@_;
-	return join"\n",$CF{'bodyHead'},($DT{'skyline'}||''),$CF{'pghead'},$CF{'menu'};
+    my%DT=@_;
+    return join"\n",$CF{'bodyHead'},($DT{'skyline'}||''),$CF{'pghead'},$CF{'menu'};
 }
 
 #-----------------------------
 # フッターの生成
 sub getFooter{
-	my$AiremixCopy=<<"_HTML_";
+    my$AiremixCopy=<<"_HTML_";
 <DIV class="AiremixCopy"><SMALL>- $CF{'Design'} -</SMALL><BR>
 - <A href="http://www.airemix.com/" target="_top" title="Airemix - Mireille -">Airemix Mireille</A>
 <VAR title="times:@{[times]}">$CF{'Version'}</VAR> -</DIV>
 _HTML_
-	return$CF{'menu'}.&getPageFooter(defined$IN{'read'}).$AiremixCopy
+    return$CF{'menu'}.&getPageFooter(defined$IN{'read'}).$AiremixCopy
 	.$CF{'bodyFoot'}.$CF{'jscript_AtSe'}."</BODY>\n</HTML>\n";
 }
 
@@ -473,30 +473,54 @@ sub artprt{
 \% スレッドの記事情報ハッシュのリファレンス
 $	この記事の情報
 =cut
-	#記事情報を受け取って
-	my%DT=(%{shift()},(shift()=~/([^\t]*)=\t([^\t]*);\t/go));
-	my@temp=qw(Name Home Date Icon Signature New accessUnread);
-	@DT{map{'_'.$_}@temp}=map{''}@temp;
-	#削除されたら知らせて
-	'del'eq$DT{'Mir12'}&&($DT{'body'}='Mireille: [この記事は削除されました]');
-	#記事ナビ
-	ArtNavi->addThreadHead(\%DT);
-	ArtNavi->addArticle(\%DT,($DT{'time'}>$CK{'time'}));
-	#記事項目の調整をして
-	$DT{'_Name'}=sprintf'<SPAN class="name">%s</SPAN>'
-		,$DT{'email'}?qq(<A href="mailto:$DT{'email'}">$DT{'name'}</A>):$DT{'name'};
-	$DT{'_Home'}=qq(<SPAN class="home"><A href="$DT{'home'}" target="_top">【HOME】</A></SPAN>)if$DT{'home'};
-	$DT{'_Date'}=sprintf$DT{'time'}>$CK{'time'}?'<SPAN class="new">%s</SPAN>':'%s',&date($DT{'time'});
-	$DT{'_Icon'}=&getIconTag(\%DT)||'&nbsp;';
-	$DT{'_Signature'}=sprintf'<SPAN class="signature">[&nbsp;%s&nbsp;]</SPAN><BR>'
-		,&getSignatureView(\%DT)if$CF{'signature'}&&$DT{'signature'};
-	if($DT{'time'}>$^T-$CF{'newnc'}){
-		$DT{'_New'}=$CF{'new'};
-		$DT{'_tabUnread'}=sprintf' tabindex="%d"',$DT{'-unreads'};
-		++$DT{'-unreads'};
+    #記事情報を受け取って
+    my%DT=(%{shift()},(shift()=~/([^\t]*)=\t([^\t]*);\t/go));
+    my@temp=qw(Name Home Date Icon Signature New accessUnread);
+    @DT{map{'_'.$_}@temp}=map{''}@temp;
+    #削除されたら知らせて
+    'del'eq$DT{'Mir12'}&&($DT{'body'}='Mireille: [この記事は削除されました]');
+    #記事ナビ
+    ArtNavi->addThreadHead(\%DT);
+    ArtNavi->addArticle(\%DT,($DT{'time'}>$CK{'time'}));
+    #記事項目の調整をして
+    $DT{'_Name'}=sprintf'<SPAN class="name">%s</SPAN>'
+	,$DT{'email'}?qq(<A href="mailto:$DT{'email'}">$DT{'name'}</A>):$DT{'name'};
+    $DT{'_Home'}=qq(<SPAN class="home"><A href="$DT{'home'}" target="_top">【HOME】</A></SPAN>)if$DT{'home'};
+    $DT{'_Date'}=sprintf$DT{'time'}>$CK{'time'}?'<SPAN class="new">%s</SPAN>':'%s',&date($DT{'time'});
+    $DT{'_Icon'}=&getIconTag(\%DT)||'&nbsp;';
+    $DT{'_Signature'}=sprintf'<SPAN class="signature">[&nbsp;%s&nbsp;]</SPAN><BR>'
+	,&getSignatureView(\%DT)if$CF{'signature'}&&$DT{'signature'};
+    if($DT{'time'}>$^T-$CF{'newnc'}){
+	$DT{'_New'}=$CF{'new'};
+	$DT{'_tabUnread'}=sprintf' tabindex="%d"',$DT{'-unreads'};
+	++$DT{'-unreads'};
+    }
+    
+    #ファイル添付
+    my $files = '';
+    if($DT{'attach'}){
+	my $attach = MirString::urldecode($DT{'attach'});
+	my @array;
+	if( ref$attach eq 'ARRAY' ){
+	    @array = @{$attach};
+	}elsif( ref$attach eq 'HASH' ){
+	    push @array, $attach;
 	}
-	#いよいよ出力だよ
-	print<<"_HTML_";
+	for(@array){
+	    ref$_ eq 'HASH' or next;
+	    $files .= <<"_HTML_";
+<a href="$CF{'Attach/Dir'}/$_->{'hash'}.$_->{'ext'}">$_->{'hash'}.$_->{'ext'}</a>
+_HTML_
+	}
+    }
+    if($files){
+	$files = <<"_HTML_";
+<TR><TD>Attached Files:</TD><TD class="file" colspan="2">$files</TD></TR>
+_HTML_
+    }
+    
+    #いよいよ出力だよ
+    print<<"_HTML_";
 <DIV class="thread" title="$DT{'i'}番スレッド" align="center" width="99%">
 <TABLE border="0" cellspacing="0" class="subject" summary="$DT{'i'}番スレッド" width="100%"><TR>
 <TH class="subject"><H2 class="subject"><A name="art$DT{'i'}" id="art$DT{'i'}" title="$DT{'i'}番スレッド">$DT{'subject'}</A></H2></TH>
@@ -519,10 +543,10 @@ $	この記事の情報
 </TR>
 <TR><TD class="icon">$DT{'_Signature'} $DT{'_Icon'}</TD>
 	<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD></TR>
-</TABLE>
+$files</TABLE>
 
 _HTML_
-	return$DT{'-unreads'};
+    return$DT{'-unreads'};
 }
 
 
@@ -533,28 +557,52 @@ sub artchd{
 \% スレッドの記事情報ハッシュのリファレンス
 $	この記事の情報
 =cut
-	#記事情報を受け取って
-	my%DT=(%{shift()},(shift()=~/([^\t]*)=\t([^\t]*);\t/go));
-	my@temp=qw(Name Home Date Icon Signature New accessUnread);
-	@DT{map{'_'.$_}@temp}=map{''}@temp;
-	#削除されてるときはここの前に飛ばしちゃうの
-	#記事ナビ
-	ArtNavi->addArticle(\%DT,($DT{'time'}>$CK{'time'}));
-	#記事項目の調整をして
-	$DT{'_Name'}=sprintf'<SPAN class="name">%s</SPAN>'
-		,$DT{'email'}?qq(<A href="mailto:$DT{'email'}">$DT{'name'}</A>):$DT{'name'};
-	$DT{'_Home'}=qq(<SPAN class="home"><A href="$DT{'home'}" target="_top">【HOME】</A></SPAN>)if$DT{'home'};
-	$DT{'_Date'}=sprintf$DT{'time'}>$CK{'time'}?'<SPAN class="new">%s</SPAN>':'%s',&date($DT{'time'});
-	$DT{'_Icon'}=&getIconTag(\%DT)||'&nbsp;';
-	$DT{'_Signature'}=sprintf'<SPAN class="signature">[&nbsp;%s&nbsp;]</SPAN><BR>'
-		,&getSignatureView(\%DT)if$CF{'signature'}&&$DT{'signature'};
-	if($DT{'time'}>$^T-$CF{'newnc'}){
-		$DT{'_New'}=$CF{'new'};
-		$DT{'_tabUnread'}=sprintf' tabindex="%d"',$DT{'-unreads'};
-		++$DT{'-unreads'};
+    #記事情報を受け取って
+    my%DT=(%{shift()},(shift()=~/([^\t]*)=\t([^\t]*);\t/go));
+    my@temp=qw(Name Home Date Icon Signature New accessUnread);
+    @DT{map{'_'.$_}@temp}=map{''}@temp;
+    #削除されてるときはここの前に飛ばしちゃうの
+    #記事ナビ
+    ArtNavi->addArticle(\%DT,($DT{'time'}>$CK{'time'}));
+    #記事項目の調整をして
+    $DT{'_Name'}=sprintf'<SPAN class="name">%s</SPAN>'
+	,$DT{'email'}?qq(<A href="mailto:$DT{'email'}">$DT{'name'}</A>):$DT{'name'};
+    $DT{'_Home'}=qq(<SPAN class="home"><A href="$DT{'home'}" target="_top">【HOME】</A></SPAN>)if$DT{'home'};
+    $DT{'_Date'}=sprintf$DT{'time'}>$CK{'time'}?'<SPAN class="new">%s</SPAN>':'%s',&date($DT{'time'});
+    $DT{'_Icon'}=&getIconTag(\%DT)||'&nbsp;';
+    $DT{'_Signature'}=sprintf'<SPAN class="signature">[&nbsp;%s&nbsp;]</SPAN><BR>'
+	,&getSignatureView(\%DT)if$CF{'signature'}&&$DT{'signature'};
+    if($DT{'time'}>$^T-$CF{'newnc'}){
+	$DT{'_New'}=$CF{'new'};
+	$DT{'_tabUnread'}=sprintf' tabindex="%d"',$DT{'-unreads'};
+	++$DT{'-unreads'};
+    }
+    
+    #ファイル添付
+    my $files = '';
+    if($DT{'attach'}){
+	my $attach = MirString::urldecode($DT{'attach'});
+	my @array;
+	if( ref$attach eq 'ARRAY' ){
+	    @array = @{$attach};
+	}elsif( ref$attach eq 'HASH' ){
+	    push @array, $attach;
 	}
-	#いよいよ出力だよ
-	print<<"_HTML_";
+	for(@array){
+	    ref$_ eq 'HASH' or next;
+	    $files .= <<"_HTML_";
+<a href="$CF{'Attach/Dir'}/$_->{'hash'}.$_->{'ext'}">$_->{'hash'}.$_->{'ext'}</a>
+_HTML_
+	}
+    }
+    if($files){
+	$files = <<"_HTML_";
+<TR><TD>&nbsp;</TD><TD>Attached Files:</TD><TD class="file">$files</TD></TR>
+_HTML_
+    }
+    
+    #いよいよ出力だよ
+    print<<"_HTML_";
 <TABLE border="0" cellspacing="0" class="child" summary="Article$DT{'i'}-$DT{'j'}" title="$DT{'i'}-$DT{'j'}" width="100%">
 <COL class="space"><COL class="number"><COL class="name"><COL class="date">
 _HTML_
@@ -566,7 +614,7 @@ _HTML_
 _HTML_
 =cut
 
-	print<<"_HTML_";
+    print<<"_HTML_";
 <TR class="info"><TH class="space" rowspan="2">&nbsp;</TH>
 	<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" class="number"
 	 href="$CF{'index'}?rvs=$DT{'i'}-$DT{'j'}"$DT{'_tabUnread'}>【Re:$DT{'j'}】</A></TH>
@@ -577,10 +625,10 @@ _HTML_
 </TR>
 <TR><TD class="icon">$DT{'_Signature'} $DT{'_Icon'}</TD>
 	<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD></TR>
-</TABLE>
+$files</TABLE>
 
 _HTML_
-	return$DT{'-unreads'};
+    return$DT{'-unreads'};
 }
 
 
@@ -590,24 +638,24 @@ sub artfot{
 =item 引数
 \% 記事情報 ハッシュのリファレンス
 =cut
-	#記事情報を受け取って
-	my%DT=%{shift()};
+    #記事情報を受け取って
+    my%DT=%{shift()};
 	
-	if($DT{'res'}){
-		#返信モードのとき
-		print<<'_HTML_';
+    if($DT{'res'}){
+	#返信モードのとき
+	print<<'_HTML_';
 </DIV>
 
 
 _HTML_
-	}elsif($CF{'readOnly'}||$DT{'-isLocked'}||$DT{'-isOverflowed'}){
-		#何らかの理由で閲覧専用
-		my$message=sprintf
-			+($CF{'readOnly'}?'読み込み専用モードなのでこの記事スレッドNo.%dの閲覧専用です'
-			:$DT{'-isLocked'}?'この記事スレッドNo.%dはロックされているので閲覧専用です'
-			:$DT{'-isOverflowed'}?'この記事スレッドNo.%dは子記事数制限に達したので閲覧専用です'
-			 :'なにはともあれとりあえずこの記事スレッドNo.%dは閲覧専用です'),$DT{'i'};
-		print<<"_HTML_";
+    }elsif($CF{'readOnly'}||$DT{'-isLocked'}||$DT{'-isOverflowed'}){
+	#何らかの理由で閲覧専用
+	my$message=sprintf
+	    +($CF{'readOnly'}?'読み込み専用モードなのでこの記事スレッドNo.%dの閲覧専用です'
+	      :$DT{'-isLocked'}?'この記事スレッドNo.%dはロックされているので閲覧専用です'
+	      :$DT{'-isOverflowed'}?'この記事スレッドNo.%dは子記事数制限に達したので閲覧専用です'
+	      :'なにはともあれとりあえずこの記事スレッドNo.%dは閲覧専用です'),$DT{'i'};
+	print<<"_HTML_";
 <TABLE border="0" cellspacing="0" class="foot" summary="ArticleFooter" width="100%"><TR>
 <TH align="right" width="100%"><P align="right"><A accesskey="$DT{'ak'}" name="res$DT{'i'}" class="warning"
  href="$CF{'index'}?res=$DT{'i'}">$message(<SPAN
@@ -617,9 +665,9 @@ _HTML_
 
 
 _HTML_
-	}else{
-		#この記事スレッドNo.???に返信する(?)
-		print<<"_HTML_";
+    }else{
+	#この記事スレッドNo.???に返信する(?)
+	print<<"_HTML_";
 <TABLE border="0" cellspacing="0" class="foot" summary="ArticleFooter" width="100%"><TR>
 <TH align="right" width="100%"><P align="right"><A accesskey="$DT{'ak'}" name="res$DT{'i'}"
  href="$CF{'index'}?res=$DT{'i'}#Form">この記事スレッドNo.$DT{'i'}に返信する(<SPAN
@@ -629,9 +677,9 @@ _HTML_
 
 
 _HTML_
-	}
-	#記事ナビ
-	ArtNavi->addThreadFoot(\%DT);
+    }
+    #記事ナビ
+    ArtNavi->addThreadFoot(\%DT);
 }
 
 
@@ -639,29 +687,33 @@ _HTML_
 # 親記事投稿フォーム
 #
 sub prtfrm{
-	my%DT=%CK;
+    my%DT=%CK;
+    $DT{'_type'} = 'Parent';
+    
+    #アイコンの初期設定
+    &iptico($DT{'icon'})if$CF{'prtitm'}=~/\bicon\b/o;
+    #色の初期設定
+    #	&iptcol($DT{'color'})if$CF{'prtitm'}=~/\bcolor\b/o;
 	
-	#アイコンの初期設定
-	&iptico($DT{'icon'})if$CF{'prtitm'}=~/\bicon\b/o;
-	#色の初期設定
-#	&iptcol($DT{'color'})if$CF{'prtitm'}=~/\bcolor\b/o;
+    #追加情報
+    $DT{'Sys'}=qq(<INPUT name="j" type="hidden" value="0">\n);
+    if(defined$DT{'i'}){
+	$DT{'caption'}='■ 親記事修正フォーム ■';
+	$DT{'Sys'}.=qq(<INPUT name="i" type="hidden" value="$DT{'i'}">\n);
+	$DT{'Sys'}.=qq(<INPUT name="oldps" type="hidden" value="$DT{'oldps'}">\n);
+    }else{
+	$DT{'caption'}='■ 新規投稿フォーム ■';
+    }
 	
-	#追加情報
-	$DT{'Sys'}=qq(<INPUT name="j" type="hidden" value="0">\n);
-	if(defined$DT{'i'}){
-		$DT{'caption'}='■ 親記事修正フォーム ■';
-		$DT{'Sys'}.=qq(<INPUT name="i" type="hidden" value="$DT{'i'}">\n);
-		$DT{'Sys'}.=qq(<INPUT name="oldps" type="hidden" value="$DT{'oldps'}">\n);
-	}else{
-		$DT{'caption'}='■ 新規投稿フォーム ■';
-	}
+    #項目の初期設定
+    $DT{'home'}='http://'unless$DT{'home'}; #http://だけ入れておく
+    $DT{'cook'}=$DT{'cook'}||!exists$DT{'cook'}?' checked':'';
 	
-	#項目の初期設定
-	$DT{'home'}='http://'unless$DT{'home'}; #http://だけ入れておく
-	$DT{'cook'}=$DT{'cook'}||!exists$DT{'cook'}?' checked':'';
-	
-	print<<"_HTML_";
-<FORM accept-charset="euc-jp" id="artform" method="post" action="$CF{'index'}">
+    #ファイル添付
+    my $attachForm = getAttachForm(\%DT);
+    
+    print<<"_HTML_";
+<FORM accept-charset="euc-jp" id="artform" method="post" action="$CF{'index'}" enctype="multipart/form-data">
 <DIV class="center"><TABLE align="center" class="note"><TR><TD><UL class="note">
 <LI>本文以外ではタグは一切使用できません。</LI>
 <LI>HTTP, FTP, MAILアドレスのリンクは自動でつきます。</LI>
@@ -718,6 +770,11 @@ sub prtfrm{
 <TH class="item"><LABEL accesskey="m" for="cmd">■コマンド(<SPAN class="ak">M</SPAN>)：</LABEL></TH>
 <TD class="input"><INPUT type="text" name="cmd" id="cmd" value="$DT{'cmd'}" onchange="changePreviewIcon()"></TD>
 <TD class="input" title="Icon&#10;アイコンを選択します">@{[&iptico($DT{'icon'})]}</TD>
+
+
+<TR title="file&#10;ファイルを添付します">
+<TH class="item"><LABEL>■ファイル添付：</LABEL></TH>
+<TD class="input">$attachForm</TD>
 </TR>
 </TABLE>
 
@@ -755,7 +812,7 @@ $CF{'jsWritingForms'}
 </FORM>
 
 _HTML_
-	return 1;
+    return 1;
 }
 
 
@@ -763,37 +820,42 @@ _HTML_
 # 子記事フォーム
 #
 sub chdfrm{
-	#返信フォーム準備
-	my%DT=%CK;
+    #返信フォーム準備
+    my%DT=%CK;
+    $DT{'_type'} = 'Child';
+    
+    #アイコンの初期設定
+    &iptico($DT{'icon'})if$CF{'chditm'}=~/\bicon\b/o;
+    #色の初期設定
+    #	&iptcol($DT{'color'})if$CF{'chditm'}=~/\bcolor\b/o;
 	
-	#アイコンの初期設定
-	&iptico($DT{'icon'})if$CF{'chditm'}=~/\bicon\b/o;
-	#色の初期設定
-#	&iptcol($DT{'color'})if$CF{'chditm'}=~/\bcolor\b/o;
+    #追加情報
+    $DT{'Sys'}.=qq(<INPUT name="i" type="hidden" value="$DT{'i'}">\n);
+    if(defined$DT{'j'}){
+	$DT{'Sys'}.=qq(<INPUT name="j" type="hidden" value="$DT{'j'}">\n);
+	$DT{'Sys'}.=qq(<INPUT name="oldps" type="hidden" value="$DT{'oldps'}">\n);
+	$DT{'caption'}='■ 子記事修正フォーム ■';
+    }else{
+	$DT{'caption'}='■ 返信投稿フォーム ■';
+    }
 	
-	#追加情報
-	$DT{'Sys'}.=qq(<INPUT name="i" type="hidden" value="$DT{'i'}">\n);
-	if(defined$DT{'j'}){
-		$DT{'Sys'}.=qq(<INPUT name="j" type="hidden" value="$DT{'j'}">\n);
-		$DT{'Sys'}.=qq(<INPUT name="oldps" type="hidden" value="$DT{'oldps'}">\n);
-		$DT{'caption'}='■ 子記事修正フォーム ■';
-	}else{
-		$DT{'caption'}='■ 返信投稿フォーム ■';
-	}
-	
-	#項目の初期設定
-	$DT{'home'}='http://'unless$DT{'home'}; #http://だけ入れておく
-	$DT{'cook'}=$DT{'cook'}||!exists$DT{'cook'}?' checked':'';
-	#note01:Resは題名ないことも
-	if($CF{'chditm'}!~/\bsubject\b/o){
-		$DT{'subject'}='disabled';
-		$DT{'_isSubjectDisabled'}=' disabled';
-	}else{
-		$DT{'_isSubjectDisabled'}='';
-	}
-	
-	print<<"_HTML_";
-<FORM accept-charset="euc-jp" id="artform" method="post" action="$CF{'index'}">
+    #項目の初期設定
+    $DT{'home'}='http://'unless$DT{'home'}; #http://だけ入れておく
+    $DT{'cook'}=$DT{'cook'}||!exists$DT{'cook'}?' checked':'';
+    #note01:Resは題名ないことも
+    if($CF{'chditm'}!~/\bsubject\b/o){
+	$DT{'subject'}='disabled';
+	$DT{'_isSubjectDisabled'}=' disabled';
+    }else{
+	$DT{'_isSubjectDisabled'}='';
+    }
+    
+    #ファイル添付
+    my $attachForm = getAttachForm(\%DT);
+    
+    
+    print<<"_HTML_";
+<FORM accept-charset="euc-jp" id="artform" method="post" action="$CF{'index'}" enctype="multipart/form-data">
 
 
 
@@ -865,6 +927,11 @@ sub chdfrm{
 <TD class="input"><INPUT type="text" name="cmd" id="cmd" value="$DT{'cmd'}" onchange="changePreviewIcon()"></TD>
 <TD class="input" title="Icon&#10;アイコンを選択します">@{[&iptico($DT{'icon'})]}</TD>
 </TR>
+
+<TR title="attach&#10;ファイルを添付します">
+<TH class="item"><LABEL>■ファイル添付：</LABEL></TH>
+<TD class="input" colspan="2">$attachForm</TD>
+</TR>
 </TABLE>
 
 
@@ -888,18 +955,49 @@ sub chdfrm{
 $CF{'jsWritingForms'}
 </FORM>
 _HTML_
-	return 1;
+    return 1;
+}
+
+
+#-------------------------------------------------
+# ファイル添付フォーム
+sub getAttachForm{
+    my %DT = %{shift()};
+    my $length = $CF{'Attach/'.$DT{'_type'}.'Length'};
+    my $html = '';
+    my @array;
+    if($DT{'attach'}){
+	my $attach = MirString::urldecode($DT{'attach'});
+	if( ref$attach eq 'ARRAY' ){
+	    @array = @{$attach};
+	}elsif( ref$attach eq 'HASH' ){
+	    push @array, $attach;
+	}
+	$#array = $length - 1 if @array > $length;
+	for( grep{ref$_ eq 'HASH'}@array ){
+	    my $hash = $_->{'hash'};
+	    $html .= <<"_HTML_";
+<A href="$CF{'Attach/Dir'}/$hash.$_->{'ext'}">$hash.$_->{'ext'}</A>
+[<LABEL for="remove_attach__$hash"><INPUT type="checkbox" id="remove_attach__$hash" name="remove_attach__$hash" value="$hash">削除</LABEL>]
+<br>
+_HTML_
+	}
+    }
+    for( my $i = 0; $i < $length - @array; $i++ ){
+	$html .= qq{<INPUT id="attach__$i" name="attach__$i" type="file"><br>\n};
+    }
+    return $html;
 }
 
 
 #-------------------------------------------------
 # ページ選択BOX
 sub getPageSelectorSkin{
-	my$following=shift;
-	my$pageList =shift;
-	my$preceding=shift;
-#	my($str,$end,$pags,$mode)=@_; #自力で組み立てたい時用
-	return<<"_HTML_";
+    my$following=shift;
+    my$pageList =shift;
+    my$preceding=shift;
+    #	my($str,$end,$pags,$mode)=@_; #自力で組み立てたい時用
+    return<<"_HTML_";
 <TABLE align="center" border="1" cellspacing="0" class="pageSelector">
 <TR>
 <TD class="following">$following</TD>
@@ -914,8 +1012,8 @@ _HTML_
 #-------------------------------------------------
 # 表紙の記事情報表示上
 sub getArticoleInfomationA{
-	my%data=@_;
-	return<<"_HTML_";
+    my%data=@_;
+    return<<"_HTML_";
 <DIV class="artinfo">
 $data{'unread'}
 $data{'pageSelector'}
@@ -929,8 +1027,8 @@ _HTML_
 #-------------------------------------------------
 # 表紙の記事情報表示下
 sub getArticoleInfomationB{
-	my%data=@_;
-	return<<"_HTML_";
+    my%data=@_;
+    return<<"_HTML_";
 <DIV class="artinfo">
 <P class="artinfo"><A name="nav_s@{[$data{'view'}+2]}" href="#nav_n@{[$data{'view'}+1]}" title="上のスレッドへ" accesskey="&#@{[$data{'view'}+50]};">▲</A><BR>
 このページのスレッド<BR>\n[ $data{'this'}]</P>
@@ -944,7 +1042,7 @@ _HTML_
 #-------------------------------------------------
 # 書き込みの前処理を拡張したい時用
 sub exprewrt{
-	return 0;
+    return 0;
 }
 
 
@@ -954,13 +1052,13 @@ sub date{
 =item 引数
 $ time形式時刻
 =cut
-	$CF{'timezone'}||&cfgTimeZone($ENV{'TZ'});
-	my($sec,$min,$hour,$day,$mon,$year,$wday)=gmtime($_[0]+$CF{'timeOffset'});
-	#sprintfの説明は、Perlの解説を見てください^^;;
-	return sprintf("%4d年%02d月%02d日(%s) %02d時%02d分%s" #"1970年01月01日(木) 09時00分"の例
-	,$year+1900,$mon+1,$day,('日','月','火','水','木','金','土')[$wday],$hour,$min,$ENV{'TZ'});
-#	return sprintf("%1d:%01d:%2d %4d/%02d/%02d(%s)" #"9:0: 0 1970/01/01(Thu)"の例
-#	,$hour,$min,$sec,$year+1900,$mon+1,$day,('Sun','Mon','Tue','Wed','Thu','Fri','Sat')[$wday]);
+    $CF{'timezone'}||&cfgTimeZone($ENV{'TZ'});
+    my($sec,$min,$hour,$day,$mon,$year,$wday)=gmtime($_[0]+$CF{'timeOffset'});
+    #sprintfの説明は、Perlの解説を見てください^^;;
+    return sprintf("%4d年%02d月%02d日(%s) %02d時%02d分%s" #"1970年01月01日(木) 09時00分"の例
+		   ,$year+1900,$mon+1,$day,('日','月','火','水','木','金','土')[$wday],$hour,$min,$ENV{'TZ'});
+    #	return sprintf("%1d:%01d:%2d %4d/%02d/%02d(%s)" #"9:0: 0 1970/01/01(Thu)"の例
+    #	,$hour,$min,$sec,$year+1900,$mon+1,$day,('Sun','Mon','Tue','Wed','Thu','Fri','Sat')[$wday]);
 }
 
 
@@ -970,27 +1068,27 @@ sub artnavi{
 =item 引数
 $ 記事ナビのモード
 =cut
-	return if defined$::CF{'artnavi'}&&!$::CF{'artnavi'};
+    return if defined$::CF{'artnavi'}&&!$::CF{'artnavi'};
 	
-	#Netscape4は記事ナビ無し
-	return($::CF{'artnavi'}=0)if$::IN{'hua'}=~/^Mozilla\/4.*(?:;\s*|\()[UI](?:;|\))/;
+    #Netscape4は記事ナビ無し
+    return($::CF{'artnavi'}=0)if$::IN{'hua'}=~/^Mozilla\/4.*(?:;\s*|\()[UI](?:;|\))/;
 	
-	unless(@_){
-		#記事ナビ本体
-		#------------------------------------------------------------------------------------
-		#ブラウザ判定
-		my$style='display:none;position:fixed';
-		unless($::IN{'hua'}){
-			#guess to be WinIEorMozilla
-		}elsif(index($::IN{'hua'},'Opera 6')>-1||index($::IN{'hua'},'Opera/6')>-1){
-			#guess to be Opera6
-			$style='display:block;position:fixed;top:-1000;left:-1000;visibility:visible;/*Opera6*/';
-		}elsif(index($::IN{'hua'},'MSIE 4')>-1){
-			#guess to be MSIE 4
-			$style='display:none;position:absolute;position:fixed;filter:alpha(opacity=60)';
-		}
+    unless(@_){
+	#記事ナビ本体
+	#------------------------------------------------------------------------------------
+	#ブラウザ判定
+	my$style='display:none;position:fixed';
+	unless($::IN{'hua'}){
+	    #guess to be WinIEorMozilla
+	}elsif(index($::IN{'hua'},'Opera 6')>-1||index($::IN{'hua'},'Opera/6')>-1){
+	    #guess to be Opera6
+	    $style='display:block;position:fixed;top:-1000;left:-1000;visibility:visible;/*Opera6*/';
+	}elsif(index($::IN{'hua'},'MSIE 4')>-1){
+	    #guess to be MSIE 4
+	    $style='display:none;position:absolute;position:fixed;filter:alpha(opacity=60)';
+	}
 		
-		print<<"_HTML_";
+	print<<"_HTML_";
 <!--[if IE]>
 <DIV id="naviwind" style="display:none;position:absolute;filter:alpha(opacity=60)">
 <![endif]--><![if ! IE]>
@@ -1012,33 +1110,33 @@ $ 記事ナビのモード
 </DIV>
 <SCRIPT type="text/javascript" src="$::CF{'navjs'}" defer></SCRIPT>
 _HTML_
-		#------------------------------------------------------------------------------------
-	}elsif('button'eq$_[0]){
-		print<<"_HTML_";
+	#------------------------------------------------------------------------------------
+    }elsif('button'eq$_[0]){
+	print<<"_HTML_";
 <DIV><BUTTON onclick="setTimeout(&#34;artnavi('popup')&#34;,500);return false;" accesskey="n"
 onkeypress="setTimeout(&#34;artnavi('popup')&#34;,500);return false;">記事ナビ(<SPAN class="ak">N</SPAN>)</BUTTON></DIV>
 _HTML_
-	}
-	return;
+    }
+    return;
 }
 
 #-------------------------------------------------
 # 記事ナビクラス
 {package ArtNavi;
-	my$ArtNaviBody='';
-	#記事ナビの本文 -- クラスメソッド
-	sub ArtNavi::body{
-		my$class=shift;
-		$ArtNaviBody=shift if@_>0;
-		$ArtNaviBody
-	}
+    my$ArtNaviBody='';
+    #記事ナビの本文 -- クラスメソッド
+    sub ArtNavi::body{
+	my$class=shift;
+	$ArtNaviBody=shift if@_>0;
+	$ArtNaviBody
+    }
 	
-	#記事ナビのスレッドヘッダ追加 -- クラスメソッド
-	sub ArtNavi::addThreadHead{
-		my$class=shift;
-		my%DT=%{shift()};
-		my$subject=$DT{'subject'}; #MirString->getTruncated($DT{'subject'},45);
-		$ArtNaviBody.=<<"_HTML_";
+    #記事ナビのスレッドヘッダ追加 -- クラスメソッド
+    sub ArtNavi::addThreadHead{
+	my$class=shift;
+	my%DT=%{shift()};
+	my$subject=$DT{'subject'}; #MirString->getTruncated($DT{'subject'},45);
+	$ArtNaviBody.=<<"_HTML_";
 <DIV class="navithre">
 <DIV class="navisubj">
 <A href="#nav_r$DT{'i'}" title="返信"><STRONG>$DT{'i'}</STRONG></A>:
@@ -1046,34 +1144,34 @@ _HTML_
 </DIV>
 <DIV class="navinums">
 _HTML_
-	}
+    }
 	
-	#記事ナビのスレッドフッタ追加 -- クラスメソッド
-	sub ArtNavi::addThreadFoot{
-		my$class=shift;
-		my%DT=%{shift()};
-		$ArtNaviBody.=<<"_HTML_";
+    #記事ナビのスレッドフッタ追加 -- クラスメソッド
+    sub ArtNavi::addThreadFoot{
+	my$class=shift;
+	my%DT=%{shift()};
+	$ArtNaviBody.=<<"_HTML_";
 <A href="$CF{'index'}?res=$DT{'i'}#Form" title="返信" style="color:green;">Re</A>
 </DIV>
 </DIV>
 _HTML_
-	}
+    }
 	
-	#記事追加 -- クラスメソッド
-	sub ArtNavi::addArticle{
-		my$class=shift;
-		my%DT=%{shift()};
-		my$isNew=shift;
-		if($isNew){
-			#未読
-			$ArtNaviBody.=qq(<A class="new" href="#art$DT{'i'}-$DT{'j'}" title="$DT{'name'}">$DT{'j'}</A> );
-			return;
-		}else{
-			#既読
-			$ArtNaviBody.=qq(<A href="#art$DT{'i'}-$DT{'j'}" title="$DT{'name'}">$DT{'j'}</A> );
-			return;
-		}
+    #記事追加 -- クラスメソッド
+    sub ArtNavi::addArticle{
+	my$class=shift;
+	my%DT=%{shift()};
+	my$isNew=shift;
+	if($isNew){
+	    #未読
+	    $ArtNaviBody.=qq(<A class="new" href="#art$DT{'i'}-$DT{'j'}" title="$DT{'name'}">$DT{'j'}</A> );
+	    return;
+	}else{
+	    #既読
+	    $ArtNaviBody.=qq(<A href="#art$DT{'i'}-$DT{'j'}" title="$DT{'name'}">$DT{'j'}</A> );
+	    return;
 	}
+    }
 }
 package main;
 

@@ -29,6 +29,12 @@ if($CF{'program'}eq __FILE__){
 
 =cut
 
+$CF{'MaxSize'} = 1048576;
+$CF{'Attach/MaxSize'} = 300*1000;
+$CF{'Attach/ParentLength'} = 3;
+$CF{'Attach/ChildLength'} = 3;
+$CF{'Attach/Dir'} = 'attach';
+$CF{'Attach/AcceptContentType'} = 'text/plain, text/html, application/xml, image/pjepg, image/x-png, application/octet-stream, image/gif';
 
 #-------------------------------------------------
 # MAIN SWITCH
@@ -268,8 +274,6 @@ sub writeArticle{
     unlink "$CF{'log'}env.log";
 
     'POST'eq$ENV{'REQUEST_METHOD'} or die 'wa: Something Wicked happend!';
-    'Mozilla/4.0 (compatible; MSIE 4.01; Windows 95)'eq$ENV{'HTTP_USER_AGENT'} and die 'wa: Something Wicked happend!';
-    $IN{'body'} =~ /^[\x21-\x7e]*$/o and die 'wa: Something Wicked happend!';
 #    gethostbyaddr(pack('C4',split('\.',$ENV{'REMOTE_ADDR'})),2) or die 'wa: Something Wicked happend!';
     
     
@@ -500,6 +504,7 @@ Marldiaはデータの保持などは適当でもいいこともあって、
 	$IN{'body'}||push(@error,'本文');
 	$IN{'pass'}||($CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'})
 	    or push(@error,'パスワード')&&push(@message,'パスワードは8文字以上、128文字以下でなければなりません。');
+	$IN{'body'} =~ /^[\x21-\x7e]*$/o and die 'wa: Something Wicked happend!';
 	if($CF{'ngWords'}&&!@error){
 
 =head2 CONFIG::NGワード
@@ -528,9 +533,8 @@ NGワードを見つけたときに表示するメッセージ
 	    for(keys%item){
 		my$item=$IN{$_};
 		my$err=$item{$_};
-		study$item;
 		for(@ngWords){
-		    MirString->match($item,$_)||next;
+		    MirString::match($item,$_)||next;
 		    push(@error,$err);
 		    last;
 		}
@@ -564,7 +568,6 @@ _HTML_
 	#本文のみタグを使ってもいい設定にもできる
 	my$attrdel=0;#属性を消す/消さない(1/0)
 	my$str=$IN{'body'};
-	study$str;
 	$str=~tr/"'<>/\01-\04/;
 	$str=~s/&(#?\w+;)/\05$1/go;
 	
@@ -705,7 +708,60 @@ _HTML_
     $IN{'body'}=~s/\t/&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;/go;
     $IN{'body'}=~s/((?:\G|>)[^<]*?) /$1&#160;/go;
     $IN{'body'}=~s/\n/<BR>/go;
-	
+    
+    #-----------------------------
+    #ファイル添付処理
+    #$IN{'_ArticleType'}&1?'chditm':'prtitm'
+    while( $IN{'_attach'} ){
+	unless(ref$IN{'_attach'} eq 'ARRAY'){
+	    delete$IN{'_attach'};
+	    last;
+	}
+	my @file = @{$IN{'_attach'}};
+	unless( @file > 0 ){
+	    delete$IN{'_attach'};
+	    last;
+	}
+	my $length;
+	if($IN{'_ArticleType'}&1){
+	    $CF{'Attach/ChildLength'} > 0 or last;
+	    $length = $CF{'Attach/ChildLength'};
+	    $CF{'chditm'}.=' +attach';
+	}else{
+	    $CF{'Attach/ParentLength'} > 0 or last;
+	    $length = $CF{'Attach/ParentLength'};
+	    $CF{'prtitm'}.=' +attach';
+	}
+	if($length > 0){
+	    unless(-d$CF{'Attach/Dir'}){
+		mkdir$CF{'Attach/Dir'};
+	    }
+	    my @attach;
+	    if(@file > $length){
+		$#file = $length - 1 ;
+		$#{$IN{'_attach'}} = $length - 1 ;
+	    }
+	    
+#	    $IN{'_attach'}[0]{'body'}='' if defined$IN{'_attach'}[0];
+#	    $IN{'_attach'}[1]{'body'}='' if defined$IN{'_attach'}[1];
+#	    $IN{'_attach'}[2]{'body'}='' if defined$IN{'_attach'}[2];
+#	    use Data::Dumper;die "<XMP>".Data::Dumper->Dump([\%IN],['data'])."</XMP>";
+	    
+	    for(@file){
+		my $item = $_;
+		my $filename = sprintf('%s/%s.%s',$CF{'Attach/Dir'},$item->{'hash'},$item->{'ext'});
+		$names.=' '.$filename;
+		open(ATTACH, '>'.$filename)||die"Can't read/write attached file($filename)[$?:$!]";
+		binmode(ATTACH);
+		print ATTACH $item->{'body'};
+		close(ATTACH);
+		push @attach, { map{ $_,$item->{$_} }qw/hash ext content-type size/ };
+	    }
+	    $IN{'attach'} = MirString::urlencode(@attach);
+	}
+	last;
+    }
+    
     #-----------------------------
     #書き込むデータの前処理
     my$crcOfThisArticle=&getCRC32($IN{'body'});
@@ -911,6 +967,44 @@ $file[$CF{'logmax'}-2] は削除された後に残った記事スレッドのうち、
 	    $DT{'time'}=$^T if$EX{'dnew'};
 	    $IN{'_NewPassword'}=&mircrypt($DT{'time'},$IN{'pass'});
 	}
+	while($DT{'attach'}){
+	    my $attach = MirString::urldecode($DT{'attach'});
+	    ref$attach eq 'ARRAY' or last;
+	    my @attach = @{ $attach };
+	    if($IN{'_remove_attach'} and ref$IN{'_remove_attach'} eq 'ARRAY'){
+		for(@{$IN{'_remove_attach'}}){
+		    index( $DT{'attach'}, $_ ) > -1 or next;
+		    my $hash = $_;
+		    my $i;
+		    for($i = 0; $i < @attach; $i++ ){
+			if($attach[$i]->{'hash'} eq $hash){
+			    unlink( "$CF{'Attach/Dir'}/$attach[$i]->{'hash'}.$attach[$i]->{'ext'}" );
+			    splice(@attach, $i, 1);
+			    last;
+			}
+		    }
+		}
+		@attach = grep{ref$_ eq 'HASH'}@attach;
+	    }
+	    if($IN{'_attach'}){
+		for(@{$IN{'_attach'}}){
+		    my $hash = $_->{'hash'};
+		    my $push = 1;
+		    for(@attach){
+			if( $_->{'hash'} eq $hash ){
+			    $push = 0;
+			    last;
+			}
+		    }
+		    if($push){
+			push @attach, $_;
+		    }
+		}
+	    }
+	    $IN{'attach'} = MirString::urlencode(@attach);
+	    last;
+	}
+	
 	#書き込み
 	$log[$IN{'j'}]=
 	    "Mir12=\t$IN{'Mir12'};\tname=\t$IN{'name'};\tpass=\t$IN{'_NewPassword'};\ttime=\t$DT{'time'};\t"
@@ -1155,7 +1249,7 @@ _HTML_
 	    my$date=&date($DT{'time'});
 	    #本文の縮め処理
 	    $DT{'body'}=~s/<BR\b[^>]*>/↓/go;
-	    $DT{'body'}=MirString->getTruncated($DT{'body'},60);
+	    $DT{'body'}=MirString::getTruncated($DT{'body'},60);
 	    my$level=!$j?'parent':'child';
 	    print<<"_HTML_";
 <TR class="$level">
@@ -1374,7 +1468,7 @@ sub showArtSeek{
 		my$thread;
 		read(FILE,$thread,-s"$CF{'log'}$_.cgi");
 		close(FILE);
-		MirString->matchedItem($thread,$item,$seek)||next;
+		MirString::matchedItem($thread,$item,$seek)||next;
 		$result.=qq(<A href="$CF{'index'}?read=$_#art$_">No.$_</A>\n);
 	    }
 	}else{
@@ -1388,7 +1482,7 @@ sub showArtSeek{
 		close(FILE);
 		index($thread,$IN{'seek'})+1||next;
 		my$i=$_;
-		for(MirString->matchedItems($thread,$item,$seek)){
+		for(MirString::matchedItems($thread,$item,$seek)){
 		    $result.=qq(<A href="$CF{'index'}?read=$i#art$i-$_">No.$i-$_</A>\n);
 		}
 	    }
@@ -1548,7 +1642,7 @@ EOF
 	my $uri = $_->{'_uri'};
 	my $title = sprintf('%d-%d %s', $_->{'i'}, $_->{'j'}, $_->{'_subject'});
 	$title =~ s/&(\w*);/&amp;$1;/go;
-	$title = MirString->getTruncated($title,90);
+	$title = MirString::getTruncated($title,90);
 	my $subject = $_->{'_subject'};
 	$subject =~ s/&(\w*);/&amp;$1;/go;
 	my $description = $_->{'body'};
@@ -1557,7 +1651,7 @@ EOF
 	$description =~ s/<BR\b[^>]*>/　/go;
 	$description =~ s/<.*?>//go;
 	$description =~ s/&(\w*);/&amp;$1;/go;
-	$description = MirString->getTruncated($description,450);
+	$description = MirString::getTruncated($description,450);
 	my $date = &datef($_->{'time'}, 'dateTime');
 	$output .= <<"EOF";
  <item rdf:about="$uri">
@@ -1665,9 +1759,11 @@ _HTML_
 #
 sub getParam{
     my%option=@_;
-	
+    
+    my $boundary = '';
     my$params;
     my@params=();
+    
     #引数取得
     unless($ENV{'REQUEST_METHOD'}){
 	@params=@ARGV;
@@ -1678,55 +1774,122 @@ sub getParam{
 	print"Status: 200 OK\nLast-Modified: $last\n"
 	    ."Content-Type: text/plain\n\nLast-Modified: $last";
 	exit;
-    }elsif('POST'eq$ENV{'REQUEST_METHOD'}){
-	read(STDIN,$params,$ENV{'CONTENT_LENGTH'});
     }elsif('GET'eq$ENV{'REQUEST_METHOD'}){
 	$params=$ENV{'QUERY_STRING'};
+    }elsif('POST'eq$ENV{'REQUEST_METHOD'}){
+	binmode STDIN;
+	read(STDIN,$params,$ENV{'CONTENT_LENGTH'});
     }
-	
+    if($ENV{'CONTENT_TYPE'}=~/multipart\/form-data(?:;\s*boundary=(.+))/o){
+	$boundary = $1;
+    }
+    
     #引数をハッシュに
+    my%DT;
     unless($params){
-    }elsif(length$params>262114){ # 262114:引数サイズの上限(byte)
+    }elsif(length$params>$CF{'MaxSize'}){
 	#サイズ制限
 	&showHeader;
 	print"いくらなんでも量が多すぎます\n$params";
 	print&getFooter;
 	exit;
-    }elsif(length$params>0){
-	#入力を展開
+    }elsif(!length$params){
+    }elsif($boundary){
+	#multipartな入力を展開
+	@params = map{/([\w\W]+)\r\n/o}split(/--$boundary(?:--|\r\n)/o,$params);
+	#die"<xmp>$params</xmp>";
+	#入力を展開してハッシュに入れる
+	while(@params){
+	    my ( $head, $value ) = split("\r\n\r\n",shift(@params),2);
+	    $head =~ /Content-Disposition:\s*form-data;.*name="([-\w]+)"/io || next;
+	    my $key = $1;
+	    if($head=~/Content-Type:\s*multipart\/mixed,\s*boundary=(.+)/io){
+		my $bound2 = $1;
+		my @mixture = map{chomp;$_}split(/--$bound2\r\n/o,$value);
+		my @files = ();
+		for(@mixture){
+		    my ( $head, $value ) = split("\r\n\r\n",shift(@params),2);
+		    if($head=~/filename="([^"]+)"[\w\W]+Content-Type:\s*(\S.*\S)/io){
+			length($value) < $CF{'Attach/MaxSize'} or next;
+			my $item = { 'filename' => $1, 'content-type' => $2, 'head' =>$head, 'body' => $value };
+			$item->{'ext'} =  $1 if $item->{'filename'} =~ /(\w+)$/o;
+			$item->{'hash'} = Airemix::Digest::MD5_hex($value);
+			$item->{'size'} = length$value;
+		    }
+		    push @files, $item;
+		}
+		$value = \@files;
+	    }elsif($head=~/filename="([^"]+)"[\w\W]+Content-Type:\s*(\S.*\S)/io){
+		length($value) < $CF{'Attach/MaxSize'} or next;
+		my $item = { 'filename' => $1, 'content-type' => $2, 'head' =>$head, 'body' => $value };
+		$item->{'ext'} =  $1 if $item->{'filename'} =~ /(\w+)$/o;
+		$item->{'hash'} = Airemix::Digest::MD5_hex($value);
+		$item->{'size'} = length$value;
+		$value = $item;
+	    }elsif(defined$value){
+		$value=MirString::getValidString($value);
+		#メインフレームの改行は\x85らしいけど、対応する必要ないよね？
+		$value=~s/\x0D\x0A/\n/go;$value=~tr/\r/\n/;
+		if(!$option{'noescape'}&&'body'ne$key){
+		    #本文以外は全面タグ禁止
+		    $value=~s/\t/&#160;&#160;/go;
+		    $value=~s/&(#?\w+;)?/$1?"&$1":'&#38;'/ego;
+		    $value=~s/"/&#34;/go;
+		    $value=~s/'/&#39;/go;
+		    $value=~s/</&#60;/go;
+		    $value=~s/>/&#62;/go;
+		    $value=~s/\n+$//o;
+		    $value=~s/\n/<BR>/go;
+		}#本文は後でまとめて
+	    }else{
+		$value = '';
+	    }
+	    if($key =~ s/__\w*$//){
+		$DT{$key} = [] unless ref$DT{$key} eq 'ARRAY';
+		push @{$DT{$key}}, $value if $value;
+	    }else{
+	       $DT{$key} = $value;
+	    }
+	}
+	#binmode STDOUT;print"content-type: $DT{'hoe'}{'content-type'}\n\n$DT{'hoe'}{'body'}";exit;
+	#$DT{'attach'}[0]{'body'}='' if $DT{'attach'}[0];
+	#$DT{'attach'}[1]{'body'}='' if $DT{'attach'}[1];
+	#$DT{'attach'}[2]{'body'}='' if $DT{'attach'}[2];
+	#use Data::Dumper;die "<XMP>".Data::Dumper->Dump([\%DT],['data'])."</XMP>";
+    }else{
+	#x-www-form-urlencodedな入力を展開
 	@params=split(/[&;]/o,$params);
+	#入力を展開してハッシュに入れる
+	while(@params){
+	    my($i,$j)=split('=',shift(@params),2);
+	    $i=~/([-\w]*)/o||next;
+	    $i=$1;
+	    defined$j||($DT{$i}='')||next;
+	    $j = MirString::unescape($j);
+	    $j = MirString::getValidString($j);
+	    #メインフレームの改行は\x85らしいけど、対応する必要ないよね？
+	    $j=~s/\x0D\x0A/\n/go;$j=~tr/\r/\n/;
+	    if(!$option{'noescape'}&&'body'ne$i){
+		#本文以外は全面タグ禁止
+		$j=~s/\t/&#160;&#160;/go;
+		$j=~s/&(#?\w+;)?/$1?"&$1":'&#38;'/ego;
+		$j=~s/"/&#34;/go;
+		$j=~s/'/&#39;/go;
+		$j=~s/</&#60;/go;
+		$j=~s/>/&#62;/go;
+		$j=~s/\n+$//o;
+		$j=~s/\n/<BR>/go;
+	    }#本文は後でまとめて
+	    $DT{$i}=$j;
+	}
     }
-	
-    #入力を展開してハッシュに入れる
-    my%DT;
-    while(@params){
-	my($i,$j)=split('=',shift(@params),2);
-	$i=~/([a-z][-.:\w]*)/o||next;$i=$1;
-	defined$j||($DT{$i}='')||next;
-	study$j;
-	$j=~tr/+/\ /;
-	$j=~s/%([\dA-Fa-f]{2})/pack('H2',$1)/ego;
-	$j=MirString->getValidString($j);
-	#メインフレームの改行は\x85らしいけど、対応する必要ないよね？
-	$j=~s/\x0D\x0A/\n/go;$j=~tr/\r/\n/;
-	if(!$option{'noescape'}&&'body'ne$i){
-	    #本文以外は全面タグ禁止
-	    $j=~s/\t/&#160;&#160;/go;
-	    $j=~s/&(#?\w+;)?/$1?"&$1":'&#38;'/ego;
-	    $j=~s/"/&#34;/go;
-	    $j=~s/'/&#39;/go;
-	    $j=~s/</&#60;/go;
-	    $j=~s/>/&#62;/go;
-	    $j=~s/\n+$//o;
-	    $j=~s/\n/<BR>/go;
-	}#本文は後でまとめて
-	$DT{$i}=$j;
-    }
+    #use Data::Dumper;
+    #die sprintf'<xmp>%s</xmp>',Data::Dumper->Dump([\%DT]);
     return%DT if$option{'nofiltering'};
-	
+    
     #引数の汚染除去
     $IN{'ra'}=($ENV{'REMOTE_ADDR'}&&$ENV{'REMOTE_ADDR'}=~/([\d\:\.]{2,56})/o)?$1:'';
-    $IN{'hua'}=MirString->getValidString($ENV{'HTTP_USER_AGENT'});
+    $IN{'hua'}=MirString::getValidString($ENV{'HTTP_USER_AGENT'});
     $IN{'hua'}=~tr/\x09\x0A\x0D/\x20\x20\x20/;
 	
     if(defined$DT{'body'}){
@@ -1793,7 +1956,7 @@ sub getParam{
 
 =cut
 
-	$IN{'name'}=MirString->getTruncated($DT{'name'},40);
+	$IN{'name'}=MirString::getTruncated($DT{'name'},40);
 	$IN{'cook'}=($DT{'cook'}=~/(.)/o)?'on':'';
 	unless($DT{'pass'}){
 	}elsif($DT{'pass'}eq$CF{'admps'}){
@@ -1816,13 +1979,16 @@ sub getParam{
 		}elsif('cmd'eq$_){
 		    $IN{'cmd'}=$DT{'cmd'}=~/(.+)/o?$1:'';
 		}elsif('subject'eq$_){
-		    $IN{'subject'}=MirString->getTruncated($DT{'subject'}?$DT{'subject'}:$DT{'body'},70);
+		    $IN{'subject'}=MirString::getTruncated($DT{'subject'}?$DT{'subject'}:$DT{'body'},70);
 		}elsif('ra'eq$_||'hua'eq$_){
 		    next;
 		}else{
 		    $IN{"$_"}=($DT{"$_"}=~/(.+)/o)?$1:'';
 		}
 	    }
+	    
+	    $IN{'_attach'} = $DT{'attach'};
+	    $IN{'_remove_attach'} = $DT{'remove_attach'};
 	}
 	#bodyの処理は基本的に&writeArticleで行う
 	$IN{'body'}=$DT{'body'}=~/(.*\S)/os?$1:'';
@@ -1985,7 +2151,7 @@ _HTML_
 	    if(!open(STDOUT,$CF{'conenc'})){
 		#GZIP失敗時のエラーメッセージ
 		binmode STDOUT;
-		print unpack("u",
+		print unpack('u',
 				q|M'XL(`-+V_#P""UV134O#0!"&[X'\AR45HBUM$&]I(TBIXD&4>O-20ES:2//A|.
 				q|M=FNKXH^)3-J#%;SX42U2BM9BH'CPY$7Q)/90B"`>S28%/^:RNS//O#.\FS$P|.
 				q|M55&)4CN)MZOZCB)D+9-BDR;IKHT%I$4O1:"X3J42-<III)544L%4P54MN64+|.
@@ -2211,7 +2377,7 @@ _HTML_
 sub getCookie{
     %CK=();
     if($ENV{'HTTP_COOKIE'}){
-	my$char=MirString->getCharRegexp;
+	my$char = MirString::getCharRegexp();
 	for($ENV{'HTTP_COOKIE'}=~/(?:^|; )Mireille=([^;]*)/go){
 	    s/%([\dA-Fa-f]{2})/pack('H2',$1)/ego;
 	    my%DT=/(\w+)\t($char*?)(?:\t|$)/go;
@@ -2282,19 +2448,19 @@ sub setCookie{
 	for("lastModified time expire"=~/(\w+)/go){
 	    $cookie.=sprintf"%s\t%s\t",$_,defined$DT{$_}?$DT{$_}:'';
 	}
-	$cookie=~s/(\W)/'%'.unpack('H2',$1)/ego;
+	$cookie = MirString::escape($cookie);
 	$setCookie.=sprintf'Mireille=%s; expires=%s',$cookie,&datef($expires,'cookie');
 	$setCookie.="\n";
 	for("lastModified name pass $CF{'cokitm'}"=~/(\w+)/go){
 	    $cookie.=sprintf"%s\t%s\t",$_,defined$DT{$_}?$DT{$_}:'';
 	}
-	$cookie=~s/(\W)/'%'.unpack('H2',$1)/ego;
+	$cookie = MirString::escape($cookie);
 	$setCookie.=sprintf'Mireille=%s; expires=%s; %s',$cookie,&datef($expires,'cookie'),$CF{'ckpath'};
     }else{
 	for("lastModified time expire name pass $CF{'cokitm'}"=~/(\w+)/go){
 	    $cookie.=sprintf"%s\t%s\t",$_,defined$DT{$_}?$DT{$_}:'';
 	}
-	$cookie=~s/(\W)/'%'.unpack('H2',$1)/ego;
+	$cookie = MirString::escape($cookie);
 	$setCookie.=sprintf'Mireille=%s; expires=%s',$cookie,&datef($expires,'cookie');
     }
     if(!defined$CF{'set_cookie_by_meta_tags'}&&index($ENV{'SERVER_NAME'},'tok2.com')+1){
@@ -3046,7 +3212,6 @@ sub rvsij{
     }
     # 正しくマッチさせる
     sub match{
-	my$class=shift;
 	my$str=shift;
 	my$regex=shift;
 	if($eucpre){
@@ -3057,7 +3222,6 @@ sub rvsij{
     }
     # Mireilleログからkey=valueを検索
     sub matchedItem{
-	my$class=shift;
 	my$str=shift;
 	my$item=shift;
 	my$seek=shift;
@@ -3069,7 +3233,6 @@ sub rvsij{
     }
     # Mireilleログからkey=valueを検索してリストを返す
     sub matchedItems{
-	my$class=shift;
 	my$str=shift;
 	my$item=shift;
 	my$seek=shift;
@@ -3082,15 +3245,14 @@ sub rvsij{
     }
     # そのエンコードで正当な文字列を取得
     sub getValidString{
-	my$class=shift;
 	@_||die'Not enough arguments for MirString::getValidString';
 	return shift=~/($char+)/?$1:'';
     }
     # そのエンコードで正当な文字を表す正規表現を取得
     sub getCharRegexp{
-	my$class=shift;
 	return$char;
     }
+    
     #-------------------------------------------------
 
 =head2 文字化けさせずに文字列の長さを切り詰める
@@ -3103,7 +3265,6 @@ sub rvsij{
 =cut
 
     sub getTruncated{
-	my$class=shift;
 	my$str=shift;
 	my$length=shift;
 		
@@ -3120,6 +3281,152 @@ sub rvsij{
 	}
 	return$str;
     }
+    
+    sub escape{
+	my $str = shift;
+	$str =~ s/(\W)/'%'.unpack('H2',$1)/ego;
+	return $str;
+    }
+    
+    sub unescape{
+	my $str = shift;
+	$str =~tr/+/\ /;
+	$str =~ s/%([\da-fA-F]{2})/pack('H2',$1)/ego;
+	return $str;
+    }
+    
+    # URL Encode
+    sub urlencode{
+	if( @_ > 1){
+	    urlencode_array(\@_);
+	}else{
+	    if( 'HASH' eq ref$_[0] ){
+		urlencode_hash($_[0]);
+	    }elsif( 'ARRAY' eq ref$_[0] ){
+		urlencode_array($_[0]);
+	    }elsif( '' eq ref$_[0] ){
+		my $scalar = $_[0];
+		$scalar = escape($scalar);
+		$scalar;
+	    }else{
+		ref$_[0];
+	    }
+	}
+    }
+    sub urlencode_hash{
+	my %hash = ref$_[0] eq 'HASH' ? %{shift()} : @_;
+	return '{'.join('&', map{ escape($_).'='.escape(urlencode($hash{$_})) }keys%hash).'}';
+    }
+    sub urlencode_array{
+	my @array = ref$_[0] eq 'ARRAY' ? @{shift()} : @_;
+	return '['.join('&', map{ escape(urlencode($_)) }@array).']';
+    }
+    
+    sub urldecode{
+	my$str = shift;
+	if( index($str,'{') == 0 ){
+	    #HASH
+	    my %hash;
+	    $str =~ /\{(.*)\}/o or return undef;
+	    for(split('&',$1)){
+		my($key,$value) = split('=',$_,2);
+		$key = unescape($key);
+		$value = urldecode(unescape($value));
+		$hash{$key} = $value;
+	    }
+	    \%hash;
+	}elsif( index($str,'[') == 0 ){
+	    #ARRAY
+	    my @array;
+	    $str =~ /\[(.*)\]/o or return undef;
+	    for(split('&',$1)){
+		push @array, urldecode(unescape($_));
+	    }
+	    \@array;
+	}else{
+	    unescape($str);
+	}
+    }
+}
+
+
+
+# ---------------------------------------------------------------------------- #
+# Airemix::Digest::MD5
+#
+# ---------------------------------------------------------------------------- #
+# MD5.pl - perl library for MD5 Message-Digest
+# Copyright (C) 1998 Masanao Izumo <mo@goice.co.jp>
+#
+# This program is free software.  You can redistribute it and/or modify
+# it without any warranty.  This library calculates the MD5 based on RFC1321.
+# See RFC1321 for more information and algorism.
+#
+
+{package Airemix::Digest;
+	my@T;
+	sub MD5{
+		@T=map{int}map{4294967296.0*$_}map{abs}map{sin}0..64unless@T;
+		my$data=shift;
+		my@state=(0x67452301,0xefcdab89,0x98badcfe,0x10325476);
+		my$len=length$data;
+		my$index=$len&0x3f;
+		my$padLen=($index<56?55:119)-$index;
+		$data.=($padLen>1?"\x80".("\x00"x$padLen):'').pack('VV',$len*8);
+		while($data=~/(.{64})/gos){
+			my@x=unpack('V16',$1);
+			my@s=@state;
+			#Round 1
+			my@ksi=(0,7,1,1,12,2,2,17,3,3,22,4,4,7,5,5,12,6,6,17,7,7,22,8,8,7,9,9
+			,12,10,10,17,11,11,22,12,12,7,13,13,12,14,14,17,15,15,22,16);
+			while(@ksi){
+				my($k,$s,$i)=splice(@ksi,0,3);
+				my$t=($s[0]+((($s[2]^$s[3])&$s[1])^$s[3])+$x[$k]+$T[$i])%4294967296;
+				$s[0]=((($t<<$s)|($t>>(32-$s)))+$s[1])%4294967296;
+				unshift(@s,pop(@s));
+			}
+			#Round 2
+			@ksi=(1,5,17,6,9,18,11,14,19,0,20,20,5,5,21,10,9,22,15,14,23,4,20,24
+				,9,5,25,14,9,26,3,14,27,8,20,28,13,5,29,2,9,30,7,14,31,12,20,32);
+			while(@ksi){
+				my($k,$s,$i)=splice(@ksi,0,3);
+				my$t=($s[0]+((($s[1]^$s[2])&$s[3])^$s[2])+$x[$k]+$T[$i])%4294967296;
+				$s[0]=((($t<<$s)|($t>>(32-$s)))+$s[1])%4294967296;
+				unshift(@s,pop(@s));
+			}
+			#Round 3
+			@ksi=(5,4,33,8,11,34,11,16,35,14,23,36,1,4,37,4,11,38,7,16,39,10,23,40
+				,13,4,41,0,11,42,3,16,43,6,23,44,9,4,45,12,11,46,15,16,47,2,23,48);
+			while(@ksi){
+				my($k,$s,$i)=splice(@ksi,0,3);
+				my$t=($s[0]+($s[1]^$s[2]^$s[3])+$x[$k]+$T[$i])%4294967296;
+				$s[0]=((($t<<$s)|($t>>(32-$s)))+$s[1])%4294967296;
+				unshift(@s,pop(@s));
+			}
+			#Round 4
+			@ksi=(0,6,49,7,10,50,14,15,51,5,21,52,12,6,53,3,10,54,10,15,55,1,21,56
+				,8,6,57,15,10,58,6,15,59,13,21,60,4,6,61,11,10,62,2,15,63,9,21,64);
+			while(@ksi){
+				my($k,$s,$i)=splice(@ksi,0,3);
+				my$t=($s[0]+(($s[1]|~$s[3])^$s[2])+$x[$k]+$T[$i])%4294967296;
+				$s[0]=((($t<<$s)|($t>>(32-$s)))+$s[1])%4294967296;
+				unshift(@s,pop(@s));
+			}
+			$state[$_]+=$s[$_],$state[$_]%=4294967296for 0..3;
+		}
+		return wantarray?@state:pack('VVVV',@state);
+	}
+	
+	sub MD5_hex{
+		return unpack('H*',MD5(shift));
+	}
+	sub MD5_uue{
+		return pack('u*',MD5(shift));
+	}
+	sub MD5_0Zencode{
+		my@ar=split(//o,'-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz');
+		return join"",map{my$res='';do{$res.=$ar[($_&63)]}while($_>>=6);$res}unpack('V*',MD5(shift));
+	}
 }
 
 
