@@ -9,7 +9,7 @@
 # Scripted by NARUSE,Yui.
 #------------------------------------------------------------------------------#
 # $cvsid = q$Id$;
-#require 5.005;
+require 5.005;
 #use strict;
 #use vars qw(%CF %IC %IN %CK);
 my(%Z0,@zer2,@file);
@@ -32,13 +32,13 @@ sub main{
 	#¥í¥°¥Õ¥¡¥¤¥ë¤Á¤ã¤ó¤È¤¢¤ë¡©
 	defined$CF{'log'}||die"\$CF{'log'} is Undefined";
 	unless(-e"$CF{'log'}0.cgi"){
-		(-e"$CF{'log'}0.pl")&&(die"µì·Á¼°0.pl¤¬»Ä¤Ã¤Æ¤¤¤Þ¤¹ ÉÔ¶ñ¹ç¤ÎÃû¤·¡©");
+		-e"$CF{'log'}0.pl"&& die"µì·Á¼°0.pl¤¬»Ä¤Ã¤Æ¤¤¤Þ¤¹ ÉÔ¶ñ¹ç¤ÎÃû¤·¡©";
 		DIR:{
-			(-e"$CF{'log'}")&&(last DIR);
-			mkdir("$CF{'log'}",0777)&&(last DIR);
+			-e"$CF{'log'}"&& last DIR;
+			mkdir("$CF{'log'}",0777)&& last DIR;
 			die"Can't read/write/create LogDir($CF{'log'})[$!]";
 		}
-		open(ZERO,"+>>$CF{'log'}0.cgi")||die"Can't write log(0.cgi)[$!]";
+		open(ZERO,'+>>'."$CF{'log'}0.cgi")||die"Can't write log(0.cgi)[$!]";
 		eval{flock(ZERO,2)};
 		if(!-s"$CF{'log'}0.cgi"){
 			print ZERO "Mir12=\t0-0;\tsubject=\tWelcome to Mireille;\tname=\tMireilleSystem;\ttime=\t$^T;\t"
@@ -465,7 +465,7 @@ Perl¥â¥¸¥å¡¼¥ë¤ÎImage::size¤òÍÑ¤¤¤ë¤³¤È¤Ë¤è¤Ã¤Æ¡¢¥µ¥¤¥ºÀ©¸Â¤ò¤«¤±¤ë¤³¤È¤¬½ÐÍè¤ë¤
 		&getCookie;
 		&setCookie(\%IN);
 	}
-
+	
 	#-----------------------------
 	#¥¨¥é¡¼É½¼¨
 	my@error;
@@ -483,10 +483,10 @@ _HTML_
 		print&getFooter;
 		exit;
 	}
-
+	
 	#-----------------------------
 	#½ñ¤­¹þ¤ß¥Ç¡¼¥¿½àÈ÷
-	open(ZERO,"+>>$CF{'log'}0.cgi")||die"Can't read/write log(0.cgi)[$!]";
+	open(ZERO,'+>>'."$CF{'log'}0.cgi")||die"Can't read/write log(0.cgi)[$!]";
 	eval{flock(ZERO,2)};
 	seek(ZERO,0,0);
 	my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
@@ -494,14 +494,26 @@ _HTML_
 	%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
 	my@zer1=split(/\s+/o,$zero[1]);
 	@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
+	
 	#-----------------------------
+	#¸½ºß¤¢¤ë¥í¥°¤Î¥ê¥¹¥È¤ò¼èÆÀ
 	&logfiles('number');
 	$IN{'i'}=$file[0]+1if$IN{'i'}&&$IN{'i'}>$file[0]+1;
-
+	
+	#-----------------------------
+	#@zer2¤Î¥¨¥é¡¼ÄûÀµ
+	for(@file){
+		$_>$zer2[0]||next; #´û¤Ë¸Å¤¯¤Ê¤Ã¤¿¤â¤Î
+		$zer2[$_-$zer2[0]]&& next; #Àµ¾ï
+		
+		#°Ê²¼°Û¾ï¤Ê¤â¤Î¤ÎÉüµì
+		$zer2[$_-$zer2[0]]=(stat("$CF{'log'}$_.cgi"))[9];
+	}
+	
 	#-----------------------------
 	#½ñ¤­¹þ¤ß¤ÎÁ°½èÍý¤ò³ÈÄ¥¤·¤¿¤¤»þÍÑ
 	&exprewrt();
-
+	
 	#-----------------------------
 	#¤¤¤è¤¤¤è
 	unless($IN{'ArtType'}&2){
@@ -511,7 +523,7 @@ _HTML_
 		if($IN{'i'}&&$zero[1]=~/($IN{'i'}):$ENV{'CONTENT_LENGTH'}:([1-9]\d*)/
 			or length$IN{'j'}&&$zero[1]=~/(\d+):$ENV{'CONTENT_LENGTH'}:($IN{'j'})/){
 			&showHeader;
-	print<<"_HTML_";
+			print<<"_HTML_";
 <H2 class="mode">- Â¿½ÅÅê¹Æ¡© -</H2>
 <DIV class="center">
 <P style="margin:0.6em">º£Åê¹Æ¤µ¤ì¤¿µ­»ö¤ÎÆâÍÆ¤Ï<A href="index.cgi?read=$1#art$1-$2" title="³ºÅöµ­»ö¤ò³ÎÇ§¤¹¤ë">Âè$1ÈÖ¥¹¥ì¥Ã¥É¤Î$2ÈÖÌÜ</A>¤ÈÆ±°ìÆâÍÆ¤À¤È»×¤ï¤ì¤Þ¤¹<BR>
@@ -575,7 +587,7 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 				$zer2[0]=$file[$CF{'logmax'}-2]-1;
 			}
 			$IN{'i'}=$file[0]+1;
-			open(WR,"+>>$CF{'log'}$IN{'i'}.cgi")||die"Can't write log($IN{'i'})[$!]";
+			open(WR,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't write log($IN{'i'})[$!]";
 			eval{flock(WR,2)};
 			truncate(WR,0);
 			seek(WR,0,0);
@@ -585,7 +597,7 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 		}else{
 			#-----------------------------
 			#ÊÖ¿®½ñ¤­¹þ¤ß
-			open(RW,"+>>$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$!]";
+			open(RW,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$!]";
 			eval{flock(RW,2)};
 			seek(RW,0,0);
 			my$line;
@@ -619,7 +631,7 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 	}else{
 		#-----------------------------
 		#½¤Àµ½ñ¤­¹þ¤ß
-		open(RW,"+>>$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$!]";
+		open(RW,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$!]";
 		eval{flock(RW,2)};
 		seek(RW,0,0);
 		my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
@@ -666,9 +678,9 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 	
 	if($EX{'znew'}){
 		#-----------------------------
-		#¥í¥°´ÉÍý¥Õ¥¡¥¤¥ë¡¢0.pl¤Ë½ñ¤­¹þ¤ß
+		#¥í¥°´ÉÍý¥Õ¥¡¥¤¥ë¡¢0.cgi¤Ë½ñ¤­¹þ¤ß
 		#¿·µ¬¡¦ÊÖ¿®¤Î»þ¤Ë¤ÏÅê¹Æ¾ðÊó¤òÊÝÂ¸
-		$#zer1>2&&($#zer1=2);
+		$#zer1=2if$#zer1>2;
 		unshift(@zer1,"$IN{'i'}:$ENV{'CONTENT_LENGTH'}:$IN{'j'}");
 		my$No=$IN{'i'}-$zer2[0];
 		$No>0||die"ZER2¤Î¥Ç¡¼¥¿¤¬ÉÔÀµ¤Ç¤¹ 'i':$IN{'i'},'zer2':$zer2[0]";
@@ -791,7 +803,7 @@ _HTML_
 		-e"$CF{'log'}$_.cgi"||next;
 		my$i=$_;
 		my$j=-1;
-		open(RD,"<$CF{'log'}$i.cgi")||die"Can't read log($i.cgi)[$!]";
+		open(RD,'<'."$CF{'log'}$i.cgi")||die"Can't read log($i.cgi)[$!]";
 		eval{flock(RD,1)};
 #		print"<TR><TD colspan=\"6\"><HR></TD></TR>";
 		my$count="<A href=\"index.cgi?read=$i#art$i\">Âè$i¹æ</A>";
@@ -834,7 +846,7 @@ _HTML_
 #
 sub rvsArticle{
 	($IN{'i'},$IN{'j'})=split('-',$IN{'rvs'});
-	open(RD,"<$CF{'log'}$IN{'i'}.cgi")||die"Can't read log($IN{'i'}.cgi)[$!]";
+	open(RD,'<'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read log($IN{'i'}.cgi)[$!]";
 	eval{flock(RD,1)};
 	my$i=0;
 	my%DT;
@@ -911,7 +923,7 @@ sub delArticle{
 	my$delEvenIfMarkMode=0;
 	
 	($IN{'i'},$IN{'j'},$IN{'type'})=split('-',$IN{'del'});
-	open(RW,"+>>$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$!]";
+	open(RW,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$!]";
 	eval{flock(RD,2)};
 	seek(RW,0,0);
 	my@log=<RW>;
@@ -1002,7 +1014,7 @@ sub showArtSeek{
 			#¥¹¥ì¥Ã¥É¤´¤È¸¡º÷
 			for(@file){
 				$_||last;
-				open(RD,"<$CF{'log'}$_.cgi")||die"Can't read log($_.cgi)[$!]";
+				open(RD,'<'."$CF{'log'}$_.cgi")||die"Can't read log($_.cgi)[$!]";
 				eval{flock(RD,1)};
 				my$thread;
 				read(RD,$thread,-s"$CF{'log'}$_.cgi");
@@ -1015,7 +1027,7 @@ sub showArtSeek{
 			#µ­»ö¤´¤È¸¡º÷
 			for(@file){
 				$_||last;
-				open(RD,"<$CF{'log'}$_.cgi")||die"Can't read log($_.cgi)[$!]";
+				open(RD,'<'."$CF{'log'}$_.cgi")||die"Can't read log($_.cgi)[$!]";
 				eval{flock(RD,1)};
 				my$thread;
 				read(RD,$thread,-s"$CF{'log'}$_.cgi");
@@ -1483,7 +1495,7 @@ _HTML_
 	unless(defined$DT{'skyline'}){
 		#LastPost
 		unless(%Z0){
-			open(ZERO,"<$CF{'log'}0.cgi")||die"Can't read log(0.cgi)[$!]";
+			open(ZERO,'<'."$CF{'log'}0.cgi")||die"Can't read log(0.cgi)[$!]";
 			eval{flock(ZERO,1)};
 			my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
 			close(ZERO);
@@ -1686,7 +1698,7 @@ sub showArticle{
 	my%DT=@_;
 	$DT{'j'}=-1;
 	
-	open(RD,"<$CF{'log'}$DT{'i'}.cgi")||die"Can't read log($DT{'i'}.cgi)[$!]";
+	open(RD,'<'."$CF{'log'}$DT{'i'}.cgi")||die"Can't read log($DT{'i'}.cgi)[$!]";
 	eval{flock(RD,1)};
 	while(<RD>){
 		#¿Æµ­»ö
@@ -1733,7 +1745,6 @@ sub setCookie{
 \% Cookie¤Ë½ñ¤­¹þ¤àÆâÍÆ¥Ï¥Ã¥·¥å¤Î¥ê¥Õ¥¡¥ì¥ó¥¹
 =cut
 	my%DT=%{shift()};
-	for(keys%CK){length$DT{$_}||($DT{$_}=$CK{$_})}
 	$DT{'time'}=0;
 	$DT{'expire'}=0;
 	if($CK{'expire'}>$^T){
