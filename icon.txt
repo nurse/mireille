@@ -1,0 +1,17 @@
+<!-- Iconlist for Mireille -->
+<!-- $Id$ -->
+<!-- "This file is written in euc-jp, CRLF." ¶õ -->
+
+<!-- ======================================================================= -->
+
+<!-- %BEGIN_VENDOR »ç¤ÎÍã -->
+<!-- %VENDOR_URL http://shinotubasa.hp.infoseek.co.jp/ -->
+<OPTGROUP label="»ç¤ÎÍã">
+	<OPTION value="shinotubasa/muma.png">Ì´Ëâ</OPTION>
+	<OPTION value="shinotubasa/muma_lag.png">Ì´Ëâ(Âç)</OPTION>
+	<OPTION value="shinotubasa/usa.png">ÅÆÌ¼</OPTION>
+	<OPTION value="shinotubasa/priest.png">À»¿¦</OPTION>
+	<OPTION value="shinotubasa/ushagi.png">¾¯½÷£±</OPTION>
+	<OPTION value="shinotubasa/rafy.png">¾¯½÷£²</OPTION>
+</OPTGROUP>
+<!-- %END_VENDOR -->
