@@ -7,15 +7,15 @@
 <META http-equiv="Content-Style-Type" content="text/css">
 <LINK rel="start" href="/">
 <LINK rel="index" href=".">
-<LINK rev="made" href="mailto:naruse@airemix.com" title="Mireille">
+<LINK rev="made" href="mailto:naruse&#64;airemix.com" title="Mireille">
 <TITLE>: The Intoroduction to Mireille :</TITLE>
 <STYLE type="text/css" media="screen">
 <!--
-/* @charset "EUC-JP"; */
+/*@charset "EUC-JP";
 /* Mireille Style Sheet */
 /* Default Style Sheet for Mireille */
 /* "This file is written in euc-jp, CRLF." 空 */
-/* $Id$ */
+/* $StyleId: style.css,v 1.5 2002/12/05 09:08:10 naruse Exp $ */
 
 /* note.
 ・marginをmargin:auto;margin-top:10px;margin-bottom:10px;と分けている
@@ -31,40 +31,55 @@ MSIE6未満対策のためです
 /* 通常のリンク文字 */
 A:link		{color:#44f;text-decoration:none;}
 A:visited	{color:#44f;text-decoration:none;}
-A:hover		{color:#fa8;text-decoration:underline;}
+A:link:hover{color:#fa8;text-decoration:underline;}
 A:active	{color:#f00;text-decoration:underline;}
 
 /* 新しいものへのリンク文字 */
 A.new:link		{color:#f00;font-weight:bold;text-decoration:none;}
 A.new:visited	{color:#f00;font-weight:bold;text-decoration:none;}
-A.new:hover		{color:#f55;font-weight:bold;text-decoration:underline;}
+A.new:link:hover{color:#f55;font-weight:bold;text-decoration:underline;}
 A.new:active	{color:#f00;font-weight:bold;text-decoration:underline;}
 
+/* 注意なリンク文字 */
+A.warning:link		{color:#f00;font-weight:bold;text-decoration:none;}
+A.warning:visited	{color:#f00;font-weight:bold;text-decoration:none;}
+A.warning:link:hover{color:#f55;font-weight:bold;text-decoration:underline;}
+A.warning:active	{color:#f00;font-weight:bold;text-decoration:underline;}
+
 /* 記事番号のリンク文字 */
-A.number:link	{color:#06e;text-decoration:none;}
-A.number:visited{color:#06e;text-decoration:none;}
-A.number:hover	{color:#fa8;text-decoration:underline;}
-A.number:active	{color:#f50;text-decoration:underline;}
+A.number:link		{color:#06e;text-decoration:none;}
+A.number:visited	{color:#06e;text-decoration:none;}
+A.number:link:hover	{color:#fa8;text-decoration:underline;}
+A.number:active		{color:#f50;text-decoration:underline;}
 
 /* 本文自動リンク機能のリンク文字 */
 A.autolink:link		{border-bottom: dashed 1px #88f;color:#44f;text-decoration:none;}
 A.autolink:visited	{border-bottom: dashed 1px #b9f;color:#97d;text-decoration:none;}
-A.autolink:hover	{border-bottom: dashed 1px #fa8;color:#fa8;text-decoration:none;}
+A.autolink:link:hover{border-bottom: dashed 1px #fa8;color:#fa8;text-decoration:none;}
 A.autolink:active	{border-bottom: dashed 1px #f00;color:#f00;text-decoration:none;}
 
+HTML{
+	border-style: none;
+	border-width: 0;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
 ABBR,ACRONYM{
-	border-bottom: dashed 1px #65c;
+	border-bottom: dotted 1px #66c;
+	cursor: help;
 }
 BODY{
 	background-color: #fff;
 	border-style: none;
+	border-width: 0;
 	color: #355;
-	font-family: 'ＭＳ Ｐゴシック',Osaka,sans-serif;
+	font-family: 'ＭＳ Ｐゴシック',sans-serif;
 	font-size: 15px;
 	margin: 3px 0;
 	padding: 0;
 	text-align: center;
-	width: 100%;
+	width: 98%;
 }
 BUTTON{
 	background-color: #ffb;
@@ -73,8 +88,16 @@ BUTTON{
 	cursor: pointer; cursor: hand;
 }
 DFN{
-	border-left: dashed 1px #f87;
-	border-bottom: dashed 1px #f87;
+	border-bottom-color: #3aa;
+	border-bottom-style: dashed;
+	border-bottom-width: 1px;
+	cursor: help;
+/*	font-family: Verdana,sans-serif;*/
+	font-style: normal;
+}
+EM{
+	border-bottom: solid 1px #3a3;
+/*	font-family: Verdana,sans-serif;*/
 	font-style: normal;
 }
 FORM{
@@ -85,13 +108,16 @@ IMG{
 	margin: 0;
 }
 INPUT,TEXTAREA{
-	font-family: 'ＭＳ Ｐゴシック',Osaka,sans-serif;
+	font-family: 'ＭＳ Ｐゴシック',sans-serif;
 }
 OPTGROUP{
 	font-size: 90%;
+	font-style: normal;
+	font-weight: bold;
 }
 PRE{
-	font-family: 'ＭＳ ゴシック',Osaka,monospace;
+	background-color: #eee;
+	font-family: monospace;
 	font-size: 85%;
 	font-weight: normal;
 	margin: 0.2em 1em;
@@ -100,18 +126,19 @@ PRE{
 	word-break: break-all;
 	word-wrap: break-word;
 }
+Q{
+	border-bottom-color: #f77;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+}
 SELECT{
 /*	background-color: transparent;*/
 	color: #355;
 	font-size: 90%;
 }
-Q{
-	border-top: dashed 1px #c65;
-	border-bottom: dashed 1px #c65;
-}
 TABLE{
 	color: #355;
-	font-family: 'ＭＳ Ｐゴシック',Osaka,sans-serif;
+	font-family: 'ＭＳ Ｐゴシック',sans-serif;
 	font-size: 100%;
 	margin: 1em auto;
 	text-align: center;
@@ -127,8 +154,23 @@ OL,UL{
 	text-align: left;
 }
 LI{
+	line-height: 120%;
 	margin-bottom: 3px;
 	text-align: left;
+}
+DT{
+	background-color: #eef;
+	color: #55f;
+	font-size: 100%;
+	font-weight: normal;
+	margin: 0.5em auto 0em auto;
+	padding: 1px;
+	position: relative;
+	bottom: 2px;
+	text-align: left;
+	vertical-align: middle;
+	width: 100%;
+	margin-top:0.3em;margin-bottom:0em;
 }
 
 
@@ -139,6 +181,10 @@ LI{
 }
 /* 新しい記事の日時 */
 .new{
+	color: #f00;
+}
+/* 何らかの注意や警告 */
+.warning, .coution{
 	color: #f00;
 }
 /* N4調整用一揃えクラス */
@@ -228,22 +274,22 @@ DIV.right{
 		background-color: #ebb;
 	}
 	/* フォームにフォーカスが無い時 */
-	.blur{
+	.blur,TEXTAREA{
 		background-color: transparent;
-		border: #6ac solid 2px;
+		border: #6ac dashed 1px;
 		color: #355;
 		font-size: 100%;
 	}
 	INPUT[type="text"],INPUT[type="password"]{
 		background-color: transparent;
-		border: #6ac solid 2px;
+		border: #6ac dashed 1px;
 		color: #355;
 		font-size: 100%;
 	}
 	/* フォームにフォーカスがある時 */
 	.focus{
 		background-color: #dfd;
-		border: #6ac solid 2px;
+		border: #6ac dashed 1px;
 		color: #355;
 		font-size: 100%;
 	}
@@ -282,7 +328,7 @@ TABLE.head td{
 TABLE.head TH{padding: 3px 5px;}
 H1.head,H1.head A:link{
 	color: #fff;
-	font-family: 'Comic Sans MS','ＭＳ Ｐゴシック',Osaka,sans-serif;
+	font-family: 'Comic Sans MS','ＭＳ Ｐゴシック',sans-serif;
 	font-size: 19px;
 	font-weight: normal;
 }
@@ -292,7 +338,7 @@ H1.head A:visited{color: #fff;}
 H2.mode{
 	background-color: #ace;
 	color: #fff;
-	font-family: 'Comic Sans MS','ＭＳ Ｐゴシック',Osaka,sans-serif;
+	font-family: 'Comic Sans MS','ＭＳ Ｐゴシック',sans-serif;
 	font-size: 17px;
 	font-weight: bold;
 	margin: 10px auto;
@@ -352,6 +398,12 @@ UL.note{
 	padding: 5px 0 5px 20px;
 	margin-top:0;margin-bottom:0;
 }
+P.note{
+	background-color: #eef;
+	border: #6ac solid 2px;
+	padding: 0.5em;
+	width: 60%;
+}
 .note LI{
 	list-style-type: square;
 }
@@ -366,8 +418,11 @@ P.artinfo{
 
 /* ========== 著作権表示 ========== */
 .AiremixCopy{
-	font: normal 100% sans-serif;
-	margin: 5px;
+	font-family: Verdana,sans-serif;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: normal;
+	margin-right: 3%;
 	text-align: right;
 }
 
@@ -450,7 +505,7 @@ P.artinfo{
 	vertical-align: bottom;
 }
 /* ＊記事の返信番号 */
-.thread .info TH.number,TH.number{text-align: center; vertical-align: middle;}
+.thread .info TH.number,TH.number{text-align: center; vertical-align: middle;white-space: nowrap;}
 /* 親記事の記事番号 */
 .thread .parent .info .number{font-size: 15px; font-weight: bold;}
 /* 子記事の返信番号 */
@@ -492,7 +547,7 @@ P.artinfo{
 }
 /* 記事本文内のコード*/
 .body CODE{
-	font-family: 'ＭＳ ゴシック',Osaka,monospace;
+	font-family: monospace;
 	font-weight: normal;
 	text-align: left;
 	white-space: pre;
@@ -551,6 +606,11 @@ TABLE.write{
 #name	 {width:220px;ime-mode:active;}
 #cook	 {}
 #icon	 {width:160px;}
+#icon OPTGROUP{
+	color: #6ac;
+	font-style: normal;
+}
+#icon OPTION{color:#333;}
 #email	{width:300px;ime-mode:inactive;}
 #home	 {width:300px;ime-mode:inactive;}
 #subject{width:300px;ime-mode:active;}
@@ -558,7 +618,8 @@ TABLE.write{
 #pass	 {width:90px;ime-mode:disabled;font-size:85%;}
 #pass[type="password"]{font-size:100%;}/* IEで100%だと大きくなってしまうので85%にし、あとで100%に */
 #cmd		{width:300px;ime-mode:inactive;}
-#body	 {width:500px;ime-mode:active;}
+#body	 {	font-size: 14px;
+width:500px;ime-mode:active;}
 
 /* ===================== 削除・修正モード ===================== */
 TABLE.list{
@@ -650,6 +711,20 @@ H3.list{
 	width: 100%;
 	margin-top:0.3em;margin-bottom:0em;
 }
+H4.list{
+	background-color: #eef;
+	color: #55f;
+	font-size: 100%;
+	font-weight: normal;
+	margin: 0.5em auto 0em auto;
+	padding: 1px;
+	position: relative;
+	bottom: 2px;
+	text-align: left;
+	vertical-align: middle;
+	width: 100%;
+	margin-top:0.3em;margin-bottom:0em;
+}
 
 /* ===================== 記事ナビ ===================== */
 /* 記事ナビウィンドウ */
@@ -690,6 +765,7 @@ DIV#naviwind:hover{
 #navibutt{
 	font-size: 100%;
 	text-align: right;
+	white-space: nowrap;
 }
 /* 記事ナビ本文 */
 #navibody{
@@ -780,7 +856,7 @@ STRONG.s81a6{
 		<LI>アクセスキーがそこそこ設定されている *</LI>
 		<LI>そこそこHTML4.01Strictに準拠 *</LI>
 		<LI>そこそこCSS2に準拠 *</LI>
-		<LI>WinIE4-6, MacIE5, Netscape4, Netscape6, Mozilla1.0, Opera6で見れます *</LI>
+		<LI>WinIE4以降, MacIE5以降, Netscape4以降, Netscape6以降, Mozilla1.0以降, Opera6以降で見れます *</LI>
 	</UL>
 		<P style="margin:0 0 0 25px">*は初期デザインの場合で、デザインを改造している場合はこの限りではありません</P>
 	</LI>
@@ -790,6 +866,7 @@ STRONG.s81a6{
 		<LI>書き込みがあると指定メールアドレスにメールを送る<BR>
 		（除外アドレス設定可能:管理人の書き込みは知らせないとか）</LI>
 		<LI>管理人パスワードによる記事削除・編集機能</LI>
+		<LI>1スレッドあたりの子記事の最大数を決めて、それを超えたらそれいじょう投稿できないようにできる</LI>
 		<LI>ログの最大数を決めて、それを超えたら、スレッドファイルの削除・変更・GZIP圧縮によって記事を削除できる</LI>
 		<LI>ログのバックアップがしやすい（1スレッド1ファイルなのでバックアップが比較的お手軽に可能）<BR>
 		過去ログも、「ファイル名変更」なら拡張子.bakになったのものだけ回収すれば大丈夫です<BR>
@@ -886,28 +963,28 @@ TeraPadの場合には、オプション設定自体を変更して、<BR>
 	この時フォルダ内には
 	<TABLE cellspacing="2" summary="サーバーでの設置の仕方" style="margin:0.5em auto 0.5em 1em">
 		<THEAD>
-		<TR><TH scope="col">パス</TH><TH scope="col">備考</TH></TR>
+		<TR><TH scope="row">パス</TH><TH scope="row">備考</TH></TR>
 		</THEAD>
 		<TBODY>
-		<TR><TD>/Mireille.txt</TD>		<TD>MireilleのReadme</TD></TR>
-		<TR><TD>/Mireille.html</TD>		<TD>Mireilleの説明書</TD></TR>
-		<TR><TD>/log/</TD>				<TD>ログ保存フォルダ</TD></TR>
-		<TR><TD>/log/0.cgi</TD>			<TD>記事情報ファイル</TD></TR>
-		<TR><TD>/init/</TD>				<TD>最初設置するときに使うファイル群</TD></TR>
-		<TR><TD>/init/index.cgi</TD>	<TD>CGI起動ファイル兼設定</TD></TR>
-		<TR><TD>/init/icon.txt</TD>		<TD>アイコンリスト</TD></TR>
-		<TR><TD>/init/iconctlg.cgi</TD>	<TD>アイコン見本</TD></TR>
-		<TR><TD>/init/style.css</TD>	<TD>スタイルシート</TD></TR>
-		<TR><TD>/scpt/</TD>				<TD>スクリプト本体のファイル群</TD></TR>
-		<TR><TD>/scpt/core.cgi</TD>		<TD>Mireille本体</TD></TR>
-		<TR><TD>/scpt/style.pl</TD>		<TD>Mireilleスタイル設定</TD></TR>
-		<TR><TD>/scpt/help.pl</TD>		<TD>ヘルプ</TD></TR>
-		<TR><TD>/scpt/artnavi.js</TD>	<TD>記事ナビJavaScript</TD></TR>
-		<TR><TD>/opti/</TD>				<TD>設置してもしなくてもいいファイル群</TD></TR>
-		<TR><TD>/opti/manage.cgi</TD>	<TD>管理CGI</TD></TR>
-		<TR><TD>/opti/convert12.cgi</TD><TD>ログファイルを他形式から1.2形式に変換する</TD></TR>
-		<TR><TD>/opti/notify.pl</TD>	<TD>メールによるお知らせ機能を使うときに設置する</TD></TR>
-		<TR><TD>/opti/.htaccess</TD>	<TD>.htaccessファイル</TD></TR>
+		<TR><TH scope="col">/Mireille.txt</TD>		<TD>MireilleのReadme</TD></TR>
+		<TR><TH scope="col">/Mireille.html</TD>		<TD>Mireilleの説明書</TD></TR>
+		<TR><TH scope="col">/log/</TD>				<TD>ログ保存フォルダ</TD></TR>
+		<TR><TH scope="col">/log/0.cgi</TD>			<TD>記事情報ファイル</TD></TR>
+		<TR><TH scope="col">/init/</TD>				<TD>最初設置するときに使うファイル群</TD></TR>
+		<TR><TH scope="col">/init/index.cgi</TD>	<TD>CGI起動ファイル兼設定</TD></TR>
+		<TR><TH scope="col">/init/icon.txt</TD>		<TD>アイコンリスト</TD></TR>
+		<TR><TH scope="col">/init/iconctlg.cgi</TD>	<TD>アイコン見本</TD></TR>
+		<TR><TH scope="col">/init/style.css</TD>	<TD>スタイルシート</TD></TR>
+		<TR><TH scope="col">/scpt/</TD>				<TD>スクリプト本体のファイル群</TD></TR>
+		<TR><TH scope="col">/scpt/core.cgi</TD>		<TD>Mireille本体</TD></TR>
+		<TR><TH scope="col">/scpt/style.pl</TD>		<TD>Mireilleスタイル設定</TD></TR>
+		<TR><TH scope="col">/scpt/help.pl</TD>		<TD>ヘルプ</TD></TR>
+		<TR><TH scope="col">/scpt/artnavi.js</TD>	<TD>記事ナビJavaScript</TD></TR>
+		<TR><TH scope="col">/opti/</TD>				<TD>設置してもしなくてもいいファイル群</TD></TR>
+		<TR><TH scope="col">/opti/manage.cgi</TD>	<TD>管理CGI</TD></TR>
+		<TR><TH scope="col">/opti/convert12.cgi</TD><TD>ログファイルを他形式から1.2形式に変換する</TD></TR>
+		<TR><TH scope="col">/opti/notify.pl</TD>	<TD>メールによるお知らせ機能を使うときに設置する</TD></TR>
+		<TR><TH scope="col">/opti/.htaccess</TD>	<TD>.htaccessファイル</TD></TR>
 		</TBODY>
 	</TABLE>
 	となっているはずです</LI>
@@ -924,7 +1001,7 @@ TeraPadの場合には、オプション設定自体を変更して、<BR>
 	設置したいサーバーのディレクトリ（例えば<CODE>bbs/</CODE>）に<BR>
 	<TABLE cellspacing="2" summary="サーバーでの設置の仕方" style="margin:0.5em auto 0.5em 1em">
 		<THEAD>
-		<TR><TH scope="col">パス</TH><TH scope="col">属性</TH><TH scope="col">用途</TH></TR>
+		<TR><TH scope="row">パス</TH><TH scope="row">属性</TH><TH scope="row">用途</TH></TR>
 		</THEAD>
 		<TBODY>
 		<TR><TH scope="col">/bbs</TH>			<TD>777(755)</TD><TD>掲示板のディレクトリ</TD></TR>
@@ -941,12 +1018,17 @@ TeraPadの場合には、オプション設定自体を変更して、<BR>
 		</TBODY>
 	</TABLE>
 	のように設置します<BR>
-	ちなみに、<BR>
-	・ここに挙げたものは一般的な場合で、パーミッションがサーバー側から指定されていればそれを最優先してください、<BR>
-	・ErrorScreenがでても、「<SAMP>Can't write...</SAMP>」系でなければパーミッションはあっています<BR>
-	・「<SAMP>500InternalServerError</SAMP>」か「<SAMP>Can't write...</SAMP>」系のエラーがでたら、パーミッションが原因かもしれません<BR>
+	ちなみに、
+	<UL>
+		<LI>ここに挙げたパーミッションは一般的なサーバーでの場合です<BR>
+		CGIやデータファイルのパーミッションがサーバー側から指定されていれば、そちらを最優先してください</LI>
+		<LI>ErrorScreenがでても、「<SAMP>Can't write...</SAMP>」系でなければパーミッションはあっています</LI>
+		<LI>「<SAMP>500InternalServerError</SAMP>」か「<SAMP>Can't write...</SAMP>」系のエラーがでたら、パーミッションが原因かもしれません</LI>
+		<LI>ErrorScreenのでないエラーでは、FTPでの転送モードがテキストモードでなく、バイナリモードで転送してしまった可能性もあります<BR>
+		テキストモードで転送しなおしてみてください</LI>
+	</UL>
 	<BR>
-	これで、おそらく、もう動作する状態になっているはずです<BR>
+	さて、これで、おそらく、もう動作する状態になっているはずです<BR>
 	最初は0.cgiの内容が表示されていますが、これは何か新しい書き込みがあると、<BR>
 	自動的に表示されないようになるのでご安心を<BR>
 	さっそく、テスト書き込みをしてみましょう<BR>
@@ -961,6 +1043,93 @@ TeraPadの場合には、オプション設定自体を変更して、<BR>
 	またCSSを使ったデザインの変更や、style.plにまで踏み込んだ細かい改造については、<BR>
 	Mireille.htmlやMireille.txtを隅々まで見るとヒントが載っているかもしれません</LI>
 
+	<LI><H3 class="list"><A name="アイコンの設定方法">アイコンの設定方法</A></H3>
+	Mireilleの設置テストが成功したらアイコンを設定しましょう<BR>
+	例えばMireilleをhttp://www.server.jp/~username/mireille_directory/index.cgiに設置したとします<BR>
+	<EM>www.server.jp</EM>は使っているプロバイダやレンタルサーバーのドメインに、<BR>
+	<EM>~username</EM>はそのサーバーでのユーザー名に、<BR>
+	<EM>mireille_directory</EM>は設置したMireilleのディレクトリに、<BR>
+	適宜置き換えてください（独自ドメインの場合でユーザー名が必要ないときは省略すること）<BR>
+	<BR>
+	実際の手順は以下の通りです
+	<OL>
+		<LI><H4 class="list">アイコンフォルダの準備</H4>
+		まず自分のコンピュータ上で、アイコンの入ったフォルダを作成します<BR>
+		どこかに「icon」などと名づけたフォルダを作成し、その中にアイコンとして使いたい画像ファイル（画像形式は何でもOK）を放り込みましょう</LI>
+		
+		<LI><H4 class="list">アイコンフォルダのアップロード</H4>
+		アイコンの入ったフォルダをアップロードします<BR>
+		場所はどこでも構いませんが、「http://www.server.jp/~username/icon/」に置くのが無難でしょう</LI>
+		
+		<LI><H4 class="list">管理CGIをアップロード</H4>
+		自分のコンピュータ内で、エディタを使ってindex.cgiを編集してもよいのですが、<BR>
+		ここでは管理CGIを使ってindex.cgiを編集してみましょう<BR>
+		（エディタで直接編集する方が楽な人は、管理CGIを使わなくてももちろんOKです）<BR>
+		<EM>manage.cgi</EM>をFTPクライアントで、Mireilleと同じディレクトリにアップロードしましょう<BR>
+		このとき<STRONG class="warning">必ずmanage.cgiを他の人には予測のつかない名前に変えてください</STRONG><BR>
+		管理CGIの管理機能は便利な反面、<STRONG class="warning">非常に危険</STRONG>です<BR>
+		<BR>
+		管理CGIについては<a href="#管理CGIの設置">管理CGIの設置</A>も参照してください</LI>
+		
+		<LI><H4 class="list">管理CGIでindex.cgiを編集する</H4>
+		http://www.server.jp/~username/mireille_directory/管理CGI.cgi（「管理CGI」の部分は適宜置き換えてください）にアクセスしましょう<BR>
+		「index.cgi編集」を選択して次へ進みます<BR>
+		アイコンのディレクトリ」の項目を探し、アイコンフォルダの置いてある場所を書きましょう<BR>
+		（この時、http://www.server.jp/~username/icon/ の最後の/を書き忘れないで下さい）<BR>
+		書けたら「OK」を押してください</LI>
+		
+		<LI><H4 class="list">管理CGIでicon.txtを編集する</H4>
+		「Iconリスト編集（タグ）」を選択して次へ進みます<BR>
+		Mireilleの圧縮ファイルについてきたicon.txtをアップロードした場合、<BR>
+		大量にいろいろと書かれているので、とりあえず全て削除してしまいましょう<BR>
+		そうしたら以下のように書き換えます<BR>
+<PRE><CODE>&lt;OPTGROUP label=&quot;（グループのラベル、例えば「アイコン（モンスター）」とか）&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;OPTION value=&quot;（画像ファイルのパス、例えば「dragon.gif」）&quot;&gt;（画像の名前、例えば「ドラゴン」）&lt;/OPTION&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;OPTION value=&quot;（何とか.png）&quot;&gt;（「スライム」）&lt;/OPTION&gt;
+&lt;/OPTGROUP&gt;</CODE></PRE>
+		括弧内を自分の設定に合わせて書き換えて下さい。<BR>
+		ただし、ここでいくつか注意することがあります<BR>
+		<UL>
+			<LI>OPTION value のところに書く「画像ファイルの置いてある場所」<BR>
+			「index.cgi編集」をしたときに指定した「アイコンディレクトリ」のパスと合わせて、<BR>
+			きちんと画像の在りかを示すURLになっていなくてはなりません<BR>
+			例えば、<BR>
+			"http://www.A.or.jp/B/icon/" + "D.gif" = 「http://www.A.or.jp/B/icon/D.gif」となり、<BR>
+			このＵＲＬに画像ファイルがあればOKです<BR>
+			もし、アイコンディレクトリのパスが「http://www.A.or.jp/B/icon」となっていた場合、<BR>
+		"http://www.A.or.jp/B/icon" + "D.gif" = 「http://www.A.or.jp/B/iconD.gif」となり、おかしくなってしまいます<BR>
+			この時はアイコンディレクトリのパスの末尾に / を加えるか、「D.gif」→「/D.gif」に変更すれば、正しくなります</LI>
+			
+			<LI>&lt;OPTION value=&quot;&quot;&gt;…&lt;/OPTION&gt;を２個以上続ける場合<BR>
+			&lt;OPTION value=&quot;&quot;&gt;…&lt;/OPTION&gt;（注目）&lt;OPTION value=&quot;&quot;&gt;…&lt;/OPTION&gt;<BR>
+			とする場合（注目）の場所は続けず、改行を入れてください<BR>
+			改行でないと、後でアイコンカタログ（アイコン見本/アイコン一覧）に表示されるアイコンがおかしくなったり、<BR>
+			管理CGIのタグモード以外でアイコンリストを編集できなくなったりします</LI>
+			<LI>一つのグループに何個ものアイコンを使いたい場合<BR>
+			&lt;OPTION value=&quot;（画像ファイルの場所）&quot;）&gt;（画像ファイルの名前）&lt;/OPTION&gt;
+			を必要な数だけ書けばいいです。<BR>
+			また、グループが何個も欲しいという場合は<BR>
+<PRE><CODE>&lt;OPTGROUP label=&quot;（グループのラベル）&quot;&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;OPTION value=&quot;（画像ファイルの場所１）&quot;&gt;（画像ファイルの名前１）&lt;/OPTION&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;OPTION value=&quot;（画像ファイルの場所２）&quot;&gt;（画像ファイルの名前２）&lt;/OPTION&gt;
+&lt;/OPTGROUP&gt;</CODE></PRE>
+　の部分を欲しいグループの数の分だけ増やせばいいです。
+		</UL>
+		
+		COPY1命令やVENDOR命令など、より詳しいアイコンリストの説明は、<BR>
+		<A href="#アイコン">Mireilleの注意事項 - アイコン</A>を参照してください<BR>
+		<BR>
+		編集が終わったら、ＯＫを押して完了です。<BR>
+		最後に、管理CGIをWeb上から削除しましょう。<BR>
+		放置しておくと<STRONG class="warning">キケン</STRONG>です。<BR>
+		<BR>
+		以上の操作が上手くいったら、アイコンが無事表示されるはずです<BR>
+		もし、表示されない場合は、ミスをチェックして<BR>
+		どうしてもわからない場合は、ソフトウェア関係に詳しい友人に聞くか、成瀬に掲示板で聞いてください<BR>
+		5時間も悩むのは得策ではありません（爆</LI>
+	</OL>
+	</LI>
+
 	<LI><H3 class="list"><A name="もうちょっと細かく設定とか、さらには改造とか">もうちょっと細かく設定とか、さらには改造とか</A></H3>
 	Mireilleをより細かくカスタマイズしたいときは、Mireille.txtの内容も参照してください<BR>
 	Mireilleでの処理に関する情報などはMireille.txtにしか書いてないものも多いです<BR>
@@ -968,38 +1137,42 @@ TeraPadの場合には、オプション設定自体を変更して、<BR>
 	<BR>
 	一般的な事例に関しては以下のとおりです
 	<UL>
-		<LI>アイコンまわり<BR>
+		<LI><H4 class="list">アイコンまわり</H4>
 		アイコンリスト(icon.txt)に関しては <A href="#アイコン">Mireilleの注意事項 - アイコン</A> や、<BR>
 		Mireille.txtを参照してください<BR>
 		アイコンリスト(icon.txt)からアイコン見本(icon.html)を生成するには、<BR>
 		管理CGIの「アイコン見本の更新」を使います<BR>
 		（1.2.3.5からはiconctlg.cgiを使うようになったので、icon.htmlを生成する必要はありません）<BR>
 		<BR>
-		<STRONG class="s81a6">注意！</STRONG><BR>
+		<STRONG class="warning">注意！</STRONG><BR>
 		アイコンを調達する際には、必ず製作者のサイトから頂いてきてください<BR>
 		他の掲示板のアイコンをそのまま拝借するのは好ましいことではありません<BR>
 		また欲しいアイコンが既に配布が終了されている場合は潔くあきらめてください＾＾；；</LI>
-		<LI>外部CSSまわり<BR>
+		
+		<LI><H4 class="list">外部CSSまわり</H4>
 		core.cgi,style.pl自体のソースや、Mireilleの生成したHTMLソース、HTMLおよびCSSのリファレンスなどと、<BR>
 		にらめっこしながらがんばってください（ぉ<BR>
 		core.cgiやstyle.plのCSSのクラス構造が不明瞭だったりおかしい、修正するべきだという場合は、<BR>
 		成瀬に説明を求めるか、改善したものを教えてください<BR>
 		それを元にこちら側でも修正します</LI>
-		<LI>style.pl<BR>
+		
+		<LI><H4 class="list">style.plってなに</H4>
 		MireilleのPerlスクリプトの中で、デザインに関連するものを抽出したファイルです<BR>
 		お好みに合わせて改造し、配布することができます<BR>
 		また、index.cgi内でcore.cgiより後に読み込んでいるため、<BR>
 		core.cgiのサブルーチンを上書き（オーバーライド）することも可能なため、<BR>
 		応用次第で全く違う掲示板のようににしてしまうこともできます</LI>
-		<LI>index.cgi後半の処理部、core.cgi、help.pl、manage.cgiなど<BR>
+		
+		<LI><H4 class="list">index.cgi後半の処理部、core.cgi、help.pl、manage.cgiなど</H4>
 		改造するのは自由ですし、規定の範囲内で改造したものを配布することもできます<BR>
 		ただ、多くの利用者がこれらのCGIを変更したいと思う、という状態は、<BR>
 		「バグだ」と判断しているので、変更点を教えてくだされば、標準で変更するかもしれません</LI>
-		<LI>Mireilleを複数設置する際の横着<BR>
-		一つのcore.cgi, style.pl, style.css, help.pl, artnavi.jsを兼用することが出来ます<BR>
+		
+		<LI><H4 class="list"><A name="Mireilleのコアファイル群を複数の掲示板で共有する">Mireilleのコアファイル群を複数の掲示板で共有する</A></H4>
+		一つのcore.cgi, style.pl, style.css, help.pl, artnavi.jsを複数の掲示板で共有することが出来ます<BR>
 	<TABLE cellspacing="2" summary="複数設置時の横着の仕方" style="margin:0.5em auto 0.5em 1em">
 		<THEAD>
-		<TR><TH scope="col">パス</TH><TH scope="col">属性</TH><TH scope="col">用途</TH></TR>
+		<TR><TH scope="row">パス</TH><TH scope="row">属性</TH><TH scope="row">用途</TH></TR>
 		</THEAD>
 		<TBODY>
 		<TR><TH scope="col">/bbs</TH>			<TD>755(777)</TD><TD>掲示板のディレクトリ</TD></TR>
@@ -1042,7 +1215,7 @@ $CF{'navjs'}='../bbs/artnavi.js';
 	まずmanage.cgiを開いて、一行目を設定します<BR>
 	その後21行目の$AM{'pass'}を設定してください<BR>
 	設定したらFTPで以下のように設置します<BR>
-	この際<STRONG class="s81a6">必ずファイル名を変更してアップロード</STRONG>してください<BR>
+	この際<STRONG class="warning">必ずファイル名を変更してアップロード</STRONG>してください<BR>
 	<CODE>/bbs/E36Vj4tGiHQ.cgi 755(700) 管理CGI</CODE>（'E36Vj4tGiHQ.cgi'にファイル名を変更した場合）<BR>
 	使用法は表示にしたがってください<BR>
 	わかりにくいところがあれば、言ってください<BR>
@@ -1052,7 +1225,7 @@ $CF{'navjs'}='../bbs/artnavi.js';
 	該当するファイルのパーミッションを、上のほうの説明の、括弧内のものに変えみてください<BR>
 	ちゃんと書き込めれば設定があっていると断定してよいでしょう<BR>
 	<BR>
-	<STRONG class="s81a6">※警告！<BR>
+	<STRONG class="warning">※警告！<BR>
 	アップロードする際には、ファイルの名前を予測のつかない名前、<BR>
 	（例えばE36Vj4tGiHQ.cgiのような）に変更してからアップロードしてください<BR>
 	このCGIは破壊的な機能（index.cgiの設定やログの削除など）持っているので、<BR>
@@ -1081,33 +1254,39 @@ $CF{'navjs'}='../bbs/artnavi.js';
 	効率が上がり、かつミスも減ると思います<BR>
 	<BR>
 	ちなみに成瀬は2001年中ごろから<A href="http://www2.noritz.co.jp/anchor/">アンカーシステムズ株式会社</A>のPeggyProを使っています<BR>
-	Perl言語の色付けの精度では、2002年8月現在において他の追随を許さない正確さでしょう<BR>
-	PeggyProはシェアウェアですが、PeggyPadはフリーウェアです</LI>
+	Perl言語の色付けの精度では、トップクラスの正確さでしょう<BR>
+	PeggyProは有料ですが、PeggyPadは無料です<BR>
+	<BR>
+	他にも<A href="http://www.airemix.com/info/">Airemix/info.</A>からいろいろなテキストエディタの配布サイトへ飛ぶことができます</LI>
+	
 	<LI><H3 class="list"><A name="アイコン">アイコン</A></H3>
 	<UL>
-		<LI>アイコンリスト<BR>
+		<LI><H4 class="list">アイコンリスト</H4>
 		基本的にはOPTGROUP要素とOPTION要素をあわせて使うことをお勧めします<BR>
 		具体的な形式としては
-<PRE><CODE>&lt;optgroup label=&quot;グループ１&quot;&gt;
-&ensp;&lt;option value=&quot;11.png&quot;&gt;アイコン1&lt;/option&gt;
-&ensp;&lt;option value=&quot;12.png&quot;&gt;アイコン2&lt;/option&gt;
-&lt;/optgroup&gt;
-&lt;optgroup label=&quot;グループ二&quot;&gt;
-&ensp;&lt;option value=&quot;21.png&quot;&gt;アイコン一&lt;/option&gt;
-&ensp;&lt;option value=&quot;22.png&quot;&gt;アイコン二&lt;/option&gt;
-&lt;/optgroup&gt;
-&lt;option value=&quot;1.png&quot;&gt;アイコン壱&lt;/option&gt;
-&lt;option value=&quot;2.png&quot;&gt;アイコン弐&lt;/option&gt;</CODE></PRE>
+<PRE><CODE>&lt;OPTGROUP label=&quot;グループ１&quot;&gt;
+&ensp;&lt;OPTION value=&quot;11.png&quot;&gt;アイコン1&lt;/option&gt;
+&ensp;&lt;OPTION value=&quot;12.png&quot;&gt;アイコン2&lt;/option&gt;
+&lt;/OPTGROUP&gt;
+&lt;OPTGROUP label=&quot;グループ二&quot;&gt;
+&ensp;&lt;OPTION value=&quot;21.png&quot;&gt;アイコン一&lt;/option&gt;
+&ensp;&lt;OPTION value=&quot;22.png&quot;&gt;アイコン二&lt;/option&gt;
+&lt;/OPTGROUP&gt;
+&lt;OPTION value=&quot;1.png&quot;&gt;アイコン壱&lt;/option&gt;
+&lt;OPTION value=&quot;2.png&quot;&gt;アイコン弐&lt;/option&gt;</CODE></PRE>
 		のような形になります<BR>
 		OPTGOUPタグ外のOPTIONは全体の末尾に存在しないといけません<BR>
 		できればこうするよりも、OPTGROUPに属さないようなOPTIONは、<BR>
 		グループ名を「その他」などにして、何らかの形でOPTROUPタグ内に入れてしまったほうがいいです<BR>
-		ちなみにoptgroup要素はHTML4で新しく追加された要素で、<BR>
-		InternetExplorer6,Netscape6,Mozilla0.8以降でしています<BR>
+		（具体的に言えば、icon.txtの内容が丸ごとSELECTタグの中身となります）<BR>
+		<BR>
+		ちなみにOPTGROUP要素はHTML4で新しく追加された要素で、<BR>
+		InternetExplorer6forWindows、InternetExplorer5forMacintosh、Netscape6、Mozilla、Opera7などが対応しています<BR>
 		これら以外では無視されますが、見易さ・分類のしやすさをを考慮すると、<BR>
 		今のうちからつけておいたほうがいいと思います<BR>
-		入れ子にはHTML4の規格上できないようになっているようなのでご了承ください</LI>
-		<LI>index.cgiのアイコンディレクトリの設定とアイコンリストの使い分け<BR>
+		ちなみに、OPTGROUPはHTML4の規格上入れ子にできないようになっています</LI>
+		
+		<LI><H4 class="list">index.cgiのアイコンディレクトリの設定とアイコンリストの使い分け</H4>
 		例えば、<CODE>http://www.airemix.com/</CODE>の下に、設置し、<BR>
 		FTPサーバーでのディレクトリの構造が、<BR>
 	<TABLE cellspacing="2" summary="アイコンのURL" style="margin:0.5em auto 0.5em 1em">
@@ -1133,28 +1312,28 @@ $CF{'navjs'}='../bbs/artnavi.js';
 		<UL>
 			<LI>アイコンディレクトリにHTTP相対パス<BR>
 			アイコンディレクトリは <CODE>$CF{'icon'}='../icon/';</CODE> とし、<BR>
-			icon.txtでは <CODE>&#60;option value="hoe/icon1.png"&#62;</CODE> などとする<BR>
-			→ アイコンは <CODE>&lt;img src="../icon/hoe/icon1.png"&gt;</CODE> になる</LI>
+			icon.txtでは <CODE>&lt;OPTION value="hoe/icon1.png"&gt;</CODE> などとする<BR>
+			→ アイコンは <CODE>&lt;IMG src="../icon/hoe/icon1.png"&gt;</CODE> になる</LI>
 			<LI>アイコンディレクトリにHTTPサーバー内絶対パス<BR>
 			アイコンディレクトリは <CODE>$CF{'icon'}='/icon/';</CODE> とし、<BR>
-			icon.txtでは <CODE>&#60;option value="hoe/icon1.png"&#62;</CODE> などとする<BR>
-			→ アイコンは <CODE>&lt;img src="/icon/hoe/icon1.png"&gt;</CODE> になる</LI>
+			icon.txtでは <CODE>&lt;OPTION value="hoe/icon1.png"&gt;</CODE> などとする<BR>
+			→ アイコンは <CODE>&lt;IMG src="/icon/hoe/icon1.png"&gt;</CODE> になる</LI>
 			<LI>アイコンディレクトリにHTTP絶対パス<BR>
 			アイコンディレクトリは <CODE>$CF{'icon'}='http://www.airemix.com/icon/';</CODE> とし、<BR>
-			icon.txtでは <CODE>&#60;option value="hoe/icon1.png"&#62;</CODE> などとする<BR>
-			→ アイコンは <CODE>&lt;img src="http://www.airemix.com/icon/hoe/icon1.png"&gt;</CODE> になる</LI>
+			icon.txtでは <CODE>&lt;OPTION value="hoe/icon1.png"&gt;</CODE> などとする<BR>
+			→ アイコンは <CODE>&lt;IMG src="http://www.airemix.com/icon/hoe/icon1.png"&gt;</CODE> になる</LI>
 			<LI>アイコンリストだけでHTTP相対パス<BR>
 			アイコンディレクトリは <CODE>$CF{'icon'}='';</CODE> とし、<BR>
-			icon.txtでは <CODE>&#60;option value="../icon/hoe/icon1.png"&#62;</CODE> などとする<BR>
-			→ アイコンは <CODE>&lt;img src="../icon/hoe/icon1.png"&gt;</CODE> になる</LI>
+			icon.txtでは <CODE>&lt;OPTION value="../icon/hoe/icon1.png"&gt;</CODE> などとする<BR>
+			→ アイコンは <CODE>&lt;IMG src="../icon/hoe/icon1.png"&gt;</CODE> になる</LI>
 			<LI>アイコンリストだけでHTTPサーバー内絶対パス<BR>
 			アイコンディレクトリは <CODE>$CF{'icon'}='';</CODE> とし、<BR>
-			icon.txtでは <CODE>&#60;option value="/icon/hoe/icon1.png"&#62;</CODE> などとする<BR>
-			→ アイコンは <CODE>&lt;img src="/icon/hoe/icon1.png"&gt;</CODE> になる</LI>
+			icon.txtでは <CODE>&lt;OPTION value="/icon/hoe/icon1.png"&gt;</CODE> などとする<BR>
+			→ アイコンは <CODE>&lt;IMG src="/icon/hoe/icon1.png"&gt;</CODE> になる</LI>
 			<LI>アイコンリストだけでHTTP絶対パス<BR>
 			アイコンディレクトリは <CODE>$CF{'icon'}='';</CODE> とし、<BR>
-			icon.txtでは <CODE>&lt;option value="http://www.airemix.com/icon/hoe/icon1.png"&gt;</CODE> などとする<BR>
-			→ アイコンは <CODE>&lt;img src="http://www.airemix.com/icon/hoe/icon1.png"&gt;</CODE> になる</LI>
+			icon.txtでは <CODE>&lt;OPTION value="http://www.airemix.com/icon/hoe/icon1.png"&gt;</CODE> などとする<BR>
+			→ アイコンは <CODE>&lt;IMG src="http://www.airemix.com/icon/hoe/icon1.png"&gt;</CODE> になる</LI>
 		</UL>
 		のような指定の仕方があります<BR>
 		結局は、「アイコンディレクトリの指定＋アイコンリストの指定」→きちんとした「相対/絶対URL」<BR>
@@ -1162,15 +1341,55 @@ $CF{'navjs'}='../bbs/artnavi.js';
 		<BR>
 		この理由から、<BR>
 		アイコンディレクトリを<CODE>$CF{'icon'}='../icon/';</CODE>とし、<BR>
-		icon.txtを<CODE>&#60;option value="/hoe/icon1.png"&#62;</CODE>などとする場合は、<BR>
-		足すと<CODE>&#60;img src="../icon//hoe/icon1.png"&#62;</CODE>となってしまい、おかしいわけです</LI>
-		<LI>アイコンの最大数<BR>
+		icon.txtを<CODE>&lt;OPTION value="/hoe/icon1.png"&gt;</CODE>などとする場合は、<BR>
+		足すと<CODE>&lt;IMG src="../icon//hoe/icon1.png"&gt;</CODE>となってしまい、おかしいわけです</LI>
+		
+		<LI><H4 class="list">アイコンリストの著作権表示機構</H4>
+		Mireilleのアイコンリスト形式は、基本的にはOPTGROUPとOPTIONを使って、SELECTタグの中身を書く、<BR>
+		といったものですが、HTMLのコメントを使って拡張情報を埋め込むことができます<BR>
+		この項ではその拡張情報の一つ、著作権表示機構を説明します<BR>
+		<BR>
+		著作権表示機構用の拡張命令には、一次著作権者を指定するためのCOPY1と、製作者を指定するVENDORがあります<BR>
+		一次著作権者はアイコンに使われている画像のそもそものオリジナルを書いた人または団体であり、<BR>
+		製作者はそのアイコンを配布している人または団体です<BR>
+		<BR>
+		例えば、成瀬がDRAGON QUESTのスライムをアイコンにして配布していたとします<BR>
+		その場合、一次著作権者(COPY1)はDRAGON QUESTの発売元であるENIXになり、<BR>
+		製作者(VENDOR)は成瀬になります<BR>
+		<BR>
+		さて、COPY1命令とVENDOR命令にはNAME,URL,LNKというオプションがあります<BR>
+		NAMEではCOPY1やVENDORの名前を、URLではサイトのURLを指定します<BR>
+		LINKについてはここでは省略します<BR>
+		<BR>
+		さて、実際に使ってみましょう<BR>
+<PRE><CODE>&lt;!-- %BEGIN_VENDOR --&gt; <STRONG class="s2f2f">#VENDOR設定を始める</STRONG>
+&lt;!-- %VENDOR_NAME 成瀬 --&gt; <STRONG class="s2f2f">#VENDORの名前は「成瀬」</STRONG>
+
+&lt;!-- %BEGIN_COPY1 --&gt; <STRONG class="s2f2f">#COPY1設定を始める</STRONG>
+&lt;!-- %COPY1_NAME ENIX --&gt; <STRONG class="s2f2f">#COPY1の名前は「ENIX」</STRONG>
+&lt;!-- %COPY1_URL http://www.enix.co.jp/ --&gt; <STRONG class="s2f2f">ENIXのURLは「http://www.enix.co.jp/」</STRONG>
+
+&lt;OPTGROUP label=&quot;DRAGON QUEST&quot;&gt; <STRONG class="s2f2f">アイコングループ「DRAGON QUEST」開始</STRONG>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;OPTION value=&quot;dq/suraimu.png&quot;&gt;スライム&lt;/OPTION&gt; <STRONG class="s2f2f">スライムのアイコン</STRONG>
+&lt;/OPTGROUP&gt; <STRONG class="s2f2f">アイコングループ終了</STRONG>
+&lt;!-- %END_COPY1 --&gt; <STRONG class="s2f2f">COPY1設定の終了</STRONG>
+&lt;!-- %END_VENDOR --&gt; <STRONG class="s2f2f">VENDOR設定の終了</STRONG></CODE></PRE>
+		以上のような具合になります<BR>
+		HTMLでいうと、BEGIN_VENDORが開始タグ、END_VENDORが終了タグにあたる、と言えばわかりやすいかもしれません<BR>
+		<BR>
+		上の例の%BEGIN_COPY1との二行に注目してください、ここは以下のように一行で書き換えることができます<BR>
+<PRE><CODE>&lt;!-- %BEGIN_COPY1 ENIX --&gt; <STRONG class="s2f2f">#COPY1の設定を始める、COPY1の名前は「ENIX」</STRONG></CODE></PRE>
+		このような省略記法を使うと、多少アイコンリストが見やすくなるかもしれません<BR>
+		</LI>
+		
+		<LI><H4 class="list">アイコンの最大数</H4>
 		理論上は無限になっています<BR>
 		ただ、CGI処理の負荷やHTTP転送の負荷を考えると、<BR>
 		ほどほどの数にしておいたほうがいいかもしれません<BR>
 		わたしの側ではアイコン数800でそこそこのスピードで動作することを確認しています<BR>
 		アイコン見本(icon.html)を見る時は一度に全てのアイコンを表示させる、ということも留意する必要があるでしょう</LI>
-		<LI>専用アイコン<BR>
+		
+		<LI><H4 class="list">専用アイコン</H4>
 		管理CGIの「CONFIG設定」で設定できます<BR>
 		または、<BR>
 		<CODE>$CF{'cmic'}='1';</CODE><BR>
@@ -1192,6 +1411,7 @@ $IC{'hoe'}='moe.png'; #乃絵</CODE></PRE>
 		なるべくアイコンパスワードは <CODE>[-_a-zA-Z0-9]</CODE> な文字で構成されているほうがいいと思います</LI>
 	</UL>
 	</LI>
+	
 	<LI><H3 class="list"><A name="意味の混同しやすい語の定義">意味の混同しやすい語の定義</A></H3>
 	Mireilleやその説明で意味がわかりにくいと思われる語の解説です<BR>
 	基本的に以下のように表記しているはずです
@@ -1203,7 +1423,8 @@ $IC{'hoe'}='moe.png'; #乃絵</CODE></PRE>
 		利用中の0.cgiが破損してしまうと大変です<BR>
 		といっても、Rev:1.2.0.7以降の管理CGIには「記事情報ファイル回復」がついているので、<BR>
 		これでほどほどに復旧することができます<BR>
-		（今までに投稿されたスレッドの並び順が記事番号順になってしまうけど）
+		（今までに投稿されたスレッドの並び順が記事番号順になってしまうけど）<BR>
+		（最近のMireilleだと適当に自動復旧します）
 		</DD>
 		<DT><DFN>記事スレッド</DFN> ArticleThread</DT>
 		<DD>
@@ -1214,7 +1435,7 @@ $IC{'hoe'}='moe.png'; #乃絵</CODE></PRE>
 		<DD>
 		記事スレッドを保存しているファイルのことです<BR>
 		一つの記事スレッドに対して、一つの記事スレッドファイルが対応します<BR>
-		例えばスレッド番号123だったら、123.cgiが対応する記事スレッドファイルです
+		例えば記事スレッド番号が123だったら、123.cgiが対応する記事スレッドファイルです
 		</DD>
 		<DT><DFN>親記事</DFN> ParentArticle</DT>
 		<DD>
@@ -1247,7 +1468,7 @@ $IC{'hoe'}='moe.png'; #乃絵</CODE></PRE>
 		<DT><DFN>フォルダ</DFN> Folder / <DFN>ディレクトリ</DFN> Directory</DT>
 		<DD>
 		フォルダはWindows用語、ディレクトリはUNIX用語というだけで、実際にあらわす意味はほぼ同じ物です<BR>
-		この説明書では「フォルダ」と言ったら設置者のPCでのフォルダ、<BR>
+		この説明書では「フォルダ」と言ったら設置者のコンピュータでのフォルダ、<BR>
 		ディレクトリといったらサーバー上のディレクトリを指します
 		</DD>
 		<DT><DFN>アイコンリスト</DFN> IconList</DT>
@@ -1256,19 +1477,33 @@ $IC{'hoe'}='moe.png'; #乃絵</CODE></PRE>
 		「アイコン一覧」を英語にすれば「アイコンリスト」になりそうですが、<BR>
 		これはアイコン見本の意味で使っていることがことが多いのです、まぎらわしいですね
 		</DD>
-		<DT><DFN>アイコン見本</DFN> IconSample, IconCatalog</DT>
+		<DT><DFN>アイコンカタログ・アイコン見本</DFN> IconSample, IconCatalog</DT>
 		<DD>
 		iconctlg.cgiが生成するHTMLやicon.htmlのことです<BR>
-		紛らわしいので言わない様にしているつもりなのですが、「アイコン一覧」もicon.htmlのことです
+		アイコンリストと紛らわしいので言わない様にしているつもりなのですが、「アイコン一覧」も同じ意味です
 		</DD>
 		<DT><DFN>アイコンプレビュー</DFN> IconPreview</DT>
 		<DD>
 		投稿フォームにある、使うアイコンをJavaScriptによって前もって見れる機能の事です<BR>
 		ARTEMISさんの掲示板を参考にして取り付けました
 		</DD>
+		<DT><DFN>パス</DFN> PATH</DT>
+		<DD>
+		主にファイルの場所を指定する際に用います<BR>
+		実際問題としては、パスには二つの種類が存在します<BR>
+		<BR>
+		一つはコンピュータ内のパスです<BR>
+		自分のコンピュータ内のファイルを指定するときや、サーバー上のCGIが直接ファイルを読み込む場合に使います<BR>
+		<BR>
+		もう一つがURLパスです<BR>
+		これはブラウザで読み込むWebページを指定したり、HTMLからIMGタグやLINKタグを使って、画像ファイルやCSSファイルを読み込む際に用います<BR>
+		<BR>
+		普段はこの二つを別々に意識する必要はありませんが、<A href="#Mireilleのコアファイル群を複数の掲示板で共有する">Mireilleのコアファイル群を複数の掲示板で共有する</A>場合には、<BR>
+		この二つの違いを意識してindex.cgiを設定する必要があります
+		</DD>
 	</DL>
 	とりあえずこのような感じでしょうか<BR>
-	他にも意味の明確でない語があったら言ってください
+	他にも意味の明確でない語があれば、掲示板でおっしゃってくださいまし、追加します
 	</LI>
 </UL>
 </DIV>
@@ -1305,7 +1540,7 @@ $IC{'hoe'}='moe.png'; #乃絵</CODE></PRE>
 	わたしのサポート用に必要な情報はエラースクリーンでほとんど集まるようにしているので、<BR>
 	逆に一部だけでは情報が集まらないのです</LI></UL>
 	
-	また<STRONG>文字はまったく表示されずただ画面が真っ白になる場合</STRONG>は、<BR>
+	また<STRONG>文字はまったく表示されずただ画面が真っ白になる場合</STRONG>や<STRONG>広告と共に化けた文字が表示される場合</STRONG>は、<BR>
 	たいてい、GZIP圧縮転送機能と無料サーバーによくある強制広告挿入機構のコンボが原因でしょう<BR>
 	対策としては、index.cgiの「圧縮転送の方法」を <CODE>$CF{'conenc'}='';</CODE>と空にしてください<BR>
 	
@@ -1373,12 +1608,6 @@ IconPreviewはここからです、便利なので頂きましたｗ<BR>
 新しい投稿があると教えてくれる～もここのを見て、です<BR>
 他にもいろいろと参考にしています<BR>
 管理機能でここを見習う点は数多くあります</LI>
-<LI><H3 class="list"><A href="http://kano.feena.jp/" title="彼の野原">彼の野原</A></H3>
-LastPostはここのealisの真似です<BR>
-1.2.2の記事ナビは神乃さんのものベースに作りました<BR>
-DHTML周りではかないません^^;;<BR>
-tableを使わずに表示させようとしているのも尊敬します<BR>
-最近はPHP+PostgreSQLにはまっているとか</LI>
 <LI><H3 class="list"><A href="http://www.ne.jp/asahi/minazuki/bakera/html/hatomaru" title="HTML鳩丸倶楽部">HTML鳩丸倶楽部</A></H3>
 ツッコミメインなHTML解説サイト、にわたしは見えました<BR>
 「HTML 4.01 のみを、純粋に学問的な興味から研究」しているそうです<BR>
@@ -1403,8 +1632,15 @@ HTML規格の策定を行う団体、W3CによるHTML検証サービスです<BR>
 Another HTML-lintよりチェック項目は少なめです</LI>
 <LI><H3 class="list"><A href="http://tohoho.wakusei.ne.jp/" title="とほほのWWW入門">とほほのWWW入門</A></H3>
 HTML部、Perl部ともに時々リファレンス代わりにしました<BR>
-なかなか載っていて便利です<BR>
-それでも一部省略されているのが残念ですが、、</LI>
+なかなか載っていて便利です</LI>
+<LI><H3 class="list"><A href="http://kano.feena.jp/" title="彼の野原">彼の野原</A></H3>
+LastPostはここのealisの真似です<BR>
+また1.2.2の記事ナビは神乃さんのものベースに作りました<BR>
+最近ではPHPに移ってあるべき姿というものを模索していらっしゃるようです</LI>
+<LI><H3 class="list"><A href="http://www10.plala.or.jp/ryokufuudou/kijindou.html" title="SWORD AND COMMERCE">SWORD AND COMMERCE</A></H3>
+retroさんにはMireilleでつまづく所No.1と思われるアイコン設定の解説を書いていただきました<BR>
+他にもMireilleの解説の不備な点を多数してもらいました<BR>
+ちなみに、retroさんのサイト自体はRagnarkOnline系雑談サイトです</LI>
 <LI><H3 class="list"><A href="http://snowish.cside8.com/" title="Snowish Hills">Snowish Hills</A></H3>
 Mireilleを作りこむにあたって、半ばオンサイト顧客として、数々の有用なアドバイスを頂きました<BR>
 特に管理CGIは西名さんに言われなければ、かなり貧弱なものになっていたでしょう<BR>
@@ -1413,6 +1649,9 @@ Mireilleを作りこむにあたって、半ばオンサイト顧客として、数々の有用なアドバイスを
 <LI>他にも意見を下さった方々、参考にしたサイト・CGIの作者さんに感謝します</LI>
 </UL>
 </DIV>
+
+<P class="note">この説明では&trade;や&reg;や&copy;マークは省略しています<BR>
+それぞれのサイト名やソフトウェア名などは各々の商標や登録商標などです</P>
 
 <DIV class="center"><TABLE align="center" border="0" cellspacing="0" class="head" summary="Footer" width="90%"><TR>
 <TD nowrap>■■■■■■■</TD>
