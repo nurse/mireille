@@ -189,6 +189,16 @@ A.autolink:link:hover,A.autolink:visited:hover
 A.autolink:link:active,A.autolink:visited:active
 {border-bottom: #f00 dashed 1px;color:#f00;text-decoration:none;}
 
+/* 注意すべきものへのリンク */
+A.warning:link
+{color:#f00;font-weight:bold;text-decoration:none;}
+A.warning:visited
+{color:#f00;font-weight:bold;text-decoration:none;}
+A.warning:link:hover,A.warning:visited:hover
+{color:#f55;font-weight:bold;text-decoration:underline;}
+A.warning:link:active,A.warning:visited:active
+{color:#f00;font-weight:bold;text-decoration:underline;}
+
 /* アクセスキー */
 .ak{
 	text-decoration: underline;
@@ -563,20 +573,28 @@ TD.menu{
 	text-align: center;
 }
 /* ========== ページ選択 ========== */
-TABLE.pgsl{
+TABLE.pageSelector{
 	border: #6ac solid 2px;
 	margin: 0.5em auto;
 	text-align: center;
 	vertical-align: middle;
 }
-TABLE.pgsl TD{
+TABLE.pageSelector TD{
 	border-style: none;
 	padding: 0.1em;
 	text-align: center;
 	vertical-align: middle;
 }
+.following{
+	width: 3.5em;
+}
+.pageList {
+}
+.preceding{
+	width: 3.5em;
+}
 /* 今見ているページ番号の強調 */
-STRONG.pgsl{
+.pageSelector .current{
 	font-size: 145%;
 }
 
@@ -751,7 +769,15 @@ P.artinfo{
 .thread TABLE.foot TH P{
 	margin: 0.2em;
 }
-
+/* 記事スレッドのフッタ欄 */
+.thread .overflowMessage{
+	background-color: #eef;
+	border: #6ac solid 2px;
+	margin: 1em auto;
+	padding: 0.5em;
+	text-align:center;
+	width:80%;
+}
 
 
 /* ==================== 書き込みフォーム ==================== */
