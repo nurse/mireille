@@ -133,7 +133,12 @@ function changePreviewIcon(){
 	}else{
 		oIcon.disabled=false;
 	}
-	if(!oIcon.disabled){
+	if(oIcon.disabled){
+		oPreview.style.visibility = "visible";
+	}else if(oIcon.value==""){
+		oPreview.style.visibility = "hidden";
+	}else{
+		oPreview.style.visibility = "visible";
 		if(oPreview.src!=iconDirectory+oIcon.value)oPreview.src=iconDirectory+oIcon.value;
 		if(oPreview.title!=oIcon.value)oPreview.title=iconDirectory+'+'+oIcon.value;
 	}
