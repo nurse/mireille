@@ -131,7 +131,7 @@ function autosaveBodyData(){
 	if(bodyObj.value.length>100){
 		switch(saveBodyData('MireilleAutosave')){
 		case'DeleteBodyData':
-			status='Something Wicked happend!';
+			status='Something Wicked happened!';
 			break;
 		case'SavedBodyDataIE':
 			status="現在の本文データをIE式で自動保存しました。";
@@ -143,7 +143,7 @@ function autosaveBodyData(){
 			status="自動保存に失敗しました。保存可能な最大文字数(約4KB)を超えたからかもしれません。";
 			break;
 		default:
-			status='Something Wicked happend!';
+			status='Something Wicked happened!';
 		}
 	}
 	autosaveId=setTimeout(autosaveBodyData,60000);
@@ -173,7 +173,7 @@ function quicksaveBodyData(){
 				+'本文をファイルに保存しながら書いた方がよいかと思われます。');
 			break;
 	default:
-		alert('Something Wicked happend!');
+		alert('Something Wicked happened!');
 	}
 }
 
@@ -344,190 +344,6 @@ $CF{'note'}=<<"_CONFIG_";
 </DIV>
 _CONFIG_
 
-#-----------------------------
-# 新規投稿/編集フォーム
-$CF{'wrtfm'}=<<'_CONFIG_';
-<DIV class="center"><TABLE align="center" class="note"><TR><TD><UL class="note">
-<LI>本文以外ではタグは一切使用できません。</LI>
-<LI>HTTP, FTP, MAILアドレスのリンクは自動でつきます。</LI>
-<LI>一般的なブラウザではマウスカーソルを項目の上に置き、<BR>しばらく待つと簡単な説明が出てきます。</LI>
-<LI>その他、機能の詳細についてはヘルプをご覧ください。</LI>
-</UL></TD></TR></TABLE></DIV>
-
-
-
-<DIV id="writingForm" class="box">
-<H2 class="h"><A name="Form">$DT{'caption'}</A></H2>
-
-
-<TABLE class="inputOthers">
-<TR title="subJect&#10;記事の題名を入力します&#10;最高半角70文字までです">
-<TH class="item"><LABEL accesskey="j" for="subject">■題名(<SPAN class="ak">J</SPAN>)：</LABEL></TH>
-<TD class="input"><INPUT type="text" name="subject" id="subject" maxlength="70" value="$DT{'subject'}"></TD>
-<TH class="iconInputLabel" title="Icon&#10;アイコンを選択します">
-<LABEL accesskey="i" for="icon">■ <A href="index.cgi?icct" title="アイコンカタログ&#10;新しい窓を開きます"
- target="_blank">アイコン</A>（<KBD class="ak">Ｉ</KBD>）■</LABEL></TH>
-</TR>
-
-<TR title="Name&#10;名前を入力します（必須）&#10;最高半角40文字までです">
-<TH class="item"><LABEL accesskey="n" for="name">■名前(<SPAN class="ak">N</SPAN>)：</LABEL></TH>
-<TD class="input"><INPUT type="text" name="name" id="name" maxlength="40" value="$DT{'name'}">
-<LABEL accesskey="k" for="cook" title="cooKie&#10;クッキー保存のON/OFF"
- >クッキ保存<INPUT name="cook" id="cook" type="checkbox" checked></LABEL></TD>
-<TD rowspan="4" class="iconPreview" title="Icon Preview"
- ><IMG name="Preview" id="Preview" src="$DT{'icon'}" alt="" title="$DT{'icon'}"></TD>
-</TR>
-
-<TR title="e-maiL&#10;メールアドレスを入力します">
-<TH class="item"><LABEL accesskey="l" for="email">■E-mail(<SPAN class="ak">L</SPAN>)：</LABEL></TH>
-<TD class="input"><INPUT type="text" name="email" id="email" maxlength="100" value="$DT{'email'}"></TD>
-</TR>
-
-<TR title="hOme&#10;自分のサイトのURLを入力します">
-<TH class="item"><LABEL accesskey="o" for="home">■ホーム(<SPAN class="ak">O</SPAN>)：</LABEL></TH>
-<TD class="input"><INPUT type="text" name="home" id="home" maxlength="80" value="$DT{'home'}"></TD>
-</TR>
-
-<TR title="Password&#10;削除/修正時に使用するパスワードを入力します（必須）&#10;最低8文字・最高128文字です">
-<TH class="item"><LABEL accesskey="p" for="pass">■パスワード(<SPAN class="ak">P</SPAN>)：</LABEL></TH>
-<TD class="input"><INPUT type="text" name="pass" id="pass" maxlength="128" value="$DT{'pass'}">
-　
-<SPAN title="Color&#10;本文の色を入力します">
-	<SPAN class="item"><LABEL accesskey="c" for="color">■色(<SPAN class="ak">C</SPAN>)：</LABEL></SPAN>
-	<SPAN class="input">@{[&iptcol($DT{'color'})]}</SPAN>
-</SPAN>
-</TD>
-</TR>
-
-<TR title="coMmand&#10;専用アイコンを始めとする拡張命令を使う場合に使用します&#10;'command=value'のように指定します">
-<TH class="item"><LABEL accesskey="m" for="cmd">■コマンド(<SPAN class="ak">M</SPAN>)：</LABEL></TH>
-<TD class="input"><INPUT type="text" name="cmd" id="cmd" value="$DT{'cmd'}" onchange="changePreviewIcon()"></TD>
-<TD class="input" title="Icon&#10;アイコンを選択します">@{[&iptico($DT{'icon'})]}</TD>
-</TR>
-</TABLE>
-
-
-<TABLE class="inputBody">
-<TR><TD class="leftColumn">&nbsp;</TD>
-<TH class="item"
- title="Body:記事の本文を入力します&#10;全角約10000文字までです&#10;使用できるタグはヘルプを参照"
-><LABEL accesskey="b" for="body">■ 本文(<SPAN class="ak">B</SPAN>) ■</LABEL></TH>
-<TD class="rightColumn">
-<INPUT type="button" accesskey="," class="buttonQuicksave"  title="本文データをQuickSaveします"
- value="Save," onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()">
-<INPUT type="button" accesskey="." class="buttonLoadQuicksave" title="Quicksaveしたデータを読み込みます"
- value="Load." onclick="loadBodyData('MireilleQuicksave')" onkeypress="loadBodyData('MireilleQuicksave')">
-<INPUT type="button" accesskey="/" class="buttonLoadAutosave" title="Autosaveしたデータを読み込みます"
- value="Load/" onclick="loadBodyData('MireilleAutosave')" onkeypress="loadBodyData('MireilleAutosave')">
-</TD></TR>
-<TR><TD colspan="3"><TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD></TR>
-</TABLE>
-
-
-<P class="footer"><INPUT type="submit" class="submit" accesskey="s" value="投稿する">
-<!-- <INPUT type="reset" class="reset" value="リセット"> --></P>
-
-
-</DIV>
-
-
-
-$CF{'jsWritingForms'}
-_CONFIG_
-
-#-----------------------------
-# 返信フォーム
-$CF{'resfm'}=<<'_CONFIG_';
-
-
-
-<DIV id="writingForm" class="box">
-<H2 class="h"><A name="Form">$DT{'caption'}</A></H2>
-
-
-<TABLE class="inputBody">
-<TR><TD class="leftColumn">&nbsp;</TD>
-<TH class="item"
- title="Body:記事の本文を入力します&#10;全角約10000文字までです&#10;使用できるタグはヘルプを参照"
-><LABEL accesskey="b" for="body">■ 本文(<SPAN class="ak">B</SPAN>) ■</LABEL></TH>
-<TD class="rightColumn">
-<INPUT type="button" accesskey="," class="buttonQuicksave"  title="本文データをQuickSaveします"
- value="Save," onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()">
-<INPUT type="button" accesskey="." class="buttonLoadQuicksave" title="Quicksaveしたデータを読み込みます"
- value="Load." onclick="loadBodyData('MireilleQuicksave')" onkeypress="loadBodyData('MireilleQuicksave')">
-<INPUT type="button" accesskey="/" class="buttonLoadAutosave" title="Autosaveしたデータを読み込みます"
- value="Load/" onclick="loadBodyData('MireilleAutosave')" onkeypress="loadBodyData('MireilleAutosave')">
-</TD></TR>
-<TR><TD colspan="3"><TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD></TR>
-</TABLE>
-
-
-<TABLE class="inputOthers">
-<TR title="subJect&#10;記事の題名を入力します&#10;最高半角70文字までです">
-<TH class="item"><LABEL accesskey="j" for="subject">■題名(<SPAN class="ak">J</SPAN>)：</LABEL></TH>
-<TD class="input"><INPUT type="text" name="subject" id="subject" maxlength="70" value="$DT{'subject'}"></TD>
-<TH class="iconInputLabel" title="Icon&#10;アイコンを選択します">
-<LABEL accesskey="i" for="icon">■ <A href="index.cgi?icct" title="アイコンカタログ&#10;新しい窓を開きます"
- target="_blank">アイコン</A>（<KBD class="ak">Ｉ</KBD>）■</LABEL></TH>
-</TR>
-
-<TR title="Name&#10;名前を入力します（必須）&#10;最高半角40文字までです">
-<TH class="item"><LABEL accesskey="n" for="name">■名前(<SPAN class="ak">N</SPAN>)：</LABEL></TH>
-<TD class="input"><INPUT type="text" name="name" id="name" maxlength="40" value="$DT{'name'}">
-<LABEL accesskey="k" for="cook" title="cooKie&#10;クッキー保存のON/OFF"
- >クッキ保存<INPUT name="cook" id="cook" type="checkbox" checked></LABEL></TD>
-<TD rowspan="4" class="iconPreview" title="Icon Preview"
- ><IMG name="Preview" id="Preview" src="$DT{'icon'}" alt="" title="$DT{'icon'}"></TD>
-</TR>
-
-<TR title="e-maiL&#10;メールアドレスを入力します">
-<TH class="item"><LABEL accesskey="l" for="email">■E-mail(<SPAN class="ak">L</SPAN>)：</LABEL></TH>
-<TD class="input"><INPUT type="text" name="email" id="email" maxlength="100" value="$DT{'email'}"></TD>
-</TR>
-
-<TR title="hOme&#10;自分のサイトのURLを入力します">
-<TH class="item"><LABEL accesskey="o" for="home">■ホーム(<SPAN class="ak">O</SPAN>)：</LABEL></TH>
-<TD class="input"><INPUT type="text" name="home" id="home" maxlength="80" value="$DT{'home'}"></TD>
-</TR>
-
-<TR title="Password&#10;削除/修正時に使用するパスワードを入力します（必須）&#10;最低8文字・最高128文字です">
-<TH class="item"><LABEL accesskey="p" for="pass">■パスワード(<SPAN class="ak">P</SPAN>)：</LABEL></TH>
-<TD class="input"><INPUT type="text" name="pass" id="pass" maxlength="128" value="$DT{'pass'}">
-　
-<SPAN title="Color&#10;本文の色を入力します">
-	<SPAN class="item"><LABEL accesskey="c" for="color">■色(<SPAN class="ak">C</SPAN>)：</LABEL></SPAN>
-	<SPAN class="input">@{[&iptcol($DT{'color'})]}</SPAN>
-</SPAN>
-</TD>
-</TR>
-
-<TR title="coMmand&#10;専用アイコンを始めとする拡張命令を使う場合に使用します&#10;'command=value'のように指定します">
-<TH class="item"><LABEL accesskey="m" for="cmd">■コマンド(<SPAN class="ak">M</SPAN>)：</LABEL></TH>
-<TD class="input"><INPUT type="text" name="cmd" id="cmd" value="$DT{'cmd'}" onchange="changePreviewIcon()"></TD>
-<TD class="input" title="Icon&#10;アイコンを選択します">@{[&iptico($DT{'icon'})]}</TD>
-</TR>
-</TABLE>
-
-
-<P class="footer"><INPUT type="submit" class="submit" accesskey="s" value="投稿する">
-<!-- <INPUT type="reset" class="reset" value="リセット"> --></P>
-
-
-</DIV>
-
-
-
-<DIV class="center"><TABLE class="note"><TR><TD><UL class="note">
-<LI>上に表示されているスレッド【No.$DT{'i'}】への返信を行います。</LI>
-<LI>本文以外ではタグは一切使用できません。</LI>
-<LI>HTTP, FTP, MAILアドレスのリンクは自動でつきます。</LI>
-<LI>一般的なブラウザではマウスカーソルを項目の上に置き、<BR>しばらく待つと項目の簡単な説明が出てきます。</LI>
-<LI>その他、機能の詳細についてはヘルプをご覧ください。</LI>
-</UL></TD></TR></TABLE></DIV>
-
-$CF{'jsWritingForms'}
-_CONFIG_
-
 
 
 #----------------------------------------------------------------------------------------#
@@ -662,45 +478,32 @@ sub artfot{
 	#記事情報を受け取って
 	my%DT=%{shift()};
 	
-	if($DT{'res'}||$CF{'readOnly'}){
+	if($DT{'res'}){
 		#返信モードのとき
-			print<<'_HTML_';
+		print<<'_HTML_';
+</DIV>
+
+
+_HTML_
+	}elsif($CF{'readOnly'}||$DT{'-isLocked'}||$DT{'-isOverflowed'}){
+		#何らかの理由で表示のみ
+		my$message=sprintf
+			+($CF{'readOnly'}?'読み込み専用モードなのでこの記事スレッドNo.%dの表示のみです'
+			:$DT{'-isLocked'}?'この記事スレッドNo.%dはロックされているので表示のみです'
+			:$DT{'-isOverflowed'}?'この記事スレッドNo.%dは子記事数制限に達したので表示のみです'
+			 :'とりあえずこの記事スレッドNo.%dは表示のみです'),$DT{'i'};
+		print<<"_HTML_";
+<TABLE border="0" cellspacing="0" class="foot" summary="ArticleFooter" width="100%"><TR>
+<TH align="right" width="100%"><P align="right"><A accesskey="$DT{'ak'}" name="res$DT{'i'}" class="warning"
+ href="index.cgi?res=$DT{'i'}">$message(<SPAN
+ class="ak">$DT{'ak'}</SPAN>)</A></P></TH>
+</TR></TABLE>
 </DIV>
 
 
 _HTML_
 	}else{
-		#記事表示
-		if($CF{'maxChilds'}&&$DT{'j'}>=$CF{'maxChilds'}){
-			#子記事数制限を超えた
-			print<<"_HTML_";
-<TABLE border="0" cellspacing="0" class="foot" summary="ArticleFooter" width="100%"><TR>
-<TH align="right" width="100%"><P align="right"><A accesskey="$DT{'ak'}" name="res$DT{'i'}" class="warning"
- href="#res$DT{'i'}">この記事スレッドNo.$DT{'i'}は子記事数制限に達したので返信できません(<SPAN
- class="ak">$DT{'ak'}</SPAN>)</A></P></TH>
-</TR></TABLE>
-</DIV>
-
-
-_HTML_
-#memo.
-#返信モードがないのに「href="#res$DT{'i'}"」とリンクを張っているのは、アクセスキーを使用可能にするため
-		}elsif($DT{'-isLocked'}){
-			#スレッドがロックされている
-			print<<"_HTML_";
-<TABLE border="0" cellspacing="0" class="foot" summary="ArticleFooter" width="100%"><TR>
-<TH align="right" width="100%"><P align="right"><A accesskey="$DT{'ak'}" name="res$DT{'i'}" class="warning"
- href="#res$DT{'i'}">この記事スレッドNo.$DT{'i'}はロックされているので返信できません(<SPAN
- class="ak">$DT{'ak'}</SPAN>)</A></P></TH>
-</TR></TABLE>
-</DIV>
-
-
-_HTML_
-#memo.
-#返信モードがないのに「href="#res$DT{'i'}"」とリンクを張っているのは、アクセスキーを使用可能にするため
-		}else{
-			#この記事スレッドNo.???に返信する(?)
+		#この記事スレッドNo.???に返信する(?)
 		print<<"_HTML_";
 <TABLE border="0" cellspacing="0" class="foot" summary="ArticleFooter" width="100%"><TR>
 <TH align="right" width="100%"><P align="right"><A accesskey="$DT{'ak'}" name="res$DT{'i'}"
@@ -711,7 +514,6 @@ _HTML_
 
 
 _HTML_
-		}
 	}
 	#記事ナビ
 	ArtNavi->addThreadFoot(\%DT);
@@ -719,46 +521,122 @@ _HTML_
 
 
 #-------------------------------------------------
-# 親記事フォーム
+# 親記事投稿フォーム
 #
 sub prtfrm{
 	my%DT=%CK;
-
+	
 	#アイコンの初期設定
 	&iptico($DT{'icon'})if$CF{'prtitm'}=~/\bicon\b/o;
 	#色の初期設定
 #	&iptcol($DT{'color'})if$CF{'prtitm'}=~/\bcolor\b/o;
-
-=item この初期設定の意義
-
-この初期設定部は一見必要なさそうです
-しかしプレビュー機能というものがこの掲示板にはあります
-通常は<IMG src="$DT{'icon'}">としているわけですが、
-$DT{'icon'}が空だったら、もしくは存在しないアイコンだったらどうしましょう
-それを前もって設定するためにここでリストと照合しておくわけです
-但し、これは初期デザインのようにこのIMGタグがアイコンリストのSELECTタグより、
-前にある場合の問題で、プレビュー部分より選択部分が前の場合は、
-初期設定をコメントアウトしても問題ありません
-
-=cut
-
-	my$wrtfm=$CF{'wrtfm'};
-	chomp$wrtfm;
-	if(defined$DT{'body'}){
-		$DT{'caption'}='■ 記事修正フォーム ■';
+	
+	#追加情報
+	$DT{'Sys'}=qq(<INPUT name="j" type="hidden" value="0">\n);
+	if(defined$DT{'i'}){
+		$DT{'caption'}='■ 親記事修正フォーム ■';
 		$DT{'Sys'}.=qq(<INPUT name="i" type="hidden" value="$DT{'i'}">\n);
-		$DT{'Sys'}.=qq(<INPUT name="j" type="hidden" value="$DT{'j'}">\n);
 		$DT{'Sys'}.=qq(<INPUT name="oldps" type="hidden" value="$DT{'oldps'}">\n);
 	}else{
-		$DT{'caption'}='■ 新規送信フォーム ■';
-		$DT{'home'}='http://'unless$DT{'home'};
-		$DT{'Sys'}.=qq(<INPUT name="j" type="hidden" value="0">\n);
+		$DT{'caption'}='■ 新規投稿フォーム ■';
 	}
-	$wrtfm=~s/<INPUT/$DT{'Sys'}<INPUT/io if$DT{'Sys'};
 	
-	print qq(<FORM accept-charset="euc-jp" id="artform" method="post" action="index.cgi">\n);
-	eval qq(print<<"_HTML_";\n$wrtfm\n_HTML_);
-	print"</FORM>\n";
+	#項目の初期設定
+	$DT{'home'}='http://'unless$DT{'home'}; #http://だけ入れておく
+	
+	print<<"_HTML_";
+<FORM accept-charset="euc-jp" id="artform" method="post" action="index.cgi">
+<DIV class="center"><TABLE align="center" class="note"><TR><TD><UL class="note">
+<LI>本文以外ではタグは一切使用できません。</LI>
+<LI>HTTP, FTP, MAILアドレスのリンクは自動でつきます。</LI>
+<LI>一般的なブラウザではマウスカーソルを項目の上に置き、<BR>しばらく待つと簡単な説明が出てきます。</LI>
+<LI>その他、機能の詳細についてはヘルプをご覧ください。</LI>
+</UL></TD></TR></TABLE></DIV>
+
+
+
+<DIV id="writingForm" class="box">
+<H2 class="h"><A name="Form">$DT{'caption'}</A></H2>
+
+
+<TABLE class="inputOthers">
+<TR title="subJect&#10;記事の題名を入力します&#10;最高半角70文字までです">
+<TH class="item"><LABEL accesskey="j" for="subject">■題名(<SPAN class="ak">J</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="subject" id="subject" maxlength="70" value="$DT{'subject'}"></TD>
+<TH class="iconInputLabel" title="Icon&#10;アイコンを選択します">
+<LABEL accesskey="i" for="icon">■ <A href="index.cgi?icct" title="アイコンカタログ&#10;新しい窓を開きます"
+ target="_blank">アイコン</A>（<KBD class="ak">Ｉ</KBD>）■</LABEL></TH>
+</TR>
+
+<TR title="Name&#10;名前を入力します（必須）&#10;最高半角40文字までです">
+<TH class="item"><LABEL accesskey="n" for="name">■名前(<SPAN class="ak">N</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="name" id="name" maxlength="40" value="$DT{'name'}">
+<LABEL accesskey="k" for="cook" title="cooKie&#10;クッキー保存のON/OFF"
+ >クッキ保存<INPUT name="cook" id="cook" type="checkbox" checked></LABEL></TD>
+<TD rowspan="4" class="iconPreview" title="Icon Preview"
+ ><IMG name="Preview" id="Preview" src="$DT{'icon'}" alt="" title="$DT{'icon'}"></TD>
+</TR>
+
+<TR title="e-maiL&#10;メールアドレスを入力します">
+<TH class="item"><LABEL accesskey="l" for="email">■E-mail(<SPAN class="ak">L</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="email" id="email" maxlength="100" value="$DT{'email'}"></TD>
+</TR>
+
+<TR title="hOme&#10;自分のサイトのURLを入力します">
+<TH class="item"><LABEL accesskey="o" for="home">■ホーム(<SPAN class="ak">O</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="home" id="home" maxlength="80" value="$DT{'home'}"></TD>
+</TR>
+
+<TR title="Password&#10;削除/修正時に使用するパスワードを入力します（必須）&#10;最低8文字・最高128文字です">
+<TH class="item"><LABEL accesskey="p" for="pass">■パスワード(<SPAN class="ak">P</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="pass" id="pass" maxlength="128" value="$DT{'pass'}">
+　
+<SPAN title="Color&#10;本文の色を入力します">
+	<SPAN class="item"><LABEL accesskey="c" for="color">■色(<SPAN class="ak">C</SPAN>)：</LABEL></SPAN>
+	<SPAN class="input">@{[&iptcol($DT{'color'})]}</SPAN>
+</SPAN>
+</TD>
+</TR>
+
+<TR title="coMmand&#10;専用アイコンを始めとする拡張命令を使う場合に使用します&#10;'command=value'のように指定します">
+<TH class="item"><LABEL accesskey="m" for="cmd">■コマンド(<SPAN class="ak">M</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="cmd" id="cmd" value="$DT{'cmd'}" onchange="changePreviewIcon()"></TD>
+<TD class="input" title="Icon&#10;アイコンを選択します">@{[&iptico($DT{'icon'})]}</TD>
+</TR>
+</TABLE>
+
+
+<TABLE class="inputBody">
+<TR><TD class="leftColumn">&nbsp;</TD>
+<TH class="item"
+ title="Body:記事の本文を入力します&#10;全角約10000文字までです&#10;使用できるタグはヘルプを参照"
+><LABEL accesskey="b" for="body">■ 本文(<SPAN class="ak">B</SPAN>) ■</LABEL></TH>
+<TD class="rightColumn">
+<INPUT type="button" accesskey="," class="buttonQuicksave"  title="本文データをQuickSaveします"
+ value="Save," onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()">
+<INPUT type="button" accesskey="." class="buttonLoadQuicksave" title="Quicksaveしたデータを読み込みます"
+ value="Load." onclick="loadBodyData('MireilleQuicksave')" onkeypress="loadBodyData('MireilleQuicksave')">
+<INPUT type="button" accesskey="/" class="buttonLoadAutosave" title="Autosaveしたデータを読み込みます"
+ value="Load/" onclick="loadBodyData('MireilleAutosave')" onkeypress="loadBodyData('MireilleAutosave')">
+</TD></TR>
+<TR><TD colspan="3"><TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD></TR>
+</TABLE>
+
+
+<P class="footer">$DT{'Sys'}
+<INPUT type="submit" class="submit" accesskey="s" value="投稿する">
+<!-- <INPUT type="reset" class="reset" value="リセット"> --></P>
+
+
+</DIV>
+
+
+
+$CF{'jsWritingForms'}
+</FORM>
+
+_HTML_
+	return 1;
 }
 
 
@@ -774,20 +652,16 @@ sub chdfrm{
 	#色の初期設定
 #	&iptcol($DT{'color'})if$CF{'chditm'}=~/\bcolor\b/o;
 	
-	#デザイン読み込み
-	my$resfm=$CF{'resfm'};
-	chomp$resfm;#最後の改行を切り落とす
-	#追加情報を埋め込む
+	#追加情報
 	$DT{'Sys'}.=qq(<INPUT name="i" type="hidden" value="$DT{'i'}">\n);
 	if(defined$DT{'j'}){
 		$DT{'Sys'}.=qq(<INPUT name="j" type="hidden" value="$DT{'j'}">\n);
 		$DT{'Sys'}.=qq(<INPUT name="oldps" type="hidden" value="$DT{'oldps'}">\n);
-		$DT{'caption'}='■ 修正フォーム ■';
+		$DT{'caption'}='■ 子記事修正フォーム ■';
 	}else{
-		$DT{'caption'}='■ 返信フォーム ■';
+		$DT{'caption'}='■ 返信投稿フォーム ■';
 	}
-	$resfm=~s/<INPUT/$DT{'Sys'}<INPUT/io if$DT{'Sys'};
-
+	
 	#項目の初期設定
 	$DT{'home'}='http://'unless$DT{'home'}; #http://だけ入れておく
 	#note01:Resは題名ないことも
@@ -798,9 +672,147 @@ sub chdfrm{
 	
 	print<<"_HTML_";
 <FORM accept-charset="euc-jp" id="artform" method="post" action="index.cgi">
+
+
+
+<DIV id="writingForm" class="box">
+<H2 class="h"><A name="Form">$DT{'caption'}</A></H2>
+
+
+<TABLE class="inputBody">
+<TR><TD class="leftColumn">&nbsp;</TD>
+<TH class="item"
+ title="Body:記事の本文を入力します&#10;全角約10000文字までです&#10;使用できるタグはヘルプを参照"
+><LABEL accesskey="b" for="body">■ 本文(<SPAN class="ak">B</SPAN>) ■</LABEL></TH>
+<TD class="rightColumn">
+<INPUT type="button" accesskey="," class="buttonQuicksave"  title="本文データをQuickSaveします"
+ value="Save," onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()">
+<INPUT type="button" accesskey="." class="buttonLoadQuicksave" title="Quicksaveしたデータを読み込みます"
+ value="Load." onclick="loadBodyData('MireilleQuicksave')" onkeypress="loadBodyData('MireilleQuicksave')">
+<INPUT type="button" accesskey="/" class="buttonLoadAutosave" title="Autosaveしたデータを読み込みます"
+ value="Load/" onclick="loadBodyData('MireilleAutosave')" onkeypress="loadBodyData('MireilleAutosave')">
+</TD></TR>
+<TR><TD colspan="3"><TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD></TR>
+</TABLE>
+
+
+<TABLE class="inputOthers">
+<TR title="subJect&#10;記事の題名を入力します&#10;最高半角70文字までです">
+<TH class="item"><LABEL accesskey="j" for="subject">■題名(<SPAN class="ak">J</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="subject" id="subject" maxlength="70" value="$DT{'subject'}"></TD>
+<TH class="iconInputLabel" title="Icon&#10;アイコンを選択します">
+<LABEL accesskey="i" for="icon">■ <A href="index.cgi?icct" title="アイコンカタログ&#10;新しい窓を開きます"
+ target="_blank">アイコン</A>（<KBD class="ak">Ｉ</KBD>）■</LABEL></TH>
+</TR>
+
+<TR title="Name&#10;名前を入力します（必須）&#10;最高半角40文字までです">
+<TH class="item"><LABEL accesskey="n" for="name">■名前(<SPAN class="ak">N</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="name" id="name" maxlength="40" value="$DT{'name'}">
+<LABEL accesskey="k" for="cook" title="cooKie&#10;クッキー保存のON/OFF"
+ >クッキ保存<INPUT name="cook" id="cook" type="checkbox" checked></LABEL></TD>
+<TD rowspan="4" class="iconPreview" title="Icon Preview"
+ ><IMG name="Preview" id="Preview" src="$DT{'icon'}" alt="" title="$DT{'icon'}"></TD>
+</TR>
+
+<TR title="e-maiL&#10;メールアドレスを入力します">
+<TH class="item"><LABEL accesskey="l" for="email">■E-mail(<SPAN class="ak">L</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="email" id="email" maxlength="100" value="$DT{'email'}"></TD>
+</TR>
+
+<TR title="hOme&#10;自分のサイトのURLを入力します">
+<TH class="item"><LABEL accesskey="o" for="home">■ホーム(<SPAN class="ak">O</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="home" id="home" maxlength="80" value="$DT{'home'}"></TD>
+</TR>
+
+<TR title="Password&#10;削除/修正時に使用するパスワードを入力します（必須）&#10;最低8文字・最高128文字です">
+<TH class="item"><LABEL accesskey="p" for="pass">■パスワード(<SPAN class="ak">P</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="pass" id="pass" maxlength="128" value="$DT{'pass'}">
+　
+<SPAN title="Color&#10;本文の色を入力します">
+	<SPAN class="item"><LABEL accesskey="c" for="color">■色(<SPAN class="ak">C</SPAN>)：</LABEL></SPAN>
+	<SPAN class="input">@{[&iptcol($DT{'color'})]}</SPAN>
+</SPAN>
+</TD>
+</TR>
+
+<TR title="coMmand&#10;専用アイコンを始めとする拡張命令を使う場合に使用します&#10;'command=value'のように指定します">
+<TH class="item"><LABEL accesskey="m" for="cmd">■コマンド(<SPAN class="ak">M</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="cmd" id="cmd" value="$DT{'cmd'}" onchange="changePreviewIcon()"></TD>
+<TD class="input" title="Icon&#10;アイコンを選択します">@{[&iptico($DT{'icon'})]}</TD>
+</TR>
+</TABLE>
+
+
+<P class="footer">$DT{'Sys'}
+<INPUT type="submit" class="submit" accesskey="s" value="投稿する">
+<!-- <INPUT type="reset" class="reset" value="リセット"> --></P>
+
+
+</DIV>
+
+
+
+<DIV class="center"><TABLE class="note"><TR><TD><UL class="note">
+<LI>上に表示されているスレッド【No.$DT{'i'}】への返信を行います。</LI>
+<LI>本文以外ではタグは一切使用できません。</LI>
+<LI>HTTP, FTP, MAILアドレスのリンクは自動でつきます。</LI>
+<LI>一般的なブラウザではマウスカーソルを項目の上に置き、<BR>しばらく待つと項目の簡単な説明が出てきます。</LI>
+<LI>その他、機能の詳細についてはヘルプをご覧ください。</LI>
+</UL></TD></TR></TABLE></DIV>
+
+$CF{'jsWritingForms'}
+</FORM>
 _HTML_
-	eval qq(print<<"_HTML_";\n$resfm\n_HTML_);
-	print"</FORM>\n";
+	return 1;
+}
+
+
+#-------------------------------------------------
+# ページ選択BOX
+sub getPageSelectorSkin{
+	my$following=shift;
+	my$pageList =shift;
+	my$preceding=shift;
+#	my($str,$end,$pags,$mode)=@_; #自力で組み立てたい時用
+	return<<"_HTML_";
+<TABLE align="center" border="1" cellspacing="0" class="pageSelector">
+<TR>
+<TD class="following">$following</TD>
+<TD class="pageList">[ $pageList ]</TD>
+<TD class="preceding">$preceding</TD>
+</TR>
+</TABLE>
+_HTML_
+}
+
+
+#-------------------------------------------------
+# 表紙の記事情報表示上
+sub getArticoleInfomationA{
+	my%data=@_;
+	return<<"_HTML_";
+<DIV class="artinfo">
+$data{'unread'}
+$data{'pageSelector'}
+<P class="artinfo">このページのスレッド<BR>\n[ $data{'this'}]<BR>
+<A name="nav_n0" href="#nav_s1" title="下のスレッドへ" accesskey="0">▼</A></P>
+</DIV>
+_HTML_
+}
+
+
+#-------------------------------------------------
+# 表紙の記事情報表示下
+sub getArticoleInfomationB{
+	my%data=@_;
+	return<<"_HTML_";
+<DIV class="artinfo">
+<P class="artinfo"><A name="nav_s@{[$data{'view'}+2]}" href="#nav_n@{[$data{'view'}+1]}" title="上のスレッドへ" accesskey="&#@{[$data{'view'}+50]};">▲</A><BR>
+このページのスレッド<BR>\n[ $data{'this'}]</P>
+
+$data{'pageSelector'}
+</DIV>
+_HTML_
 }
 
 
