@@ -218,14 +218,15 @@ function saveBodyData(key){
 /*========================================================*/
 // Load Body Data
 loadBodyCk=loadBodyData;
-function loadBodyData(){
+function loadBodyData(key){
 	if(!bodyObj)return false;
 	if(!confirm("Cookieから本文データを読み出すと、現在の本文は消えてしまいます\nそれでも読み出してよろしいですか？"))
 		return false;
 	
-	if(confirm("QuicksaveのデータとAutosaveのデータ、どちらを読み出しますか？\n"
+	if(key=='MireilleQuicksave'||key=='MireilleAutosave');
+	else if(confirm("QuicksaveのデータとAutosaveのデータ、どちらを読み出しますか？\n"
 				+"Quicksaveの場合は「OK」、Autosaveの場合は「キャンセル」を選んでください"))
-		var key='MireilleQuicksave';
+		key='MireilleQuicksave';
 	else key='MireilleAutosave';
 	
 	var regexp=new RegExp('(^|; )'+key+'=([^;]+)');
@@ -262,7 +263,18 @@ $CF{'jscript_AtSe'}=<<'_CONFIG_';
 if(document.getElementsByTagName){
 	var tags=document.getElementsByTagName('INPUT');
 	for(var i in tags){
-		if('button'==tags[i].type||'button'==tags[i].className){
+		if(tags[i].className&&tags[i].className.substr(0,6)=='button'){
+			tags[i].onfocus=
+				function(){if(this.className.substr(this.className.length-4)!='Over')this.className+='Over'}
+			tags[i].onmouseover=
+				function(){if(this.className.substr(this.className.length-4)!='Over')this.className+='Over'}
+			tags[i].onblur=
+				function(){if(this.className.substr(this.className.length-4)=='Over')
+					this.className=this.className.substring(0,this.className.length-4)};
+			tags[i].onmouseout=
+				function(){if(this.className.substr(this.className.length-4)=='Over')
+					this.className=this.className.substring(0,this.className.length-4)};
+		}else if('button'==tags[i].type||'button'==tags[i].className){
 			tags[i].className='button';
 			tags[i].onfocus=function()		{this.className='buttonover'};
 			tags[i].onmouseover=function()	{this.className='buttonover'};
@@ -288,6 +300,7 @@ if(document.getElementsByTagName){
 	}
 	tags=document.getElementsByTagName('TEXTAREA');
 	for(var i in tags){
+		if(tags[i].className)continue;
 		tags[i].className='blur';
 		tags[i].onfocus=function(){this.className='focus';};
 		tags[i].onblur=function(){this.className='blur';};
@@ -335,100 +348,82 @@ $CF{'wrtfm'}=<<'_CONFIG_';
 <LI>その他、機能の詳細についてはヘルプをご覧ください。</LI>
 </UL></TD></TR></TABLE></DIV>
 
-<DIV class="center"><TABLE border="2" cellspacing="0" class="write" summary="MainForm">
-<COL span="3">
-<THEAD><TR><TH colspan="3" class="caption"><A name="Form"></A>$DT{'caption'}</TH></TR></THEAD>
 
-<TBODY>
+
+<DIV class="writingForm">
+<H2><A name="Form">$DT{'caption'}</A></H2>
+
+
+<TABLE class="inputOthers">
 <TR title="subJect&#10;記事の題名を入力します&#10;最高半角70文字までです">
-<TH class="item">
-<LABEL accesskey="j" for="subject">■題名(<SPAN class="ak">J</SPAN>)：</LABEL>
-</TH>
-<TD class="input">
-<INPUT type="text" name="subject" id="subject" maxlength="70" value="$DT{'subject'}">
-</TD>
-<TH class="item" title="Icon&#10;アイコンを選択します" style="text-align:center">
-<LABEL accesskey="i" for="icon">■ <A href="index.cgi?icct" title="アイコン見本&#10;新しい窓を開きます" target="_blank">アイコン</A>（<KBD class="ak">Ｉ</KBD>）■</LABEL>
-</TH>
+<TH class="item"><LABEL accesskey="j" for="subject">■題名(<SPAN class="ak">J</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="subject" id="subject" maxlength="70" value="$DT{'subject'}"></TD>
+<TH class="iconInputLabel" title="Icon&#10;アイコンを選択します">
+<LABEL accesskey="i" for="icon">■ <A href="index.cgi?icct" title="アイコンカタログ&#10;新しい窓を開きます"
+ target="_blank">アイコン</A>（<KBD class="ak">Ｉ</KBD>）■</LABEL></TH>
 </TR>
+
 <TR title="Name&#10;名前を入力します（必須）&#10;最高半角40文字までです">
-<TH class="item">
-<LABEL accesskey="n" for="name">■名前(<SPAN class="ak">N</SPAN>)：</LABEL>
-</TH>
-<TD class="input">
-<INPUT type="text" name="name" id="name" maxlength="40" value="$DT{'name'}">
-<LABEL accesskey="k" for="cook" title="cooKie&#10;クッキー保存のON/OFF">Coo<SPAN class="ak">k</SPAN>ie
-<INPUT name="cook" id="cook" type="checkbox" checked></LABEL>
-</TD>
-<TD rowspan="4" style="margin:0;text-align:center;vertical-align:middle" title="Icon Preview">
-<IMG name="Preview" id="Preview" src="$DT{'icon'}" alt="" title="$DT{'icon'}">
-</TD>
+<TH class="item"><LABEL accesskey="n" for="name">■名前(<SPAN class="ak">N</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="name" id="name" maxlength="40" value="$DT{'name'}">
+<LABEL accesskey="k" for="cook" title="cooKie&#10;クッキー保存のON/OFF"
+ >クッキ保存<INPUT name="cook" id="cook" type="checkbox" checked></LABEL></TD>
+<TD rowspan="4" class="iconPreview" title="Icon Preview"
+ ><IMG name="Preview" id="Preview" src="$DT{'icon'}" alt="" title="$DT{'icon'}"></TD>
 </TR>
+
 <TR title="e-maiL&#10;メールアドレスを入力します">
-<TH class="item">
-<LABEL accesskey="l" for="email">■E-mail(<SPAN class="ak">L</SPAN>)：</LABEL>
-</TH>
-<TD class="input">
-<INPUT type="text" name="email" id="email" maxlength="100" value="$DT{'email'}">
-</TD>
+<TH class="item"><LABEL accesskey="l" for="email">■E-mail(<SPAN class="ak">L</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="email" id="email" maxlength="100" value="$DT{'email'}"></TD>
 </TR>
+
 <TR title="hOme&#10;自分のサイトのURLを入力します">
-<TH class="item">
-<LABEL accesskey="o" for="home">■ホーム(<SPAN class="ak">O</SPAN>)：</LABEL>
-</TH>
-<TD class="input">
-<INPUT type="text" name="home" id="home" maxlength="80" value="$DT{'home'}">
-</TD>
+<TH class="item"><LABEL accesskey="o" for="home">■ホーム(<SPAN class="ak">O</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="home" id="home" maxlength="80" value="$DT{'home'}"></TD>
 </TR>
+
 <TR title="Password&#10;削除/修正時に使用するパスワードを入力します（必須）&#10;最低8文字・最高128文字です">
-<TH class="item">
-<LABEL accesskey="p" for="pass">■パスワード(<SPAN class="ak">P</SPAN>)：</LABEL>
-</TH>
-<TD class="input">
-<INPUT type="text" name="pass" id="pass" maxlength="128" value="$DT{'pass'}">
+<TH class="item"><LABEL accesskey="p" for="pass">■パスワード(<SPAN class="ak">P</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="pass" id="pass" maxlength="128" value="$DT{'pass'}">
 　
 <SPAN title="Color&#10;本文の色を入力します">
-<SPAN class="item">
-<LABEL accesskey="c" for="color">■色(<SPAN class="ak">C</SPAN>)：</LABEL>
-</SPAN>
-<SPAN class="input">
-@{[&iptcol($DT{'color'})]}
-</SPAN>
+	<SPAN class="item"><LABEL accesskey="c" for="color">■色(<SPAN class="ak">C</SPAN>)：</LABEL></SPAN>
+	<SPAN class="input">@{[&iptcol($DT{'color'})]}</SPAN>
 </SPAN>
 </TD>
 </TR>
+
 <TR title="coMmand&#10;専用アイコンを始めとする拡張命令を使う場合に使用します&#10;'command=value'のように指定します">
-<TH class="item">
-<LABEL accesskey="m" for="cmd">■コマンド(<SPAN class="ak">M</SPAN>)：</LABEL>
-</TH>
-<TD class="input">
-<INPUT type="text" name="cmd" id="cmd" value="$DT{'cmd'}" onchange="changePreviewIcon()">
-</TD>
-<TD class="input" title="Icon&#10;アイコンを選択します">
-@{[&iptico($DT{'icon'})]}
-</TD>
+<TH class="item"><LABEL accesskey="m" for="cmd">■コマンド(<SPAN class="ak">M</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="cmd" id="cmd" value="$DT{'cmd'}" onchange="changePreviewIcon()"></TD>
+<TD class="input" title="Icon&#10;アイコンを選択します">@{[&iptico($DT{'icon'})]}</TD>
 </TR>
-</TBODY>
-
-<TBODY title="Body&#10;記事の本文を入力します&#10;全角約10000文字までです&#10;使用できるタグはヘルプを参照してください">
-<TR><TH class="item" colspan="3" style="text-align:center"><LABEL accesskey="b"
- for="body">■ 本文(<SPAN class="ak">B</SPAN>) ■</LABEL></TH></TR>
-<TR><TD colspan="3" style="text-align:center">
-<TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD>
-</TR></TBODY>
-
-<TBODY><TR title="Submit&#10;記事を投稿します">
-<TD colspan="3" class="foot">
-<INPUT type="submit" class="submit" accesskey="s" value="投稿する">
-<!-- <INPUT type="reset" class="reset" value="リセット"> -->
-<INPUT type="button" class="button" accesskey="," value="Quicksave,"
- onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()" title="本文データを保存します">
-<INPUT type="button" class="button" accesskey="." value="LoadData."
- onclick="loadBodyData()" onkeypress="loadBodyData()" title="Quicksave/Autosaveしたデータを読み込みます">
-</TD></TR></TBODY>
-
 </TABLE>
+
+
+<TABLE class="inputBody">
+<CAPTION title="Body:記事の本文を入力します&#10;全角約10000文字までです&#10;使用できるタグはヘルプを参照"
+><LABEL accesskey="b" for="body">■ 本文(<SPAN class="ak">B</SPAN>) ■</LABEL></CAPTION>
+<TR><TD rowspan="6" class="bodyCell">
+<TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD>
+	<TD><INPUT type="button" accesskey="," class="buttonQuicksave"  title="本文データをQuickSaveします"
+ value="Sv," onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()"></TD></TR>
+<TR><TD><INPUT type="button" accesskey="." class="buttonLoadQuicksave" title="Quicksaveしたデータを読み込みます"
+ value="Ld." onclick="loadBodyData('MireilleQuicksave')" onkeypress="loadBodyData('MireilleQuicksave')"></TD></TR>
+<TR><TD>&nbsp;</TD></TR>
+<TR><TD><INPUT type="button" accesskey="/" class="buttonLoadAutosave" title="Autosaveしたデータを読み込みます"
+ value="la/" onclick="loadBodyData('MireilleAutosave')" onkeypress="loadBodyData('MireilleAutosave')"></TD></TR>
+<TR><TD>&nbsp;</TD></TR>
+<TR><TD>&nbsp;</TD></TR>
+</TABLE>
+
+<P class="footer"><INPUT type="submit" class="submit" accesskey="s" value="投稿する">
+<!-- <INPUT type="reset" class="reset" value="リセット"> --></P>
+
+
 </DIV>
+
+
 
 $CF{'jsWritingForms'}
 _CONFIG_
@@ -436,100 +431,84 @@ _CONFIG_
 #-----------------------------
 # 返信フォーム
 $CF{'resfm'}=<<'_CONFIG_';
-<DIV class="center"><TABLE border="2" cellspacing="0" class="write" summary="ResForm">
-<COL span="3">
-<THEAD><TR><TH colspan="3" class="caption"><A name="Form"></A>$DT{'caption'}</TH></TR></THEAD>
 
-<TBODY title="Body&#10;記事の本文を入力します&#10;全角約10000文字までです&#10;使用できるタグはヘルプを参照してください">
-<TR><TH class="item" colspan="3" style="text-align:center"><LABEL accesskey="b"
- for="body">■ 本文(<SPAN class="ak">B</SPAN>) ■</LABEL></TH></TR>
-<TR><TD colspan="3" style="text-align:center">
+
+
+<DIV class="writingForm">
+<H2><A name="Form">$DT{'caption'}</A></H2>
+
+
+<TABLE class="inputBody">
+<CAPTION title="Body:記事の本文を入力します&#10;全角約10000文字までです&#10;使用できるタグはヘルプを参照"
+><LABEL accesskey="b" for="body">■ 本文(<SPAN class="ak">B</SPAN>) ■</LABEL></CAPTION>
+<TR><TD rowspan="6" class="bodyCell">
 <TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD>
-</TR></TBODY>
+	<TD><INPUT type="button" accesskey="," class="buttonQuicksave"  title="本文データをQuickSaveします"
+ value="Sv," onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()"></TD></TR>
+<TR><TD><INPUT type="button" accesskey="." class="buttonLoadQuicksave" title="Quicksaveしたデータを読み込みます"
+ value="Ld." onclick="loadBodyData('MireilleQuicksave')" onkeypress="loadBodyData('MireilleQuicksave')"></TD></TR>
+<TR><TD>&nbsp;</TD></TR>
+<TR><TD><INPUT type="button" accesskey="/" class="buttonLoadAutosave" title="Autosaveしたデータを読み込みます"
+ value="la/" onclick="loadBodyData('MireilleAutosave')" onkeypress="loadBodyData('MireilleAutosave')"></TD></TR>
+<TR><TD>&nbsp;</TD></TR>
+<TR><TD>&nbsp;</TD></TR>
+</TABLE>
 
-<TBODY>
+
+<TABLE class="inputOthers">
 <TR title="subJect&#10;記事の題名を入力します&#10;最高半角70文字までです">
-<TH class="item">
-<LABEL accesskey="j" for="subject">■題名(<SPAN class="ak">J</SPAN>)：</LABEL>
-</TH>
-<TD class="input">
-<INPUT type="text" name="subject" id="subject" maxlength="70" value="$DT{'subject'}">
-</TD>
-<TH class="item" title="Icon&#10;アイコンを選択します" style="text-align:center">
-<LABEL accesskey="i" for="icon">■ <A href="index.cgi?icct" title="アイコン見本&#10;新しい窓を開きます" target="_blank">アイコン</A>（<KBD class="ak">Ｉ</KBD>）■</LABEL>
-</TH>
+<TH class="item"><LABEL accesskey="j" for="subject">■題名(<SPAN class="ak">J</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="subject" id="subject" maxlength="70" value="$DT{'subject'}"></TD>
+<TH class="iconInputLabel" title="Icon&#10;アイコンを選択します">
+<LABEL accesskey="i" for="icon">■ <A href="index.cgi?icct" title="アイコンカタログ&#10;新しい窓を開きます"
+ target="_blank">アイコン</A>（<KBD class="ak">Ｉ</KBD>）■</LABEL></TH>
 </TR>
+
 <TR title="Name&#10;名前を入力します（必須）&#10;最高半角40文字までです">
-<TH class="item">
-<LABEL accesskey="n" for="name">■名前(<SPAN class="ak">N</SPAN>)：</LABEL>
-</TH>
-<TD class="input">
-<INPUT type="text" name="name" id="name" maxlength="40" value="$DT{'name'}">
-<LABEL accesskey="k" for="cook" title="cooKie&#10;クッキー保存のON/OFF">Coo<SPAN class="ak">k</SPAN>ie
-<INPUT name="cook" id="cook" type="checkbox" checked></LABEL>
-</TD>
-<TD rowspan="4" style="margin:0;text-align:center;vertical-align:middle" title="Icon Preview">
-<IMG name="Preview" id="Preview" src="$DT{'icon'}" alt="" title="$DT{'icon'}">
-</TD>
+<TH class="item"><LABEL accesskey="n" for="name">■名前(<SPAN class="ak">N</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="name" id="name" maxlength="40" value="$DT{'name'}">
+<LABEL accesskey="k" for="cook" title="cooKie&#10;クッキー保存のON/OFF"
+ >クッキ保存<INPUT name="cook" id="cook" type="checkbox" checked></LABEL></TD>
+<TD rowspan="4" class="iconPreview" title="Icon Preview"
+ ><IMG name="Preview" id="Preview" src="$DT{'icon'}" alt="" title="$DT{'icon'}"></TD>
 </TR>
+
 <TR title="e-maiL&#10;メールアドレスを入力します">
-<TH class="item">
-<LABEL accesskey="l" for="email">■E-mail(<SPAN class="ak">L</SPAN>)：</LABEL>
-</TH>
-<TD class="input">
-<INPUT type="text" name="email" id="email" maxlength="100" value="$DT{'email'}">
-</TD>
+<TH class="item"><LABEL accesskey="l" for="email">■E-mail(<SPAN class="ak">L</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="email" id="email" maxlength="100" value="$DT{'email'}"></TD>
 </TR>
+
 <TR title="hOme&#10;自分のサイトのURLを入力します">
-<TH class="item">
-<LABEL accesskey="o" for="home">■ホーム(<SPAN class="ak">O</SPAN>)：</LABEL>
-</TH>
-<TD class="input">
-<INPUT type="text" name="home" id="home" maxlength="80" value="$DT{'home'}">
-</TD>
+<TH class="item"><LABEL accesskey="o" for="home">■ホーム(<SPAN class="ak">O</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="home" id="home" maxlength="80" value="$DT{'home'}"></TD>
 </TR>
+
 <TR title="Password&#10;削除/修正時に使用するパスワードを入力します（必須）&#10;最低8文字・最高128文字です">
-<TH class="item">
-<LABEL accesskey="p" for="pass">■パスワード(<SPAN class="ak">P</SPAN>)：</LABEL>
-</TH>
-<TD class="input">
-<INPUT type="text" name="pass" id="pass" maxlength="128" value="$DT{'pass'}">
+<TH class="item"><LABEL accesskey="p" for="pass">■パスワード(<SPAN class="ak">P</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="pass" id="pass" maxlength="128" value="$DT{'pass'}">
 　
 <SPAN title="Color&#10;本文の色を入力します">
-<SPAN class="item">
-<LABEL accesskey="c" for="color">■色(<SPAN class="ak">C</SPAN>)：</LABEL>
-</SPAN>
-<SPAN class="input">
-@{[&iptcol($DT{'color'})]}
-</SPAN>
+	<SPAN class="item"><LABEL accesskey="c" for="color">■色(<SPAN class="ak">C</SPAN>)：</LABEL></SPAN>
+	<SPAN class="input">@{[&iptcol($DT{'color'})]}</SPAN>
 </SPAN>
 </TD>
 </TR>
+
 <TR title="coMmand&#10;専用アイコンを始めとする拡張命令を使う場合に使用します&#10;'command=value'のように指定します">
-<TH class="item">
-<LABEL accesskey="m" for="cmd">■コマンド(<SPAN class="ak">M</SPAN>)：</LABEL>
-</TH>
-<TD class="input">
-<INPUT type="text" name="cmd" id="cmd" value="$DT{'cmd'}" onchange="changePreviewIcon()">
-</TD>
-<TD class="input" title="Icon&#10;アイコンを選択します">
-@{[&iptico($DT{'icon'})]}
-</TD>
+<TH class="item"><LABEL accesskey="m" for="cmd">■コマンド(<SPAN class="ak">M</SPAN>)：</LABEL></TH>
+<TD class="input"><INPUT type="text" name="cmd" id="cmd" value="$DT{'cmd'}" onchange="changePreviewIcon()"></TD>
+<TD class="input" title="Icon&#10;アイコンを選択します">@{[&iptico($DT{'icon'})]}</TD>
 </TR>
-</TBODY>
-<TBODY>
-<TR title="Submit&#10;記事を投稿します">
-<TD colspan="3" class="foot">
-<INPUT type="submit" class="submit" accesskey="s" value="投稿する">
-<!-- <INPUT type="reset" class="reset" value="リセット"> -->
-<INPUT type="button" class="button" accesskey="," value="Quicksave,"
- onclick="quicksaveBodyData()" onkeypress="quicksaveBodyData()" title="本文データを保存します">
-<INPUT type="button" class="button" accesskey="." value="LoadData."
- onclick="loadBodyData()" onkeypress="loadBodyData()" title="Quicksave/Autosaveしたデータを読み込みます">
-</TD></TR>
-</TBODY>
 </TABLE>
+
+
+<P class="footer"><INPUT type="submit" class="submit" accesskey="s" value="投稿する">
+<!-- <INPUT type="reset" class="reset" value="リセット"> --></P>
+
+
 </DIV>
+
+
 
 <DIV class="center"><TABLE class="note"><TR><TD><UL class="note">
 <LI>上に表示されているスレッド【No.$DT{'i'}】への返信を行います。</LI>

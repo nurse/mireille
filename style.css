@@ -398,7 +398,7 @@ DIV.right{
 		width: 7em;
 	}
 	/* 了解ボタン（マウスが重なった時） */
-	.submit:hover,.submitover,{
+	.submit:hover,.submitover{
 		background-color: #aaf;
 		border: #355 solid 2px;
 		color: #355;
@@ -717,38 +717,116 @@ P.artinfo{
 
 
 
-/* ==================== 投稿画面 ==================== */
-/* 投稿フォームのテーブル */
-TABLE.write{
+/* ==================== 書き込みフォーム ==================== */
+.writingForm{
 	border: #6ac solid 2px;
 	font-size: 14px;
 	margin: 2em auto;
+	padding: 3px;
 	text-align: center;
+	width: 600px;
+}
+/* 項目名セル */
+.writingForm TH.item{
+	font-weight: normal;
+	text-align: left;
+}
+/* 入力欄セル */
+.writingForm TD.input{
+	text-align: left;
 }
 /* 投稿フォームのタイトル欄 */
-.write TH.caption{
+.writingForm H2{
 	background-color: #6ac;
 	color: #fff;
 	font-size: 18px;
 	font-weight: bold;
+	margin: 0;
+	padding: 0.2em;
 	text-align: center;
 	vertical-align: middle;
 }
-.write TH,.write TD{border:none;}
-/* 項目名 */
-.write TH.item{
+/* その他の入力欄を収めるTABLE */
+.writingForm TABLE.inputOthers{
+	margin: 0.2em;
+}
+/* 本文の入力欄を収めるTABLE */
+.writingForm TABLE.inputBody{
+	margin: 0.2em;
+}
+/* 本文の入力欄を収めるTABLEのLABEL */
+.writingForm TABLE.inputBody CAPTION{
+	margin: 0;
+	padding: 0;
+}
+.writingForm TABLE.inputBody TD.bodyCell{
+	text-align: right;
+}
+.writingForm TABLE.inputBody TD{
+	text-align: left;
+	width: 35px;
+}
+/* Quicksave/Autosave用のボタン */
+@media all{
+	/* Quicksave書き込みボタン */
+	.writingForm .buttonQuicksave{
+		background-color: #edd;
+		border: #355 solid 1px;
+		color: #355;
+		width: 30px;
+	}
+	.writingForm .buttonQuicksave:hover,.writingForm .buttonQuicksaveOver{
+		background-color: #eaa;
+		border: #355 solid 1px;
+		color: #355;
+		width: 30px;
+	}
+	/* Quicksave読み込みボタン */
+	.writingForm .buttonLoadQuicksave{
+		background-color: #ccf;
+		border: #355 solid 1px;
+		color: #355;
+		width: 30px;
+	}
+	.writingForm .buttonLoadQuicksave:hover,.writingForm .buttonLoadQuicksaveOver{
+		background-color: #aaf;
+		border: #355 solid 1px;
+		color: #355;
+		width: 30px;
+	}
+	/* Autosave読み込みボタン */
+	.writingForm .buttonLoadAutosave{
+		background-color: #dfe;
+		border: #355 solid 1px;
+		color: #355;
+		width: 30px;
+	}
+	.writingForm .buttonLoadAutosave:hover,.writingForm .buttonLoadAutosaveOver{
+		background-color: #aeb;
+		border: #355 solid 1px;
+		color: #355;
+		width: 30px;
+	}
+}
+/* アイコン選択のラベル */
+.writingForm .iconInputLabel{
 	font-weight: normal;
-	text-align: left;
-}
-/* 入力欄セル位置 */
-.write TD.input{
-	text-align: left;
-}
-/* 投稿フォームのフッタ欄 */
-.write TD.foot{
-	background-color: #6ac;
 	text-align: center;
 }
+/* アイコンプレビュー */
+.writingForm TD.iconPreview{
+	margin: 0;
+	text-align: center;
+	vertical-align: middle;
+}
+/* 書き込みフォームのフッタ */
+.writingForm .footer{
+	background-color: #6ac;
+	margin: 0;
+	padding: 0.2em;
+	text-align: center;
+}
+/* 個々の項目 */
 #name	{width:220px;ime-mode:active;}
 #cook	{}
 #icon	{width:160px;}
