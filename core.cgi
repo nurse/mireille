@@ -13,8 +13,6 @@ require 5.005;
 #use strict;
 #use vars qw(%CF %IC %IN %CK);
 my(%Z0,@zer2,@file);
-$CF{'encoding'}||='euc-jp';
-$CF{'index'}||='index.cgi';
 
 =head1 "Mireille" Bulletin Board System
 
@@ -269,11 +267,11 @@ sub writeArticle{
 	#-----------------------------
 	#スレッドのロック
 	if($EX{'lockThread'}&&$IN{'i'}){
-		open(RW,'+<'."$CF{'log'}$IN{'i'}.cgi")
+		open(FILE,'+<'."$CF{'log'}$IN{'i'}.cgi")
 		||die"Can't read/write log($IN{'i'};.cgi)[$?:$!]";
-		eval{flock(RW,2)};
-		seek(RW,0,0);
-		my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
+		eval{flock(FILE,2)};
+		seek(FILE,0,0);
+		my@log=map{m/^([^\x0D\x0A]*)/o}<FILE>;
 		
 		my$isLocked=index($log[$#log],"Mir12=\tLocked")>-1;
 		my$lockedBy=$log[$#log]=~/Mir12=\tLocked:(?:\S+ )*lockedBy=(\S+)[ ;]/o?$1:'';
@@ -309,10 +307,10 @@ sub writeArticle{
 			#されていない時はロックする→push
 			push(@log,"Mir12=\tLocked:$option;\t");
 		}
-		truncate(RW,0);
-		seek(RW,0,0);
-		print RW map{"$_\n"}@log;
-		close(RW);
+		truncate(FILE,0);
+		seek(FILE,0,0);
+		print FILE map{"$_\n"}@log;
+		close(FILE);
 		
 		#修正モードに移動
 		$IN{'page'}=1;
@@ -803,39 +801,39 @@ $file[$CF{'logmax'}-2] は削除された後に残った記事スレッドのうち、
 				$zer2[0]=$file[$CF{'logmax'}-2]-1;
 			}
 			$IN{'i'}=$file[0]+1;
-			open(WR,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't write log($IN{'i'})[$?:$!]";
-			eval{flock(WR,2)};
+			open(FILE,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't write log($IN{'i'})[$?:$!]";
+			eval{flock(FILE,2)};
 			die"書き込み処理中に割り込まれました($CF{'log'}$IN{'i'}.cgi)"if-s"$CF{'log'}$IN{'i'}.cgi";
-			truncate(WR,0);
-			seek(WR,0,0);
-			print WR "Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'_NewPassword'};\ttime=\t$^T;\t"
+			truncate(FILE,0);
+			seek(FILE,0,0);
+			print FILE "Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'_NewPassword'};\ttime=\t$^T;\t"
 			."body=\t$IN{'body'};\tsignature=\t$IN{'_Signature'};\t"
 			.join('',map{"$_=\t$IN{$_};\t"}grep{defined$IN{$_}}($CF{'prtitm'}=~/\+(\w+)\b/go))."\n";
-			close(WR);
+			close(FILE);
 		}else{
 			#-----------------------------
 			#返信書き込み
-			open(RW,'+<'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$?:$!]";
-			eval{flock(RW,2)};
-			seek(RW,0,0);
+			open(FILE,'+<'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$?:$!]";
+			eval{flock(FILE,2)};
+			seek(FILE,0,0);
 			my$line;
-			$line=$_ while<RW>;
+			$line=$_ while<FILE>;
 			
 			#スレッドのロック
 			index($line,"Mir12=\tLocked")+1&&&showUserError('このスレッドはロックされている');
 			
 			$IN{'j'}=$.; #$.-1+1
-			seek(RW,0,2);
+			seek(FILE,0,2);
 			if($CF{'admps'}&&$IN{'pass'}eq$CF{'admps'}){
 				#パスワードが管理パスのときは最大子記事数制限がかかっていても投稿出来る
 			}elsif($CF{'maxChilds'}&&$IN{'j'}>$CF{'maxChilds'}){
 				&showUserError('既に最大子記事数制限を越えている');
 			}
-			print RW (!chomp$line&&++$IN{'j'}?"\n":'')
+			print FILE (!chomp$line&&++$IN{'j'}?"\n":'')
 			."Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'_NewPassword'};\ttime=\t$^T;\t"
 			."body=\t$IN{'body'};\tsignature=\t$IN{'_Signature'};\t"
 			.join('',map{"$_=\t$IN{$_};\t"}grep{defined$IN{$_}}$CF{'chditm'}=~/\+(\w+)\b/go)."\n";
-			close(RW);
+			close(FILE);
 		}
 		
 		#-----------------------------
@@ -849,10 +847,10 @@ $file[$CF{'logmax'}-2] は削除された後に残った記事スレッドのうち、
 	}else{
 		#-----------------------------
 		#修正書き込み
-		open(RW,'+<'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$?:$!]";
-		eval{flock(RW,2)};
-		seek(RW,0,0);
-		my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
+		open(FILE,'+<'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$?:$!]";
+		eval{flock(FILE,2)};
+		seek(FILE,0,0);
+		my@log=map{m/^([^\x0D\x0A]*)/o}<FILE>;
 		$#log<$IN{'j'}&&die'wa1: Something Wicked happend!';
 		$log[$IN{'j'}]||die'wa2: Something Wicked happend!';
 		my%DT=$log[$IN{'j'}]=~/([^\t]*)=\t([^\t]*);\t/go;
@@ -898,10 +896,10 @@ $file[$CF{'logmax'}-2] は削除された後に残った記事スレッドのうち、
 			."body=\t$IN{'body'};\tsignature=\t$IN{'_Signature'};\t"
 			.join('',map{"$_=\t$IN{$_};\t"}grep{defined$IN{$_}}
 			((!$IN{'j'}?$CF{'prtitm'}:$CF{'chditm'})=~/\+(\w+)\b/go));
-		truncate(RW,0);
-		seek(RW,0,0);
-		print RW map{"$_\n"}@log;
-		close(RW);
+		truncate(FILE,0);
+		seek(FILE,0,0);
+		print FILE map{"$_\n"}@log;
+		close(FILE);
 	}
 	
 	if($EX{'znew'}){
@@ -1114,11 +1112,11 @@ _HTML_
 		$_&&-e"$CF{'log'}$_.cgi"||next;
 		my$i=$_;
 		my$j=-1;
-		open(RD,'<'."$CF{'log'}$i.cgi")||die"Can't read log($i.cgi)[$?:$!]";
-		eval{flock(RD,1)};
+		open(FILE,'<'."$CF{'log'}$i.cgi")||die"Can't read log($i.cgi)[$?:$!]";
+		eval{flock(FILE,1)};
 		my$count=qq(<A href="$CF{'index'}?read=$i#art$i">第$i号</A>);
 		#記事ごと
-		while(<RD>){
+		while(<FILE>){
 			$j++;
 			index($_,"Mir12=\tdel;\t")+1&&next;
 			if(index($_,"Mir12=\tLocked")+1){
@@ -1151,7 +1149,7 @@ _HTML_
 </TR>
 _HTML_
 		}
-		close(RD);
+		close(FILE);
 	}
 	print"</TABLE></DIV></FORM>\n";
 	print qq(<DIV class="center">$pageSelector</DIV>);
@@ -1161,14 +1159,21 @@ _HTML_
 
 
 #-------------------------------------------------
-# 記事を修正
-#
+
+=head2 記事修正
+
+=head3 引数
+
+  $ 修正する記事（"120-4"など）
+
+=cut
+
 sub rvsArticle{
 	($IN{'i'},$IN{'j'})=split('-',$IN{'rvs'});
-	open(RD,'<'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read log($IN{'i'}.cgi)[$?:$!]";
-	eval{flock(RD,1)};
-	my@log=map{m/^([^\x0D\x0A]*)/o}<RD>;
-	close(RD);
+	open(FILE,'<'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read log($IN{'i'}.cgi)[$?:$!]";
+	eval{flock(FILE,1)};
+	my@log=map{m/^([^\x0D\x0A]*)/o}<FILE>;
+	close(FILE);
 	my%DT=$log[$IN{'j'}]=~/([^\t]*)=\t([^\t]*);\t/go;
 	%DT||die"第$IN{'i'}番スレッドには$IN{'j'}なんてありません";
 
@@ -1252,14 +1257,21 @@ _HTML_
 
 
 #-------------------------------------------------
-# 記事削除
-#
+
+=head2 記事削除
+
+=head3 引数
+
+  $ 削除する記事と削除方法（"120-4-1"など）
+
+=cut
+
 sub delArticle{
 	($IN{'i'},$IN{'j'},$IN{'type'})=split('-',$IN{'del'});
-	open(RW,'+<'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$?:$!]";
-	eval{flock(RD,2)};
-	seek(RW,0,0);
-	my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
+	open(FILE,'+<'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$?:$!]";
+	eval{flock(FILE,2)};
+	seek(FILE,0,0);
+	my@log=map{m/^([^\x0D\x0A]*)/o}<FILE>;
 	my%DT=$log[$IN{'j'}]=~/([^\t]*)=\t([^\t]*);\t/go;
 	#削除分岐
 	SWITCH:{
@@ -1301,13 +1313,13 @@ _HTML_
 		
 		#mark
 		$log[$IN{'j'}]=~s/^Mir12=\t([^\t]*);\t/Mir12=\tdel;\t/go;
-		truncate(RW,0);
-		seek(RW,0,0);
-		print RW map{"$_\n"}@log;
-		close(RW);
+		truncate(FILE,0);
+		seek(FILE,0,0);
+		print FILE map{"$_\n"}@log;
+		close(FILE);
 		&showRvsMenu("第$IN{'i'}番の$IN{'j'}を削除しました。");
 	}
-	close(RW);
+	close(FILE);
 	#親記事削除
 	&delThread($CF{'delthr'},$IN{'i'});
 	&showRvsMenu("第$IN{'i'}番スレッドを削除しました。($CF{'delthr'})");
@@ -1336,11 +1348,11 @@ sub showArtSeek{
 			#スレッドごと検索
 			for(@file){
 				$_||last;
-				open(RD,'<'."$CF{'log'}$_.cgi")||die"Can't read log($_.cgi)[$?:$!]";
-				eval{flock(RD,1)};
+				open(FILE,'<'."$CF{'log'}$_.cgi")||die"Can't read log($_.cgi)[$?:$!]";
+				eval{flock(FILE,1)};
 				my$thread;
-				read(RD,$thread,-s"$CF{'log'}$_.cgi");
-				close(RD);
+				read(FILE,$thread,-s"$CF{'log'}$_.cgi");
+				close(FILE);
 				MirString->matchedItem($thread,$item,$seek)||next;
 				$result.=qq(<A href="$CF{'index'}?read=$_#art$_">No.$_</A>\n);
 			}
@@ -1348,11 +1360,11 @@ sub showArtSeek{
 			#記事ごと検索
 			for(@file){
 				$_||last;
-				open(RD,'<'."$CF{'log'}$_.cgi")||die"Can't read log($_.cgi)[$?:$!]";
-				eval{flock(RD,1)};
+				open(FILE,'<'."$CF{'log'}$_.cgi")||die"Can't read log($_.cgi)[$?:$!]";
+				eval{flock(FILE,1)};
 				my$thread;
-				read(RD,$thread,-s"$CF{'log'}$_.cgi");
-				close(RD);
+				read(FILE,$thread,-s"$CF{'log'}$_.cgi");
+				close(FILE);
 				index($thread,$IN{'seek'})+1||next;
 				my$i=$_;
 				for(MirString->matchedItems($thread,$item,$seek)){
@@ -1500,6 +1512,8 @@ _HTML_
 # Form内容取得
 #
 sub getParam{
+	my%option=@_;
+	
 	my$params;
 	my@params=();
 	#引数取得
@@ -1543,7 +1557,7 @@ sub getParam{
 		$j=MirString->getValidString($j);
 		#メインフレームの改行は\x85らしいけど、対応する必要ないよね？
 		$j=~s/\x0D\x0A/\n/go;$j=~tr/\r/\n/;
-		if('body'ne$i){
+		if(!$option{'noescape'}&&'body'ne$i){
 			#本文以外は全面タグ禁止
 			$j=~s/\t/&nbsp;&nbsp;/go;
 			$j=~s/&(#?\w+;)?/$1?"&$1":'&#38;'/ego;
@@ -1556,11 +1570,13 @@ sub getParam{
 		}#本文は後でまとめて
 		$DT{$i}=$j;
 	}
+	return%DT if$option{'nofiltering'};
 	
 	#引数の汚染除去
 	$IN{'ra'}=($ENV{'REMOTE_ADDR'}&&$ENV{'REMOTE_ADDR'}=~/([\d\:\.]{2,56})/o)?$1:'';
 	$IN{'hua'}=MirString->getValidString($ENV{'HTTP_USER_AGENT'});
 	$IN{'hua'}=~tr/\x09\x0A\x0D/\x20\x20\x20/;
+	
 	if(defined$DT{'body'}){
 		#記事書き込み
 		#http URL の正規表現
@@ -1637,16 +1653,16 @@ sub getParam{
 		{ #フォームの内容処理
 			for($CF{$IN{'_ArticleType'}&1?'chditm':'prtitm'}=~/\b(\w+)\b/go){
 				if('color'eq$_){
-					$IN{'color'}=($DT{'color'}=~/([\#\w\(\)\,]{1,20})/o)?$1:'';
+					$IN{'color'}=$DT{'color'}=~/([\#\w\(\)\,]{1,20})/o?$1:'';
 				}elsif('email'eq$_){
-					$IN{'email'}=($DT{'email'}=~/($mail_regex)/o)?$1:'';
+					$IN{'email'}=$DT{'email'}=~/($mail_regex)/o?$1:'';
 					$IN{'email'}=~s/\@/&#64;/;
 				}elsif('home'eq$_){
-					$IN{'home'}=($DT{'home'}=~/($http_URL_regex)/o)?$1:'';
+					$IN{'home'}=$DT{'home'}=~/($http_URL_regex)/o?$1:'';
 				}elsif('icon'eq$_){
-					$IN{'icon'}=($DT{'icon'}=~/(.+)/o)?$1:'';
+					$IN{'icon'}=$DT{'icon'}=~/(.+)/o?$1:'';
 				}elsif('cmd'eq$_){
-					$IN{'cmd'}=$1 if$DT{'cmd'}=~/(.+)/o;
+					$IN{'cmd'}=$DT{'cmd'}=~/(.+)/o?$1:'';
 				}elsif('subject'eq$_){
 					$IN{'subject'}=MirString->getTruncated($DT{'subject'}?$DT{'subject'}:$DT{'body'},70);
 				}elsif('ra'eq$_||'hua'eq$_){
@@ -1998,10 +2014,10 @@ sub showArticle{
 	
 	-e"$CF{'log'}$DT{'i'}.cgi"||return -isDeleted=>1;
 	
-	open(RD,'<'."$CF{'log'}$DT{'i'}.cgi")||die"Can't read log($DT{'i'}.cgi)[$?:$!]";
-	eval{flock(RD,1)};
-	my@articles=<RD>;
-	close(RD);
+	open(FILE,'<'."$CF{'log'}$DT{'i'}.cgi")||die"Can't read log($DT{'i'}.cgi)[$?:$!]";
+	eval{flock(FILE,1)};
+	my@articles=<FILE>;
+	close(FILE);
 	
 	my$maxChildsShown=$DT{'-maxChildsShown'}>-1?int(abs($DT{'-maxChildsShown'})):$#articles;
 	my$horizon=$#articles-$maxChildsShown;
@@ -2102,8 +2118,9 @@ sub setCookie{
 	my%DT=%{shift()};
 	$DT{'name'}||return undef;
 	unless($DT{'lastModified'}){
+		#本来非Cookie情報な%DT
 		if(%CK){
-			$DT{$_}||=$CK{$_}for keys%CK;
+			$DT{$_}=$CK{$_}for map{exists$DT{$_}}keys%CK;
 		}else{
 			%DT=%{&checkCookie(\%DT)};
 		}
@@ -2111,15 +2128,21 @@ sub setCookie{
 	my$setCookie;
 	my$expires=$^T+33554432; #33554432=2<<24; #33554432という数字に特に意味はない、ちなみに一年と少し
 	if($CF{'ckpath'}){
-		my$cookie=join('',map{"$_\t$DT{$_}\t"}("time expire lastModified"=~/\b(\w+)\b/go));
+		my$cookie='';
+		for("time expire lastModified"=~/\b(\w+)\b/go){
+			$cookie.=sprintf"%s\t%s\t",$_,defined$DT{$_}?$DT{$_}:'';
+		}
 		$cookie=~s/(\W)/'%'.unpack('H2',$1)/ego;
 		$setCookie="Mireille=$cookie; expires=".&datef($expires,'cookie');
-		$cookie=join('',map{"$_\t$DT{$_}\t"}("name pass lastModified $CF{'cokitm'}"=~/\b(\w+)\b/go));
+		for("name pass lastModified $CF{'cokitm'}"=~/\b(\w+)\b/go){
+			$cookie.=sprintf"%s\t%s\t",$_,defined$DT{$_}?$DT{$_}:'';
+		}
 		$cookie=~s/(\W)/'%'.unpack('H2',$1)/ego;
 		$setCookie.="\nMireille=$cookie; expires=".&datef($expires,'cookie')."; $CF{'ckpath'}";
 	}else{
-		my$cookie=join('',map{"$_\t$DT{$_}\t"}
-		("name pass time expire lastModified $CF{'cokitm'}"=~/\b(\w+)\b/go));
+		for("name pass time expire lastModified $CF{'cokitm'}"=~/\b(\w+)\b/go){
+			$cookie.=sprintf"%s\t%s\t",$_,defined$DT{$_}?$DT{$_}:'';
+		}
 		$cookie=~s/(\W)/'%'.unpack('H2',$1)/ego;
 		$setCookie="Mireille=$cookie; expires=".&datef($expires,'cookie');
 	}
@@ -2462,18 +2485,18 @@ sub iptico{
 		for($CF{'icls'}=~/("[^"\\]*(?:\\.[^"\\]*)*"|\S+)/go){
 			$_||next;
 			my$tmp;
-			open(RD,'<'.$_)||die"Can't open multi-iconlist($_).";
-			eval{flock(RD,1)};
-			read(RD,$tmp,-s$_);
-			close(RD);
+			open(FILE,'<'.$_)||die"Can't open multi-iconlist($_).";
+			eval{flock(FILE,1)};
+			read(FILE,$tmp,-s$_);
+			close(FILE);
 			$iconlist.=$tmp;
 		}
 	}else{
 		#単一アイコンリスト読み込み
-		open(RD,'<'.$CF{'icls'})||die"Can't open single-iconlist.";
-		eval{flock(RD,1)};
-		read(RD,$iconlist,-s$CF{'icls'});
-		close(RD);
+		open(FILE,'<'.$CF{'icls'})||die"Can't open single-iconlist.";
+		eval{flock(FILE,1)};
+		read(FILE,$iconlist,-s$CF{'icls'});
+		close(FILE);
 	}
 	
 	#選択アイコンの決定＋SELECTタグの中身
@@ -2950,22 +2973,29 @@ sub rvsij{
 # 初期設定
 #
 BEGIN{
-	# Mireille Error Screen 1.2.1
-	unless(%CF){
+	$CF{'index'}||='index.cgi';
+	$CF{'encoding'}||='euc-jp';
+	# Mireille Error Screen 1.2.2
+	unless($CF{'program'}){
 		$CF{'program'}=__FILE__;
 		$SIG{'__DIE__'}=$ENV{'REQUEST_METHOD'}?sub{
 			$_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/&&return;
-			print"Status: 200 OK\nContent-Language: ja-JP\nContent-type: text/plain; charset=$CF{'encoding'}"
-			."\n\n<PRE>\t:: Mireille ::\n   * Error Screen 1.2.1 (o__)o// *\n\n";
-			print"ERROR: $_[0]\n"if@_;
-			print join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(Index Style Core Exte))
-			."\n".join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(log icon icls style));
-			print"\n".join('',map{"$$_[0]\t: $$_[1]\n"}
-			([PerlVer=>$]],[PerlPath=>$^X],[BaseTime=>$^T],[OSName=>$^O],[FileName=>$0],[__FILE__=>__FILE__]))
-			."\n\t= = = ENV = = =\n".join('',map{sprintf"%-20.20s : %s\n",$_,$ENV{$_}}grep{$ENV{"$_"}}
-			qw(CONTENT_LENGTH QUERY_STRING REQUEST_METHOD
-			SERVER_NAME HTTP_HOST SCRIPT_NAME OS SERVER_SOFTWARE PROCESSOR_IDENTIFIER))
-			."\n+#      Airemix Mireille     #+\n+#  http://www.airemix.com/  #+";
+			print "Status: 200 OK\nContent-Language: ja-JP\nContent-type: text/html; charset=$CF{'encoding'}\n\n"
+				. "<HTML>\n<HEAD>\n"
+				.qq(<META http-equiv="Content-type" content="text/html; charset=$CF{'encoding'}">\n)
+				. "<TITLE>Mireille Error Screen 1.2.2</TITLE>\n"
+				. "</HEAD>\n<BODY>\n\n<PRE>\t:: Mireille ::\n   * Error Screen 1.2.2 (o__)o// *\n\n";
+			print "ERROR: $_[0]\n"if@_;
+			printf"%-20.20s : %s\n",$_,$CF{$_} for grep{$CF{$_}}qw(Index Style Core Exte);
+			print "\n";
+			printf"%-20.20s : %s\n",$_,$CF{$_} for grep{$CF{$_}}qw(index log icon icls style);
+			print "\n";
+			printf"%-20.20s : %s\n",$$_[0],$$_[1]
+				for([PerlVer=>$]],[PerlPath=>$^X],[BaseTime=>$^T],[OSName=>$^O],[FileName=>$0],[__FILE__=>__FILE__]);
+			print "\n = = = ENVIRONMENTAL VARIABLE = = =\n";
+			printf"%-20.20s : %s\n",$_,$ENV{$_} for grep{$ENV{$_}}
+		qw(CONTENT_LENGTH QUERY_STRING REQUEST_METHOD SERVER_NAME HTTP_HOST SCRIPT_NAME OS SERVER_SOFTWARE);
+			print "\n+#      Airemix Mireille     #+\n+#  http://www.airemix.com/  #+\n</PRE>\n</BODY>\n</HTML>\n";
 			exit;
 		}:sub{
 			if($_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/o){return}
@@ -2975,7 +3005,7 @@ BEGIN{
 	}
 	$CF{'_HiraganaLetterA'}->{'Core'}='あ';
 	# Version
-	$CF{'Version'}=join('.',q$Mireille: 1_2_12 $=~/\d+[a-z]?/go);
+	$CF{'Version'}=join('.',q$Mireille: 1_2_13 $=~/\d+[a-z]?/go);
 	($CF{'Core'}=q$Revision$)=~/(\d+((?:\.\d+)*))/o;
 	$CF{'CoreRevision'}=$1;
 	my$subver=$2;
