@@ -853,7 +853,7 @@ STRONG.s81a6{
 <H2 class="mode">: The Intoroduction to Mireille :</H2>
 
 <DIV class="hthread" style="text-align:left">
-<H2 class="list"><A name="Mireilleの特徴">◇Mireilleの特徴</A></H2>
+<H2 class="list">◇<A name="Mireilleの特徴">Mireilleの特徴</A></H2>
 <UL>
 	<LI><H3 class="list"><A name="Mireilleとは">Mireilleとは</A></H3>
 		基本的には、レスアイコン掲示板です<BR>
@@ -887,7 +887,7 @@ STRONG.s81a6{
 		<LI>書き込みがあると指定メールアドレスにメールを送る<BR>
 		（除外アドレス設定可能:管理人の書き込みは知らせないとか）</LI>
 		<LI>管理人パスワードによる記事削除・編集機能</LI>
-		<LI>1スレッドあたりの子記事の最大数を決めて、それを超えたらそれいじょう投稿できないようにできる</LI>
+		<LI>1スレッドあたりの子記事の最大数を決めて、それを超えたらそれ以上投稿できないようにできる</LI>
 		<LI>ログの最大数を決めて、それを超えたら、スレッドファイルの削除・変更・GZIP圧縮によって記事を削除できる</LI>
 		<LI>ログのバックアップがしやすい（1スレッド1ファイルなのでバックアップが比較的お手軽に可能）<BR>
 		過去ログも、「ファイル名変更」なら拡張子.bakになったのものだけ回収すれば大丈夫です<BR>
@@ -900,7 +900,7 @@ STRONG.s81a6{
 		<LI>管理CGIからアイコンリストを2通りの方法から選んで編集できる</LI>
 		<LI>管理CGIでアイコンリストから、アイコン見本のHTMLを生成できる</LI>
 		<LI>管理CGIからログ削除・ログ詰めができる</LI>
-		<LI>HTML/CSSの知識があれば、記事表示・投稿画面を始めとする部分のデザインが変更可能で、<BR>
+		<LI>HTML/CSSの知識があれば、style.cssの改造により記事表示や投稿画面などのデザインが変えられ、<BR>
 		Perlの知識があれば、style.plからサブルーチンをオーバーライドしたりすることでさらに大幅に改造できる</LI>
 	</UL>
 	</LI>
@@ -958,27 +958,28 @@ STRONG.s81a6{
 </DIV>
 
 <DIV class="hthread" style="text-align:left">
-<H2 class="list"><A name="設置の説明書">◇設置の説明書</A></H2>
-<DIV style="margin-top:0.5em;margin-left:1em;text-align:left;width:95%">
-この説明ファイルは、HTMLのみで構成されたサイトは作れる方、<BR>
-とりあえず圧縮解凍、FTPによるアップロードは知っている人に書かれています<BR>
-「ホームページって何？どうやって作るの？」という方は想定していません<BR>
-そこまで範囲を広げると「設置の説明書」のレベルを越えてしまうため、ご了承ください<BR>
-また、このCGIでは漢字コードにEUC-JPを使用しているため、Windows標準のメモ帳では読めません<BR>
-<A href="http://www2s.biglobe.ne.jp/~t-susumu/toclip/">TeraPad</A>、<A href="http://hidemaru.xaxon.co.jp/">秀丸エディタ</A>、<A href="http://sakura-editor.sourceforge.net/index-j.html">さくらエディタ</A>などのEUC-JPも読めるエディタをお使いください<BR>
-CGI自体を編集する場合は、以上に挙げたエディタに搭載されている、<BR>
-「色づけ機能」を使うと効率が格段に上がるとおもいます<BR>
-<BR>
-ちなみに、以上に挙げたエディタを使っても、文字化けして表示される場合は、<BR>
-メニューバーの「ファイル」→「漢字指定コード指定再読み込み」→「EUC」（TeraPadの場合）<BR>
-としたり、「ファイル」→「開く」で、「漢字コード」を「EUC」にして開いたりしてください<BR>
-<BR>
-TeraPadの場合には、オプション設定自体を変更して、<BR>
-「表示」→「 オプション」→「ウィンドウ/漢字コード」タブ→「漢字コード」グループで、<BR>
-・漢字/改行コードを自動認識する　にチェックをつける<BR>
-・下の二つで両方「読み込み時の○○コードと同じ」を選ぶ<BR>
-とすれば、自動で文字化けしないようにしてくれます</DIV>
-<OL>
+<H2 class="list">◇<A name="設置の説明書">設置の説明書</A></H2>
+<OL start="0">
+	<LI><H3 class="list"><A name="まずはじめに">まずはじめに</A></H3>
+	この説明ファイルは、HTMLのみで構成されたサイトは作れる方、<BR>
+	とりあえず圧縮解凍、FTPによるアップロードは知っている人に書かれています<BR>
+	「ホームページって何？どうやって作るの？」という方は想定していません<BR>
+	そこまで範囲を広げると「設置の説明書」のレベルを越えてしまうため、ご了承ください<BR>
+	また、このCGIでは漢字コードにEUC-JPを使用しているため、Windows標準のメモ帳では読めません<BR>
+	<A href="http://www2s.biglobe.ne.jp/~t-susumu/toclip/">TeraPad</A>、<A href="http://hidemaru.xaxon.co.jp/">秀丸エディタ</A>、<A href="http://sakura-editor.sourceforge.net/index-j.html">さくらエディタ</A>などのEUC-JPも読めるエディタをお使いください<BR>
+	CGI自体を編集する場合は、以上に挙げたエディタに搭載されている、<BR>
+	「色づけ機能」を使うと効率が格段に上がるとおもいます<BR>
+	<BR>
+	ちなみに、以上に挙げたエディタを使っても、文字化けして表示される場合は、<BR>
+	メニューバーの「ファイル」→「漢字指定コード指定再読み込み」→「EUC」（TeraPadの場合）<BR>
+	としたり、「ファイル」→「開く」で、「漢字コード」を「EUC」にして開いたりしてください<BR>
+	<BR>
+	TeraPadの場合には、オプション設定自体を変更して、<BR>
+	「表示」→「 オプション」→「ウィンドウ/漢字コード」タブ→「漢字コード」グループで、<BR>
+	・漢字/改行コードを自動認識する　にチェックをつける<BR>
+	・下の二つで両方「読み込み時の○○コードと同じ」を選ぶ<BR>
+	とすれば、自動で文字化けしないようにしてくれます</LI>
+	
 	<LI><H3 class="list"><A name="DLから解凍まで">DLから解凍まで</A></H3>
 	まずダウンロードした圧縮ファイル（例えばMirR1233.ZIP）を適当なフォルダ内に解凍します<BR>
 	この時フォルダ内には
@@ -987,25 +988,25 @@ TeraPadの場合には、オプション設定自体を変更して、<BR>
 		<TR><TH scope="row">パス</TH><TH scope="row">備考</TH></TR>
 		</THEAD>
 		<TBODY>
-		<TR><TH scope="col">/Mireille.txt</TD>		<TD>MireilleのReadme</TD></TR>
-		<TR><TH scope="col">/Mireille.html</TD>		<TD>Mireilleの説明書</TD></TR>
-		<TR><TH scope="col">/init/log/</TD>			<TD>ログ保存フォルダ</TD></TR>
-		<TR><TH scope="col">/init/log/0.cgi</TD>	<TD>記事情報ファイル</TD></TR>
-		<TR><TH scope="col">/init/</TD>				<TD>最初設置するときに使うファイル群</TD></TR>
-		<TR><TH scope="col">/init/index.cgi</TD>	<TD>CGI起動ファイル兼設定</TD></TR>
-		<TR><TH scope="col">/init/icon.txt</TD>		<TD>アイコンリスト</TD></TR>
-		<TR><TH scope="col">/init/iconctlg.cgi</TD>	<TD>アイコン見本</TD></TR>
-		<TR><TH scope="col">/init/style.css</TD>	<TD>スタイルシート</TD></TR>
-		<TR><TH scope="col">/scpt/</TD>				<TD>スクリプト本体のファイル群</TD></TR>
-		<TR><TH scope="col">/scpt/core.cgi</TD>		<TD>Mireille本体</TD></TR>
-		<TR><TH scope="col">/scpt/style.pl</TD>		<TD>Mireilleスタイル設定</TD></TR>
-		<TR><TH scope="col">/scpt/help.pl</TD>		<TD>ヘルプ</TD></TR>
-		<TR><TH scope="col">/scpt/artnavi.js</TD>	<TD>記事ナビJavaScript</TD></TR>
-		<TR><TH scope="col">/opti/</TD>				<TD>設置してもしなくてもいいファイル群</TD></TR>
-		<TR><TH scope="col">/opti/manage.cgi</TD>	<TD>管理CGI</TD></TR>
-		<TR><TH scope="col">/opti/convert12.cgi</TD><TD>ログファイルを他形式から1.2形式に変換する</TD></TR>
-		<TR><TH scope="col">/opti/notify.pl</TD>	<TD>メールによるお知らせ機能を使うときに設置する</TD></TR>
-		<TR><TH scope="col">/opti/.htaccess</TD>	<TD>.htaccessファイル</TD></TR>
+		<TR><TH scope="col">/Mireille.txt</TH>		<TD>MireilleのReadme</TD></TR>
+		<TR><TH scope="col">/Mireille.html</TH>		<TD>Mireilleの説明書</TD></TR>
+		<TR><TH scope="col">/init/log/</TH>			<TD>ログ保存フォルダ</TD></TR>
+		<TR><TH scope="col">/init/log/0.cgi</TH>	<TD>記事情報ファイル</TD></TR>
+		<TR><TH scope="col">/init/</TH>				<TD>最初設置するときに使うファイル群</TD></TR>
+		<TR><TH scope="col">/init/index.cgi</TH>	<TD>CGI起動ファイル兼設定</TD></TR>
+		<TR><TH scope="col">/init/icon.txt</TH>		<TD>アイコンリスト</TD></TR>
+		<TR><TH scope="col">/init/iconctlg.cgi</TH>	<TD>アイコン見本</TD></TR>
+		<TR><TH scope="col">/init/style.css</TH>	<TD>スタイルシート</TD></TR>
+		<TR><TH scope="col">/scpt/</TH>				<TD>スクリプト本体のファイル群</TD></TR>
+		<TR><TH scope="col">/scpt/core.cgi</TH>		<TD>Mireille本体</TD></TR>
+		<TR><TH scope="col">/scpt/style.pl</TH>		<TD>Mireilleスタイル設定</TD></TR>
+		<TR><TH scope="col">/scpt/help.pl</TH>		<TD>ヘルプ</TD></TR>
+		<TR><TH scope="col">/scpt/artnavi.js</TH>	<TD>記事ナビJavaScript</TD></TR>
+		<TR><TH scope="col">/opti/</TH>				<TD>設置してもしなくてもいいファイル群</TD></TR>
+		<TR><TH scope="col">/opti/manage.cgi</TH>	<TD>管理CGI</TD></TR>
+		<TR><TH scope="col">/opti/convert12.cgi</TH><TD>ログファイルを他形式から1.2形式に変換する</TD></TR>
+		<TR><TH scope="col">/opti/notify.pl</TH>	<TD>メールによるお知らせ機能を使うときに設置する</TD></TR>
+		<TR><TH scope="col">/opti/.htaccess</TH>	<TD>.htaccessファイル</TD></TR>
 		</TBODY>
 	</TABLE>
 	となっているはずです</LI>
@@ -1065,14 +1066,14 @@ TeraPadの場合には、オプション設定自体を変更して、<BR>
 	Mireille.htmlやMireille.txtを隅々まで見るとヒントが載っているかもしれません</LI>
 
 	<LI><H3 class="list"><A name="アイコンの設定方法">アイコンの設定方法</A></H3>
-	Mireilleの設置テストが成功したらアイコンを設定しましょう<BR>
+	<P>Mireilleの設置テストが成功したらアイコンを設定しましょう<BR>
 	例えばMireilleをhttp://www.server.jp/~username/mireille_directory/index.cgiに設置したとします<BR>
 	<EM>www.server.jp</EM>は使っているプロバイダやレンタルサーバーのドメインに、<BR>
 	<EM>~username</EM>はそのサーバーでのユーザー名に、<BR>
 	<EM>mireille_directory</EM>は設置したMireilleのディレクトリに、<BR>
 	適宜置き換えてください（独自ドメインの場合でユーザー名が必要ないときは省略すること）<BR>
 	<BR>
-	実際の手順は以下の通りです
+	実際の手順は以下の通りです</P>
 	<OL>
 		<LI><H4 class="list">アイコンフォルダの準備</H4>
 		まず自分のコンピュータ上で、アイコンの入ったフォルダを作成します<BR>
@@ -1142,13 +1143,18 @@ TeraPadの場合には、オプション設定自体を変更して、<BR>
 		<BR>
 		編集が終わったら、ＯＫを押して完了です。<BR>
 		最後に、管理CGIをWeb上から削除しましょう。<BR>
-		放置しておくと<STRONG class="warning">キケン</STRONG>です。<BR>
-		<BR>
-		以上の操作が上手くいったら、アイコンが無事表示されるはずです<BR>
-		もし、表示されない場合は、ミスをチェックして<BR>
-		どうしてもわからない場合は、ソフトウェア関係に詳しい友人に聞くか、成瀬に掲示板で聞いてください<BR>
-		5時間も悩むのは得策ではありません（爆</LI>
+		放置しておくと<STRONG class="warning">キケン</STRONG>です。</LI>
 	</OL>
+	
+	<P>上の操作が上手くいったら、アイコンが無事表示されるはずです<BR>
+	もし、表示されない場合は、ミスをチェックして<BR>
+	どうしてもわからない場合は、ソフトウェア関係に詳しい友人に聞くか、成瀬に掲示板で聞いてください<BR>
+	5時間も悩むのは得策ではありません（爆</P>
+	
+	<P><STRONG class="warning">※警告！<BR>
+	アイコンの著作権には十分注意を払ってください。<BR>
+	ゲームの画像を切り出して使ったり、Webサイトで使われている画像を勝手に拾ってきた場合、<BR>
+	著作者の権利を侵害してしまうことがあります。</STRONG></P>
 	</LI>
 
 	<LI><H3 class="list"><A name="もうちょっと細かく設定とか、さらには改造とか">もうちょっと細かく設定とか、さらには改造とか</A></H3>
@@ -1165,9 +1171,10 @@ TeraPadの場合には、オプション設定自体を変更して、<BR>
 		管理CGIの「アイコン見本の更新」を使います<BR>
 		（1.2.3.5からはiconctlg.cgiを使うようになったので、icon.htmlを生成する必要はありません）<BR>
 		<BR>
-		<STRONG class="warning">注意！</STRONG><BR>
-		アイコンを調達する際には、必ず製作者のサイトから頂いてきてください<BR>
-		他の掲示板のアイコンをそのまま拝借するのは好ましいことではありません<BR>
+		<STRONG class="warning">※警告！</STRONG><BR>
+		アイコンを調達する際には、必ず製作者のサイトから頂いてきてください。<BR>
+		他の掲示板のアイコンをそのまま拝借するのは好ましいことではありませんし、<BR>
+		その掲示板の管理者さんにも迷惑をかけることになります。<BR>
 		また欲しいアイコンが既に配布が終了されている場合は潔くあきらめてください＾＾；；</LI>
 		
 		<LI><H4 class="list">外部CSSまわり</H4>
@@ -1237,7 +1244,7 @@ $CF{'navjs'}='../bbs/artnavi.js';
 	その後21行目の$AM{'pass'}を設定してください<BR>
 	設定したらFTPで以下のように設置します<BR>
 	この際<STRONG class="warning">必ずファイル名を変更してアップロード</STRONG>してください<BR>
-	<CODE>/bbs/E36Vj4tGiHQ.cgi 755(700) 管理CGI</CODE>（'E36Vj4tGiHQ.cgi'にファイル名を変更した場合）<BR>
+		<PRE>/bbs/E36Vj4tGiHQ.cgi 755(700) 管理CGI（'E36Vj4tGiHQ.cgi'にファイル名を変更した場合）</PRE>
 	使用法は表示にしたがってください<BR>
 	わかりにくいところがあれば、言ってください<BR>
 	表記を変えるなり、これに書き加えるなりします<BR>
@@ -1257,7 +1264,103 @@ $CF{'navjs'}='../bbs/artnavi.js';
 </DIV>
 
 <DIV class="hthread" style="text-align:left">
-<H2 class="list"><A name="Mireilleの注意事項">◇Mireilleの注意事項</A></H2>
+<H2 class="list">◇<A name="設置の説明書">設置した後の運用</A></H2>
+<DIV style="border:1px solid #cdf;margin-left:1.5em;margin-bottom:1em;padding:5px">
+<H3 class="list"><A name="Mireilleをバージョンアップする時">Mireilleをバージョンアップする時</A></H3>
+<P>基本的には、core.cgi, style.pl, artnavi.js, iconctlg.cgiを上書きすればOKです。</P>
+<P>style.cssを自分で改造していないのなら、style.cssも上書きした方が良いですが、<BR>
+style.cssは多少古いものでも動作するように作ってあるので、上書きしなくても大丈夫です。<BR>
+ただ、style.cssの変更はブラウザの表示をより綺麗にするため、のものが多いので、<BR>
+OperaやMozillaを使う人が多い掲示板では、まめにstyle.cssをバージョンアップした方がよいかもしれません。<BR>
+また、style.cssを改造している方も、時々は新しいバージョンをベースに、style.cssを改造しなおした方がよいとは思います。</P>
+<P>index.cgiは後方互換性に気を使っているので、かなり古いものでも動作するはずです。<BR>
+確認した限りでは1.2.2.8以降のindex.cgiなら、それ以降に追加された新機能はつかえませんが、とりあえず動作はします。</P>
+<P>もしindex.cgiやstyle.cssに、それまでのバージョンと著しく互換性を損なう変更場行われた時は、<BR>
+Mireille.txtの更新履歴の部分にそのことが書かれるので、対応策はそこを参照してください。<BR>
+特別に注意することが書いてない場合は、互換性があると考えてよいです。</P>
+<P>バージョンアップについては以上の通りですが、上の説明はindex.cgiとstyle.css以外は改造していない場合の話です。<BR>
+core.cgiやstyle.plなどに手を入れている場合は、現在考慮に入れてません。<BR>
+もしindex.cgiとstyle.css以外を改造している方は名乗り出てくだされば、考慮して開発するようにします。</P>
+</DIV>
+
+<DIV style="border:1px solid #cdf;margin-left:1.5em;margin-bottom:1em;padding:5px">
+<H3 class="list"><A name="過去ログの扱い">過去ログの扱い</A></H3>
+<P>Mireilleでは過去ログを圧縮して保存するようにしているので、ファイルスペースへの負担は比較的軽いのですが、<BR>
+それでも長い間ほったらかしにしていると、思わぬサイズになってしまうことがあります。<BR>
+なので、定期的に整理するようにしましょう。（過去ログが100ファイルを超えたら、くらいかな）</P>
+<P>整理するには二通りあるかと思います。<BR>
+未練を残さず削除してしまうのと、ローカルにダウンロードした上でサーバー上のファイルを削除するのと、になるのですが、<BR>
+後者ではダウンロード時に注意すべき点が一点あります。</P>
+<P>Mireilleでは、1.cgiをGZIP圧縮で削除した場合、「1.cgi-(GZIP圧縮)→1.gz」とした後に、<BR>
+このままだと管理者以外でも過去ログをダウンロードできてしまうため、「1.gz-(ファイル名変更)→1.gz.cgi」とします。<BR>
+.htaccessのようにlogディレクトリからのダウンロードを不許可にできれば、こんな小細工も必要ないのですが、<BR>
+色々なサーバーで動くようにすると、.htaccessに頼りきりになるわけにも行かないため、このような仕様になっています。</P>
+<P>で、このファイル名変更処理は所詮小手先の業なため副作用が出ます。<BR>
+Windows向けFTPソフトにはファイルの転送モードが「テキスト/ASCIIモード」と「バイナリモードが」あります。<BR>
+二つの違いは、ASCIIモードだとファイル転送時に<CODE>s/\x0a/\x0d\x0a/g</CODE>し、バイナリモードではしません。</P>
+<P class="note">テキストファイルとは文字情報を保存しているファイル。<BR>
+バイナリファイルは絵や音、プログラムなどのファイル。<BR>
+テキストファイルでは、OSごとに改行文字が異なるため、改行文字を変換する必要があります。</P>
+<P>で、ちょっと気の利いたFTPソフトは、ファイルの拡張子によってこの転送モードを自動的に切り替えてくれるのです。<BR>
+拡張子cgiは普通テキストなので、「ASCIIモード」でファイル転送が行われます。<BR>
+1.gz.cgiはGZIP圧縮しているので実はバイナリファイルなのに・・・<BR>
+「ASCIIモード」で転送された1.gz.cgiは、哀れ、トンチンカンな改行処理をくらって、ファイルが破壊されます。</P>
+<P>で、対策ですが簡単です。ダウンロード前に1.gzに戻してダウンロードすれば、<BR>
+FTPソフトはgzはバイナリファイルだと知っているので、破壊されることはないです。<BR>
+（転送モードの自動判定をOFFにして、バイナリモードを強制して、ダウンロードしてもOKです。)</P>
+</DIV>
+
+<DIV style="border:1px solid #cdf;margin-left:1.5em;margin-bottom:1em;padding:5px">
+<H3 class="list"><A name="荒らしが来たら">荒らしが来たら</A></H3>
+<P>「荒らしになりそうな人にはサイトのURLを教えない」、「荒らされそうなコンテンツを扱わない」、<BR>
+といった事前策があるのですが、来てしまったものは仕方がありません。<BR>
+早速撃退策を練りましょう。</P>
+<P>心に余裕のある方だったら、荒らしをからかって暇つぶし、飽きたらポイ捨て、というのも趣があり、おもしろいのですが、<BR>
+みながそんな気分なはずもないので、まじめにいきます。<BR>
+世の荒らし対策ページ、というので紹介される対策は、主に以下の三種類でしょう。<P>
+<OL>
+<LI>荒されても無視しよう</LI>
+<LI>荒らし対策BBSを導入しよう</LI>
+<LI>荒らした人のIPをみて追跡しよう</LI>
+</OL>
+<P>一つ目は定石中の定石、基本中の基本です。<BR>
+世の荒らしの8割以上は愉快犯という統計もある（ほんとか？）通り、荒らしはおもしろくなければ止みます。<BR>
+なので「荒らしている人のことを罵倒しよう」というのは、荒らしを止めさせたいのであれば絶対にやってはいけません。<BR>
+（逆に暇ならちゃんと相手をしてあげないとダメです。）</P>
+<P>二つ目も定石といえば定石なのですが、今となってはあまり効果がないように思えます。<BR>
+荒らし対策BBSの「荒らし対策」とは機械化された自動の荒らしを指すことが多く、自動化荒らしへの対策がなされています。<BR>
+しかし、今時の技術的レベルの低い荒らしには逆に無力です。<BR>
+「騙り（他の人の名前を偽って発言し、場を混乱させること）」への対策として導入された「トリップ」機能は、<BR>
+ある程度有効かもしれませんが、荒らし対策BBSで今時の荒らしを止めさせることは困難だと思われます。</P>
+<P>三つ目は確実ではありますが、高い技術を持っていないとできませんし、Proxyを使える人相手では技術戦になりがちですが、<BR>
+時によっては一発で荒らしに止めをさせるので確実です。<BR>
+具体的な手法についてはgoogleで「荒らし対策」「追跡」などのキーワードで検索してください。</P>
+<P>とは言っても、やはり自分で荒らしのISPを突き止めるのは大変です。<BR>
+大手プロバイダの「ホームページスペース」を使っていたり、一部の有料レンタルサーバーを使っているなどで、<BR>
+サーバーが面倒のいいところの場合は、サーバーに泣きつくのも一つの手段です。<BR>
+基本的に大手はスペースの値段が割高なのですが、それはこういうときのサポートのために割高になっているのだ、<BR>
+と自分勝手な解釈をして助けを求めれば、それなりの対応をとってくれるかもしれません。<BR>
+その際は荒らされたログをとっておき、見せることを忘れずに。<BR>
+こちら側のプロバイダが、荒らし側のプロバイダを責めるときに、荒らされたログが必要ですので、必ずとっておきましょう。</P>
+<P>また、自分の側のサーバーが頼りない時でも、荒らされ方によっては、他を頼ることができます。<BR>
+荒らしの文言に「殺してやる」とかそれに類する言葉があった場合、脅迫として警察に駆け込めるかもしれません。<BR>
+一昔前では「民事不介入」などとのたまうばかりで頼りにならなかったようですが、<BR>
+近頃は何件か「脅迫として逮捕した」と報道もされているなので、結構頼りになるようです。<BR>
+この場合でもログが絶対に必要です。</P>
+<P>荒らされることと、それに打ち勝つことはは、有名ページへと上り詰めるためには必要不可欠なステップです。<BR>
+Webの星を目指すため、重いコンダラをひきひき、試練の道を行って、ど根性を見せてください。（謎</P>
+</DIV>
+<!--
+この章だけデザインが違うけど、きにしない、きにしない。。
+<DIV style="border:1px solid #cdf;margin-left:1.5em;margin-bottom:1em;padding:5px">
+<H3 class="list"><A name=""></A></H3>
+</DIV>
+-->
+</DIV>
+
+
+<DIV class="hthread" style="text-align:left">
+<H2 class="list">◇<A name="Mireilleの注意事項">Mireilleの注意事項</A></H2>
 <UL>
 	<LI><H3 class="list"><A name="漢字コード">漢字コード</A></H3>
 	Mireilleは、このMireille.txtとそのほか一部のファイルを除いて全て、<BR>
@@ -1530,7 +1633,7 @@ $IC{'hoe'}='moe.png'; #乃絵</CODE></PRE>
 </DIV>
 
 <DIV class="hthread" style="text-align:left">
-<H2 class="list"><A name="Mireilleの設置でつまづいたら">◇Mireilleの設置でつまづいたら</A></H2>
+<H2 class="list">◇<A name="Mireilleの設置でつまづいたら">Mireilleの設置でつまづいたら</A></H2>
 <UL>
 	<LI><H3 class="list"><A name="動かない！とき">動かない！とき</A></H3>
 	まず、<STRONG>「500 Internal Server Error」と表示される場合</STRONG>は、<BR>
@@ -1547,7 +1650,7 @@ $IC{'hoe'}='moe.png'; #乃絵</CODE></PRE>
 		アップロードしなおしてみてください</LI>
 		<LI>「最初の一行」が正しくない<BR>
 		いわゆる「最初の一行」が正しくない可能性があります<BR>
-		<CODE>#!/usr/local/bin/perl</CODE>と<CODE>#!/usr/bin/perl</CODE>を両方試して、<BR>
+		とりあえず<CODE>#!/usr/local/bin/perl</CODE>と<CODE>#!/usr/bin/perl</CODE>を両方試してみて、<BR>
 		だめだった場合は、プロバイダーやレンタルサーバーに聞いてみてください</LI>
 	</UL>
 	
@@ -1616,7 +1719,7 @@ $IC{'hoe'}='moe.png'; #乃絵</CODE></PRE>
 </DIV>
 
 <DIV class="hthread" style="text-align:left">
-<H2 class="list"><A name="お世話になったところ">◇お世話になったところ</A></H2>
+<H2 class="list">◇<A name="お世話になったところ">お世話になったところ</A></H2>
 <UL>
 <LI><H3 class="list"><A href="http://www.tg.rim.or.jp/~hexane/ach/" title="Academic HTML">Academic HTML</A></H3>
 HTML,CSSに関する的確な情報がたくさんあります<BR>
