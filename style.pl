@@ -30,6 +30,7 @@ $CF{'head'}=<<"_CONFIG_";
 <LINK rel="Index" href="$CF{'index'}">
 <LINK rel="Help" href="$CF{'index'}?help">
 <LINK rel="Stylesheet" type="text/css" href="$CF{'style'}">
+<LINK rel="Alternate" type="application/rss+xml" title="RSS" href="$CF{'self'}?rss">
 <TITLE>$CF{'title'}</TITLE>
 _CONFIG_
 
