@@ -306,12 +306,12 @@ $CF{'wrtfm'}=<<'_CONFIG_';
 <INPUT type="text" name="home" id="home" maxlength="80" value="$DT{'home'}">
 </TD>
 </TR>
-<TR title="Password&#10;削除/修正時に使用するパスワードを入力します（必須）&#10;最高半角24文字までです">
+<TR title="Password&#10;削除/修正時に使用するパスワードを入力します（必須）&#10;最低8文字・最高128文字です">
 <TH class="item">
 <LABEL accesskey="p" for="pass">■パスワード(<SPAN class="ak">P</SPAN>)：</LABEL>
 </TH>
 <TD class="input">
-<INPUT type="password" name="pass" id="pass" maxlength="24" value="$DT{'pass'}">
+<INPUT type="text" name="pass" id="pass" maxlength="128" value="$DT{'pass'}">
 　
 <SPAN title="Color&#10;本文の色を入力します">
 <SPAN class="item">
@@ -410,12 +410,12 @@ $CF{'resfm'}=<<'_CONFIG_';
 <INPUT type="text" name="home" id="home" maxlength="80" value="$DT{'home'}">
 </TD>
 </TR>
-<TR title="Password&#10;削除/修正時に使用するパスワードを入力します（必須）&#10;最高半角24文字までです">
+<TR title="Password&#10;削除/修正時に使用するパスワードを入力します（必須）&#10;最低8文字・最高128文字です">
 <TH class="item">
 <LABEL accesskey="p" for="pass">■パスワード(<SPAN class="ak">P</SPAN>)：</LABEL>
 </TH>
 <TD class="input">
-<INPUT type="password" name="pass" id="pass" maxlength="24" value="$DT{'pass'}">
+<INPUT type="text" name="pass" id="pass" maxlength="128" value="$DT{'pass'}">
 　
 <SPAN title="Color&#10;本文の色を入力します">
 <SPAN class="item">
@@ -486,6 +486,10 @@ $	この記事の情報
 	$DT{'home'}&&=qq(<A href="$DT{'home'}" target="_top">【HOME】</A>);
 	$DT{'date'}=&date($DT{'time'}); #UNIX秒から日付に
 	$DT{'-iconTag'}=&getIconTag(\%DT)||'&nbsp;';
+	
+	#署名
+	$DT{'name'}.=&getSignature2($DT{'signature'})if$CF{'signature'}&&$DT{'signature'};
+	
 	#未読記事に印
 	$DT{'time'}>$CK{'time'}&&($DT{'date'}=qq(<SPAN class="new">$DT{'date'}</SPAN>));
 	$DT{'time'}>$^T-$CF{'newnc'}&&($DT{'new'}=$CF{'new'});
@@ -538,6 +542,10 @@ $	この記事の情報
 	$DT{'home'}&&=qq(<A href="$DT{'home'}" target="_top">【HOME】</A>);
 	$DT{'date'}=&date($DT{'time'}); #UNIX秒から日付に
 	$DT{'-iconTag'}=&getIconTag(\%DT)||'&nbsp;';
+	
+	#署名
+	$DT{'name'}.=&getSignature2($DT{'signature'})if$CF{'signature'}&&$DT{'signature'};
+	
 	#未読記事に印
 	$DT{'time'}>$CK{'time'}&&($DT{'date'}=qq(<SPAN class="new">$DT{'date'}</SPAN>));
 	$DT{'time'}>$^T-$CF{'newnc'}&&($DT{'new'}=$CF{'new'});
@@ -596,6 +604,20 @@ _HTML_
 <TABLE border="0" cellspacing="0" class="foot" summary="ArticleFooter" width="100%"><TR>
 <TH align="right" width="100%"><P align="right"><A accesskey="$DT{'ak'}" name="res$DT{'i'}" class="warning"
  href="#res$DT{'i'}">この記事スレッドNo.$DT{'i'}は子記事数制限に達したので返信できません(<SPAN
+ class="ak">$DT{'ak'}</SPAN>)</A></P></TH>
+</TR></TABLE>
+</DIV>
+
+
+_HTML_
+#memo.
+#返信モードがないのに「href="#res$DT{'i'}"」とリンクを張っているのは、アクセスキーを使用可能にするため
+		}elsif($DT{'-isLocked'}){
+			#スレッドがロックされている
+			print<<"_HTML_";
+<TABLE border="0" cellspacing="0" class="foot" summary="ArticleFooter" width="100%"><TR>
+<TH align="right" width="100%"><P align="right"><A accesskey="$DT{'ak'}" name="res$DT{'i'}" class="warning"
+ href="#res$DT{'i'}">この記事スレッドNo.$DT{'i'}はロックされているので返信できません(<SPAN
  class="ak">$DT{'ak'}</SPAN>)</A></P></TH>
 </TR></TABLE>
 </DIV>
