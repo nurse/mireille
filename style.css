@@ -404,7 +404,7 @@ TABLE.note{
 DIV.note{
 	border: #6ac solid 5px;
 	margin: 0 auto;
-	padding: 0;
+	padding: 0.1em;
 	margin-top:0;margin-bottom:0;
 }
 UL.note{
@@ -416,6 +416,7 @@ UL.note{
 P.note{
 	background-color: #eef;
 	border: #6ac solid 2px;
+	margin: 0.5em auto;
 	padding: 0.5em;
 	width: 60%;
 }
@@ -711,28 +712,24 @@ H3.list{
 	color: #05a;
 	font-size: 15px;
 	font-weight: normal;
-	margin: 0.3em auto 0em auto;
+	margin: 0.4em auto 0 auto;
 	padding: 1px;
-	position: relative;
-	bottom: 2px;
 	text-align: left;
 	vertical-align: middle;
 	width: 100%;
-	margin-top:0.3em;margin-bottom:0em;
+	margin-top:0.4em;margin-bottom:0;
 }
 H4.list{
 	background-color: #eef;
 	color: #55f;
 	font-size: 100%;
 	font-weight: normal;
-	margin: 0.5em auto 0em auto;
+	margin: 0.4em auto 0 auto;
 	padding: 1px;
-	position: relative;
-	bottom: 2px;
 	text-align: left;
 	vertical-align: middle;
 	width: 100%;
-	margin-top:0.3em;margin-bottom:0em;
+	margin-top:0.4em;margin-bottom:0;
 }
 
 /* ===================== 記事ナビ ===================== */
