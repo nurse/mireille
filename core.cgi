@@ -86,23 +86,32 @@ sub main{
 #
 sub showCover{
 	#-----------------------------
-	#¥Ú¡¼¥¸½èÍý
+	#³Æ¼ï¾ðÊó¼èÆÀ
+	$CK{'time'}=$^T-$CF{'newnc'}unless&getCookie;
 	&logfiles($CF{'sort'});
 	!@file&&$file[$#file-1]&&push(@file,0);
-	if(!$IN{'read'}){
+	#%Z0||&getZeroInfo;
+	
+	#-----------------------------
+	#$IN{'page'}¤ÎÀßÄê
+	unless($IN{'read'}){
+		#Ä¾ÀÜpage¤ò»ØÄê
+		$IN{'page'}=1if$IN{'page'}>($#file-1)/$CF{'page'}+1;
 	}elsif($IN{'read'}<$file[$#file-1]){
 		#¸Å¤¹¤®¤ëµ­»ö
 		$IN{'page'}=int(($#file-1)/$CF{'page'})+1;
 	}elsif($file[0]<$IN{'read'}){
 		#Ì¤Íè¤Îµ­»ö
-		$IN{'page'}=1;
 	}else{
+		#ÀµÅö¤Ã¤Ý¤¤µ­»ö»ØÄê
 		my$thread=$CF{'page'};
 		for(@file){
-			$_==$IN{'read'}&&last;
+			if($_==$IN{'read'}){
+				$IN{'page'}=int($thread/$CF{'page'});
+				last;
+			}
 			++$thread;
 		}
-		$IN{'page'}=int($thread/$CF{'page'});
 	}
 	
 	#-----------------------------
@@ -110,13 +119,13 @@ sub showCover{
 	my%NEW;
 	my@view=map{$NEW{"$_"}=qq(<A href="index.cgi?read=$_#art$_" class="new">$_</A>)}
 	grep{$zer2[$_-$zer2[0]]>$CK{'time'}}grep{$_>$zer2[0]}@file;
-
+	
 	#-----------------------------
 	#Ì¤ÆÉµ­»ö¤Î¤¢¤ë¥¹¥ì¥Ã¥É
 	my$unread='';
 	if(@view){
 		# 20 : Ì¤ÆÉµ­»ö¤Î¤¢¤ë¥¹¥ì¥Ã¥É¤¬¤¢¤ë»þ¤ËÉ½¼¨¤¹¤ë¥¹¥ì¥Ã¥É¿ô¤Î¾å¸Â
-		$unread='<P>Ì¤ÆÉµ­»ö¤Î¤¢¤ë¥¹¥ì¥Ã¥É[ '.($#view>20?"@view[0..20] ..":"@view[0..$#view]")." ]</P>";
+		$unread=sprintf'<P>Ì¤ÆÉµ­»ö¤Î¤¢¤ë¥¹¥ì¥Ã¥É[ %s ]</P>',$#view>20?"@view[0..20] ..":"@view[0..$#view]";
 	}
 	
 	#-----------------------------
@@ -125,17 +134,17 @@ sub showCover{
 	@view=splice(@{[@file]},($IN{'page'}-1)*$CF{'page'},$CF{'page'});
 	$#view&&!$view[$#view]&&pop@view;
 	for(0..$#view){
-		$this.='<A href="#art'.$view[$_].'" title="Alt+'.($_+1).'">'
-			.($NEW{"$view[$_]"}?qq(<SPAN class="new">$view[$_]</SPAN>):$view[$_]).'</A> ';
+		$this.=sprintf'<A href="#art%d" title="Alt+%d">%s</A> '
+			,$view[$_],$_+1,(sprintf$NEW{"$view[$_]"}?'<SPAN class="new">%d</SPAN>':'%d',$view[$_]);
 	}
 	
 	#-----------------------------
-	#¥Ú¡¼¥¸ÁªÂòTABLE¤òÉ½¼¨
+	#¥Ú¡¼¥¸ÁªÂòTABLE¤ò¼èÆÀ
 	my$pageSelector=&pageSelector($#file,$CF{'page'});
 	
 	#-----------------------------
-	#Cookie¼èÆÀ¡õ½ñ¤­¹þ¤ß
-	&getCookie?&setCookie(\%CK):($CK{'time'}=$^T-$CF{'newnc'});
+	# Cookie½ñ¤­¹þ¤ß
+	&setCookie(\%CK);
 	
 	#-----------------------------
 	# HTTP,HTML,PAGE¥Ø¥Ã¥À¡¼¤òÉ½¼¨
@@ -381,7 +390,7 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 				}
 				@error&&last;
 			}
-			push(@message,'Something Wicked happend!(ÉÔÀµ¤ÊÊ¸»úÎó)')if@error;
+			push(@message,'wa0: Something Wicked happend!')if@error;
 		}
 		if(@error){
 			&showHeader;
@@ -569,7 +578,7 @@ _HTML_
 	#-----------------------------
 	#@zer1¥Ù¡¼¥¹¹Ó¤é¤·ÂÐºö(?)
 	#120ÉÃ°ÊÆâ¤Ë@zer1¤¬Á´¤ÆÆþ¤ìÂØ¤ï¤Ã¤¿¤é´í¸±¤ÎÃû¸õ
-	@zer1>4&&$zer1[$#zer1]=~/\d+:\w+:\d+\[(\d+)\]/o&&$1+120>$^T&&&showUserError('Å·Ê¸´±¤¬¶§Ãû¤òÃÎ¤é¤»¤Æ¤­¤¿');
+	@zer1>4&&$zer1[$#zer1]=~/\d+:\w+:\d+\[(\d+)\]/o&&$1+120>$^T&&&showUserError('¶§Ãû¤¬¸«¤¨¤¿');
 	
 	#-----------------------------
 	#@zer2¤Î¥¨¥é¡¼ÄûÀµ
@@ -713,8 +722,8 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 		eval{flock(RW,2)};
 		seek(RW,0,0);
 		my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
-		$#log<$IN{'j'}&&die'Something Wicked happend!(j¤¬Âç¤­¤¹¤®)';
-		$log[$IN{'j'}]||die'Something Wicked happend!(½¤Àµ¤Ç¤Ê¤¤j)';
+		$#log<$IN{'j'}&&die'wa1: Something Wicked happend!';
+		$log[$IN{'j'}]||die'wa2: Something Wicked happend!';
 		my%DT=$log[$IN{'j'}]=~/([^\t]*)=\t([^\t]*);\t/go;
 		
 		#PasswordCheck
@@ -855,6 +864,7 @@ function setDivHeight(){
 	inpDivBorder.value='ÏÈ¤ò¹­¤²¤ë';
 	threadBox.style.height=inpDivHeight.value=inpDivHeight.value.match(/([1-9]\d*)/)?RegExp.$1+'px':'400px';
 	threadBox.style.overflow='auto';
+	return true;
 }
 
 /* ========== ÏÈ¤ò¹­¤²¤¿¤ê¶¹¤á¤¿¤ê ========== */
@@ -872,6 +882,7 @@ function switchDivBorder(self){
 		threadBox.style.height=value
 		threadBox.style.overflow='auto';
 	}
+	return true;
 }
 
 /* ========== ÏÈ¤ò½é´ü²½ ========== */
@@ -881,20 +892,28 @@ function initDiv(){
 	inpDivBorder.value='ÏÈ¤ò¹­¤²¤ë';
 	threadBox.style.height=inpDivHeight.value=inpDivHeight.value.match(/([1-9]\d*)/)?RegExp.$1+'px':'400px';
 	threadBox.style.overflow='auto';
+	return true;
 }
 
 /* ==========  ========== */
 //initDiv();
-var div=document.getElementById('threadBox');
-var but=document.getElementById('inpDivBorder');
-var inp=document.getElementById('inpDivHeight');
+var threadBox=document.getElementById('threadBox');
+var inpDivBorder=document.getElementById('inpDivBorder');
+var inpDivHeight=document.getElementById('inpDivHeight');
 -->
 </SCRIPT>
 
 _HTML_
-	$CK{'i'}=$IN{'i'};
-	$CK{'ak'}=1;
-	&chdfrm if$status{'-isAvailable'};
+	if($status{'-isAvailable'}){
+		$CK{'i'}=$IN{'i'};
+		$CK{'ak'}=1;
+		&chdfrm;
+	}else{
+		printf'<P class="note">¤³¤Îµ­»ö¥¹¥ì¥Ã¥ÉNo.%d¤Ï%s¤¿¤á¡¢ÊÖ¿®¤¹¤ë¤³¤È¤Ï¤Ç¤­¤Þ¤»¤ó¡£</P>',$IN{'i'},
+			($status{'-isLocked'}?'¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤ë'
+			:$status{'-isOverflowed'}?'ºÇÂç»Òµ­»ö¿ô¤òÄ¶¤¨¤Æ¤¤¤ë'
+			:'°ì¿È¾å¤ÎÍýÍ³¤Î');
+	}
 	print&getFooter;
 	exit;
 }
@@ -913,7 +932,7 @@ $ Á°²ó¤Î½èÍý¤Î·ë²Ì
 	#¥â¡¼¥ÉÊ¬´ô
 	if(defined$IN{'rvs'}){$mode='rvs';print qq(<H2 class="heading2">- µ­»ö½¤Àµ¥â¡¼¥É -</H2>\n);}
 	elsif(defined$IN{'del'}){$mode='del';print qq(<H2 class="heading2">- µ­»öºï½ü¥â¡¼¥É -</H2>\n);}
-	else{print qq(<H2 class="heading2">Something Wicked happend!(mode¤¬ÉÔÌÀ)</H2>).&getFooter;exit;}
+	else{print qq(<H2 class="heading2">rmn: Something Wicked happend!</H2>).&getFooter;exit;}
 	#½èÍýÀ®¸ù-Cover¤ËÌá¤ë
 	if($_[0]){
 		print<<"_HTML_";
@@ -934,8 +953,7 @@ _HTML_
 	#¥í¥°½èÍý
 	&logfiles('number');
 	my$pageSelector=&pageSelector($#file,$CF{'delpg'},$mode);
-	my@thisPage=@file;
-	@thisPage=splice(@thisPage,($IN{'page'}-1)*$CF{'delpg'},$CF{'delpg'});
+	my@thisPage=splice(@{[@file]},($IN{'page'}-1)*$CF{'delpg'},$CF{'delpg'});
 	$thisPage[$#thisPage]==0&&pop@thisPage;
 	print<<"_HTML_";
 <DIV class="center">$pageSelector</DIV>
@@ -982,7 +1000,7 @@ _HTML_
 			my$date=&date($DT{'time'});
 			#ËÜÊ¸¤Î½Ì¤á½èÍý
 			$DT{'body'}=~s/<BR\b[^>]*>/¢­/go;
-			$DT{'body'}=&getTruncated($DT{'body'},60);
+			$DT{'body'}=MirString->getTruncated($DT{'body'},60);
 			my$level=!$j?'parent':'child';
 			print<<"_HTML_";
 <TR class="$level">
@@ -1457,7 +1475,7 @@ sub getParam{
 
 =cut
 
-		$IN{'name'}=&getTruncated($DT{'name'},40);
+		$IN{'name'}=MirString->getTruncated($DT{'name'},40);
 		$IN{'cook'}=($DT{'cook'}=~/(.)/o)?'on':'';
 		unless($DT{'pass'}){
 		}elsif($DT{'pass'}eq$CF{'admps'}){
@@ -1480,7 +1498,7 @@ sub getParam{
 				}elsif('cmd'eq$_){
 					$IN{'cmd'}=$1 if$DT{'cmd'}=~/(.+)/o;
 				}elsif('subject'eq$_){
-					$IN{'subject'}=&getTruncated($DT{'subject'}?$DT{'subject'}:$DT{'body'},70);
+					$IN{'subject'}=MirString->getTruncated($DT{'subject'}?$DT{'subject'}:$DT{'body'},70);
 				}elsif('ra'eq$_||'hua'eq$_){
 					next;
 				}else{
@@ -1552,14 +1570,6 @@ sub getParam{
 		$IN{'page'}=($DT{'page'}&&$DT{'page'}=~/([1-9]\d*)/o)?$1:1;
 	}
 	return%IN;
-}
-
-
-#-------------------------------------------------
-# Ê¸»ú²½¤±¤µ¤»¤º¤ËÊ¸»úÎó¤ÎÄ¹¤µ¤òÀÚ¤êµÍ¤á¤ë
-#
-sub getTruncated{
-	return MirString->getTruncated(@_);
 }
 
 
@@ -1680,20 +1690,25 @@ _HTML_
 # ºÇ¿·¤ÎÅê¹Æ¤Î¾ðÊó¤ò¼èÆÀ
 #
 sub getLastpost{
-	unless(%Z0){
-		open(ZERO,'<'."$CF{'log'}0.cgi")||die"Can't read log(0.cgi)[$?:$!]";
-		eval{flock(ZERO,1)};
-		my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
-		close(ZERO);
-		$zero[0]&&index($zero[0],"Mir12=\t")+1or die'ZERO¤Î¥í¥°·Á¼°¤¬Mir12·¿°Ê³°¤Ç¤¹';
-		%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
-		@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
-	}
+	%Z0||&getZeroInfo;
 	my$date=&date($Z0{'time'});
 	my$dateNow="Date:\t\t".&datef($^T,'dateTime')
 	."\nLast-Modified:\t".&datef((stat("$CF{'log'}0.cgi"))[9],'dateTime');
 	return sprintf'<P class="lastpost" title="%s"><A href="index.cgi?read=%s#art%s">Lastpost: %s %s</A></P>'
 		,$dateNow,$Z0{'Mir12'},$Z0{'Mir12'},$date,$Z0{'name'};
+}
+
+#-------------------------------------------------
+# ZERO¾ðÊó¥Õ¥¡¥¤¥ë¤ÎÆÉ¤ß¹þ¤ß
+#
+sub getZeroInfo{
+	open(ZERO,'<'."$CF{'log'}0.cgi")||die"Can't read log(0.cgi)[$?:$!]";
+	eval{flock(ZERO,1)};
+	my@zero=map{m/^([^\x0D\x0A]*)/o}<ZERO>;
+	close(ZERO);
+	$zero[0]&&index($zero[0],"Mir12=\t")+1or die'ZERO¤Î¥í¥°·Á¼°¤¬Mir12·¿°Ê³°¤Ç¤¹';
+	%Z0=($zero[0]=~/([^\t]*)=\t([^\t]*);\t/go);
+	@zer2=$zero[2]?split(/\s/o,$zero[2]):(0);
 }
 
 
@@ -1719,6 +1734,7 @@ $ µ­»ö¥¹¥ì¥Ã¥É¥Õ¥¡¥¤¥ë¥ê¥¹¥È¤Î½çÈÖ(date|number)
 	closedir(DIR);
 	if('date'eq$_[0]){
 		#ÆüÉÕ½ç 'date'
+		%Z0||&getZeroInfo;
 		my@list=grep{$_>$zer2[0]}@list;
 		my@tmp=map{$zer2[$_-$zer2[0]]}@list;
 		@file=@list[sort{$tmp[$b]<=>$tmp[$a]or$list[$b]<=>$list[$a]}0..$#list];
@@ -1855,7 +1871,40 @@ sub getCookie{
 			}
 		}
 	}
+	%CK||return undef;
+	%CK=%{&checkCookie(\%CK)};
 	return%CK;
+}
+
+
+#-------------------------------------------------
+# Cookie¤ÎÄ´À°
+#
+sub checkCookie{
+=item °ú¿ô
+\% Ä´¤Ù¤ë¥Ï¥Ã¥·¥å¤Î¥ê¥Õ¥¡¥ì¥ó¥¹
+=cut
+	my%DT=%{shift()};
+	#»þ´Ö¼þ¤ê¤òÀßÄê
+	$DT{'time'}=0;
+	$DT{'expire'}=0;
+	unless($CK{'expire'}){
+		#¿·µ¬
+		$DT{'time'}=$^T;
+		$DT{'expire'}=$^T+$CF{'newuc'};
+		$CK{'time'}=$^T-$CF{'newnc'};
+	}elsif($CK{'expire'}>$^T){
+		#´ü¸ÂÆâ
+		$DT{'time'}=$CK{'time'};
+		$DT{'expire'}=$CK{'expire'};
+	}else{
+		#´ü¸ÂÀÚ¤ì
+		$DT{'time'}=$CK{'expire'}-$CF{'newuc'};
+		$DT{'expire'}=$^T+$CF{'newuc'};
+		$CK{'time'}=$DT{'time'};
+	}
+	$DT{'lastModified'}=$^T;
+	return\%DT;
 }
 
 
@@ -1864,48 +1913,39 @@ sub getCookie{
 #
 sub setCookie{
 =item °ú¿ô
-\% Cookie¤Ë½ñ¤­¹þ¤àÆâÍÆ¥Ï¥Ã¥·¥å¤Î¥ê¥Õ¥¡¥ì¥ó¥¹
+\% Cookie¤Ë½ñ¤­¹þ¤àÆâÍÆ¤ò»ý¤Ä¥Ï¥Ã¥·¥å¤Î¥ê¥Õ¥¡¥ì¥ó¥¹
 =cut
 	my%DT=%{shift()};
-	$DT{'time'}=0;
-	$DT{'expire'}=0;
-	if($CK{'expire'}>$^T){
-		#´ü¸ÂÆâ
-		$DT{'time'}=$CK{'time'};
-		$DT{'expire'}=$CK{'expire'};
-	}elsif($CK{'expire'}>0){
-		#´ü¸ÂÀÚ¤ì
-		$DT{'time'}=$CK{'expire'}-$CF{'newuc'};
-		$DT{'expire'}=$^T+$CF{'newuc'};
-		$CK{'time'}=$DT{'time'};
-	}else{
-		#¿·µ¬
-		$DT{'time'}=$^T;
-		$DT{'expire'}=$^T+$CF{'newuc'};
-		$CK{'time'}=$^T-$CF{'newnc'};
+	unless($DT{'lastModified'}){
+		if(%CK){
+			$DT{$_}||=$CK{$_}for keys%CK;
+		}else{
+			%DT=%{&checkCookie(\%DT)};
+		}
 	}
-	$DT{'lastModified'}=$^T;
+	my$setCookie;
 	my$expires=$^T+33554432; #33554432=2<<24; #33554432¤È¤¤¤¦¿ô»ú¤ËÆÃ¤Ë°ÕÌ£¤Ï¤Ê¤¤¡¢¤Á¤Ê¤ß¤Ë°ìÇ¯¤È¾¯¤·
 	if($CF{'ckpath'}){
-		my$cook=join('',map{"$_\t$DT{$_}\t"}("time expire lastModified"=~/\b(\w+)\b/go));
-		$cook=~s/(\W)/'%'.unpack('H2',$1)/ego;
-		$CF{'-setCookie'}="Mireille=$cook; expires=".&datef($expires,'cookie');
-		$cook=join('',map{"$_\t$DT{$_}\t"}("name pass lastModified $CF{'cokitm'}"=~/\b(\w+)\b/go));
-		$cook=~s/(\W)/'%'.unpack('H2',$1)/ego;
-		$CF{'-setCookie'}.="\nMireille=$cook; expires=".&datef($expires,'cookie')."; $CF{'ckpath'}";
+		my$cookie=join('',map{"$_\t$DT{$_}\t"}("time expire lastModified"=~/\b(\w+)\b/go));
+		$cookie=~s/(\W)/'%'.unpack('H2',$1)/ego;
+		$setCookie="Mireille=$cookie; expires=".&datef($expires,'cookie');
+		$cookie=join('',map{"$_\t$DT{$_}\t"}("name pass lastModified $CF{'cokitm'}"=~/\b(\w+)\b/go));
+		$cookie=~s/(\W)/'%'.unpack('H2',$1)/ego;
+		$setCookie.="\nMireille=$cookie; expires=".&datef($expires,'cookie')."; $CF{'ckpath'}";
 	}else{
-		my$cook=join('',map{"$_\t$DT{$_}\t"}
+		my$cookie=join('',map{"$_\t$DT{$_}\t"}
 		("name pass time expire lastModified $CF{'cokitm'}"=~/\b(\w+)\b/go));
-		$cook=~s/(\W)/'%'.unpack('H2',$1)/ego;
-		$CF{'-setCookie'}="Mireille=$cook; expires=".&datef($expires,'cookie');
+		$cookie=~s/(\W)/'%'.unpack('H2',$1)/ego;
+		$setCookie="Mireille=$cookie; expires=".&datef($expires,'cookie');
 	}
 	$CF{'set_cookie_by_meta_tags'}=1if!defined$CF{'set_cookie_by_meta_tags'}&&index($ENV{'SERVER_NAME'},'tok2.com')+1;
 	if($CF{'set_cookie_by_meta_tags'}){
 		#tok2ÂÐºö
+		$CF{'-setCookie'}=$setCookie;
 	}else{
-		print map{qq(Set-Cookie: $_\n)}split("\n",$CF{'-setCookie'});
-		undef($CF{'-setCookie'});
+		print map{qq(Set-Cookie: $_\n)}split("\n",$setCookie);
 	}
+	return$setCookie;
 }
 
 
@@ -1978,7 +2018,7 @@ $ °Å¹æ²½¤¹¤ëÊ¸»úÎó
 $ Èæ¤Ù¤ë¥Ñ¥¹¥ï¡¼¥É
 =cut
 	srand($_[0]);
-	my$salt=join('',('a'..'z','.',0..9,'/','A'..'Z')[rand(64),rand(64)]);#¡Ö.¡×¤¬º®¤¶¤Ã¤Æ¤¤¤ë¤Î¤Ï¥Ð¥°
+	my$salt=join('',('a'..'z','.',0..9,'/','A'..'Z')[rand(64),rand(64)]);
 	my$pass='';
 	for($_[1]=~/.{1,8}/go){
 		length$_||next;
@@ -2003,7 +2043,7 @@ $ 32bit¤Î10¿Ê¿ô¤¬Íß¤·¤¤»þ¤Ë¿¿¤ò¡£
 	my$r=0xffffffff;
 	$r=$r>>8&0xffffff^$crc32[$r&255^$_]for unpack"C*",$word;
 	$r^=0xffffffff;
-	return@_?$r:sprintf("%08X",$r);
+	return@_?$r:sprintf('%08X',$r);
 }
 
 
@@ -2017,13 +2057,8 @@ sub getSignature{
 	if($canUseSpecial&&$CF{'signatureSpecial'}=~/(?:^|\s+)\Q$word\E\s+(\S+)/o){
 		$signature='!'.$1;
 	}else{
-		my$salt='';
-		for(0,1){
-			my$n=ord chop$word;
-			$n%=76;
-			$n+=47;
-			$salt.=chr$n;
-		}
+		my@salt=('.','/',0..9,'A'..'Z','a'..'z');
+		my$salt=join'',map{$salt[(ord chop$word)%64]}0,1;
 		$signature=&getCRC32(substr(crypt(&getCRC32($word),$salt),2));
 	}
 	return$signature;
@@ -2539,7 +2574,8 @@ $ RFC1123·Á¼°¤ÎÆüÉÕ
 		$char=qr([\W\w]);
 	}
 	# Àµ¤·¤¯¥Þ¥Ã¥Á¤µ¤»¤ë
-	sub match{shift;
+	sub match{
+		my$class=shift;
 		my$str=shift;
 		my$regex=shift;
 		if($eucpre){
@@ -2549,7 +2585,8 @@ $ RFC1123·Á¼°¤ÎÆüÉÕ
 		}
 	}
 	# Mireille¥í¥°¤«¤ékey=value¤ò¸¡º÷
-	sub matchedItem{shift;
+	sub matchedItem{
+		my$class=shift;
 		my$str=shift;
 		my$item=shift;
 		my$seek=shift;
@@ -2560,7 +2597,8 @@ $ RFC1123·Á¼°¤ÎÆüÉÕ
 		}
 	}
 	# Mireille¥í¥°¤«¤ékey=value¤ò¸¡º÷¤·¤Æ¥ê¥¹¥È¤òÊÖ¤¹
-	sub matchedItems{shift;
+	sub matchedItems{
+		my$class=shift;
 		my$str=shift;
 		my$item=shift;
 		my$seek=shift;
@@ -2572,22 +2610,25 @@ $ RFC1123·Á¼°¤ÎÆüÉÕ
 		}
 	}
 	# ¤½¤Î¥¨¥ó¥³¡¼¥É¤ÇÀµÅö¤ÊÊ¸»úÎó¤ò¼èÆÀ
-	sub getValidString{shift;
+	sub getValidString{
+		my$class=shift;
 		@_||die'Not enough arguments for MirString::getValidString';
 		return shift=~/($char+)/?$1:'';
 	}
 	# ¤½¤Î¥¨¥ó¥³¡¼¥É¤ÇÀµÅö¤ÊÊ¸»ú¤òÉ½¤¹Àµµ¬É½¸½¤ò¼èÆÀ
-	sub getCharRegexp{shift;
+	sub getCharRegexp{
+		my$class=shift;
 		return$char;
 	}
 	#-------------------------------------------------
 	# Ê¸»ú²½¤±¤µ¤»¤º¤ËÊ¸»úÎó¤ÎÄ¹¤µ¤òÀÚ¤êµÍ¤á¤ë
 	#
-	sub getTruncated{shift;
+	sub getTruncated{
 =item °ú¿ô
 $ $str
 $ Ê¸»ú¿ôÀ©¸Â
 =cut
+		my$class=shift;
 		my$str=shift;
 		my$length=shift;
 		
