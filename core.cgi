@@ -1489,6 +1489,7 @@ sub rss{
     my %item =();
     my @logfiles = &logfiles('date');
     for( 0 .. ( $maxItem > $#logfiles ? $#logfiles : $maxItem-1 ) ){
+    	my $count = $_;
     	my $i = $logfiles[$_];
 	-e"$CF{'log'}$i.cgi"||next;
 	
@@ -1498,19 +1499,16 @@ sub rss{
 	close(FILE);
 	
 	my $subject = '';
-	for( 0, reverse( (@articles-$maxItem) .. $#articles )){
+	for( 0, reverse( ($#articles-$maxItem+$count) .. $#articles )){
 	    my $j = $_;
 	    my %DT = ($articles[$_] =~ /([^\t]*)=\t([^\t]*);\t/go);
 	    $DT{'i'} = $i;
 	    $DT{'j'} = $j;
-	    $DT{'_uri'} = "$CF{'self'}?read=$DT{'i'}#art$DT{'i'}-$DT{'j'}";
-	    $DT{'_date'} = &datef($DT{'time'}, 'dateTime');
 	    if($DT{'subject'}){
 		$subject = $DT{'subject'};
 	    }elsif($DT{'title'}){
 	    	$subject = $DT{'title'};
 	    }
-	    $DT{'_title'} = "$i-$j ".$subject;
 	    $DT{'_subject'} = $subject;
 	    $item{$DT{'time'}} = \%DT;
 	}
@@ -1544,28 +1542,28 @@ EOF
 EOF
     for(@latestArticles){
 	#本文の縮め処理
-	my $title = MirString->getTruncated($_->{'_title'},90);
-	$title =~ s/<.*?>//go;
+	my $uri = sprintf('%s?read=%d#art%d-%d', $CF{'self'}, $_->{'i'}, $_->{'i'}, $_->{'j'});
+	my $title = sprintf('%d-%d %s', $_->{'i'}, $_->{'j'}, $_->{'_subject'});
 	$title =~ s/&(\w*);/&amp;$1;/go;
+	$title = MirString->getTruncated($title,90);
+	my $subject = $_->{'_subject'};
+	$subject =~ s/&(\w*);/&amp;$1;/go;
 	my $description = $_->{'body'};
+	my $creator = $_->{'name'};
+	$creator =~ s/&(\w*);/&amp;$1;/go;
 	$description =~ s/<BR\b[^>]*>/　/go;
 	$description =~ s/<.*?>//go;
 	$description =~ s/&(\w*);/&amp;$1;/go;
 	$description = MirString->getTruncated($description,450);
-	my $creator = $_->{'name'};
-	$creator =~ s/<.*?>//go;
-	$creator =~ s/&(\w*);/&amp;$1;/go;
-	my $subject = $_->{'_subject'};
-	$subject =~ s/<.*?>//go;
-	$subject =~ s/&(\w*);/&amp;$1;/go;
+	my $date = &datef($_->{'time'}, 'dateTime');
 	$output .= <<"EOF";
- <item rdf:about="$_->{'_uri'}">
+ <item rdf:about="$uri">
   <title>$title</title>
-  <link>$_->{'_uri'}</link>
+  <link>$uri</link>
   <description>$description</description>
   <dc:creator>$creator</dc:creator>
   <dc:subject>$subject</dc:subject>
-  <dc:date>$_->{'_date'}</dc:date>
+  <dc:date>$date</dc:date>
  </item>
 
 EOF
