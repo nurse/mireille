@@ -82,11 +82,11 @@ $CF{'AttachParentLength'}='3';
 #子記事に添付できるファイル数
 $CF{'AttachChildLength'}='3';
 #添付ファイルを保存するディレクトリ
-$CF{'AttachDir'}='attach';
+$CF{'AttachDir'}='./attach/';
 #添付イメージファイルのサムネイルを作る
 $CF{'AttachThumbnail'}='1';
 #添付イメージファイルのサムネイルを保存するディレクトリ
-$CF{'AttachThumbnailDir'}='attach/thumbnail';
+$CF{'AttachThumbnailDir'}='./attach/thumbnail/';
 #添付イメージファイルのサムネイル幅
 $CF{'AttachThumbnailWidth'}='100';
 #添付イメージファイルのサムネイル高さ
