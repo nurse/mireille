@@ -1,0 +1,1091 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML lang="ja-JP">
+<HEAD>
+<META http-equiv="Content-type" content="text/html; charset=euc-jp">
+<META http-equiv="Content-Script-Type" content="text/javascript">
+<META http-equiv="Content-Style-Type" content="text/css">
+<META http-equiv="MSThemeCompatible" content="yes">
+<TITLE>Icon Manager</TITLE>
+<SCRIPT type="text/javascript" defer>
+<!--
+var isLoaded=null;
+var iconDir='file:///D:/Web/Airemix/icon/full/';
+var currentIconGroup=null;
+var iconListType='Mir0x'; // 'Mir0x' or 'ealis3'
+
+/* ========================================================================== */
+// General Routines
+
+/* ====================================================== */
+// Load IconList from Textarea
+function loadIconListTextarea(){
+	if(!isLoaded)return false;
+	var elapse=new Date();
+	
+	removeAllChilds(iconTempSelect);
+	iconTempSelect.appendChild(iconListType=='ealis3'?parseEalis3(iconTextarea.value):parseMir0x(iconTextarea.value));
+	
+	removeAllChilds(iconThumbnail);
+	iconThumbnail.appendChild(generateIconThumbnails(iconTempSelect));
+	
+	iconTempSelect.selectedIndex=-1;
+	currentIconGroup=iconThumbnail.firstChild;
+	
+	removeAllChilds(iconMenuTable);
+	status='phase3/3:';
+	for(var i=0,len=iconThumbnail.childNodes.length;i<len;i++){
+		//processing gauge
+		if(status.length<parseInt(100*i/len))status='phase3/3:'+Array(parseInt(100*i/len)).join('.');
+		
+		iconMenuTable.appendChild(
+			createIconMenuItem(iconThumbnail.childNodes[i].getElementsByTagName('INPUT')[0].value,!i));
+	}
+	status='';
+	
+	elapse=new Date()-elapse;
+	status='Elapsed Time = '+elapse+'ms';
+	return true;
+}
+
+/* ====================================================== */
+// Generate Icon Thumbnails from HTMLSelectElement
+function generateIconThumbnails(eSELECT){
+	if(!isLoaded)return false;
+	var fragment=document.createDocumentFragment();
+	status='phase2/3:';
+	
+	var OPTGROUPs=eSELECT.getElementsByTagName('OPTGROUP');
+	for(var i=0,len=OPTGROUPs.length;i<len;i++){
+		//processing gauge
+		if(status.length<parseInt(100*i/len))status='phase2/3:'+Array(parseInt(100*i/len)).join('.');
+		
+		var table=createIconGroup(OPTGROUPs[i],!fragment.hasChildNodes());
+		var tbody=table.childNodes[1];
+		var OPTIONs=OPTGROUPs[i].getElementsByTagName('OPTION');
+		for(var j=0,lenJ=OPTIONs.length;j<lenJ;j++)tbody.appendChild(createIconItem(OPTIONs[j]));
+		fragment.appendChild(table);
+	}
+	status='';
+	return fragment;
+}
+
+/* ====================================================== */
+// Save IconList to Textarea
+function saveIconListTextarea(){
+	if(!isLoaded)return false;
+	var elapse=new Date();
+	iconTextarea.value=iconListType=='ealis3'?generateEalis3(iconTempSelect):generateMir0x(iconTempSelect);
+	elapse=new Date()-elapse;
+	status='Elapsed Time = '+elapse+'ms';
+	return true;
+}
+
+/* ====================================================== */
+// Create Icon Menu Item
+function createIconMenuItem(value,isCurrent){
+	var item=document.createElement('P');
+	item.appendChild(document.createTextNode(value));
+	item.onclick=function(){changeIconGroup(this.firstChild.nodeValue);return false};
+	item.onmousedown=function(e){changeMenuItemStyle(e||event,this)};
+	item.onmouseover=function(e){changeMenuItemStyle(e||event,this)};
+	item.onmouseout =function(e){changeMenuItemStyle(e||event,this)};
+	item.onselectstart=function(){return false};
+	item.className=isCurrent?'iconMenuItemCurrent':'iconMenuItem';
+	return item;
+}
+
+/* ====================================================== */
+// Change Menu Item Style
+function changeMenuItemStyle(e,self){
+	if(!isLoaded)return false;
+	self.className='mousedown'==e.type?'iconMenuItemCurrent':
+		currentIconGroup&&self.firstChild.nodeValue==currentIconGroup.getElementsByTagName('INPUT')[0].value
+		?'mouseout'==e.type	?'iconMenuItemCurrent'	:'iconMenuItemCurrentOver'
+		:'mouseout'==e.type	?'iconMenuItem'		:'iconMenuItemOver';
+	return true;
+}
+
+/* ====================================================== */
+// Remove All Childs
+function removeAllChilds(aNode){while(aNode.hasChildNodes())aNode.removeChild(aNode.firstChild)}
+
+
+/* ========================================================================== */
+// Do something arround Icon Groups
+
+/* ====================================================== */
+// Change Icon Group
+function changeIconGroup(value){
+	if(!isLoaded)return false;
+	for(var i=0,len=iconMenuTable.childNodes.length;i<len;i++){
+		status=i;
+		if(value==iconMenuTable.childNodes[i].firstChild.nodeValue){
+			if(currentIconGroup!=iconThumbnail.childNodes[i]){
+				iconThumbnail.childNodes[i].style.display='block';
+				iconMenuTable.childNodes[i].className='iconMenuItemCurrent'
+				currentIconGroup=iconThumbnail.childNodes[i];
+			}
+		}else{
+			if(iconThumbnail.childNodes[i].style.display!='none'){
+				iconThumbnail.childNodes[i].style.display='none';
+				iconMenuTable.childNodes[i].className='iconMenuItem'
+			}
+		}
+	}
+	status='';
+	return true;
+}
+
+/* ====================================================== */
+// Change Icon Group Label
+function changeIconGroupLabel(self){
+	if(!isLoaded)return false;
+	var label=self.value;
+	self=self.parentNode.parentNode;
+	for(var i=0,len=self.parentNode.childNodes.length;i<len;i++)if(self===self.parentNode.childNodes[i])break;
+	iconTempSelect.childNodes[i].label=label;
+	iconMenuTable.childNodes[i].firstChild.nodeValue=label;
+	return true;
+}
+
+/* ====================================================== */
+// Move Icon Group Previous
+function moveIconGroupPrevious(self){
+	if(!isLoaded)return false;
+	self=self.parentNode.parentNode;
+	if(!self.previousSibling)return false;
+	for(var i=0,len=self.parentNode.childNodes.length;i<len;i++)if(self===self.parentNode.childNodes[i])break;
+	
+	self.parentNode.insertBefore(self,self.previousSibling);
+	self=iconTempSelect.childNodes[i];
+	self.parentNode.insertBefore(self,self.previousSibling);
+	self=iconMenuTable.childNodes[i];
+	self.parentNode.insertBefore(self,self.previousSibling);
+	return true;
+}
+
+/* ====================================================== */
+// Move Icon Group Next
+function moveIconGroupNext(self){
+	if(!isLoaded)return false;
+	self=self.parentNode.parentNode;
+	if(!self.nextSibling)return false;
+	for(var i=0,len=self.parentNode.childNodes.length;i<len;i++)if(self===self.parentNode.childNodes[i])break;
+	
+	if(self.nextSibling.nextSibling){
+		self.parentNode.insertBefore(self,self.nextSibling.nextSibling);
+		self=iconTempSelect.childNodes[i];
+		self.parentNode.insertBefore(self,self.nextSibling.nextSibling);
+		self=iconMenuTable.childNodes[i];
+		self.parentNode.insertBefore(self,self.nextSibling.nextSibling);
+	}else{
+		self.parentNode.appendChild(self);
+		self=iconTempSelect.childNodes[i];
+		self.parentNode.appendChild(self);
+		self=iconMenuTable.childNodes[i];
+		self.parentNode.appendChild(self);
+	}
+	return true;
+}
+
+/* ====================================================== */
+// Remove Icon Group
+function removeIconGroup(self){
+	if(!isLoaded)return false;
+	self=self.parentNode.parentNode;
+	
+	if(self.nextSibling)changeIconGroup(self.nextSibling.getElementsByTagName('INPUT')[0].value);
+	else if(self.previousSibling)changeIconGroup(self.previousSibling.getElementsByTagName('INPUT')[0].value);
+	for(var i=0,len=self.parentNode.childNodes.length;i<len;i++)if(self===self.parentNode.childNodes[i])break;
+	self.parentNode.removeChild(self);
+	self=iconTempSelect.childNodes[i];
+	self.parentNode.removeChild(self);
+	self=iconMenuTable.childNodes[i];
+	self.parentNode.removeChild(self);
+	return true;
+}
+
+/* ====================================================== */
+// Add Icon Group
+function addIconGroup(){
+	if(!isLoaded)return false;
+	var divIconGroup=createIconGroup(null,!iconTempSelect.getElementsByTagName('OPTGROUP').length);
+	var label=divIconGroup.getElementsByTagName('INPUT')[0].value;
+	if(!iconTempSelect.hasChildNodes()||iconTempSelect.firstChild.tagName!='OPTGROUP'){
+		removeAllChilds(iconThumbnail);
+		iconThumbnail.appendChild(divIconGroup);
+		removeAllChilds(iconMenuTable);
+		iconMenuTable.appendChild(createIconMenuItem(label,true));
+		removeAllChilds(iconTempSelect);
+	}else{
+		iconThumbnail.appendChild(divIconGroup);
+		iconMenuTable.appendChild(createIconMenuItem(label,!iconTempSelect.hasChildNodes()));
+	}
+	
+	var aOPTGROUP=document.createElement('OPTGROUP');
+	aOPTGROUP.label=label;
+	iconTempSelect.appendChild(aOPTGROUP);
+	addIconItem(divIconGroup.firstChild.firstChild);//横着
+	return true;
+}
+
+/* ====================================================== */
+// Create Icon Group
+function createIconGroup(iDefault,isCurrent){
+	if(!iDefault||typeof(iDefault)!='object'){
+		iDefault=document.createElement('OPTGROUP');
+		iDefault.label='NEW GROUP';
+	}
+	
+	var table=document.createElement('DIV');
+	table.className='iconTable';
+	if(isCurrent){
+		table.style.display='block';
+		currentIconGroup=table;
+	}else table.style.display='none';
+	var thead=document.createElement('H2');
+	thead.className='iconTableHead';
+	var eINPUT=document.createElement('INPUT');
+	eINPUT.className='iconTableLabel';
+	eINPUT.onchange=function(){changeIconGroupLabel(this)};
+	eINPUT.value=iDefault.label;
+	var bRemove=document.createElement('BUTTON');
+	bRemove.className='groupRemove';
+	bRemove.onclick=function(){removeIconGroup(this);return false};
+	bRemove.appendChild(document.createTextNode('削'));
+	var bMovePrevious=document.createElement('BUTTON');
+	bMovePrevious.className='groupMovePrevious';
+	bMovePrevious.onclick=function(){moveIconGroupPrevious(this);return false};
+	bMovePrevious.appendChild(document.createTextNode('前'));
+	var bMoveNext=document.createElement('BUTTON');
+	bMoveNext.className='groupMoveNext';
+	bMoveNext.onclick=function(){moveIconGroupNext(this);return false};
+	bMoveNext.appendChild(document.createTextNode('次'));
+	
+	thead.appendChild(document.createTextNode('GROUP: '));
+	thead.appendChild(eINPUT);
+	thead.appendChild(bMovePrevious);
+	thead.appendChild(bRemove);
+	thead.appendChild(bMoveNext);
+	table.appendChild(thead);
+	var tbody=document.createElement('DIV');
+	tbody.className='iconTableBody';
+	table.appendChild(tbody);
+	var tfoot=document.createElement('DIV');
+	tfoot.className='iconTableFoot';
+	var copy=new Array('VENDOR_NAME','VENDOR_URL','VENDOR_LINK','COPY1_NAME','COPY1_URL','COPY1_LINK');
+	for(var i=0;i<copy.length;i++){
+		var eINPUT=document.createElement('INPUT');
+		if(iDefault.getAttribute(copy[i]))eINPUT.value=iDefault.getAttribute(copy[i]);
+		eINPUT.onchange=function(){changeCopyInfo(this)};
+		eINPUT.title=copy[i];
+		eINPUT.style.width='50px';
+		tfoot.appendChild(eINPUT);
+	}
+	var eBUTTON=document.createElement('BUTTON');
+	eBUTTON.accesskey='a';
+	eBUTTON.onclick=function(){addIconItem(this);return false};
+	eBUTTON.appendChild(document.createTextNode('アイコンを追加(A)'));
+	tfoot.appendChild(eBUTTON);
+	table.appendChild(tfoot);
+	return table;
+}
+
+/* ====================================================== */
+// Get TempSelect Item from IconItemDIV
+function getTempSelectItem(self){
+	var i=0,j=0,len=0,target
+	target=self.parentNode.parentNode;
+	for(len=target.parentNode.childNodes.length;i<len;i++)if(target===target.parentNode.childNodes[i])break;
+	target=self;
+	for(len=target.parentNode.childNodes.length;j<len;j++)if(target===target.parentNode.childNodes[j])break;
+	return iconTempSelect.childNodes[i].childNodes[j];
+}
+
+
+/* ====================================================== */
+// Change Copy Info
+function changeCopyInfo(self){
+	if(!isLoaded)return false;
+	var value=self.value;
+	var key=self.title;
+	self=self.parentNode.parentNode;
+	for(var i=0,len=self.parentNode.childNodes.length;i<len;i++)if(self===self.parentNode.childNodes[i])break;
+	iconTempSelect.childNodes[i].setAttribute(key,value);
+	return true;
+}
+
+
+/* ========================================================================== */
+// Do something arround Icon Items
+
+/* ====================================================== */
+// Change Icon Item Text
+function changeIconItemText(self){
+	if(!isLoaded)return false;
+	getTempSelectItem(self.parentNode).text=self.value;
+	return true;
+}
+
+/* ====================================================== */
+// Change Icon Item Value
+function changeIconItemValue(self){
+	if(!isLoaded)return false;
+	
+	var eIMG=document.createElement('IMG');
+	eIMG.src=iconDir+self.value;
+	getTempSelectItem(self.parentNode).value=self.value;
+	self.parentNode.replaceChild(eIMG,self.parentNode.getElementsByTagName('IMG')[0])
+	return true;
+}
+
+/* ====================================================== */
+// Move Icon Item Previous
+function moveIconItemPrevious(self){
+	if(!isLoaded)return false;
+	self=self.parentNode;
+	if(!self.previousSibling)return false;
+	var option=getTempSelectItem(self);
+	self.parentNode.insertBefore(self,self.previousSibling);
+	option.parentNode.insertBefore(option,option.previousSibling);
+	return true;
+}
+
+/* ====================================================== */
+// Move Icon Item Next
+function moveIconItemNext(self){
+	if(!isLoaded)return false;
+	self=self.parentNode;
+	if(!self.nextSibling)return false;
+	var option=getTempSelectItem(self);
+	if(self.nextSibling.nextSibling){
+		self.parentNode.insertBefore(self,self.nextSibling.nextSibling);
+		option.parentNode.insertBefore(option,option.nextSibling.nextSibling);
+	}else{
+		self.parentNode.appendChild(self);
+		option.parentNode.appendChild(option);
+	}
+	return true;
+}
+
+/* ====================================================== */
+// Remove IconItem
+function removeIconItem(self){
+	if(!isLoaded)return false;
+	self=self.parentNode;
+	var option=getTempSelectItem(self);
+	self.parentNode.removeChild(self);
+	option.parentNode.removeChild(option);
+	return true;
+}
+
+/* ====================================================== */
+// Add IconItem
+function addIconItem(self){
+	if(!isLoaded)return false;
+	var divIconItem=createIconItem();
+	self=self.parentNode.parentNode;
+	self.getElementsByTagName('DIV')[0].appendChild(divIconItem);
+	
+	for(var i=0,len=self.parentNode.childNodes.length;i<len;i++)if(self===self.parentNode.childNodes[i])break;
+	var eOPTION=document.createElement('OPTION');
+	iconTempSelect.childNodes[i].appendChild(eOPTION);
+	eOPTION.text=divIconItem.getElementsByTagName('INPUT')[0].value;
+	eOPTION.value=divIconItem.getElementsByTagName('INPUT')[1].value;
+	return true;
+}
+
+/* ====================================================== */
+// Create IconItem
+function createIconItem(iDefault){
+	if(!iDefault||typeof(iDefault)!='object'){
+		iDefault=document.createElement('OPTION');
+		iDefault.text='new item';
+		iDefault.value='';
+	}
+	
+	var item=document.createElement('DIV');
+	item.className='iconItem';
+	var iImage=document.createElement('IMG');
+	iImage.src=iconDir+iDefault.value;
+	var iText=document.createElement('INPUT');
+	iText.className='itemText';
+	iText.value=iDefault.text;
+	iText.onchange=function(){changeIconItemText(this)};
+	var iValue=document.createElement('INPUT');
+	iValue.className='itemValue';
+	iValue.value=iDefault.value;
+	iValue.onchange=function(){changeIconItemValue(this)};
+	var bRemove=document.createElement('BUTTON');
+	bRemove.className='itemRemove';
+	bRemove.onclick=function(){removeIconItem(this);return false};
+	bRemove.appendChild(document.createTextNode('削'));
+	var bMovePrevious=document.createElement('BUTTON');
+	bMovePrevious.className='itemMovePrevious';
+	bMovePrevious.onclick=function(){moveIconItemPrevious(this);return false};
+	bMovePrevious.appendChild(document.createTextNode('前'));
+	var bMoveNext=document.createElement('BUTTON');
+	bMoveNext.className='itemMoveNext';
+	bMoveNext.onclick=function(){moveIconItemNext(this);return false};
+	bMoveNext.appendChild(document.createTextNode('次'));
+	
+	item.appendChild(iImage);
+	item.appendChild(iText);
+	item.appendChild(iValue);
+	item.appendChild(bMovePrevious);
+	item.appendChild(bRemove);
+	item.appendChild(bMoveNext);
+	return item;
+}
+
+
+/* ========================================================================== */
+// Parsers and Generators of IconLists
+
+/* ====================================================== */
+// Parse Mir0x IconList
+function parseMir0x(list){
+	if(!isLoaded)return false;
+	var icons;
+	if(typeof(list)=='array')icons=list;
+	else if(typeof(list)=='string')icons=list.split("\n")
+	else return false;
+	var fragment=document.createDocumentFragment();
+	var target;
+	var com=new Object({VENDOR:new Object(),COPY1:new Object()});
+	
+	status='phase1/3:';
+	for(var i=0,len=icons.length;i<len;i++){
+		//processing gauge
+		if(status.length<parseInt(100*i/len))status='phase1/3:'+Array(parseInt(100*i/len)).join('.');
+		
+		var line=icons[i];
+		if(line.match(/<!--\s*%(\S+)\s+(.*)-->/)){
+			//何かしらのコマンド
+			var $command=RegExp.$1;
+			var $param=RegExp.$2;
+			$param=$param.replace(/\s+$/,'');
+			if('PAGE-BREAK'==$command){
+				//改ページ処理
+				com['pageBreakBefore']=true;
+			}else if($command.match(/([A-Z]+)(_[A-Z]+)*/)){
+				//著作権表示機構
+				var $cmds=$command.split('_');
+				if('SET'==$cmds[0]||'VENDOR'==$cmds[0]||'COPY1'==$cmds[0]){
+					if('SET'==$cmds[0])$cmds.shift;
+					com[$cmds[0]][$cmds[1]]=$param;
+				}else if('BEGIN'==$cmds[0]){
+					com[$cmds[1]]=$param?{NAME:$param}:new Object();
+				}else if('END'==$cmds[0]){
+					com[$cmds[1]]=new Object();
+				}
+			}
+			continue;
+		}else if(line.match(/^\s*<OPTION [^>]*\bvalue=("([^"]*)"|'([^']*)'|[\w-.:]+)[^>]*>([^<]*)(<\/OPTION>)?/i)){
+			if(!target)continue;
+			var eOPTION=document.createElement('OPTION');
+			target.appendChild(eOPTION);
+			eOPTION.value=RegExp.$2||RegExp.$3||RegExp.$1;
+			eOPTION.text=RegExp.$4;
+		}else if(line.match(/^<OPTGROUP [^>]*\blabel=("([^"]*)"|'([^']*)'|[\w-.:]+).*>/i)){
+			var eOPTGROUP=document.createElement('OPTGROUP');
+			fragment.appendChild(eOPTGROUP);
+			eOPTGROUP.label=RegExp.$2||RegExp.$3||RegExp.$1;
+			target=eOPTGROUP;
+		}else if(line.match(/^<\/OPTGROUP>/i)){
+			if(com['pageBreakBefore']){
+				target.setAttribute('pageBreakBefore',com['pageBreakBefore']);
+				com['pageBreakBefore']=false;
+			}
+			if(com['VENDOR']['NAME'])target.setAttribute('VENDOR_NAME',com['VENDOR']['NAME']);
+			if(com['VENDOR']['URL' ])target.setAttribute('VENDOR_URL' ,com['VENDOR']['URL']);
+			if(com['VENDOR']['LINK'])target.setAttribute('VENDOR_LINK',com['VENDOR']['LINK']);
+			if(com['COPY1'] ['NAME'])target.setAttribute('COPY1_NAME' ,com['COPY1']['NAME']);
+			if(com['COPY1'] ['URL' ])target.setAttribute('COPY1_URL'  ,com['COPY1']['URL']);
+			if(com['COPY1'] ['LINK'])target.setAttribute('COPY1_LINK' ,com['COPY1']['LINK']);
+			target=null;
+		}
+		continue;
+	}
+	status='';
+	return fragment;
+}
+
+/* ====================================================== */
+// Parse Mir0x IconList innerHTML
+function parseMir0xInnerHTML(list){
+	var fragment=document.createDocumentFragment();
+	var temp=document.createElement('DIV');
+	temp.innerHTML='<SELECT>'+list+"<\/SELECT>";
+	temp=temp.getElementsByTagName('SELECT')[0];
+	
+	status='phase1/3:';
+	var len=temp.childNodes.length;
+	for(var i=0;i<temp.childNodes.length;){
+		//processing gauge
+		if(status.length<parseInt(100*i/len))status='phase1/3:'+Array(parseInt(100*i/len)).join('.');
+		
+		if(temp.childNodes[i].nodeType!=1||temp.childNodes[i].tagName!='OPTGROUP')if(++i)continue;
+		fragment.appendChild(temp.childNodes[i]);
+		var eOPTGROUP=fragment.lastChild;
+		for(var j=0;j<eOPTGROUP.childNodes.length;){
+			if(eOPTGROUP.childNodes[j].nodeType==1&&eOPTGROUP.childNodes[j].tagName=='OPTION')if(++j)continue;
+			eOPTGROUP.removeChild(eOPTGROUP.childNodes[j]);
+		}
+	}
+	status='';
+	return fragment;
+}
+
+/* ====================================================== */
+// Generate Mir0x IconList from HTMLSelectElement
+function generateMir0x(eSELECT){
+	var list='';
+	var OPTGROUPs=eSELECT.getElementsByTagName('OPTGROUP');
+	var com =new Object({VENDOR:new Object(),COPY1:new Object()});
+	var copy=new Object({VENDOR:new Object(),COPY1:new Object()});
+	status='phase1/1:';
+	for(var i=0,len=OPTGROUPs.length;i<len;i++){
+		//processing gauge
+		if(status.length<parseInt(100*i/len))status='phase1/1:'+Array(parseInt(100*i/len)).join('.');
+		
+		//著作権情報
+		com['VENDOR']['NAME']=OPTGROUPs[i].getAttribute('VENDOR_NAME');
+		com['VENDOR']['URL' ]=OPTGROUPs[i].getAttribute('VENDOR_URL' );
+		com['VENDOR']['LINK']=OPTGROUPs[i].getAttribute('VENDOR_LINK');
+		com['COPY1'] ['NAME']=OPTGROUPs[i].getAttribute('COPY1_NAME' );
+		com['COPY1'] ['URL' ]=OPTGROUPs[i].getAttribute('COPY1_URL'  );
+		com['COPY1'] ['LINK']=OPTGROUPs[i].getAttribute('COPY1_LINK' );
+		if(!copy['COPY1']['NAME']||com['COPY1']['NAME']&&com['COPY1']['NAME']==copy['COPY1']['NAME']
+		&&com['COPY1']['URL' ]==copy['COPY1']['URL']&&com['COPY1']['LINK']==copy['COPY1']['LINK']);
+		else list+='<!-- %END_COPY1 -->'+"\n\n";
+		if(!copy['VENDOR']['NAME']||com['VENDOR']['NAME']&&com['VENDOR']['NAME']==copy['VENDOR']['NAME']
+		&&com['VENDOR']['URL' ]==copy['VENDOR']['URL']&&com['VENDOR']['LINK']==copy['VENDOR']['LINK']);
+		else list+='<!-- %END_VENDOR -->'+"\n\n";
+		
+		if(OPTGROUPs[i].getAttribute('pageBreakBefore'))
+			list+="\n"+'<!-- %PAGE-BREAK -->'+"\n"+'<!-- '+Array(72).join('=')+' -->'+"\n";
+		
+		if(com['VENDOR']['NAME']){
+			if(com['VENDOR']['NAME']==copy['VENDOR']['NAME']&&com['VENDOR']['URL' ]==copy['VENDOR']['URL']
+				&&com['VENDOR']['LINK']==copy['VENDOR']['LINK']){
+			}else{
+				list+='<!-- %BEGIN_VENDOR '+com['VENDOR']['NAME']+' -->'+"\n";
+				if(com['VENDOR']['URL' ])list+='<!-- %VENDOR_URL ' +com['VENDOR']['URL' ]+' -->'+"\n";
+				if(com['VENDOR']['LINK'])list+='<!-- %VENDOR_LINK '+com['VENDOR']['LINK']+' -->'+"\n";
+			}
+		}
+		if(com['COPY1']['NAME']){
+			if(com['COPY1']['NAME']==copy['COPY1']['NAME']&&com['COPY1']['URL' ]==copy['COPY1']['URL']
+				&&com['COPY1']['LINK']==copy['COPY1']['LINK']){
+			}else{
+				list+='<!-- %BEGIN_COPY1 '+com['COPY1']['NAME']+' -->'+"\n";
+				if(com['COPY1']['URL' ])list+='<!-- %COPY1_URL ' +com['COPY1']['URL' ]+' -->'+"\n";
+				if(com['COPY1']['LINK'])list+='<!-- %COPY1_LINK '+com['COPY1']['LINK']+' -->'+"\n";
+			}
+		}
+		if(copy['VENDOR']['NAME']!=com['VENDOR']['NAME'])copy['VENDOR']['NAME']=com['VENDOR']['NAME'];
+		if(copy['VENDOR']['URL' ]!=com['VENDOR']['URL' ])copy['VENDOR']['URL' ]=com['VENDOR']['URL' ];
+		if(copy['VENDOR']['LINK']!=com['VENDOR']['LINK'])copy['VENDOR']['LINK']=com['VENDOR']['LINK'];
+		if(copy['COPY1'] ['NAME']!=com['COPY1'] ['NAME'])copy['COPY1'] ['NAME']=com['COPY1'] ['NAME'];
+		if(copy['COPY1'] ['URL' ]!=com['COPY1'] ['URL' ])copy['COPY1'] ['URL' ]=com['COPY1'] ['URL' ];
+		if(copy['COPY1'] ['LINK']!=com['COPY1'] ['LINK'])copy['COPY1'] ['LINK']=com['COPY1'] ['LINK'];
+		
+		//本処理
+		list+='<OPTGROUP label="'+OPTGROUPs[i].label.replace('"','&quot;')+"\">\n";
+		var OPTIONs=OPTGROUPs[i].getElementsByTagName('OPTION');
+		for(var j=0,lenJ=OPTIONs.length;j<lenJ;j++)
+			list+="\t<OPTION value=\""+OPTIONs[j].value.replace('"','&quot;')+'">'+OPTIONs[j].text+"<\/OPTION>\n";
+		list+="<\/OPTGROUP>\n";
+	}
+	if(copy['COPY1']['NAME'])list+='<!-- %END_COPY1 -->'+"\n";
+	if(copy['VENDOR']['NAME'])list+='<!-- %END_VENDOR -->'+"\n";
+	
+	status='';
+	return list;
+}
+
+/* ====================================================== */
+// Parse Ealis3 IconList
+function parseEalis3(list){
+	var fragment=document.createDocumentFragment();
+	var icons;
+	if(typeof(list)=='array')icons=list;
+	else if(typeof(list)=='string'){
+		var regexp=/(\S+)\s+(\S[^\x0a\x0d]*)/g;
+		while(regexp.exec(list))icons.push(RegExp.$1,RegExp.$2);
+	}else return false;
+	
+	var len=icons.length;
+	status='phase1/3:';
+	for(var i=0;i<len;i+=2){
+		//processing gauge
+		if(status.length<parseInt(100*i/len))status='phase1/3:'+Array(parseInt(100*i/len)).join('.');
+		
+		var value=icons[i];
+		var label=icons[i+1];
+		if('**'==value){
+			var eOPTGROUP=document.createElement('OPTGROUP');
+			eOPTGROUP.label=label;
+			fragment.appendChild(eOPTGROUP);
+		}else{
+			if(!fragment.hasChildNodes())continue;
+			var eOPTION=document.createElement('OPTION');
+			fragment.lastChild.appendChild(eOPTION);
+			eOPTION.value=value;
+			eOPTION.text=label;
+		}
+	}
+	status='';
+	return fragment;
+}
+
+/* ====================================================== */
+// Generate Ealis3 IconList
+function generateEalis3(eSELECT){
+	var list='';
+	var OPTGROUPs=eSELECT.getElementsByTagName('OPTGROUP');
+	status='phase1/1:';
+	for(var i=0,len=OPTGROUPs.length;i<len;i++){
+		//processing gauge
+		if(status.length<parseInt(100*i/len))status='phase1/1:'+Array(parseInt(100*i/len)).join('.');
+		
+		list+='** '+(OPTGROUPs[i].label||'GROUP'+i)+"\n";
+		var OPTIONs=OPTGROUPs[i].getElementsByTagName('OPTION');
+		for(var j=0,lenJ=OPTIONs.length;j<lenJ;j++)
+			list+=(OPTIONs[j].value||'.')+' '+(OPTIONs[j].text||OPTIONs[j].value||'icon'+j)+"\n";
+	}
+	status='';
+	return list;
+}
+
+//-->
+</SCRIPT>
+<STYLE type="text/css">
+<!--
+/* ==================== 要素の標準スタイル ==================== */
+HTML{
+	overflow-y: scroll;/*WinIE6の標準モード対策*/
+}
+BODY{
+	font-family: 'MS UI Gothic',sans-serif;
+	font-size: 15px;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+
+/* ========== Links ========== */
+A:link,A:visited{
+	color: #44f;
+	text-decoration: none;
+}
+A:link:hover,A:visited:hover{
+	color: #fa8;
+	text-decoration: underline;
+}
+A:link:active,A:visited:active{
+	color: #f00;
+	text-decoration: underline;
+}
+
+/* ========== Forms ========== */
+FORM{margin: 0}
+BUTTON,INPUT{
+	color: #000;
+	font-family: 'MS UI Gothic',sans-serif;
+	font-size: 13px;
+	font-weight: normal;
+}
+TEXTAREA{
+	font-family: monospace;
+	font-size: 13px;
+}
+SELECT{
+	font-style: normal;
+}
+OPTGROUP{
+	background-color: #eee;
+	color: #555;
+	font-size: 90%;
+	font-style: normal;
+	font-weight: normal;
+}
+OPTION{
+	background-color: #fff;
+	color: #000;
+}
+
+
+/* ==================== 汎用クラススタイル ==================== */
+/* ========== アクセスキー ========== */
+.ak{
+	text-decoration: underline;
+}
+
+/* ==================== PAGE HEAD/FOOT ==================== */
+.pageHead,.pageFoot{
+	background-color: #6ac;
+	clear: both;
+	color: #fff;
+	margin: 0.3em auto;
+	padding: 0;
+	text-align: center;
+	width: 90%;
+}
+.pageHead H1,.pageFoot P{
+	font-family: 'Comic Sans MS', sans-serif;
+	font-size: 19px;
+	font-weight: normal;
+	line-height: 25px;
+	margin: 0;
+	padding: 2px 5px;
+}
+.pageHead H1{float: left;text-align: left}
+.pageFoot P {text-align: right}
+.pageFoot A:link,.pageFoot A:visited{color:#fff;text-decoration: none}
+.pageFoot A:hover{color:#fff;text-decoration: underline}
+.pageHead DIV,.pageFoot DIV{
+	letter-spacing: 1em;
+	line-height: 25px;
+	padding: 2px 5px;
+}
+.pageHead DIV{text-align: right}
+.pageFoot DIV{float: left;text-align: left}
+
+#content{
+	margin: 0 0 0 180px;
+}
+
+/* ==================== ICON MENU ==================== */
+#iconMenu{
+	border: #6ac solid 3px;
+	left: 0;
+	margin: 10px;
+	padding: 3px;
+	position: absolute;
+	text-align: center;
+	width: 150px;
+}
+.iconMenuHead{
+	background-color: #6ac;
+	color: #fff;
+	font-size: 16px;
+	margin: 0;
+	padding: 3px;
+}
+#iconMenuTable{
+}
+#iconMenuTable P{
+	border: solid 1px #fff;
+	cursor: default;
+	margin: 0.3em 3px;
+	padding: 3px 0;
+}
+#iconMenuTable P.iconMenuItem{
+	background-color: transparent;
+	border-color: #fff;
+}
+#iconMenuTable P.iconMenuItemOver{
+	background-color: #def;
+	border-color: #ccc;
+}
+#iconMenuTable P.iconMenuItemCurrent{
+	background-color: #cde;
+	border-color: #ccd;
+}
+#iconMenuTable P.iconMenuItemCurrentOver{
+	background-color: #99f;
+	border-color: #aaf;
+}
+
+
+/* ==================== ICON THUMBNAIL ==================== */
+#iconThumbnail{
+	margin: 5px auto;
+	width: 720px;
+}
+.iconTable{
+	border: #6ac solid 5px;
+	margin: 0 auto 1em auto;
+	padding: 3px;
+	text-align: left;
+	width: 720px;
+}
+.iconTableHead{
+	background-color: #6ac;
+	color: #fff;
+	font-size: 18px;
+	font-weight: bold;
+	margin: 0 auto 0.3em auto;
+	padding: 0.2em;
+	text-align: left;
+	white-space: nowrap;
+}
+.iconTableBody{
+}
+.iconTableFoot{
+	background-color: #cdf;
+	clear: both;
+	color: #05a;
+	font-size: 15px;
+	font-weight: bold;
+	margin: 0.3em 0 0 0;
+	padding: 0.2em;
+	text-align: right;
+	white-space: nowrap;
+}
+.iconItem{
+	background-color: #eee;
+	float: left;
+	text-align: center;
+	width: 120px;
+}
+.itemText,.itemValue{
+	width:110px
+}
+.groupRemove,.itemRemove{
+	color: #f33;
+}
+
+
+/* ==================== ICON PREF ==================== */
+#iconPref{
+	margin: auto;
+}
+#iconTextarea{
+	max-width: 720px;
+}
+
+
+/* ========== 著作権表示 ========== */
+.AiremixCopy{
+	font-family: Verdana,sans-serif;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: normal;
+	text-align: right;
+}
+
+-->
+</STYLE>
+</HEAD>
+
+<BODY>
+
+<DIV class="pageHead"><H1>Icon Manager</H1><DIV>■■■■■■■</DIV></DIV>
+
+<DIV id="iconMenu">
+<P class="iconMenuHead">ICON MENU</P>
+<DIV id="iconMenuTable"><P style="background:#eee;border:none;margin:1em auto;padding:70px 0">[ ready... ]</P></DIV>
+<P><BUTTON type="button" accesskey="g" onclick="addIconGroup()">グループ追加(G)</BUTTON></P>
+<P><SELECT id="iconTempSelect" size="10" style="width:140px"><OPTION>ready...</SELECT></P>
+</DIV>
+
+<DIV id="content">
+<DIV id="iconThumbnail"><P style="background:#eee;margin:1em auto;padding:150px">[ ready... ]</P></DIV>
+
+<DIV id="iconPref">
+<FORM action="#" onsubmit="return false">
+<P><BUTTON type="button" accesskey="o" onclick="loadIconListTextarea()">読み込み(O)</BUTTON>&nbsp;
+<BUTTON type="button" accesskey="q" onclick="saveIconListTextarea()">書き出し(Q)</BUTTON>&nbsp;
+<LABEL accesskey="r" for="iconDirectory">IconDi<span class="ak">r</SPAN>ectory:
+<INPUT id="iconDirectory" type="text" onchange="iconDir=this.value" value=""></LABEL>
+<LABEL accesskey="y" for="setIconListType">IconListT<span class="ak">y</SPAN>pe:
+<SELECT id="setIconListType" onchange="iconListType=this.value">
+<OPTION value="Mir0x">Mir0x形式</OPTION><OPTION value="ealis3">ealis3形式</OPTION></SELECT>
+</LABEL>
+</P>
+
+<P><LABEL accesskey="b" for="iconTextarea">Icon <SPAN class="ak">B</SPAN>ody</LABEL><BR>
+<TEXTAREA id="iconTextarea" rows="20" cols="100">
+&lt;!-- ======================================================================= --&gt;
+&lt;!-- %BEGIN_VENDOR BLACK AND WHITE GORGE --&gt;
+&lt;!-- %VENDOR_URL http://homepage2.nifty.com/BWG/ --&gt;
+&lt;OPTGROUP label=&quot;アメコミ系&quot;&gt;
+	&lt;OPTION value=&quot;bwg/hellboy.gif&quot; title=&quot;HELL BOY&quot;&gt;ヘルボーイ&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;bwg/abraham.gif&quot; title=&quot;HELL BOY&quot;&gt;エイブラハム&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;bwg/master.gif&quot; title=&quot;HELL BOY&quot;&gt;導師&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;bwg/spawn.gif&quot; title=&quot;SPAWN&quot;&gt;スポーン&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;bwg/ghorst.gif&quot; title=&quot;GHORST RIDER&quot;&gt;ゴーストライダー&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;bwg/wolv.gif&quot; title=&quot;X-MEN&quot;&gt;ウルヴァリン&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;bwg/raven.gif&quot; title=&quot;McFARLANE TOYS&quot;&gt;レイヴンスポーン&lt;/OPTION&gt;
+&lt;/OPTGROUP&gt;
+&lt;OPTGROUP label=&quot;GOTH&quot;&gt;
+	&lt;OPTION value=&quot;bwg/g_kao.gif&quot;&gt;ゴス香里&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;bwg/g_nayu.gif&quot;&gt;ゴス名雪&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;bwg/g_sayu.gif&quot;&gt;ゴス佐祐理&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;bwg/g_saya.gif&quot;&gt;ゴスさやか&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;bwg/saki.gif&quot;&gt;花島咲&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;bwg/sara.gif&quot;&gt;サラ&lt;/OPTION&gt;
+&lt;/OPTGROUP&gt;
+&lt;!-- %END_VENDOR --&gt;
+
+&lt;!-- %PAGE-BREAK --&gt;
+&lt;!-- ======================================================================= --&gt;
+&lt;!-- %BEGIN_VENDOR 行脚堂 --&gt;
+&lt;!-- %VENDOR_URL http://www.ccsakura.org/home/angyadow/ --&gt;
+
+&lt;!-- %BEGIN_COPY1 Visual Art's/Key --&gt;
+&lt;!-- %COPY1_URL http://key.visualarts.gr.jp/ --&gt;
+&lt;OPTGROUP label=&quot;Air&quot;&gt;
+	&lt;OPTION value=&quot;angyadow/sik_misuzu.gif&quot;&gt;神尾観鈴&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;angyadow/sik_minagi.gif&quot;&gt;遠野美凪&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;angyadow/sik_kano.gif&quot;&gt;霧島佳乃&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;angyadow/sik_haruko.gif&quot;&gt;神尾晴子&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;angyadow/sik_michiru.gif&quot;&gt;みちる&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;angyadow/sik_hijiri.gif&quot;&gt;霧島聖&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;angyadow/sik_kanna.gif&quot;&gt;神奈備命&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;angyadow/sik_uraha.gif&quot;&gt;裏葉&lt;/OPTION&gt;
+&lt;/OPTGROUP&gt;
+&lt;!-- %END_COPY1 --&gt;
+&lt;!-- %END_VENDOR --&gt;
+
+&lt;!-- %PAGE-BREAK --&gt;
+&lt;!-- ======================================================================= --&gt;
+&lt;!-- %BEGIN_VENDOR ExpensiveNoise --&gt;
+&lt;!-- %VENDOR_URL http://mypage.naver.co.jp/y_takai/ --&gt;
+
+&lt;!-- %BEGIN_COPY1 Ｆ＆Ｃ --&gt;
+&lt;!-- %COPY1_URL http://www.fandc.co.jp/ --&gt;
+&lt;OPTGROUP label=&quot;With You&quot;&gt;
+	&lt;OPTION value=&quot;y_takai/ic_noemi.png&quot;&gt;乃絵美&lt;/OPTION&gt;
+&lt;/OPTGROUP&gt;
+&lt;OPTGROUP label=&quot;Canvas&quot;&gt;
+	&lt;OPTION value=&quot;y_takai/ic_s_ren.png&quot;&gt;恋&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;y_takai/ic_s_ai.png&quot;&gt;藍&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;y_takai/ic_yurina.png&quot;&gt;百合奈&lt;/OPTION&gt;
+&lt;/OPTGROUP&gt;
+&lt;!-- %END_COPY1 --&gt;
+
+&lt;!-- %BEGIN_COPY1 jANIS/ivory --&gt;
+&lt;!-- %COPY1_URL http://www.sp-janis.com/ --&gt;
+&lt;!-- %COPY1_LINK &lt;A href=&quot;http://www.sp-janis.com/&quot;&gt;jANIS&lt;/A&gt;/&lt;A href=&quot;http://www.ivory.co.jp/&quot;&gt;ivory&lt;/A&gt; --&gt;
+&lt;OPTGROUP label=&quot;とらいあんぐるハート&quot;&gt;
+	&lt;OPTION value=&quot;y_takai/ic_kotori.png&quot;&gt;小鳥&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;y_takai/ic_yuuhi.png&quot;&gt;ゆうひ&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;y_takai/ic_mio.png&quot;&gt;美緒&lt;/OPTION&gt;
+	&lt;OPTION value=&quot;y_takai/ic_fiasse.png&quot;&gt;フィアッセ&lt;/OPTION&gt;
+&lt;/OPTGROUP&gt;
+&lt;!-- %END_COPY1 --&gt;
+&lt;!-- %END_VENDOR --&gt;
+</TEXTAREA></P>
+</FORM>
+</DIV>
+</DIV>
+
+<DIV class="pageFoot"><DIV>■■■■■■■</DIV><P>Point of No Return</P></DIV>
+
+<DIV class="AiremixCopy">- <A href="http://www.airemix.com/" title="Airemix - iconManager -">Airemix Icon Manager</A>
+<VAR>$Revision$</VAR> -</DIV>
+
+<SCRIPT type="text/javascript" defer>
+<!--
+/* ============================================ */
+// isLoaded?
+var iconThumbnail=document.getElementById('iconThumbnail');
+var iconTempSelect=document.getElementById('iconTempSelect');
+var iconMenuTable=document.getElementById('iconMenuTable');
+var iconTextarea=document.getElementById('iconTextarea');
+document.getElementById('iconDirectory').value=iconDir;
+isLoaded=true;
+-->
+</SCRIPT>
+</BODY>
+</HTML>
+<!--
+$Id$
+=begin
+
+= Icon Manager
+
+== Name
+Icon Manager - Icon Management Tool for Mireille and Marldia and ...
+
+== Synopsis
+気合で使うべし。
+
+== Description
+以前Mireilleに添付されていたIcon Managerプレビュー版はCGI/Perlで書かれていましたが、
+このIconManagerはJavaScriptのみで書かれています。
+W3CDOMにある程度対応したブラウザで動作します。
+（DOM1とDOM2Coreの一部に対応している必要あり）
+サーバー上に置いてもローカルに置いても動きます。
+（どちらにしてもクライアントサイドで動くわけなので）
+ただし、アイコンのディレクトリはローカルのフォルダを指定したほうが軽いでしょう。
+
+== Requirements
+* DOM2 Core, DOM2 HTMLなどの、W3CDOM関連仕様にそこそこ準拠したブラウザ。
+* 適量のアイコン。
+* そのほか。
+
+== Bugs and Limitations
+=== ブラウザ非依存な制限
+* OPTGROUPの子要素でないOPTION要素は読み書きの過程で失われます。
+* 標準のアイコン情報以外の、埋め込み情報は読み書きの過程で失われます。
+* ealis形式でアイコン情報を書き出すと、著作権情報や改ページ情報は失われます。
+
+=== ブラウザ依存な制限
+どのブラウザでも基本的な動作はするようです。
+特別な個々のブラウザ向けの調整は行っていないのに〜♪
+W3Cさまさまですねっ。
+暮らしやすい時代になったものです。
+
+というわけで、各々のブラウザについては以下の通り
+:Microsoft Internet Explorer Version: 6.0.2800.1106
+  * ちゃんと動きます。
+:Mozilla 1.3b (Gecko/20030210)
+  * IconItemを削除してIconTableBodyの高さが減ったのに、高さを自動調節してくれない。
+  * IconItemに関するappendChild/removeChild周りの挙動が不審。
+  * 処理が遅い
+:Netscape Navigator 4
+  * 非対応・対応予定無し。
+:Opera 7.01 build2651
+  * SELECT周りの表示が乱れますが、内部的にはきちんと反映されているようです。
+:Opera 6.0
+  * 非対応・対応予定無し。
+:KHTML系
+  * 未調査
+
+== History
+:Revision: 1.6 (2003-05-16)
+  * 著作権情報をサポート
+  * PAGE-BREAKをサポート
+  * JavaScriptのバグを修正
+:Revision: 1.5 (2003-02-27)
+  * CSSを調整
+:Revision: 1.4 (2003-02-17)
+  * CSSを調整
+  * Licenseを決定
+:Revision: 1.3 (2003-02-12)
+  * CSSを調整
+  * IDやクラス、変数などの名前付けルールを変更
+  * 各々の関数の汎用性を向上
+:Revision: 1.2 (2003-02-05)
+  * ealis3のアイコンリスト形式の読み書きに対応
+  * 横幅1024程度でもIconThumbnailがIconMenuの右に表示されるように
+:Revision: 1.1 (2003-01-28)
+  最初のバージョン。
+  JavaScript+DOMで書き直したもの。
+
+== See also
+=== これを使うとき
+:Introduction to Mireille
+  ((<http://www.airemix.com/HP_CGI/Mireille.html>))
+:Mireille Readme
+  ((<http://www.airemix.com/HP_CGI/file/Mireille.xml>))
+
+=== 内部構造を知りたいとき
+:Document Object Model (DOM) Level 2 Core Specification
+  ((<http://www.w3.org/TR/DOM-Level-2-Core>))
+:Document Object Model (DOM) Level 2 HTML Specification
+  ((<http://www.w3.org/TR/DOM-Level-2-HTML>))
+
+== License
+Public Domain。
+
+== Author
+成瀬ゆい ((<URL:mailto:naruse@airemix.com>))
+
+=end
+-->
