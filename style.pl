@@ -648,7 +648,7 @@ _HTML_
 #
 sub getAttachedFiles{
     my %DT = %{shift()};
-    my $files = '';
+    my $attachments = '';
     my $thumbnails = '';
     if($DT{'attach'}){
 	my $attach = MirString::urldecode($DT{'attach'});
@@ -666,27 +666,25 @@ sub getAttachedFiles{
 	    my $filename = sprintf('%s.%s',$item->{'hash'},$item->{'ext'});
 	    my $attach = sprintf('%s/%s',$CF{'AttachDir'},$filename);
 	    my $thumbnail = sprintf('%s/%s',$CF{'AttachThumbnailDir'},$filename);
-	    $files .= <<"_HTML_";
-<a href="$attach" title="$filename">$_->{'hash'}.$_->{'ext'}</a>
-_HTML_
-	    if(AttachThumbnail&&-s$thumbnail){
+	    if($CF{'AttachThumbnail'}&&-s$thumbnail){
 		$thumbnails .= <<"_HTML_";
-<a href="$attach" title="$filename"><img src="$thumbnail" alt=""></a>
+<a href="$attach" title="$filename"><img src="$thumbnail" alt="$filename"></a>
+_HTML_
+	    }else{
+		$attachments .= <<"_HTML_";
+<a href="$attach" title="$filename">$_->{'hash'}.$_->{'ext'}</a>
 _HTML_
 	    }
 	}
     }
-    if($files){
-	$files = <<"_HTML_";
-<TR><TD>&nbsp;</TD><TD>Attached Files:</TD><TD class="file">$files</TD></TR>
+    $attachments .= $thumbnails if $thumbnails;
+    if($attachments){
+	$attachments = <<"_HTML_";
+<TR><TD>&nbsp;</TD><TD>Attachements:</TD><TD class="attachments">
+$attachments</TD></TR>
 _HTML_
     }
-    if($thumbnails){
-	$thumbnails = <<"_HTML_";
-<TR><TD>&nbsp;</TD><TD>Thumbnails:</TD><TD class="thumbnail">$thumbnails</TD></TR>
-_HTML_
-    }
-    return($files,$thumbnails);
+    return $attachments;
 }
 
 
