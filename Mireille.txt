@@ -18,12 +18,12 @@
 
 ◇対応サーバー
  OS:    UNIX系,WinNT系（Win9xとMacOS9以下ではflockが動きません）
- httpd: IIS5以上とApacheで確認、他のものでもCGI/Perlが動けば多分
- Perl:  5.005_03以降
+ httpd: IIS5.1とApacheで確認、他のものでもCGI/Perlが動けばきっと動くはず
+ Perl:  5.005_03以降（手を入れれば5.xなら動くはず）
 ◇対応ブラウザ
  WinIE5.01以上（WinIE6以上を推奨）
  Mozilla1.0.0以上
- Opera7？
+ Opera7
  そのほかのブラウザでも多分読めます
  WinIE4,MacIE,Netscape4,Opera,iCabなどでも、記事の読み書きができない場合は教えてください
  最低限記事の読み書きは出来るべきだと思っていますので
@@ -85,7 +85,7 @@ index.cgiの中の $CF{'conenc'}='|gzip -cfq9'; という所を $CF{'conenc'}=''; として
 #------------------------------------------------------------------------------#
 ◇Mireille History
 2002-12-25 Release 1.2.6
-core.cgi
++core.cgi
  引数取得処理回りを調整
  スレッドごと検索でファイルをcloseしてなかったのを修正
  記事ごと検索でバックトラックにはまる場合があったのを修正
@@ -100,6 +100,7 @@ core.cgi
 +help.pl
  メールアドレスの@を&#64;に置換するようにしてみた（SPAM対策？）
  デザインや構成を一部変更
+ 文章を一部校正
 +index.cgi,manage.cgi
  index.cgiがrequireされたときに自分のRevisionを返すようにした
  $CF{'bodyHead'}と$CF{'bodyFoot'}を追加
@@ -114,6 +115,7 @@ core.cgi
  デザイン周りの処理構造を再構成
  記事ナビの処理を一部クラスにまとめた
  Cookieに本文データを一時保存するJavaScriptを微調整
+ 記事の出力を変数+evalからただのprintに変更
 +Mireille.html
  retroさんから頂いたアイコン設定の解説を統合
  アイコン周りの解説を増やした
@@ -633,7 +635,7 @@ style.cssで使っていないところを一部削除
  DIVとTABLEでごちゃごちゃやってる->Netscape4対策
  現在のブラウザが一通り入れ替わったら、XHTML2+JavaScript2+CSS3で書き直します
  #成瀬はW3C原理主義者じゃないので・・・
- $ENV{'HTTP_USER_AGENT'}みてstyleを切り替える？
+ $ENV{'HTTP_USER_AGENT'}みてrequireするstyleを切り替える？
 □アイコンリストや色リストの形式はHTML完全互換でない
  処理の簡便化のため、一部互換性を省いています
  例えば次の、
@@ -680,7 +682,9 @@ style.cssで使っていないところを一部削除
 □より自由度の高いスタイルの変更
  ツリービューにしたり、果ては日記のように使えるようにしたり
 □Unicode化
- EUC/SJISの呪縛から逃れたい
+ EUC/SJISの呪縛から逃れたい～use encodingさいこぉ～
+ 'テスト'=~/好/がマッチしないのステキ☆
+ Perl5.8待ちですね
 □ログ形式の変更
  Storableモジュールなんか使うのいいですね
  XMLデータベースまで使ちゃったら素敵ですね
@@ -724,7 +728,7 @@ $DT{'body'}=~s[$regexp][$ST{$_}]gm;
  上の例では /* ・・・ */ というC言語のコメント部分に、s2f2aというCSSクラスを与えます
  
  文字列内に' '（半角空白）を書きたい場合は、8進数文字コードで\040と書くか、
- 16進数文字コードで\x40と書いてください
+ 16進数文字コードで\x20と書いてください
 
 
 #------------------------------------------------------------------------------#
@@ -804,11 +808,9 @@ $DT{'body'}=~s[$regexp][$ST{$_}]gm;
 
 
 #------------------------------------------------------------------------------#
-◇CONFIGのHTMLデザイン部について
+◇style.plのHTMLデザイン部について
 かなりの自由度でデザインを変更することが出来ます
-また、メニュー$CF{'menu'}、記事$CF{'artprt'},$CF{'artchd'},$CF{'artfot'}、
-投稿フォーム$CF{'wrtfm'},$CF{'resfm'}のデザイン部では、
-以下の変数を使うことが出来ます
+また、メニュー、記事、投稿フォームのデザイン部では以下の変数を使うことが出来ます
  記事番号：$DT{'i'}
  返信番号：$DT{'j'}
  名前：$DT{'name'}
@@ -913,7 +915,7 @@ $DT{'body'}=~s[$regexp][$ST{$_}]gm;
  とあるレンタルサーバーで、Mireilleの自動作成したファイルを、
  FTPから削除できないという現象があったのですが、これの対応策として、
  getloginでユーザーを調べ、''だったらumask(0)をかける、としたためです
- そのサーバーは今はSuEXECを使うようになっためumask(0)する必要ないのですけどね
+ そのサーバーは今ではSuEXECを使うようになっためumask(0)する必要ないのですけどね
  もっとスマートな解決方法ってあったのかな。。
 
 
@@ -1072,7 +1074,7 @@ s/value="Cookieにあるファイル名"/value="Cookieにあるファイル名" selected="select
   記事参照機能というのは、
   「>>No.113」などとすると、その掲示板の113番スレッドにリンクが張られ、
   「>>No.113-5」などとすると、その掲示板の113番スレッド子記事5にリンクが張られる機能です
-  比較的初期からある機能ですが、今まで文章化されていない機能だったりします
+  比較的早くからある機能ですが、今まで文章化されていなかった機能だったりします
 □セキュリティ
  一応意識してはいます
  そのまま他のCGI/Perlのセキュリティホールを指摘してしまうことになるので、
@@ -1222,10 +1224,9 @@ s/value="Cookieにあるファイル名"/value="Cookieにあるファイル名" selected="select
 	表示機能はMozillaと同じ
 ・Opera
 	Opera7でinnerHTMLやOPTGROUPにも対応しました
-	betaではOPTION要素のbackground-colorが未だに反映されなかったり、一部表示が崩れたりします
-	機能的には「第三のブラウザ」と名乗れるくらいになってきたかもしれません
-	まだ記事ナビの半透明化には非対応
-	W3Cによる標準化待ちですかね
+	W3C標準の実装においては、一部Mozillaより進んでいるところもあるくらいで、
+	やっと機能的にも「第三のブラウザ」と名乗れるくらいになってきたかもしれません
+	まだ記事ナビの半透明化には非対応、これはW3Cによる標準化待ちですかね
 ・NetscapeNavigator
 	はやくきえてなくなれ
 	1.2.3.1でCSSをN4でも使うようにしました
@@ -1246,6 +1247,7 @@ s/value="Cookieにあるファイル名"/value="Cookieにあるファイル名" selected="select
 	OPTGROUPをツリーメニューにして表示してくれるのはうれしいのですけどね
 	次のバージョンではまともに動くのでしょうか
 	#Amaya6.3ではAiremixやMireilleを見れるようになりました、でも数分で落ちます
+	#Amaya7.0でも数分で落ちます
 ・Lynxとかw3mとか
 	勘弁してくださいｗ
 	積極的に対応作業をすることはありませんが、変更すべき点のリストをくださればマージはします
@@ -1256,20 +1258,20 @@ s/value="Cookieにあるファイル名"/value="Cookieにあるファイル名" selected="select
 □サーバー別情報
 ・ccsnet.ne.jp
 	#!/usr/bin/perl
-	htaccess非対応
+	.htaccess非対応
 	CGIパーミッションは755
 	管理人権限で稼動
 	.plはCGIとみなす
 ・biglobe.ne.jp
 	#!/usr/local/bin/perl
-	htaccess非対応
+	.htaccess非対応
 	perl5.6
 ・cool.ne.jp
 	#!/usr/bin/perl
-	htaccess対応
+	.htaccess対応
 ・infoseek.co.jp
 	#!usr/local/bin/perl
-	htaccess非対応
+	.htaccess非対応
 	CGIパーミッションは755
 	ディレクトリは777
 	ディレクトリ丸見え
@@ -1287,13 +1289,13 @@ s/value="Cookieにあるファイル名"/value="Cookieにあるファイル名" selected="select
 ・mixedmedia.net
 	#!usr/local/bin/perl
 	ディレクトリは755、CGIは700を推奨（777は不可）
-	htaccess対応（exec系・OPTIONSディレクティブは不可）
+	.htaccess対応（exec系・OPTIONSディレクティブは不可）
 	.plはCGIとみなす
 	perl5.005_03
 ・cside.jp
 	#!usr/local/bin/perl
 	ディレクトリは755、CGIは700を推奨
-	htaccess対応
+	.htaccess対応
 	.plはCGIとみなされない
 	perl5.6
 ・tok2.com
