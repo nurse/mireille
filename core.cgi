@@ -1488,6 +1488,7 @@ sub rss{
     
     my %item =();
     my @logfiles = &logfiles('date');
+    pop @logfiles;
     for( 0 .. ( $maxItem > $#logfiles ? $#logfiles : $maxItem-1 ) ){
     	my $count = $_;
     	my $i = $logfiles[$_];
@@ -1499,8 +1500,7 @@ sub rss{
 	close(FILE);
 	
 	my $subject = '';
-	for( 0, reverse( ($#articles-$maxItem+$count) .. $#articles )){
-	    $_ < 0 and next;
+	for( 0, grep{$_>0}reverse( ($#articles-$maxItem+$count) .. $#articles )){
 	    my $j = $_;
 	    my %DT = ($articles[$_] =~ /([^\t]*)=\t([^\t]*);\t/go);
 	    $DT{'i'} = $i;
