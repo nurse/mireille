@@ -15,7 +15,7 @@
 @charset "Shift_JIS";
 /* Airemix General Style Sheet */
 /* "This file is written in shift_jis, CRLF." 空 */
-/* $Id$ */
+/* $Airemix$ */
 
 
 
@@ -37,7 +37,7 @@ body{
 	color:#88f;
 	font-family: 'MS UI Gothic',Osaka,sans-serif;
 	font-size: 95%;
-	line-height: 1.2em;
+	line-height: 1.4;
 	margin: 0 auto;
 	padding: 0;
 	text-align:center;
@@ -161,8 +161,8 @@ th,td{
 	background-color: #6ac;
 	clear: both;
 	color: #fff;
-	margin: 0.3em auto;
-	padding: 0.3em;
+	margin: 0 auto;
+	padding: 0.4em;
 	text-align: center;
 	width: 90%;
 }
@@ -170,6 +170,7 @@ th,td{
 	font-family: 'Comic Sans MS', sans-serif;
 	font-size: 1.2em;
 	font-weight: normal;
+	line-height: 1;
 	margin: 0;
 }
 .PageHead H1{float: left;text-align: left}
@@ -178,7 +179,7 @@ th,td{
 .PageFoot A:hover{color:#fff;text-decoration: underline}
 .PageHead DIV,.PageFoot DIV{
 	letter-spacing: 1em;
-	line-height: 1.5em;
+	line-height: 1.2;
 	margin: 0;
 }
 .PageHead DIV{text-align: right}
@@ -264,8 +265,9 @@ th,td{
 	color: #fff;
 	font-size: 1.3em;
 	font-weight: bold;
+	line-height: 1.4;
 	margin: 0.2em;
-	padding: 0.2em 0.3em;
+	padding: 0.1em 0.3em;
 	text-align: left;
 }
 /* Second Level */
@@ -534,11 +536,7 @@ BODY{
 
 <DIV class="section">
 <H3 class="h"><A name="Mireilleとは">Mireilleとは</A></H3>
-<P>基本的には、レスアイコン掲示板です<BR>
-CSSを編集すれば楽に色を変えたりでき、記事部分のデザインをそこそこ変更可能です<BR>
-さらにHTMLの知識があれば管理CGI上からデザインをかなりの部分まで好みどおりにすることが可能で、<BR>
-アイコンを使わなかったり、色を選べなくしたり、ということまで出来るので自由度は高いほうです<BR>
-他にも重宝するであろう以下の機能を備えています</P>
+<P>基本的には、レスアイコン掲示板です。CSSを編集すれば楽に色を変えたりでき、記事部分のデザインをそこそこ変更可能です。さらにHTMLの知識があれば管理CGI上からデザインをかなりの部分まで好みどおりにすることが可能で、アイコンを使わなかったり、色を選べなくしたり、ということまで出来るので自由度は高いほうです。他にも重宝するであろう以下の機能を備えています。</P>
 </DIV>
 
 
@@ -584,83 +582,74 @@ CSSを編集すれば楽に色を変えたりでき、記事部分のデザインをそこそこ変更可能です<BR
 	<LI>管理CGIからアイコンリストを2通りの方法から選んで編集できる</LI>
 	<LI>管理CGIでアイコンリストから、アイコン見本のHTMLを生成できる</LI>
 	<LI>管理CGIからログ削除・ログ詰めができる</LI>
-	<LI>HTML/CSSの知識があれば、style.cssの改造により記事表示や投稿画面などのデザインが変えられ、<BR>
-	Perlの知識があれば、style.plからサブルーチンをオーバーライドしたりすることでさらに大幅に改造できる</LI>
+	<LI>HTML/CSSの知識があれば、style.cssの改造により記事表示や投稿画面などのデザインが変えられ、Perlの知識があれば、style.plからサブルーチンをオーバーライドしたりすることでさらに大幅に改造できる</LI>
 </UL>
 </DIV>
 </DIV>
 
 
 
-<!-- BEGIN_Mireilleの利用規定 -->
+<!-- BEGIN_MireilleLicense -->
 <DIV class="section">
-<H2 class="h">◇<A name="Mireilleの利用規定">Mireilleの利用規定（2003-05-16版）</A></H2>
-
+<H2 class="h">◇<A name="Mireille License">Mireille License 1.0</A></H2>
 
 <DIV class="section">
-<H3 class="h">1. Mireilleをそのまま、または改造して、自分のサイトで使う場合</H3>
-<P>ご自由にお使いください。<BR>
-Airemix/Mireilleの表示とリンクは残しておいていただいた方がありがたいのですが、削除しても構いません。</P>
+<H3 class="h">1. Mireilleを使う場合</H3>
+<P>好きなように使うことができます。このケースに限り、<A href="http://www.airemix.com/">Airemix</A>の著作権表示やリンクを削除しても構いません。</P>
+<P>「Mireilleを使う場合」とは、Mireilleがオリジナルのままか改造済みであるかを問いません。Mireilleの直接の利用者以外に、Web経由などでMireilleを使う人がいても構いません。しかし、Mireilleを配布する場合は、第3節が適用されるため、著作権表示を削除することはできません。</P>
 </DIV>
 
-
 <DIV class="section">
-<H3 class="h">2. Mireilleの圧縮ファイルををそのまま二次配布する場合</H3>
-<P>以下の条件を満たす限りにおいて、自由に配布することができます。<BR>
-この際、必要以上の利益を得ても構いません。</P>
-<UL>
-	<LI>圧縮ファイルを一切変更しないこと。（解凍再圧縮やファイル名変更も不可）</LI>
-	<LI><A href="http://www.airemix.com/">Airemix</A>で入手できるものであると明示すること。</LI>
-</UL>
+<H3 class="h">2. Mireilleのパッケージを二次配布する場合</H3>
+<P>Mireilleのパッケージを変更しない限りにおいて、自由に配布することができます。この際、必要以上の利益を得ても構いません。</P>
+<P>Mireilleのパッケージを変更した場合は第3節が適用されます。</P>
 </DIV>
-
 
 <DIV class="section">
 <H3 class="h">3. Mireilleを改造したものを配布する場合</H3>
-<P>以下の条件を満たす限りにおいて、自由に改造し、配布することができます。</P>
+<P>以下の条件を満たす限りにおいて、自由に改造し、配布することができます。配布ライセンスに非オープンソースなライセンスを採用しても構いません。</P>
 <UL>
 	<LI><A href="http://www.airemix.com/">Airemix</A>のMireilleをベースに、改造を施したものである、と明示すること。（オリジナルのMireilleを二次配布しているのではないことがわかるようにする）</LI>
-	<LI>改造後のCGIでも<A href="http://www.airemix.com/">Airemix</A>の著作権表記を残すか、<BR>
-	掲示板に利用者がアクセスしたとき、最初に見るページのそこそこ目立つところに、<A
-	 href="http://www.airemix.com/">Airemix</A>へのリンクを張ること。</LI>
+	<LI>改造後のCGIでも<A href="http://www.airemix.com/">Airemix</A>の著作権表記を残すか、掲示板に利用者がアクセスしたとき、最初に見るページのそこそこ目立つところに<A href="http://www.airemix.com/">Airemix</A>へのリンクを張ること。</LI>
 </UL>
-<P>但し、根本から作り直し、原型をとどめていない場合はこの限りではありません。<BR>
-それでも、ヘルプあたりに「参考にしたところ」としてリンクをはっていただければ幸いです。</P>
+<P>但し、変更を重ねた末に、原型がなくなった場合はこの限りではありません。それでも、ヘルプあたりに「参考にしたところ」としてリンクをはっていただければ幸いです。</P>
 </DIV>
-
 
 <DIV class="section">
-<H3 class="h">4. 商用利用する場合</H3>
-<P>レンタル掲示板を運用したり、商用サイトの掲示板として使う場合でもこれまでに表記した通りで、<BR>
-「商用だったら、」という商用だけの特別な制限などはありません。<BR>
-何かくださるというのなら喜んで頂きますが；）</P>
+<H3 class="h">4. Mireilleのコードを利用する場合</H3>
+<P>利用したソフトウェアのソースコードやそのソフトウェアの付属ドキュメントに、<A href="http://www.airemix.com/">Airemix</A>の著作権表記とMireilleのコードを利用した旨が書いてあれば十分です。</P>
 </DIV>
-
 
 <DIV class="section">
-<H3 class="h">5. 使用することが出来ない人</H3>
-<P>何らかの律令格式の類によってMireilleの使用を禁じられている人は使えません。</P>
+<H3 class="h">5. 商用利用する場合</H3>
+<P>これまでに表記した通りで、「商用だったら」という特別な制限はありません。</P>
 </DIV>
-
 
 <DIV class="section">
-<H3 class="h">6. いわゆる免責</H3>
-<P>このスクリプト及びこのスクリプトの関連品を使って不利益を被ってもわたしは知りません。<BR>
-うちの掲示板を通して実行可能な形で依頼されれば、なんらかの助けはするかもしれませんが、<BR>
-基本的には何もしない、という形で覚悟した上で使ってください。<BR>
-バグ報告や機能追加要望、誤植の発見は<A href="http://www.airemix.com/bbs/">Airemix掲示板</A>までどうぞ</P>
+<H3 class="h">6. 利用の禁止</H3>
+<P>利用目的や利用者の所属によって、このライセンスで特別に利用を制限することはありません。しかし、何らかの律令格式の類によって、Mireilleの利用が禁じられていることがあるかもしれません。</P>
 </DIV>
-
 
 <DIV class="section">
-<H3 class="h">7. この規定自体について</H3>
-<P>この規定はMireille及び、Mireilleの名の下に構成された関連物に対して効力を持ちます。<BR>
-また、利用者が使用しているMireilleのバージョン時の規定と、最新の規定とが異なる場合、<BR>
-利用者はどちらの規定を使うか選択することができます。<BR>
-ある特定の時期の規定に特別な思い入れがあるならば、その規定を掲げておけばそれが適用されるでしょう。</P>
+<H3 class="h">7. 免責</H3>
+<P>Mireille及びMireilleの関連・派生物を使って不利益を被ったとしてもわたしは知りません。うちの掲示板を通して実行可能な形で依頼されれば、なんらかの助けはするかもしれませんが、基本的には何もしない、という形で覚悟した上で使ってください。</P>
 </DIV>
+
+<DIV class="section">
+<H3 class="h">8. Mireille License自体について</H3>
+<P>Mireille LicenseはMireille及び、Mireilleの名の下に構成された関連物に対して効力を持ちます。</P>
+<p>利用者が使用しているMireilleのバージョンに対応する規定と、最新のライセンスとが異なる場合、利用者はどちらのライセンスを使うか選択することができます。</P>
+<P>Mireille LicenseはMireilleの利用を許可する際に用いる唯一の規定ではありません。著作者はMireille License以外のライセンスでMireilleの利用を許可する権利を留保しています。また、Mireille License自体が変更されることもあります。</P>
 </DIV>
-<!-- END_Mireilleの利用規定 -->
+
+<DIV class="section">
+<H3 class="h">9. 他のライセンスとの関連</H3>
+<P>Mireilleの派生物は<A href="http://www.opensource.org/licenses/gpl-license.php">GNU General Public License (GPL)</A>で配布可能です。つまり、Mireille LicenseはGPLと矛盾することはありません。もし矛盾している条項がある場合、そのGPL下の派生物に対しては、該当するMireille Licenseの条項が継承されることはありません。</P>
+<P>Mireilleの派生物は<A href="http://www.opensource.org/licenses/bsd-license.php">BSD License</A>で配布可能です。つまり、Mireille LicenseはBSD Licenseと矛盾することはありません。もし矛盾している条項がある場合、そのBSD License下の派生物に対しては、該当するMireille Licenseの条項が継承されることはありません。</P>
+</DIV>
+
+</DIV>
+<!-- END_MireilleLicense -->
 
 
 
@@ -703,18 +692,17 @@ CGI自体を編集する場合は、以上に挙げたエディタに搭載されている、<BR>
 	<TBODY>
 	<TR><TH scope="col">/Mireille.txt</TH>		<TD>MireilleのReadme</TD></TR>
 	<TR><TH scope="col">/Mireille.html</TH>		<TD>Mireilleの説明書</TD></TR>
-	<TR><TH scope="col">/init/log/</TH>			<TD>ログ保存フォルダ</TD></TR>
-	<TR><TH scope="col">/init/log/0.cgi</TH>	<TD>記事情報ファイル</TD></TR>
-	<TR><TH scope="col">/init/</TH>				<TD>最初設置するときに使うファイル群</TD></TR>
-	<TR><TH scope="col">/init/index.cgi</TH>	<TD>CGI起動ファイル兼設定</TD></TR>
-	<TR><TH scope="col">/init/icon.txt</TH>		<TD>アイコンリスト</TD></TR>
-	<TR><TH scope="col">/init/iconctlg.cgi</TH>	<TD>アイコン見本</TD></TR>
-	<TR><TH scope="col">/init/style.css</TH>	<TD>スタイルシート</TD></TR>
-	<TR><TH scope="col">/scpt/</TH>				<TD>スクリプト本体のファイル群</TD></TR>
-	<TR><TH scope="col">/scpt/core.cgi</TH>		<TD>Mireille本体</TD></TR>
-	<TR><TH scope="col">/scpt/style.pl</TH>		<TD>Mireilleスタイル設定</TD></TR>
-	<TR><TH scope="col">/scpt/help.pl</TH>		<TD>ヘルプ</TD></TR>
-	<TR><TH scope="col">/scpt/artnavi.js</TH>	<TD>記事ナビJavaScript</TD></TR>
+	<TR><TH scope="col">/bbs/log/</TH>			<TD>ログ保存フォルダ</TD></TR>
+	<TR><TH scope="col">/bbs/log/0.cgi</TH>		<TD>記事情報ファイル</TD></TR>
+	<TR><TH scope="col">/bbs/</TH>				<TD>掲示板設置に必要なファイル群</TD></TR>
+	<TR><TH scope="col">/bbs/index.cgi</TH>		<TD>CGI起動ファイル兼設定</TD></TR>
+	<TR><TH scope="col">/bbs/icon.txt</TH>		<TD>アイコンリスト</TD></TR>
+	<TR><TH scope="col">/bbs/iconctlg.cgi</TH>	<TD>アイコン見本</TD></TR>
+	<TR><TH scope="col">/bbs/style.css</TH>		<TD>スタイルシート</TD></TR>
+	<TR><TH scope="col">/bbs/core.cgi</TH>		<TD>Mireille本体</TD></TR>
+	<TR><TH scope="col">/bbs/style.pl</TH>		<TD>Mireilleスタイル設定</TD></TR>
+	<TR><TH scope="col">/bbs/help.pl</TH>		<TD>ヘルプ</TD></TR>
+	<TR><TH scope="col">/bbs/artnavi.js</TH>	<TD>記事ナビJavaScript</TD></TR>
 	<TR><TH scope="col">/opti/</TH>				<TD>設置してもしなくてもいいファイル群</TD></TR>
 	<TR><TH scope="col">/opti/manage.cgi</TH>	<TD>管理CGI</TD></TR>
 	<TR><TH scope="col">/opti/convert12.cgi</TH><TD>ログファイルを他形式から1.2形式に変換する</TD></TR>
@@ -722,7 +710,7 @@ CGI自体を編集する場合は、以上に挙げたエディタに搭載されている、<BR>
 	<TR><TH scope="col">/opti/.htaccess</TH>	<TD>.htaccessファイル</TD></TR>
 	</TBODY>
 </TABLE>
-<P>となっているはずです</P>
+<P>となっているはずです。</P>
 </DIV>
 
 
@@ -784,7 +772,7 @@ CGI自体を編集する場合は、以上に挙げたエディタに搭載されている、<BR>
 <EM>~username</EM>はそのサーバーでのユーザー名に、<BR>
 <EM>mireille_directory</EM>は設置したMireilleのディレクトリに、<BR>
 適宜置き換えてください。（独自ドメインの場合でユーザー名が必要ないときは省略すること）</P>
-<P>実際の手順は以下の通りです</P>
+<P>実際の手順は以下の通りです。</P>
 
 <DIV class="section">
 <H4 class="h">アイコンフォルダの準備</H4>
@@ -962,7 +950,7 @@ $CF{'style'}='../bbs/style.css';
 $CF{'navjs'}='../bbs/artnavi.js';
 </CODE></PRE>
 <P>などとすれば、CGIバージョンアップ時には/bbs/にあるcore.cgiなどを入れ替えればいいだけになります。<BR>
-実際にAiremixでも/bbs/にあるCGIをサイト内の何ヶ所かで、この方法によって共有して使っています</P>
+実際にAiremixでも/bbs/にあるCGIをサイト内の何ヶ所かで、この方法によって共有して使っています。</P>
 </DIV>
 </DIV>
 
@@ -1261,7 +1249,7 @@ $IC{'hee'}='mee.png'; #姐
 $IC{'hoe'}='moe.png'; #乃絵</CODE></PRE>
 <P>このようになっています。<BR>
 実際に使う場合は「コマンド」欄を使用します。</P>
-<P>上の例のように設定されているとすると、</P>
+<P>上の例のように設定されているとすると、
 コマンド欄に「icon=hoe」と入力すればアイコンに&quot;moe.png&quot;が設定されます。<BR>
 注意：アイコンパスワードには <CODE>=</CODE> や <CODE>;</CODE> は使用できません。<BR>
 なるべくアイコンパスワードは <CODE>[-_a-zA-Z0-9]</CODE> な文字で構成されているほうがいいと思います。</P>
@@ -1406,8 +1394,8 @@ $IC{'hoe'}='moe.png'; #乃絵</CODE></PRE>
 
 <DIV class="section">
 <H4 class="h">以上の三つ以外の症状で動作しない場合</H4>
-<P>原因が特定できないのでAiremixの掲示板で成瀬に聞いてください<BR>
-まだ確認できていないバグが原因の可能性があります</P>
+<P>原因が特定できないのでAiremixの掲示板で成瀬に聞いてください。<BR>
+まだ確認できていないバグが原因の可能性があります。</P>
 </DIV>
 </DIV>
 
@@ -1435,7 +1423,7 @@ TeraPadで一つ一つのファイルを開いて、<BR>
 FTPソフトでアップロードするときにEUC-JPからShift_JISに変換してしまう場合もあります<BR>
 「アップロード時に漢字コードを変換しない」というような意味の設定をしておきましょう<BR>
 EUC-JPのファイルをアップロードして、ダウンロードして、エディタで見てみて、<BR>
-Shift_JISになっていたら、FTPソフトが原因の可能性が高いです</P>
+Shift_JISになっていたら、FTPソフトが原因の可能性が高いです。</P>
 </DIV>
 
 
@@ -1539,8 +1527,8 @@ Another HTML-lintよりチェック項目は少なめです。</DD>
 <P>他にも意見を下さった方々、参考にしたサイト・CGIの作者さんに感謝します。</P>
 </DIV>
 
-<P class="note">この説明では&trade;や&reg;や&copy;マークは省略しています<BR>
-それぞれのサイト名やソフトウェア名などは各々の商標や登録商標などです</DD>
+<P class="note">この説明では&trade;や&reg;や&copy;マークは省略しています。<BR>
+それぞれのサイト名やソフトウェア名などは各々の商標や登録商標などです。</P>
 
 <DIV class="PageFoot"><DIV>■■■■■■■</DIV><P><A href="./">BACK to INDEX</A></P></DIV>
 
