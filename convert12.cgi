@@ -1,96 +1,78 @@
+#!/usr/local/bin/perl
+
 #------------------------------------------------------------------------------#
 # 'Mireille' Bulletin Board System
-# - Mireille 1.1 to 1.2 Converter -
+# - Mireille Log Converter to Mir12 -
 #
- $CF{'cnvrev'}=qq$Revision$;
+# $Revision$
 # "This file is written in euc-jp, CRLF." 空
 # Scripted by NARUSE Yui.
 #------------------------------------------------------------------------------#
 # $cvsid = q$Id$;
 require 5.004;
-use Fcntl qw(:DEFAULT :flock);
 use strict;
 use vars qw(%CF);
 
-require 'index.cgi';
+=item 更新履歴
+2002-08-10 Revision 1.2.2.33
+ convert11.cgi,convmtp.cgi,convert12.cgiを統合した
 
-my@zero;
+=item 使い方
 
-#ログ拡張子
-if(-e"$CF{'log'}0.cgi"){
-  $CF{'logext'}='.cgi';
-  sysopen(ZERO,"$CF{'log'}0.cgi",O_CREAT|O_RDWR)||die"Can't write log$_!";
-  flock(ZERO,LOCK_EX);
-  (<ZERO>=~m/\tsubject=\t/)&&(die"Already 1.2!");
-  while(<ZERO>){
-    chomp$_;push(@zero,$_);
-  }
-}elsif(-e"$CF{'log'}0.pl"){
-  $CF{'logext'}='.pl';
-  sysopen(ZERO,"$CF{'log'}0.cgi",O_CREAT|O_WRONLY)||die"Can't write log$_!";
-  flock(ZERO,LOCK_EX);
+まず設置しましょう
+圧縮ファイルを解凍して、convert12.cgiの設定をします
 
-  sysopen(OLD,"$CF{'log'}0.pl",O_CREAT|O_WRONLY)||die"Can't write log$_!";
-  flock(OLD,LOCK_EX);
-  while(<ZERO>){
-    chomp$_;push(@zero,$_);
-  }
-  close(OLD);
-}else{
-  #最初から
-  sysopen(ZERO,"$CF{'log'}0.cgi",O_CREAT|O_WRONLY)||die"Can't write log$_!";
-  flock(ZERO,LOCK_EX);
-}
+/
+/Mir10/
+/Mir10/log/
+/Mir11/
+/Mir11/log/
+/MTP164g/
+/MTP164g/1_data.cgi
+/Mir12/
+/Mir12/convert12.cgi
+/Mir12/log/
 
-#バックアップディレクトリ
-my$bckdir=$^T;
-$bckdir=~s/^(.*)(\d{4})$/$2/o;
-$bckdir='back'.$bckdir;
-(mkdir"$CF{'log'}$bckdir",0777)||(die"Can't make Dir:$bckdir");
+こんな状態で設置してあり、
+Mir10ディレクトリには Mireille1.0 が
+Mir11ディレクトリには Mireille1.1 が
+MTP164gディレクトリにはMulti Talk PRIVATE rel 0.1.64gが入っている場合、
+それぞれ、
 
-#ファイル一覧
-my@file;
-opendir(DIR,$CF{'log'});
-for(readdir(DIR)){
-  ('0.cgi'eq$_)&&(next);
-  (($_=~/^(\d+)$CF{'logext'}$/io)&&($1))&&(push(@file,"$1"));
-  rename("$CF{'log'}$_","$CF{'log'}$bckdir/$_");#Backup
-}
-closedir(DIR);
+#Mir10
+$CF{oldlog}='../Mir10/log/';
+#CF{from}='Mir10';
 
-#変換
-my@convert=();
-my$convert=0;
+#Mir11
+$CF{oldlog}='../Mir11/log/';
+#CF{from}='Mir11';
 
-for(@file){
-  sysopen(RD,"$CF{'log'}$bckdir/$_$CF{'logext'}",O_RDONLY)||die"Can't open $_.pl.";
-  flock(RD,LOCK_EX);
-  my$log=join('',<RD>);
-  close(RD);
+#MTP164g
+$CF{oldlog}='../MTP164g/1_data.cgi'
+#CF{from}='MTP164g';
 
-  $log=~s/\ttitle=\t/\tsubject=\t/go;
-  $log=~s/\tmes=\t/\tbody=\t/go;
+と設定します
+convert12.cgiにブラウザからアクセスしましょう
+少し待てば1.1形式が1.2形式に変換され、掲示板本体から使えるようになります
 
-  sysopen(WR,"$CF{'log'}$_.cgi",O_CREAT|O_WRONLY)||die"Can't write log$_!";
-  flock(WR,LOCK_EX);
-  print WR $log;
-  close(WR);
-  
-  push(@convert,"$_.cgi");
-  next;
-}
+=item 対応形式
 
-truncate(ZERO,0);
-seek(ZERO,0,0);
-print<<"_DATA_";
-$zero[0]
-$zero[1]
-$zero[2]
-_DATA_
-close(ZERO);
+Mireille 1.0形式
+Mireille 1.1形式
+Mireille 1.2形式β（1.2.1.1, 1.2.1.2での暫定形式）
+Multi Talk PRIVATE rel 0.1.64g形式
+をMireille 1.2形式に変換します
 
+=cut
 
-    print<<"_HTML_";
+&main();
+
+sub main{
+	$CF{oldlog}='';
+	$CF{from}='';
+	$CF{log}='';
+	
+	print<<"_HTML_";
 Content-Language: ja
 Content-type: text/plain; charset=euc-jp
 
@@ -100,77 +82,429 @@ Content-type: text/plain; charset=euc-jp
 <meta http-equiv="Content-type" content="text/html; charset=euc-jp">
 <meta http-equiv="Content-Script-Type" content="text/javascript">
 <meta http-equiv="Content-Style-Type" content="text/css">
-<link rel="stylesheet" type="text/css" href="$CF{'style'}" media="screen" title="DefaultStyle">
-<link rel="start" href="$CF{'home'}">
-<link rel="index" href="$CF{'index'}">
-<link rel="help" href="$CF{'help'}">
 <title>: Mireille LogFileConverter :</title>
+<style type="text/css">
+<!--
+/* 通常のリンク文字 */
+a:link		{color:#44f;text-decoration:none;}
+a:visited	{color:#44f;text-decoration:none;}
+a:hover		{color:#fa8;text-decoration:underline;}
+a:active	{color:#f00;text-decoration:underline;}
+body{
+	background-color: #fff;
+	border-style: none;
+	color: #355;
+	font-family: 'ＭＳ Ｐゴシック',Osaka,sans-serif;
+	font-size: 15px;
+	margin: 3px 0;
+	padding: 0;
+	text-align: center;
+	width: 100%;
+}
+form{
+	margin: 0;
+}
+pre{
+	font-family: 'ＭＳ ゴシック',Osaka,monospace;
+	font-size: 85%;
+	font-weight: normal;
+	margin: 0.2em 1em;
+	text-align: left;
+	white-space: pre;
+	word-break: break-all;
+}
+/* ---------- ページヘッダーテーブル ---------- */
+table.head{
+	background: #6ac;
+	color: #fff;
+	margin: auto;
+}
+table.head td{
+	color: #fff;
+	letter-spacing: 1em;
+	padding: 3px 5px;
+}
+table.head th{padding: 3px 5px;}
+h1.head,h1.head a:link{
+	color: #fff;
+	font-family: 'Comic Sans MS','ＭＳ Ｐゴシック',Osaka,sans-serif;
+	font-size: 19px;
+	font-weight: normal;
+}
+h1.head{margin: 0;}
+h1.head a:visited{color: #fff;}
+/* ---------- 見出し（Mode表示で主に使用） ---------- */
+h2.mode{
+	background-color: #ace;
+	color: #fff;
+	font-family: 'Comic Sans MS','ＭＳ Ｐゴシック',Osaka,sans-serif;
+	font-size: 17px;
+	font-weight: bold;
+	margin: 10px auto;
+	padding: 3px;
+	text-align: center;
+	width: 80%;
+	margin-top:10px;margin-bottom:10px;
+}
+-->
+</style>
 </head>
 <body>
-<h1>Mireille LogFileConverter $CF{'cnvrev'}</h1>
+<div class="center"><table align="center" border="0" cellspacing="0" class="head" summary="Header" width="90%"><tr>
+<th width="100%"><h1 class="head" align="left">Mireille LogFileConverter</h1></th>
+<td nowrap>■■■■■■■</td>
+</tr></table></div>
 
+_HTML_
+	if(!$ENV{'REQUEST_METHOD'}||'GET'eq$ENV{'REQUEST_METHOD'}){
+		print<<"_HTML_";
+<h2 class="mode">ログファイルの変換をしますよ？</h2>
+<pre style="text-align:left;width:60%">
+Mireille Log Converter to Mireille'Mir12'をご利用いただきどうもありがとうございます
+これからこのCGIは"$CF{oldlog}"に保存されている、"$CF{from}"形式のログを、
+Mir12形式に変換した上で、"$CF{log}"に保存します
+
+心の準備はできましたでしょうか
+バックアップはとりましたか？
+ログファイルの変換に際し、ログデータが破損したとしても、
+Airemixはその責任は一切取りません（同情はしますけど）
+心の準備ができましたら、したの「開始」を押してください
+幸運をお祈りいたします
+
+
+</pre>
+<form method="post" action="convert12.cgi">
+<p><input type="hidden" name="mode" value="exec">
+<input type="submit" value="開始" style="height:30px;width:100px"></p>
+</form>
+_HTML_
+	}elsif('POST'eq $ENV{'REQUEST_METHOD'}){
+		$CF{oldlog}&&$CF{from}&&$CF{log}&& die"ちゃんと設定できてないみたいです";
+
+		my($from,@convert)=&convert();
+		my$convert=@convert;
+		print<<"_HTML_";
 <h2>ログファイルの変換は完了しました</h2>
 
 
 <pre style="text-align:left;width:60%">
 ◇今回行った処理
-Mireilleのログを1.1形式から1.2形式への変換
+ログを $from形式 から Mireille'Mir12'形式 への変換
 
 ◇処理の結果
-@{[$#convert+1]}個のファイルを1.2形式に変換しました
+$convert個のファイルを Mir12形式 に変換しました
 
-◇変換したファイル
-@convert
+・情報ファイル"0.cgi"のMir12形式への変換
+・変換したログファイル
+_HTML_
+		my$i=0;
+		for(@convert){
+			print$_;
+			if(++$i>=10){print"\n";$i=0;}
+			else{print" ";}
+		}
+		print<<"_HTML_";
 
 </pre>
+_HTML_
+	}else{
+		print qq(<h2 class="mode">何らかのエラーが起きました[$ENV{'REQUEST_METHOD'}]</h2>);
+	}
+	print<<"_HTML_";
+<div class="center"><table align="center" border="0" cellspacing="0" class="head" summary="Footer" width="90%"><tr>
+<td nowrap>■■■■■■■</td>
+<th width="100%"><h1 class="head" align="right"><a href="$CF{log}../">BACK to INDEX</a></h1></th>
+</tr></table></div>
+
+<div class="AiremixCopy">- <a href="http://www.airemix.com/" target="_blank" title="Airemix - Mireille -">Airemix Mireille</a>
+<var>$CF{Conv}</var> -</div>
+</body>
 </html>
 _HTML_
-exit;
+	exit;
+}
+
+
+#-------------------------------------------------
+# Converter Switch
+sub convert{
+	unless($CF{from}){
+	}elsif('Mir10'eq$CF{from}){
+		return&fromMir10();
+	}elsif('Mir11'eq$CF{from}){
+		return&fromMir11();
+	}elsif('MTP164g'eq$CF{from}){
+		return&fromMTP164g();
+	}
+	return('エラー',('エラー'));
+}
+
+
+#-------------------------------------------------
+# From Mireille 1.0.x
+sub fromMir10{
+	#ZeroFileの場所を探す
+	my$logext; #ログ拡張子
+	my$old0; #PATH of OldZeroFile
+	if(-e"$CF{oldlog}0.cgi"){
+		$logext='.cgi';
+		$old0="$CF{oldlog}0.cgi";
+	}elsif(-e"$CF{oldlog}0.pl"){
+		$logext='.pl';
+		$old0="$CF{oldlog}0.pl";
+	}else{
+		die"ZeroFile couldn't be found.";
+	}
+	
+	#ZeroConvert
+	open(OLD,$old0)||die"Can't read oldlog($old0)[$?:$!]";
+	eval{flock(OLD,1)};
+	my@zero=map{m/(.*)/o}<OLD>;
+	close(OLD);
+	
+	my%DT;
+	my@key=qw(Mir12 subject name email home icon color body blank pass time ra hua);
+	@DT{@key}=split(/\t/,$zero[0]);
+	$DT{Mir1}||($DT{Mir1}='1-1');
+	$zero[0]=join('',map{"$_=\t$DT{$_};\t"}qw(Mir12 subject name color time));
+	open(ZERO,">$CF{log}0.cgi")||die"Can't write log($CF{log}0.cgi)[$?:$!]";
+	eval{flock(ZERO,2)};
+	print ZERO join("\n",@zero[0,1,2])."\n";
+	close(ZERO);
+	
+	#ファイル一覧
+	opendir(DIR,$CF{oldlog});
+	my@file=sort{$a<=>$b}grep{$1}map{m/^(\d+)$logext$/}readdir(DIR);
+	closedir(DIR);
+	
+	#LogConvert
+	my@convert=();
+	for(@file){
+		open(OLD,"$CF{oldlog}$_$logext")||die"Can't read oldlog($CF{oldlog}$_$logext)[$?:$!]";
+		eval{flock(OLD,1)};
+		my@log=<OLD>;
+		close(OLD);
+		
+		($log[0]=~/^Mir12=\t/o)&&(next);#変換済み除外
+		for(@log){
+			my%DT;
+			chomp$_;$_||next;
+			@DT{@key}=split(/\t/,$_);
+			$_=join('',map{"$_=\t$DT{$_};\t"}@key);
+		}
+		
+		open(NEW,">$CF{log}$_.cgi")||die"Can't write log($CF{log}$_.cgi)[$?:$!]";
+		eval{flock(NEW,2)};
+		print NEW join("\n",@log)."\n";
+		close(NEW);
+		
+		push(@convert,"$_$logext");
+		next;
+	}
+	my$from="Mireille'Mir10'";
+	return($from,@convert);
+}
+
+
+#-------------------------------------------------
+# From Mireille 1.1.x & 1.2.1.[1-2]
+sub fromMir11{
+	#ZeroFileの場所を探す
+	my$logext; #ログ拡張子
+	my$old0; #PATH of OldZeroFile
+	if(-e"$CF{oldlog}0.cgi"){
+		$logext='.cgi';
+		$old0="$CF{oldlog}0.cgi";
+	}elsif(-e"$CF{oldlog}0.pl"){
+		$logext='.pl';
+		$old0="$CF{oldlog}0.pl";
+	}else{
+		die"ZeroFile couldn't be found.";
+	}
+	
+	#ZeroConvert
+	open(OLD,$old0)||die"Can't read oldlog($old0)[$?:$!]";
+	eval{flock(OLD,1)};
+	my@zero=map{m/(.*)/o}<OLD>;
+	close(OLD);
+	
+	($zero[0]=~/^Mir12=\t/o)&&(die"ログ形式がすでにMir12型です");
+	$zero[0]=~s/\bMir1=\t/Mir12=\t/go;
+	
+	open(ZERO,">$CF{log}0.cgi")||die"Can't write log($CF{log}0.cgi)[$?:$!]";
+	eval{flock(ZERO,2)};
+	print ZERO join("\n",@zero[0,1,2])."\n";
+	close(ZERO);
+	
+	#ファイル一覧
+	opendir(DIR,$CF{oldlog});
+	my@file=sort{$a<=>$b}grep{$1}map{m/^(\d+)$logext$/}readdir(DIR);
+	closedir(DIR);
+	
+	#LogConvert
+	my@convert=();
+	for(@file){
+		open(OLD,"$CF{oldlog}$_$logext")||die"Can't read oldlog($CF{oldlog}$_$logext)[$?:$!]";
+		eval{flock(OLD,1)};
+		my$log=join('',<OLD>);
+		close(OLD);
+		
+		$log=~s/\bMir1=\t/Mir12=\t/go;
+		$log=~s/\ttitle=\t/\tsubject=\t/go;
+		$log=~s/\tmes=\t/\tbody=\t/go;
+		
+		open(NEW,">$CF{log}$_.cgi")||die"Can't write log($CF{log}$_.cgi)[$?:$!]";
+		eval{flock(NEW,2)};
+		print NEW $log;
+		close(NEW);
+		
+		push(@convert,"$_$logext");
+		next;
+	}
+	my$from="Mireille'Mir11'";
+	return($from,@convert);
+}
+
+
+#-------------------------------------------------
+# From Multi Talk PRIVATE rel 0.1.64g
+sub fromMTP164g{
+	my@error=();
+	my@zer2=(0);
+	my@convert;
+	
+	#MTPログ読み込み
+	open(MTP,$CF{oldlog})||die"Can't read log($CF{oldlog})[$?:$!]";
+	ecal{flock(MTP,1)};
+	my%DT;
+	my@log;
+	while(<MTP>){
+		chomp$_;
+		unless($_){
+			#スレッド変え
+			$zer2[$DT{i}]=$DT{time};
+			push(@convert,$DT{i});
+			if(-s"$CF{log}$DT{i}.cgi"){
+				push(@error,"$CF{log}$DT{i}.cgi");
+			}else{
+				open(LOG,">$CF{log}$DT{i}.cgi")||die"Can't write log($CF{log}$DT{i}.cgi)[$?:$!]";
+				eval{flock(LOG,2)};
+				print LOG join("\n",@log)."\n";
+				close(LOG);
+			}
+			%DT=();
+			@log=();
+		}
+		#SJISからEUCに漢字コードを変換しよう
+		$_=sjis2euc($_);
+		unless(defined$DT{subject}){
+			#0行目
+			@DT{qw(i mtp subject)}=split('<>',$_);
+			next;
+		}
+		#記事
+		@DT{qw(mtp mtp email time name icon body home ra mtp hua)}=split('<>',$_);
+		$DT{icon}.='.gif'; #MTP作者ってUNISYS好きなの？
+		my$data="Mir12=\t;\tname=\t$DT{name};\tpass=\t;\ttime=\t$DT{time};\tbody=\t$DT{body};\t";
+		#親記事:子記事
+		for(!@log?qw(color email home icon ra hua cmd subject):qw(color email home icon ra hua cmd)){
+			$data.=qq($_=\t$DT{"$_"};\t);
+		}
+		push(@log,$data);
+	}
+	close(MTP);
+	if(%DT){
+		#スレッド変え
+		$zer2[$DT{i}]=$DT{time};
+		push(@convert,$DT{i});
+		if(-s"$CF{log}$DT{i}.cgi"){
+			push(@error,"$CF{log}$DT{i}.cgi");
+		}else{
+			open(LOG,">$CF{log}$DT{i}.cgi")||die"Can't write log($CF{log}$DT{i}.cgi)[$?:$!]";
+			eval{flock(LOG,2)};
+			print LOG join("\n",@log)."\n";
+			close(LOG);
+		}
+		%DT=();
+		@log=();
+	}
+	
+	open(ZERO,"$CF{log}0.cgi")||die"Can't write log($CF{log}0.cgi)[$?:$!]";
+	eval{flock(ZERO,1)};
+	print ZERO<<"ASDF".join(' ',@zer2);;
+Mir12=\t;\tsubject=\tMTP164gからコンバート成功;\tname=\tMireille;\tcolor=\t#fd0;\ttime=\t$^T;\t
+
+ASDF
+	close(ZERO);
+	
+	my$from="Multi Talk PRIVATE rel 0.1.64g";
+	return($from,@convert);
+}
+
+
+#-------------------------------------------------
+# jcode.pl: Perl library for Japanese character code conversion
+# Copyright (c) 1992-2000 Kazumasa Utashiro <utashiro@iij.ad.jp>
+#	ftp://ftp.iij.ad.jp/pub/IIJ/dist/utashiro/perl/
+sub sjis2euc{
+	my$s=$_[0];
+	$s=~s<([\x81-\x9f\xe0-\xfc][\x40-\x7e\x80-\xfc]|[\xa1-\xdf])>
+	[
+		my($c1,$c2)=unpack('CC',$1);
+		if(0xa1<=$c1&&$c1<=0xdf){
+			$c2=$c1;$c1=0x8e;
+		}elsif(0x9f<=$c2){
+			$c1=$c1*2-($c1>=0xe0?0xe0:0x60);$c2+=2;
+		}else{
+			$c1=$c1*2-($c1>=0xe0?0xe1:0x61);$c2+=0x60+($c2<0x7f);
+		}
+		pack('CC',$c1,$c2);
+	]ego;
+	return$s;
+}
 
 
 #-------------------------------------------------
 # 初期設定
 BEGIN{
-  # Revision Number
-  $CF{'cnvrev'}=qq$Revision$;
-  #エラーが出たらエラー画面を表示するように
-  if($0=~m{index.cgi$}o){
-    $SIG{'__DIE__'}=sub{
-    print<<"_HTML_";
+	getlogin||umask(0); #'nobody'って''だよね？
+	# Revision Number
+	$CF{Conv}=qq$Revision$;
+	#エラーが出たらエラー画面を表示するように
+	$SIG{__DIE__}=sub{
+		print<<"_HTML_";
 Content-Language: ja
 Content-type: text/plain; charset=euc-jp
 
 <pre>
-: Mireille :
-Mireille Error Screen...
+       :: Mireille ::
+   * Error Screen 1.0 (T_T;) *
 
 ERROR: $_[0]
-$CF{'cnvrev'}
-Index : $CF{'idxrev'}
+$CF{Conv}
 
-PerlVer  : $]
+PerlVer	: $]
 PerlPath : $^X
 BaseTime : $^T
-OS Name  : $^O
+OS Name	: $^O
 FileName : $0
 
-ENV
-CONTENT_LENGTH: $ENV{'CONTENT_LENGTH'}
-QUERY_STRING: $ENV{'QUERY_STRING'}
-REQUEST_METHOD: $ENV{'REQUEST_METHOD'}
+ = = ENV = =
+CONTENT_LENGTH: $ENV{CONTENT_LENGTH}
+QUERY_STRING	: $ENV{QUERY_STRING}
+REQUEST_METHOD: $ENV{REQUEST_METHOD}
 
-SERVER_NAME: $ENV{'SERVER_NAME'}
-HTTP: $ENV{'HTTP_HOST'} $ENV{'SCRIPT_NAME'}
-OS: $ENV{'OS'}
-PROCESSOR_IDENTIFIER: $ENV{'PROCESSOR_IDENTIFIER'}
-SERVER_SOFTWARE: $ENV{'SERVER_SOFTWARE'}
+SERVER_NAME: $ENV{SERVER_NAME}
+HTTP_PATH	: $ENV{HTTP_HOST} $ENV{SCRIPT_NAME}
+ENV_OS		 : $ENV{OS}
+SERVER_SOFTWARE			: $ENV{SERVER_SOFTWARE}
+PROCESSOR_IDENTIFIER : $ENV{PROCESSOR_IDENTIFIER}
 
-Airemix Mireille
-http://airemix.site.ne.jp/
++#     Airemix Mireille      #+
++#  http://www.airemix.com/  #+
 _HTML_
-    exit;
-    };
-  }
+		exit;
+	};
 }
 1;
 __END__

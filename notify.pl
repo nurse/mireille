@@ -1,81 +1,82 @@
-#!/usr/local/bin/perl
-
 #------------------------------------------------------------------------------#
 # 'Mireille' Bulletin Board System
-# - MireilleNotify -
+# - Mireille Notify Module-
 #
-#BEGIN{$main::version=q$Revision$;}
-# "This file is written in euc-jp, LF." 空
-# Scripted by NaRuSe.
+$CF{'Notify'}=q$Revision$;
+# "This file is written in euc-jp, CRLF." 空
+# Scripted by NARUSE Yui.
 #------------------------------------------------------------------------------#
+# $cvsid = q$Id$;
+require 5.004;
 use strict;
 use vars qw(%CF);
+
+$CF{'Exte'}.=qq(notify: $CF{'Notify'}\n);
+
 sub mailnotify{
-  #お知らせの送り先
-  $CF{'mailto'}='me@mysite.jp';
-  #除外メールアドレス
-  $CF{'myself'}='me@mysite.jp myself@mysite.jp';
-  #sendmailのパス
-  $CF{'sendmail'}='/usr/sbin/sendmail';
+	#お知らせの送り先
+	$CF{'mailto'}='me@mysite.jp';
+	#除外メールアドレス
+	$CF{'myself'}='me@mysite.jp myself@mysite.jp';
+	#sendmailのパス
+	$CF{'sendmail'}='sendmail';
+	#親記事のとき知らせる項目
+	$CF{'prtntf'}='subject name time icon email home color ra hua body';
+	#子記事のとき知らせる項目
+	$CF{'chdntf'}='name time icon email home color ra hua body';
+#ra:REMOTE_ADDR			例「127.0.0.1」
+#hua:HTTP_USER_AGENT	例「Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)」
 
-  #投稿された記事のメールアドレスと、送り先アドレスが同じなら、メールを送らない
-  my%DT=('time'=>$^T,@_);
-  (" $CF{'myself'} "=~m/ $DT{'email'} /o)&&(return 2);
-  # 記事の改行・タグを復元
-  for(keys%DT){
-    $DT{"$_"}=~s/<br>/\x0A/go;
-    $DT{"$_"}=~s/&#38;/&/go;
-    $DT{"$_"}=~s/&#34;/"/go;
-    $DT{"$_"}=~s/&#39;/'/go;
-    $DT{"$_"}=~s/&#60;/</go;
-    $DT{"$_"}=~s/&#62;/>/go;
-  }
-  #投稿日時表示用
-  my($sec,$min,$hour,$mday,$mon,$year,$wday)=localtime($DT{'time'});
-#  my@wdays=qw(Sun Mon Tue Wed Thu Fri Sat);
-  my@wdays=qw(日 月 火 水 木 金 土);
-  $wday="($wdays[$wday])";
-  ($year<1900)&&($year+=1900);
-#  return sprintf("%4d/%02d/%02d%s %02d:%02d",$year,$mon+1,$mday,$wday,$hour,$min);
-  $DT{'time'}=sprintf("%4d年%02d月%02d日%s %02d時%02d分",$year,$mon+1,$mday,$wday,$hour,$min);
 
-  #題名（2バイト文字は使えません）
-  my$Subject = "Mireille Notify $DT{'i'}-$DT{'j'}";
-  #本文
-  my$Body=<<"_HTML_";
-■記事：$DT{'i'}-$DT{'j'}
-■題名：$DT{'subject'}
-■名前：$DT{'name'}
-■時刻：$DT{'time'}
-■Icon：$DT{'icon'}
-■Mail：$DT{'email'}
-■Home：$DT{'home'}
-■色　：$DT{'color'}
-■REMOTE_ADDR：$DT{'ra'}
-■HTTP_USER_AGENT：$DT{'hua'}
-■本文：
-$DT{'body'}
-_HTML_
+	#投稿された記事のメールアドレスと、送り先アドレスが同じなら、メールを送らない
+	my%DT=('time'=>$^T,@_);
+	(" $CF{'myself'} "=~m/ $DT{'email'} /o)&&(return 2);
+	# 記事の改行・タグを復元
+	for(keys%DT){
+		$DT{"$_"}=~s/<BR[^>]*>/\x0A/gio;
+		$DT{"$_"}=~s/&#38;/&/go;
+		$DT{"$_"}=~s/&#34;/"/go;
+		$DT{"$_"}=~s/&#39;/'/go;
+		$DT{"$_"}=~s/&#60;/</go;
+		$DT{"$_"}=~s/&#62;/>/go;
+	}
+	#投稿日時表示用
+	my($sec,$min,$hour,$mday,$mon,$year,$wday)=localtime($DT{'time'});
+	$DT{'time'}=sprintf("%4d年%02d月%02d日(%s) %02d時%02d分" #"1970年01月01日(木) 09時00分"の例
+	,$year+1900,$mon+1,$mday,('日','月','火','水','木','金','土')[$wday],$hour,$min);
 
-  # JISコード変換
-#  $Subject=jcode::e2j($Subject);
-  $Body=jcode::e2j($Body);
+	#題名（2バイト文字はたぶん使えません）
+	my$Subject = "Mireille Notify $DT{'i'}-$DT{'j'}";
+	#本文
+	my$Body='';
+	if($DT{'j'}eq 0){
+		for(split(/\s/,$CF{'prtntf'})){
+			(length$DT{$_})&&($Body.=qq($_:$DT{$_}\n));
+		}
+	}elsif($DT{'j'}){
+		for(split(/\s/,$CF{'prtntf'})){
+			(length$DT{$_})&&($Body.=qq($_:$DT{$_}\n));
+		}
+	}else{die"Something Wicked happend";}
 
-  open(MAIL,"| $CF{'sendmail'} -t")||die"Can't use sendmail.";
-  print MAIL <<"_HTML_";
+	# JISコード変換
+	$Subject=jcode::e2j($Subject);
+	$Body=jcode::e2j($Body);
+
+	open(MAIL,"| $CF{'sendmail'} -t")||die"Can't use sendmail.";
+	print MAIL <<"_HTML_";
 To: $CF{'mailto'}
 From: Mireille\@$ENV{'SERVER_NAME'}
 Subject: $Subject
 MIME-Version: 1.0
 Content-type: text/plain; charset=iso-2022-jp
 Content-Transfer-Encoding: 7bit
-X-Mailer: Mireille $main::version
-X-Moe: Undefined
+X-Mailer: Mireille $CF{'Notify'}
 
 $Body
 _HTML_
-  close(MAIL);
-  return 1;
+	close(MAIL);
+	return 1;
 }
 
 #以下漢字コード変換
@@ -86,27 +87,27 @@ package jcode;
 
 ;# EUC to JIS
 sub e2j{
-  my$s=$_[0];
-  $s=~s/(([\241-\376]{2}|\216[\241-\337]|\217[\241-\376]{2})+)/&_e2j($1)."\e(B"/geo;
-  return$s;
+	my$s=$_[0];
+	$s=~s/(([\241-\376]{2}|\216[\241-\337]|\217[\241-\376]{2})+)/&_e2j($1)."\e(B"/geo;
+	return$s;
 }
 sub _e2j{
-  my($s)=shift;
-  $s=~s/(([\241-\376]{2})+|(\216[\241-\337])+|(\217[\241-\376]{2})+)/&__e2j($1)/geo;
-  return$s;
+	my($s)=shift;
+	$s=~s/(([\241-\376]{2})+|(\216[\241-\337])+|(\217[\241-\376]{2})+)/&__e2j($1)/geo;
+	return$s;
 }
 sub __e2j{
-  my($s)=shift;
-  my$esc;
-  if($s=~tr/\216//d){
+	my($s)=shift;
+	my$esc;
+	if($s=~tr/\216//d){
 	$esc="\e(I";
-  }elsif($s=~tr/\217//d){
+	}elsif($s=~tr/\217//d){
 	$esc="\e\$(D";
-  }else{
+	}else{
 	$esc="\e\$B";
-  }
-  $s=~tr/\241-\376/\041-\176/;
-  $esc.$s;
+	}
+	$s=~tr/\241-\376/\041-\176/;
+	$esc.$s;
 }
 
 1;
