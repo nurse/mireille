@@ -6,7 +6,7 @@
 
 /* note.
 ・marginをmargin:auto;margin-top:10px;margin-bottom:10px;と分けている
-Opera対策のためです
+Opera6対策のためです
 ・cursolをhand,pointerと分けている
 MSIE6未満対策のためです
 ・input,textareなどを@mediaでくくっている
@@ -46,11 +46,7 @@ A.autolink:link:hover{border-bottom: dashed 1px #fa8;color:#fa8;text-decoration:
 A.autolink:active	{border-bottom: dashed 1px #f00;color:#f00;text-decoration:none;}
 
 HTML{
-	border-style: none;
-	border-width: 0;
-	margin: 0;
-	padding: 0;
-	width: 100%;
+	overflow-y: scroll;/*WinIE6の標準モード対策*/
 }
 ABBR,ACRONYM{
 	border-bottom: dotted 1px #66c;
@@ -70,7 +66,6 @@ BODY{
 	margin: 3px 0;
 	padding: 0;
 	text-align: center;
-	width: 98%;
 }
 BUTTON{
 	background-color: #ffb;
@@ -93,7 +88,7 @@ DFN{
 	font-style: normal;
 }
 EM{
-	border-bottom: solid 1px #3a3;
+	border-bottom: solid 1px #333;
 /*	font-family: Verdana,sans-serif;*/
 	font-style: normal;
 }
@@ -308,7 +303,7 @@ DIV.right{
 /* ===================== メニュー部 ===================== */
 /* ========== LastPost ========== */
 P.lastpost{
-	margin: 0 0.2em 0 0;
+	margin: 0;
 	text-align: right;
 	text-decoration: underline;
 }
@@ -425,7 +420,6 @@ P.artinfo{
 	font-size: 16px;
 	font-style: normal;
 	font-weight: normal;
-	margin-right: 3%;
 	text-align: right;
 }
 
@@ -518,14 +512,14 @@ P.artinfo{
 .thread .info TD.name{text-align: left; white-space: nowrap;}
 .thread .info SPAN.name{font-size: 17px;}
 /* HOME */
-.thread .info SPAN.home{}
+@media all{.thread .info SPAN.home{margin-left:3em}}
 /* 投稿日時 */
 .thread .info TD.date{
 	text-align: right;
 }
 .thread .info SPAN.date{}
 /* 【修正】 */
-.thread .info SPAN.revise{}
+@media all{.thread .info SPAN.revise{margin-left:3em}}
 /* info行での余白 */
 .thread .info SPAN.nbsp{letter-spacing: 30px;}
 
@@ -606,23 +600,18 @@ TABLE.write{
 	background-color: #6ac;
 	text-align: center;
 }
-#name	 {width:220px;ime-mode:active;}
-#cook	 {}
-#icon	 {width:160px;}
-#icon OPTGROUP{
-	color: #6ac;
-	font-style: normal;
-}
+#name	{width:220px;ime-mode:active;}
+#cook	{}
+#icon	{width:160px;}
+#icon OPTGROUP{color: #6ac;font-style: normal;}
 #icon OPTION{color:#333;}
 #email	{width:300px;ime-mode:inactive;}
-#home	 {width:300px;ime-mode:inactive;}
+#home	{width:300px;ime-mode:inactive;}
 #subject{width:300px;ime-mode:active;}
 #color	{width:100px;}
-#pass	 {width:90px;ime-mode:disabled;font-size:85%;}
-#pass[type="password"]{font-size:100%;}/* IEで100%だと大きくなってしまうので85%にし、あとで100%に */
-#cmd		{width:300px;ime-mode:inactive;}
-#body	 {	font-size: 14px;
-width:500px;ime-mode:active;}
+#pass	{width:90px;ime-mode:disabled;}
+#cmd	{width:300px;ime-mode:inactive;}
+#body	{width:500px;ime-mode:active;}
 
 /* ===================== 削除・修正モード ===================== */
 TABLE.list{
@@ -750,6 +739,7 @@ DIV#naviwind:hover{
 #navihead{
 	background-color: #6ac;
 	color: #fff;
+	cursor: default;
 	font-size: 13px;
 	font-weight: bold;
 	margin: 0;
