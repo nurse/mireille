@@ -27,8 +27,8 @@ $CF{'head'}=<<"_CONFIG_";
 <META http-equiv="Content-Style-Type" content="text/css">
 <META http-equiv="MSThemeCompatible" content="yes">
 <LINK rel="Start" href="$CF{'home'}">
-<LINK rel="Index" href="index.cgi">
-<LINK rel="Help" href="index.cgi?help">
+<LINK rel="Index" href="$CF{'index'}">
+<LINK rel="Help" href="$CF{'index'}?help">
 <LINK rel="Stylesheet" type="text/css" href="$CF{'style'}">
 <TITLE>$CF{'title'}</TITLE>
 _CONFIG_
@@ -37,13 +37,13 @@ _CONFIG_
 # Mireile Menu
 $CF{'menu'}=<<"_CONFIG_";
 <TABLE align="center" border="1" cellspacing="3" class="menu" summary="MireilleMenu"><TR>
-<TD class="menu"><A href="index.cgi?new#Form">新規投稿</A></TD>
-<TD class="menu"><A href="index.cgi">更新</A></TD>
-<TD class="menu"><A href="index.cgi?rvs">修正</A></TD>
-<TD class="menu"><A href="index.cgi?del">削除</A></TD>
-<TD class="menu"><A href="index.cgi?icct">アイコン</A></TD>
-<TD class="menu"><A href="index.cgi?seek">検索</A></TD>
-<TD class="menu"><A href="index.cgi?help">ヘルプ</A></TD>
+<TD class="menu"><A href="$CF{'index'}?new#Form">新規投稿</A></TD>
+<TD class="menu"><A href="$CF{'index'}">更新</A></TD>
+<TD class="menu"><A href="$CF{'index'}?rvs">修正</A></TD>
+<TD class="menu"><A href="$CF{'index'}?del">削除</A></TD>
+<TD class="menu"><A href="$CF{'index'}?icct">アイコン</A></TD>
+<TD class="menu"><A href="$CF{'index'}?seek">検索</A></TD>
+<TD class="menu"><A href="$CF{'index'}?help">ヘルプ</A></TD>
 <TD class="menu"><A href="$CF{'home'}" title="$CF{'name'}">ホーム</A></TD>
 </TR></TABLE>
 _CONFIG_
@@ -64,7 +64,7 @@ sub getPageFooter{
 <DIV class="center"><TABLE align="center" border="0" cellspacing="0" class="head" summary="PageFooter" width="90%"><TR>
 <TD nowrap>■■■■■■■</TD>
 <TH width="100%"><DIV class="head"><A href="@{[
-	$_[0]?qq($CF{'home'}">BACK to HOME):qq(index.cgi">BACK to INDEX)
+	$_[0]?qq($CF{'home'}">BACK to HOME):qq($CF{'index'}">BACK to INDEX)
 ]}</A></DIV></TH>
 </TR></TABLE></DIV>
 _HTML_
@@ -126,7 +126,7 @@ function changePreviewIcon(){
 /*========================================================*/
 // Autosave Body Data
 function autosaveBodyData(){
-	if(!isLoaded||!bodyObj)return false;
+	if(!isLoaded||!bodyObj||!bodyObj.value)return false;
 	if(autosaveId)clearTimeout(autosaveId);
 	if(bodyObj.value==oldData){
 		return false;
@@ -187,26 +187,27 @@ function saveBodyData(key){
 	var expires=new Date();
 	if(bodyObj.addBehavior){
 		//bahavior版（IE依存）（サイズ制限:escape無しで128KB）
-		bodyObj.load('MireilleBody');
-		bodyObj.expires=expires.toUTCString();
+		if(!bodyObj.getAttribute('MireilleBody'))bodyObj.load('MireilleBody');
 		if(!bodyObj.value.length){
 			//valueが空→削除
 			bodyObj.removeAttribute(key);
 			if(bodyObj.getAttribute('MireilleQuicksave')||bodyObj.getAttribute('MireilleAutosave')){
 				expires.setMonth(expires.getMonth()+1);
 				bodyObj.expires=expires.toUTCString();
+				bodyObj.setAttribute('MireilleBody',new Date().toUTCString());
 				bodyObj.save('MireilleBody');
 			}else{
 				expires.setMonth(expires.getMonth()-1);
 				bodyObj.expires=expires.toUTCString();
 				bodyObj.save('MireilleBody');
-				bodyObj.load('MireilleBody');
 			}
 			return'DeleteBodyData';
 		}else{
 			//保存
-		expires.setMonth(expires.getMonth()+1);
+			expires.setMonth(expires.getMonth()+1);
+			bodyObj.expires=expires.toUTCString();
 			bodyObj.setAttribute(key,bodyObj.value);
+			bodyObj.setAttribute('MireilleBody',new Date().toUTCString());
 			bodyObj.save('MireilleBody');
 			return'SavedBodyDataIE';
 		}
@@ -247,9 +248,13 @@ function loadBodyData(key){
 	else key='MireilleAutosave';
 	
 	if(bodyObj.addBehavior){
-		bodyObj.load('MireilleBody');
+		if(!bodyObj.getAttribute('MireilleBody'))bodyObj.load('MireilleBody');
 		var temp=bodyObj.getAttribute(key);
-		if(temp)bodyObj.value=temp;
+		if(temp){
+			bodyObj.value=temp;
+		}else{
+			alert('読み込みに失敗しました');
+		}
 	}else if(document.cookie.match(new RegExp('(^|; )'+key+'=([^;]+)'))){
 		bodyObj.value=unescape(RegExp.$2);
 	}else{
@@ -262,7 +267,7 @@ function loadBodyData(key){
 /*========================================================*/
 // Remove Body Data
 function removeBodyData(key){
-	if(!isLoaded||!bodyObj)return false;
+	if(!bodyObj)return false;
 	if(document.cookie.match(/(^|; )MirBody=([^;]+)/))
 		document.cookie='MirBody=; expires=Thu, 01-Jan-1970 00:00:00; ';
 	document.cookie=key+'=; expires=Thu, 01-Jan-1970 00:00:00; ';
@@ -287,21 +292,20 @@ function removeBodyData(key){
 		}
 		
 		bodyObj.load('MireilleBody');
-		bodyObj.removeAttribute('MireilleBody');
 		bodyObj.removeAttribute(key);
 		if(bodyObj.getAttribute('MireilleQuicksave')||bodyObj.getAttribute('MireilleAutosave')){
-			expires.setMonth(expires.getMonth()+1);
+			expires.setMonth(expires.getMonth()+2);
 			bodyObj.expires=expires.toUTCString();
+			bodyObj.setAttribute('MireilleBody',new Date().toUTCString());
 			bodyObj.save('MireilleBody');
 		}else{
-			expires.setMonth(expires.getMonth()-1);
 			bodyObj.expires=expires.toUTCString();
 			bodyObj.save('MireilleBody');
-			bodyObj.load('MireilleBody');
 		}
 		
 		if(flag&1)bodyObj.load('MireilleQuicksave');
 		if(flag&2)bodyObj.load('MireilleAutosave');
+		if(!bodyObj.getAttribute('MireilleBody'))bodyObj.load('MireilleBody');
 	}
 	if(key=='MireilleQuicksave'){
 		return'一時保存されていた本文データを削除しました。';
@@ -318,7 +322,7 @@ function removeBodyData(key){
 // initialization
 bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
 bodyObj.addBehavior('#default#userData');
-bodyObj.load('MireilleBody');
+if(!bodyObj.getAttribute('MireilleBody'))bodyObj.load('MireilleBody');
 if(bodyObj.value&&bodyObj.getAttribute('MireilleAutosave'))status=removeBodyData('MireilleAutosave');
 oldData=bodyObj.value;
 isLoaded=true;
@@ -483,7 +487,7 @@ $	この記事の情報
 <TH class="subject"><H2 class="subject"><A name="art$DT{'i'}" id="art$DT{'i'}" title="$DT{'i'}番スレッド">$DT{'subject'}</A></H2></TH>
 <TD class="arrow">
 <A name="nav_n$DT{'ak'}" href="#nav_n@{[$DT{'ak'}-1]}" title="上のスレッドへ">▲</A>
-<A name="nav_r$DT{'i'}" href="index.cgi?res=$DT{'i'}#Form" title="この記事No.$DT{'i'}に返信">■</A>
+<A name="nav_r$DT{'i'}" href="$CF{'index'}?res=$DT{'i'}#Form" title="この記事No.$DT{'i'}に返信">■</A>
 <A name="nav_s$DT{'ak'}" href="#nav_s@{[$DT{'ak'}+1]}" title="下のスレッドへ">▼</A>
 </TD>
 </TR></TABLE>
@@ -492,11 +496,11 @@ $	この記事の情報
 <COL class="number"><COL class="name"><COL class="date">
 <TR class="info">
 	<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" class="number"
-	 href="index.cgi?rvs=$DT{'i'}-$DT{'j'}"$DT{'_tabUnread'}>【No.$DT{'i'}】</A></TH>
+	 href="$CF{'index'}?rvs=$DT{'i'}-$DT{'j'}"$DT{'_tabUnread'}>【No.$DT{'i'}】</A></TH>
 	<TD class="name">$DT{'_New'} $DT{'_Name'} $DT{'_Home'}</TD>
 	<TD class="date"><SPAN class="date">$DT{'_Date'}</SPAN>
 	<SPAN class="revise" title="$DT{'i'}番スレッドの親記事を修正"><A
-	 href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【修正】</A></SPAN></TD>
+	 href="$CF{'index'}?rvs=$DT{'i'}-$DT{'j'}">【修正】</A></SPAN></TD>
 </TR>
 <TR><TD class="icon">$DT{'_Signature'} $DT{'_Icon'}</TD>
 	<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD></TR>
@@ -550,11 +554,11 @@ _HTML_
 	print<<"_HTML_";
 <TR class="info"><TH class="space" rowspan="2">&nbsp;</TH>
 	<TH class="number"><A name="art$DT{'i'}-$DT{'j'}" class="number"
-	 href="index.cgi?rvs=$DT{'i'}-$DT{'j'}"$DT{'_tabUnread'}>【Re:$DT{'j'}】</A></TH>
+	 href="$CF{'index'}?rvs=$DT{'i'}-$DT{'j'}"$DT{'_tabUnread'}>【Re:$DT{'j'}】</A></TH>
 	<TD class="name">$DT{'_New'} $DT{'_Name'} $DT{'_Home'}</TD>
 	<TD class="date"><SPAN class="date">$DT{'_Date'}</SPAN>
 	<SPAN class="revise" title="$DT{'i'}番スレッドの子記事$DT{'j'}を修正"
-	><A href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【修正】</A></SPAN></TD>
+	><A href="$CF{'index'}?rvs=$DT{'i'}-$DT{'j'}">【修正】</A></SPAN></TD>
 </TR>
 <TR><TD class="icon">$DT{'_Signature'} $DT{'_Icon'}</TD>
 	<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD></TR>
@@ -591,7 +595,7 @@ _HTML_
 		print<<"_HTML_";
 <TABLE border="0" cellspacing="0" class="foot" summary="ArticleFooter" width="100%"><TR>
 <TH align="right" width="100%"><P align="right"><A accesskey="$DT{'ak'}" name="res$DT{'i'}" class="warning"
- href="index.cgi?res=$DT{'i'}">$message(<SPAN
+ href="$CF{'index'}?res=$DT{'i'}">$message(<SPAN
  class="ak">$DT{'ak'}</SPAN>)</A></P></TH>
 </TR></TABLE>
 </DIV>
@@ -603,7 +607,7 @@ _HTML_
 		print<<"_HTML_";
 <TABLE border="0" cellspacing="0" class="foot" summary="ArticleFooter" width="100%"><TR>
 <TH align="right" width="100%"><P align="right"><A accesskey="$DT{'ak'}" name="res$DT{'i'}"
- href="index.cgi?res=$DT{'i'}#Form">この記事スレッドNo.$DT{'i'}に返信する(<SPAN
+ href="$CF{'index'}?res=$DT{'i'}#Form">この記事スレッドNo.$DT{'i'}に返信する(<SPAN
  class="ak">$DT{'ak'}</SPAN>)</A></P></TH>
 </TR></TABLE>
 </DIV>
@@ -642,7 +646,7 @@ sub prtfrm{
 	$DT{'cook'}=$DT{'cook'}||!exists$DT{'cook'}?' checked':'';
 	
 	print<<"_HTML_";
-<FORM accept-charset="euc-jp" id="artform" method="post" action="index.cgi">
+<FORM accept-charset="euc-jp" id="artform" method="post" action="$CF{'index'}">
 <DIV class="center"><TABLE align="center" class="note"><TR><TD><UL class="note">
 <LI>本文以外ではタグは一切使用できません。</LI>
 <LI>HTTP, FTP, MAILアドレスのリンクは自動でつきます。</LI>
@@ -661,7 +665,7 @@ sub prtfrm{
 <TH class="item"><LABEL accesskey="j" for="subject">■題名(<SPAN class="ak">J</SPAN>)：</LABEL></TH>
 <TD class="input"><INPUT type="text" name="subject" id="subject" maxlength="70" value="$DT{'subject'}"></TD>
 <TH class="iconInputLabel" title="Icon&#10;アイコンを選択します">
-<LABEL accesskey="i" for="icon">■ <A href="index.cgi?icct" title="アイコンカタログ&#10;新しい窓を開きます"
+<LABEL accesskey="i" for="icon">■ <A href="$CF{'index'}?icct" title="アイコンカタログ&#10;新しい窓を開きます"
  target="_blank">アイコン</A>（<KBD class="ak">I</KBD>）■</LABEL></TH>
 </TR>
 
@@ -774,7 +778,7 @@ sub chdfrm{
 	}
 	
 	print<<"_HTML_";
-<FORM accept-charset="euc-jp" id="artform" method="post" action="index.cgi">
+<FORM accept-charset="euc-jp" id="artform" method="post" action="$CF{'index'}">
 
 
 
@@ -807,7 +811,7 @@ sub chdfrm{
 <TH class="item"><LABEL accesskey="j" for="subject">■題名(<SPAN class="ak">J</SPAN>)：</LABEL></TH>
 <TD class="input"><INPUT type="text" name="subject" id="subject" maxlength="70" value="$DT{'subject'}"$DT{'_isSubjectDisabled'}></TD>
 <TH class="iconInputLabel" title="Icon&#10;アイコンを選択します">
-<LABEL accesskey="i" for="icon">■ <A href="index.cgi?icct" title="アイコンカタログ&#10;新しい窓を開きます"
+<LABEL accesskey="i" for="icon">■ <A href="$CF{'index'}?icct" title="アイコンカタログ&#10;新しい窓を開きます"
  target="_blank">アイコン</A>（<KBD class="ak">I</KBD>）■</LABEL></TH>
 </TR>
 
@@ -1034,7 +1038,7 @@ _HTML_
 		my$class=shift;
 		my%DT=%{shift()};
 		$ArtNaviBody.=<<"_HTML_";
-<A href="index.cgi?res=$DT{'i'}#Form" title="返信" style="color:green;">Re</A>
+<A href="$CF{'index'}?res=$DT{'i'}#Form" title="返信" style="color:green;">Re</A>
 </DIV>
 </DIV>
 _HTML_
