@@ -341,14 +341,16 @@ ASDF
 # アイコン（タグ）
 sub icont{
     &loadcfg;
-    unless($IN{'icon'}){#アイコンリスト編集
+    unless($IN{'icon'}){
+	#アイコンリスト編集
 	open(FILE,'<'."$CF{'icls'}")||die"Can't read iconlist($CF{'icls'})[$?:$!]";
 	eval{flock(FILE,1)};
 	my$icon;
 	read(FILE,$icon,-s$CF{'icls'});
 	close(FILE);
 	$icon=~s/\t/\ \ /go;
-	$icon=~s/[\x0D\x0A]*$//o;
+	$icon=~s/\x0D\x0A/\n/go;$icon=~tr/\r/\n/;
+	$icon=~s/\n*$/\n/o;
 	print&getManageHeader.<<"ASDF".&getManageFooter;
 <H2 class="heading2">アイコンリスト編集モード（タグ）</H2>
 <FORM accept-charset="$CF{'encoding'}" name="iconedit" method="post" action="$AT{'manage'}">
@@ -360,9 +362,9 @@ sub icont{
 <INPUT type="submit" accesskey="s" class="submit" value="OK"></P>
 ASDF
 	exit;
-    }else{#アイコンリスト書き込み Tag
-	$IN{'icon'}=~tr/\n//s;
-	$IN{'icon'}=~s/(\n)*$/\n/;
+    }else{
+	#アイコンリスト書き込み Tag
+	$IN{'icon'}=~s/\n*$/\n/;
 
 	open(FILE,'+>>'."$CF{'icls'}")||die"Can't write iconlist($CF{'icls'})[$?:$!]";
 	eval{flock(FILE,2)};
@@ -450,7 +452,6 @@ ASDF
 	truncate(FILE,0);
 	seek(FILE,0,0);
 	my $optg = 0;
-	my $text='';
 	while($IN{'icon'}=~/(.*)\n?/go){
 	    $line = $1;
 	    if(!$line||index($line,'<!') > -1){#if(/^\s*<!/o){
@@ -1474,7 +1475,6 @@ ASDF
 	    }
 	    close(FILE);
 	    $zer2[$i-$file[$#file]]=$lastModified;
-	    #$zer2[$i-$file[$#file]]=(stat("$CF{'log'}$i.cgi"))[9];
 	}
 	unshift(@zer2,$file[$#file]-1);
 	
