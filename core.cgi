@@ -76,7 +76,7 @@ sub main{
 
 
 #------------------------------------------------------------------------------#
-# MARD ROUTINS
+# MAIN ROUTINS
 #
 # main直下のサブルーチン群
 
@@ -976,12 +976,12 @@ _HTML_
 _HTML_
 				last;
 			}
-			my%DT=($_=~/([^\t]*)=\t([^\t]*);\t/go);
-			$j&&($count="Res $j");
+			my%DT=/([^\t]*)=\t([^\t]*);\t/go;
+			$count="Res $j"if$j;
 			my$No="$i-$j";
 			my$date=&date($DT{'time'});
 			#本文の縮め処理
-			$DT{'body'}=~s/<br\b[^>]*>/↓/go;
+			$DT{'body'}=~s/<BR\b[^>]*>/↓/go;
 			$DT{'body'}=&getTruncated($DT{'body'},100);
 			my$level=!$j?'parent':'child';
 			print<<"_HTML_";
@@ -1067,7 +1067,7 @@ sub rvsArticle{
 <COL width="330">
 <P style="margin:0.6em">パスワードを入力してください</P>
 <P style="margin:0.6em"><SPAN class="ak">P</SPAN>assword:
-<INPUT name="pass" type="text" accesskey="p" size="12" style="ime-mode:disabled" value="$CK{'pass'}">
+<INPUT name="pass" type="text" accesskey="p" size="12" style="ime-mode:inactive" value="$CK{'pass'}">
 <INPUT name="rvs" type="hidden" value="$IN{'rvs'}"></P>
 <P style="margin:0.6em">
 <INPUT type="submit" class="submit" accesskey="s" value="OK">　
@@ -1699,8 +1699,8 @@ _HTML_
 		#gzip/compress以外に対応してるブラウザは稀なため、可変への需要が少ないと思われるためと
 		#$CF{'conenc'}を設定可能にしているのは、GZIP圧縮転送のON/OFF切り替えのため、だから
 		if(!$CF{'forceGZIP'}&&$ENV{'SERVER_NAME'}#広告対策
-			and	1+index($ENV{'SERVER_NAME'},'tkcity.net')
-			||	1+index($ENV{'SERVER_NAME'},'infoseek.co.jp')
+			and	1+index($ENV{'SERVER_SOFTWARE'},'WhizBanner') #infoseek系
+			||	1+index($ENV{'SERVER_NAME'},'tkcity.net')
 			||	1+index($ENV{'SERVER_NAME'},'aaacafe.ne.jp')
 			||	1+index($ENV{'SERVER_NAME'},'xrea.com')
 			||	1+index($ENV{'SERVER_NAME'},'tok2.com')
@@ -2091,11 +2091,10 @@ sub getSignature{
 	}else{
 		my$salt='';
 		for(0,1){
-			my$c=chop$word;
-			my$n=ord$c;
-			$n-=76while$n>122;
-			$n+=47if$n<47;
-			$salt.=$c eq$n?$c:chr$n;
+			my$n=ord chop$word;
+			$n%=76;
+			$n+=47;
+			$salt.=chr$n;
 		}
 		$signature=&getCRC32(substr(crypt(&getCRC32($word),$salt),2));
 	}
