@@ -502,7 +502,8 @@ $	この記事の情報
 	#削除されたら知らせて
 	'del'eq$DT{'Mir12'}&&($DT{'body'}='Mireille: [この記事は削除されました]');
 	#記事ナビ
-	&artnavi(\%DT,'head',($DT{'time'}>$CK{'time'}));
+	ArtNavi->addThreadHead(\%DT);
+	ArtNavi->addArticle(\%DT,($DT{'time'}>$CK{'time'}));
 	#記事項目の調整をして
 	$DT{'email'}&&($DT{'name'}=qq(<A href="mailto:$DT{'email'}">$DT{'name'}</A>));
 	$DT{'home'}&&=qq(<A href="$DT{'home'}" target="_top">【HOME】</A>);
@@ -529,7 +530,7 @@ $	この記事の情報
 
 	#削除されてるときはここの前に飛ばしちゃうの
 	#記事ナビ
-	&artnavi(\%DT,($DT{'time'}>$CK{'time'}));
+	ArtNavi->addArticle(\%DT,($DT{'time'}>$CK{'time'}));
 	#記事項目の調整をして
 	$DT{'email'}&&($DT{'name'}=qq(<A href="mailto:$DT{'email'}">$DT{'name'}</A>));
 	$DT{'home'}&&=qq(<A href="$DT{'home'}" target="_top">【HOME】</A>);
@@ -566,7 +567,7 @@ sub artfot{
 		}
 	}
 	#記事ナビ
-	&artnavi(\%DT,'foot');
+	ArtNavi->addThreadFoot(\%DT);
 }
 
 
@@ -670,7 +671,7 @@ sub date{
 $ time形式時刻
 =cut
 	my$time=shift();
-	$CF{'timeZone'}||&cfgTimeZone($ENV{'TZ'});
+	$CF{'timezone'}||&cfgTimeZone($ENV{'TZ'});
 	my($sec,$min,$hour,$day,$mon,$year,$wday)=gmtime($time+$CF{'timeOffset'});
 	#sprintfの説明は、Perlの解説を見てください^^;;
 	return sprintf("%4d年%02d月%02d日(%s) %02d時%02d分%s" #"1970年01月01日(木) 09時00分"の例
@@ -924,16 +925,16 @@ _HTML_
 
 
 #-------------------------------------------------
-#記事ナビHTML
+#記事ナビ
 sub artnavi{
 =item 引数
 $ 記事ナビのモード
 =cut
-	return if defined$CF{'artnavi'}&&!$CF{'artnavi'};
+	return if defined$::CF{'artnavi'}&&!$::CF{'artnavi'};
 
 	#Netscape4は記事ナビ無し
-	if($IN{'hua'}=~/^Mozilla\/4.*(?:;\s*|\()[UI](?:;|\))/){
-		$CF{'artnavi'}=0;
+	if($::IN{'hua'}=~/^Mozilla\/4.*(?:;\s*|\()[UI](?:;|\))/){
+		$::CF{'artnavi'}=0;
 		return; #記事ナビを出力しない
 	}
 	
@@ -942,16 +943,16 @@ $ 記事ナビのモード
 		#------------------------------------------------------------------------------------
 		#ブラウザ判定
 		my$style='display:none;position:absolute;filter:alpha(opacity=60);';
-		unless($IN{'hua'}){
+		unless($::IN{'hua'}){
 			#guess to be WinIE4-6
-		}elsif(index($IN{'hua'},'Opera')>-1){
+		}elsif(index($::IN{'hua'},'Opera')>-1){
 			#guess to be Opera
 			$style='display:block;position:fixed;top:-1000;left:-1000;visibility:visible;/*Opera*/';
-		}elsif(index($IN{'hua'},'Mac')>-1&& index($IN{'hua'},'MSIE')>-1){
+		}elsif(index($::IN{'hua'},'Mac')>-1&& index($::IN{'hua'},'MSIE')>-1){
 			#guess to be MacIE5
 			#どうせMacIE4なら記事ナビは動かない
 			$style='display:none;position:fixed;/*MacIE*/';
-		}elsif(index($IN{'hua'},'Mozilla/5')>-1){
+		}elsif(index($::IN{'hua'},'Mozilla/5')>-1){
 			#guess to be Mozilla/Netscape
 			$style='display:none;position:fixed;/*Mozilla*/';
 		}else{
@@ -968,30 +969,43 @@ $ 記事ナビのモード
 <TH id="navititl" onmousedown="beginDrag(event,'naviwind')">■記事ナビ - Mireille</TH>
 <TD id="navibutt" style="width:35px" onmousedown="beginDrag(event,'naviwind')">
 <A accesskey="m" onclick="view(event,'navibody')" onkeypress="acskey(event,'navibody')"
- href="#拡大/縮小" title="拡大/縮小(&amp;M)">□</A>
+href="#拡大/縮小" title="拡大/縮小(&amp;M)">□</A>
 <A accesskey="c" onclick="view(event,'naviwind')" onkeypress="acskey(event,'naviwind')"
- href="#閉じる" title="閉じる(&amp;C)">×</A></TD>
+href="#閉じる" title="閉じる(&amp;C)">×</A></TD>
 </TR>
 </TABLE>
 <DIV id="navibody" style="display:block">
-$CK{'navibody'}</DIV>
+@{[ArtNavi->body]}</DIV>
 </DIV>
-<SCRIPT type="text/javascript" src="$CF{'navjs'}" defer></SCRIPT>
+<SCRIPT type="text/javascript" src="$::CF{'navjs'}" defer></SCRIPT>
 _HTML_
 		#------------------------------------------------------------------------------------
 		return;
 	}elsif('button'eq$_[0]){
 		print<<"_HTML_";
 <DIV><BUTTON onclick="setTimeout(&#34;artnavi('popup')&#34;,500);return false;" accesskey="n"
- onkeypress="setTimeout(&#34;artnavi('popup')&#34;,500);return false;">記事ナビ(<SPAN class="ak">N</SPAN>)</BUTTON></DIV>
+onkeypress="setTimeout(&#34;artnavi('popup')&#34;,500);return false;">記事ナビ(<SPAN class="ak">N</SPAN>)</BUTTON></DIV>
 _HTML_
 		return;
 	}
+}
+
+#-------------------------------------------------
+# 記事ナビクラス
+{package ArtNavi;
+	my$ArtNaviBody='';
+	#記事ナビの本文 -- クラスメソッド
+	sub ArtNavi::body{
+		my$class=shift;
+		$ArtNaviBody=shift if@_>0;
+		$ArtNaviBody
+	}
 	
-	my%DT=%{shift()};
-	if('head'eq$_[0]){
-		#記事ヘッダ
-		$CK{'navibody'}.=<<"_HTML_";
+	#記事ナビのスレッドヘッダ追加 -- クラスメソッド
+	sub ArtNavi::addThreadHead{
+		my$class=shift;
+		my%DT=%{shift()};
+		$ArtNaviBody.=<<"_HTML_";
 <DIV class="navithre">
 <DIV class="navisubj">
 <A href="#nav_r$DT{'i'}" title="返信"><STRONG>$DT{'i'}</STRONG></A>:
@@ -999,35 +1013,42 @@ _HTML_
 </DIV>
 <DIV class="navinums">
 _HTML_
-		shift;
-	}elsif('foot'eq$_[0]){
-		#記事フッタ
-		$CK{'navibody'}.=<<"_HTML_";
+	}
+	
+	#記事ナビのスレッドフッタ追加 -- クラスメソッド
+	sub ArtNavi::addThreadFoot{
+		my$class=shift;
+		my%DT=%{shift()};
+		$ArtNaviBody.=<<"_HTML_";
 <A href="index.cgi?res=$DT{'i'}#Form" title="返信" style="color:green;">Re</A>
 </DIV>
 </DIV>
 _HTML_
-		return;
 	}
 	
-	#記事
-	if($_[0]){
-		#未読
-		$CK{'navibody'}.=<<"_HTML_";
+	#記事追加 -- クラスメソッド
+	sub ArtNavi::addArticle{
+		my$class=shift;
+		my%DT=%{shift()};
+		my$isNew=shift;
+		if($isNew){
+			#未読
+			$ArtNaviBody.=<<"_HTML_";
 <A class="new" href="#art$DT{'i'}-$DT{'j'}" title="$DT{'name'}">$DT{'j'}</A>
 _HTML_
-		return;
-	}else{
-		#既読
-		$CK{'navibody'}.=<<"_HTML_";
+			return;
+		}else{
+			#既読
+			$ArtNaviBody.=<<"_HTML_";
 <A href="#art$DT{'i'}-$DT{'j'}" title="$DT{'name'}">$DT{'j'}</A>
 _HTML_
-		return;
+			return;
+		}
 	}
 }
+package main;
 
 #requireにstyle.cgiのRevisionを返す
-$CF{'Style'}=qq$Revision$;
-$CF{'Style'}=~/(\d+(?:\.\d+)*)/o;
+($CF{'Style'}=qq$Revision$)=~/(\d+(?:\.\d+)*)/o;
 $CF{'StyleRevision'}=$1;
 __END__
