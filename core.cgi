@@ -1756,18 +1756,24 @@ $ 全部で何スレッドあるの？
 $ 1ページあたりのスレッド数
 ;
 $ モードの保持(rvs,del)
+$ 直接飛べるページ数
+$ following / precedingで使う文字列のarrayRef
 =cut
-	my$thds=shift();
-	my$page=shift();
-	my$mode=$_[0]?"$_[0];page":'page';
-	my@key=map{qq( accesskey="$_")}('0','!','&#34;','#','$','%','&#38;','&#39;','(',')');#1-9ページのAccessKey
+	my$thds=shift||1;
+	my$page=shift||1;
+	my$mode=$_[0]?"$_[0];page":'page';@_&&shift;
+	my$max=$_[0]||20;@_&&shift; #直接飛べるページ数
+	my$pageText=$_[0]?shift: #ページセレクタ用の文字
+		['[最新]','<A accesskey="," href="index.cgi?%s=%d">&#60; 後の</A>'
+		,'[最古]','<A accesskey="." href="index.cgi?%s=%d">昔の &#62;</A>'];@_&&shift;
+
 	
 	#page表示調節
-	my$max=20; #全部で20ページは直接飛べる
 	my$half=int($max/2);
-	my$str=0; #$strページ目から
-	my$end=0; #$endページ目まで連続して直接飛べるように表示
+	my$str; #$strページ目から
+	my$end; #$endページ目まで連続して直接飛べるように表示
 	my$pags=int(($thds-1)/$page)+1;
+	my@key=map{qq( accesskey="$_")}('0','!','&#34;','#','$','%','&#38;','&#39;','(',')');#1-9ページのAccessKey
 	
 	#どこからどこまで
 	if($pags<=$max){
@@ -1796,9 +1802,9 @@ $ モードの保持(rvs,del)
 	
 	#following / preceding
 	my$following=$IN{'page'}==$str?
-		'[最新]':sprintf'<A accesskey="," href="index.cgi?%s=%d">&#60; 後の</A>',$mode,$IN{'page'}-1;
+		$pageText->[0]:sprintf$pageText->[1],$mode,$IN{'page'}-1;
 	my$preceding=$IN{'page'}==$end?
-		'[最古]':sprintf'<A accesskey="." href="index.cgi?%s=%d">昔の &#62;</A>',$mode,$IN{'page'}+1;
+		$pageText->[2]:sprintf$pageText->[3],$mode,$IN{'page'}+1;
 	
 	#いざ出力
 	return &getPageSelectorSkin($following,join("\n",@page),$preceding,$str,$end,$pags,$mode);
@@ -1916,6 +1922,7 @@ sub setCookie{
 \% Cookieに書き込む内容を持つハッシュのリファレンス
 =cut
 	my%DT=%{shift()};
+	$DT{'name'}||return undef;
 	unless($DT{'lastModified'}){
 		if(%CK){
 			$DT{$_}||=$CK{$_}for keys%CK;
@@ -2108,7 +2115,7 @@ $ どのような形で返すかの設定
 :-!src!-
   dir+file
 :-!dir!-
-  dir\
+  dir
 :-!file!-
   file
 
