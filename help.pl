@@ -55,7 +55,7 @@ print<<'_HTML_';
 				ちなみに半角カタカナもたぶん使えます</LI>
 			<LI><H4 class="list">コマンド</H4>
 				現在は主に専用アイコンのパスワードを入れるのに使っています。<BR>
-				形式は&#34;<CODE>icon=<VAR>password</VAR></CODE>&#34;のようになっています。<BR>
+				形式は「<CODE>icon=<VAR style="border-bottom:1px solid #3aa;cursor:help;font-style:normal" title="個々のアイコンのパスワード">password</VAR></CODE>」のようになっています。<BR>
 				専用アイコンが欲しい方は、管理人さんに交渉してみましょう。</LI>
 		</UL>
 	</LI>
@@ -77,12 +77,18 @@ _HTML_
 	my%ST=($CF{'strong'}=~/(\S+)\s+(\S+)/go);
 	my$line;my$regexp;
 	for(keys%ST){
+		my$str=$_;
+		$str=~s/&/&#38;/go;
+		$str=~s/"/&#34;/go;
+		$str=~s/'/&#39;/go;
+		$str=~s/</&#60;/go;
+		$str=~s/>/&#62;/go;
 		if($ST{$_}=~m{^(/.+/)$}o){
-			$regexp.=qq(<STRONG style="color:#f77;font-weight:normal">$_</STRONG>, );
+			$regexp.=qq(<STRONG style="color:#f77;font-weight:normal">$str</STRONG>, );
 		}elsif(m!^(/.+/)$!o){
-			$regexp.=qq(<STRONG class="$ST{$_}">$_</STRONG>, );
+			$regexp.=qq(<STRONG class="$ST{$_}">$str</STRONG>, );
 		}else{
-			$line.=qq(<STRONG class="$ST{$_}">$_</STRONG>, );
+			$line.=qq(<STRONG class="$ST{$_}">$str</STRONG>, );
 		}
 	}
 	chop$line;chop$line;
