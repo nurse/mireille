@@ -513,6 +513,8 @@ P.artinfo{
 /* 投稿者名 */
 .thread .info TD.name{text-align: left; white-space: nowrap;}
 .thread .info SPAN.name{font-size: 17px;}
+/* 署名 */
+.thread .info SPAN.signature{font-size: 13px; font-weight: normal;margin-left: 1em}
 /* HOME */
 @media all{.thread .info SPAN.home{margin-left:3em}}
 /* 投稿日時 */
@@ -788,6 +790,11 @@ STRONG.s8184{
 	background-color: #ddf;
 	font-weight:normal;
 }
+/* §の強調 */
+STRONG.s8198{
+	background-color: #fea;
+	font-weight:bold;
+}
 /* ◇の強調 */
 STRONG.s819e{
 	background-color: #ddf;
@@ -795,7 +802,8 @@ STRONG.s819e{
 }
 /* □の強調 */
 STRONG.s81a0{
-	font-weight:bold;
+	background-color: #dfd;
+	font-weight:normal;
 }
 /* ※の強調 */
 STRONG.s81a6{
