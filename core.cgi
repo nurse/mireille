@@ -123,12 +123,12 @@ sub showIndex{
 	#µ­»ö¾ðÊó
 	my%NEW;
 	my@view=map{$NEW{"$_"}=qq(<A href="index.cgi?read=$_#art$_" class="new">$_</A>)}
-	grep{$zer2[$_-$zer2[0]]>$CK{'time'}}@file;
+	grep{$zer2[$_-$zer2[0]]>$CK{'time'}}grep{$_>$zer2[0]}@file;
 
 	#-----------------------------
 	#Ì¤ÆÉµ­»ö¤Î¤¢¤ë¥¹¥ì¥Ã¥É
 	my$unread='';
-	if($#view>-1){
+	if(@view){
 		# 20 : Ì¤ÆÉµ­»ö¤Î¤¢¤ë¥¹¥ì¥Ã¥É¤¬¤¢¤ë»þ¤ËÉ½¼¨¤¹¤ë¥¹¥ì¥Ã¥É¿ô¤Î¾å¸Â
 		$unread='<P>Ì¤ÆÉµ­»ö¤Î¤¢¤ë¥¹¥ì¥Ã¥É[ '.($#view>20?"@view[0..20] ..":"@view[0..$#view]")." ]</P>";
 	}
@@ -278,7 +278,9 @@ Perl¥â¥¸¥å¡¼¥ë¤ÎImage::size¤òÍÑ¤¤¤ë¤³¤È¤Ë¤è¤Ã¤Æ¡¢¥µ¥¤¥ºÀ©¸Â¤ò¤«¤±¤ë¤³¤È¤¬½ÐÍè¤ë¤
 	#-----------------------------
 	#ËÜÊ¸¤Î½èÍý
 	#form->dataÊÑ´¹
-	if($CF{'tags'}&& 'ALLALL'eq$CF{'tags'}){
+	unless(defined$IN{'body'}&& length$IN{'body'}){
+		$IN{'body'}='';
+	}elsif($CF{'tags'}&& 'ALLALL'eq$CF{'tags'}){
 		#ALLALL¤ÏÁ´ÌÌOK¡£Ã¢¤·¶¯Ä´¤ÏÌµ¸ú¡£URI¼«Æ°¥ê¥ó¥¯¤âÌµ¸ú¡£
 		#¼«Á°¤Ç¥ê¥ó¥¯¤òÄ¥¤Ã¤¿¤ê¡¢¶¯Ä´¤·¤Æ¤¢¤ë¤â¤Î¤ò¡¢Æó½Å¤Ë¥ê¥ó¥¯¡¦¶¯Ä´¤·¤Æ¤·¤Þ¤¤¤Þ¤¹¤«¤é
 	}else{
@@ -287,9 +289,14 @@ Perl¥â¥¸¥å¡¼¥ë¤ÎImage::size¤òÍÑ¤¤¤ë¤³¤È¤Ë¤è¤Ã¤Æ¡¢¥µ¥¤¥ºÀ©¸Â¤ò¤«¤±¤ë¤³¤È¤¬½ÐÍè¤ë¤
 		my$str=$IN{'body'};
 		study$str;
 		$str=~tr/"'<>/\01-\04/;
+		$str=~s/&(#?\w+;)/\05$1/go;
 		
 		#¥¿¥°½èÍý
 		if($CF{'tags'}&&!$EX{'notag'}){
+			my$tag_regex_='[^\01-\04]*(?:\01[^\01]*\01[^\01-\04]*|\02[^\02]*\02[^\01-\04]*)*(?:\04|(?=\03)|$(?!\n))';
+			my$comment_tag_regex='\03!(?:--[^-]*-(?:[^-]+-)*?-(?:[^\04-]*(?:-[^\04-]+)*?)??)*(?:\04|$(?!\n)|--.*$)';
+			my$text_regex = '[^\03]*';
+			
 			my$tags=$CF{'tags'};
 			my%tagCom=map{m/(!\w+)(?:\(([^()]+)\))?/o;$1," $2 "||''}($tags=~/!\w+(?:\([^()]+\))?/go);
 			if($tagCom{'!SELECTABLE'}){
@@ -298,9 +305,6 @@ Perl¥â¥¸¥å¡¼¥ë¤ÎImage::size¤òÍÑ¤¤¤ë¤³¤È¤Ë¤è¤Ã¤Æ¡¢¥µ¥¤¥ºÀ©¸Â¤ò¤«¤±¤ë¤³¤È¤¬½ÐÍè¤ë¤
 				$tags='\w+';
 			}
 			
-			my$tag_regex_='[^\01-\04]*(?:\01[^\01]*\01[^\01-\04]*|\02[^\02]*\02[^\01-\04]*)*(?:\04|(?=\03)|$(?!\n))';
-			my$comment_tag_regex='\03!(?:--[^-]*-(?:[^-]+-)*?-(?:[^\04-]*(?:-[^\04-]+)*?)??)*(?:\04|$(?!\n)|--.*$)';
-			my$text_regex = '[^\03]*';
 			my$result='';
 			#¤â¤· BR¥¿¥°¤ä A¥¿¥°¤Ê¤ÉÆÃÄê¤Î¥¿¥°¤À¤±¤Ïºï½ü¤·¤¿¤¯¤Ê¤¤¾ì¹ç¤Ë¤Ï¡¤ 
 			#$tag_tmp = $2; ¤Î¸å¤Ë¡¤¼¡¤Î¤è¤¦¤Ë¤·¤Æ $tag_tmp ¤ò $result ¤Ë²Ã¤¨¤ë¤è¤¦¤Ë¤¹¤ì¤Ð¤Ç¤­¤Þ¤¹¡¥ 
@@ -312,7 +316,7 @@ Perl¥â¥¸¥å¡¼¥ë¤ÎImage::size¤òÍÑ¤¤¤ë¤³¤È¤Ë¤è¤Ã¤Æ¡¢¥µ¥¤¥ºÀ©¸Â¤ò¤«¤±¤ë¤³¤È¤¬½ÐÍè¤ë¤
 			my$pos=length$str;
 			while($str=~/\G($text_regex)($comment_tag_regex|\03$tag_regex_)?/gso){
 				$pos=pos$str;
-				length$1||length$2||last;
+				($1&& length$1)||($2&& length$2)||last;
 				$result.=$1;
 				my$tag_tmp=$2;
 				if($tag_tmp=~s/^\03((\/?(?:$remain))(?![\dA-Za-z]).*)\04/<$1>/io){
@@ -396,17 +400,39 @@ Perl¥â¥¸¥å¡¼¥ë¤ÎImage::size¤òÍÑ¤¤¤ë¤³¤È¤Ë¤è¤Ã¤Æ¡¢¥µ¥¤¥ºÀ©¸Â¤ò¤«¤±¤ë¤³¤È¤¬½ÐÍè¤ë¤
 		.q{\])(?:\.(?:[^(\040)<>@,;:".\\\\\[\]\00-\037\x80-\xff]+(?![^(\040)<>@,}
 		.q{;:".\\\\\[\]\00-\037\x80-\xff])|\[(?:[^\\\\\x80-\xff\n\015\[\]]|\\\\[}
 		.q{^\x80-\xff])*\]))+};
-			#¼Â²ÔÆ°Éô¡¢¤Á¤ç¤Ã¤ÁÅ¬Åö¡£¡£
-			while($str=~m{(?<!["'])($http_URL_regex|$ftp_URL_regex|($mail_regex))(?!["']|[^<>]*</A>)}o){
-				$str=~s{(?<!["'])($http_URL_regex|$ftp_URL_regex|($mail_regex))(?!["'])}
-				{
-					my$content=$1;
-					my$href=$2?'mailto:':'';
-					my$tmp=$content=~s/(&#?\w+;.*)$//o?$1:'';
-					$href.=$content;
-					qq(<A class="autolink" href="$href" target="_blank">$content</A>$tmp);
-				}ego;
+			#¼Â²ÔÆ°Éô
+			my$tag_regex_=q{[^"'<>]*(?:"[^"]*"[^"'<>]*|'[^']*'[^"'<>]*)*(?:>|(?=<)|$(?!\n))};
+			my$comment_tag_regex='<!(?:--[^-]*-(?:[^-]+-)*?-(?:[^>-]*(?:-[^>-]+)*?)??)*(?:>|$(?!\n)|--.*$)';
+			my$tag_regex=qq{$comment_tag_regex|<$tag_regex_};
+			my$text_regex=q{[^<]*};
+			my$result='';
+			my$skip=0;
+			my$pos=length$str;
+			while($str=~/($text_regex)($tag_regex)?/gso){
+				''eq$1&&!$2&& last;
+				$pos=pos$str;
+				my$text_tmp=$1;
+				my$tag_tmp=$2;
+				if($skip){
+					$result.=$text_tmp.$tag_tmp;
+					$skip=0 if$tag_tmp=~/^<\/[aA](?!\w)/;
+				}else{
+					$text_tmp=~s{($http_URL_regex|$ftp_URL_regex|($mail_regex))}
+					{
+						my$href=$2?'mailto:':'';
+						my$org=$1;
+						($href.=$org)=~tr/"/\01/;
+						qq{<A class="autolink" href="$href" target="_blank">$org</A>}
+					}ego;
+					$result.=$text_tmp.$tag_tmp;
+					$skip=1 if$tag_tmp=~/^<[aA](?!\w)/;
+					if($tag_tmp=~/^<(XMP|PLAINTEXT|SCRIPT)(?!\w)/i){
+						$str=~/(.*?(?:<\/$1(?!\w)$tag_regex_|$))/gis;
+						$result.=$1;
+					}
+				}
 			}
+			$str=$result.substr($str,$pos);
 		}else{
 			#Command:nolink
 		}
@@ -416,11 +442,12 @@ Perl¥â¥¸¥å¡¼¥ë¤ÎImage::size¤òÍÑ¤¤¤ë¤³¤È¤Ë¤è¤Ã¤Æ¡¢¥µ¥¤¥ºÀ©¸Â¤ò¤«¤±¤ë¤³¤È¤¬½ÐÍè¤ë¤
 			$str=~s{(\04\04No\.(\d+)(-\d+)?)}{<A class="autolink" href="index.cgi?read=$2#art$2$3">$1</A>}go;
 		}
 		
-		$str=~s/&(#?\w+;)?/$1?"&$1":'&#38;'/ego;
+		$str=~s/&/&#38;/go;
 		$str=~s/\01/&#34;/go;
 		$str=~s/\02/&#39;/go;
 		$str=~s/\03/&#60;/go;
 		$str=~s/\04/&#62;/go;
+		$str=~tr/\05/&/;
 		$IN{'body'}=$str;
 	}
 	$IN{'body'}=~s/\t/&nbsp;&nbsp;&nbsp;&nbsp;/go;
@@ -1106,7 +1133,7 @@ Content-Language: ja-JP
 Pragma: no-cache
 Cache-Control: no-cache
 Location: $i
-X-Moe: Mireille
+X-CGI-Moe: Mireille
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN"> 
 <HTML>
@@ -1137,7 +1164,7 @@ _HTML_
 # FormÆâÍÆ¼èÆÀ
 #
 sub getParam{
-	my$param;
+	my$params;
 	my@params=();
 	#°ú¿ô¼èÆÀ
 	unless($ENV{'REQUEST_METHOD'}){
@@ -1146,13 +1173,13 @@ sub getParam{
 #Method¤¬HEAD¤Ê¤é¤ÐLastModifed¤ò½ÐÎÏ¤·¤Æ¡¢
 #ºÇ¸å¤ÎÅê¹Æ»þ¹ï¤òÃÎ¤é¤»¤ë
 		my$last=&datef((stat("$CF{'log'}0.cgi"))[9],'rfc1123');
-		print"Status: 200 OK\nLast-Modified: $last\n"
+		print"Status: HTTP/1.1 200 OK\nLast-Modified: $last\n"
 		."Content-Type: text/plain\n\nLast-Modified: $last";
 		exit;
 	}elsif('POST'eq$ENV{'REQUEST_METHOD'}){
-		read(STDIN,$param,$ENV{'CONTENT_LENGTH'});
+		read(STDIN,$params,$ENV{'CONTENT_LENGTH'});
 	}elsif('GET'eq$ENV{'REQUEST_METHOD'}){
-		$param=$ENV{'QUERY_STRING'};
+		$params=$ENV{'QUERY_STRING'};
 	}
 	
 	# EUC-JPÊ¸»ú
@@ -1163,28 +1190,28 @@ sub getParam{
 	))x;
 	
 	#°ú¿ô¤ò¥Ï¥Ã¥·¥å¤Ë
-	unless($param){
-	}elsif(length$param>262114){ # 262114:°ú¿ô¥µ¥¤¥º¤Î¾å¸Â(byte)
+	unless($params){
+	}elsif(length$params>262114){ # 262114:°ú¿ô¥µ¥¤¥º¤Î¾å¸Â(byte)
 		#¥µ¥¤¥ºÀ©¸Â
 		&showHeader;
-		print"¤¤¤¯¤é¤Ê¤ó¤Ç¤âÎÌ¤¬Â¿¤¹¤®¤Þ¤¹\n$param";
+		print"¤¤¤¯¤é¤Ê¤ó¤Ç¤âÎÌ¤¬Â¿¤¹¤®¤Þ¤¹\n$params";
 		print&getFooter;
 		exit;
-	}elsif(length$param>0){
+	}elsif(length$params>0){
 		#ÆþÎÏ¤òÅ¸³«
-		@params=split(/[&;]/o,$param);
+		@params=split(/[&;]/o,$params);
 	}
 	
 	#ÆþÎÏ¤òÅ¸³«¤·¤Æ¥Ï¥Ã¥·¥å¤ËÆþ¤ì¤ë
 	my%DT;
 	while(@params){
 		my($i,$j)=split('=',shift(@params),2);
-		$i=~/([a-z][-.:\w]*)/o?($i=$1):next;
+		$i=~/([a-z][-.:\w]*)/o||next;$i=$1;
 		defined$j||($DT{$i}='')||next;
 		study$j;
 		$j=~tr/+/\ /;
 		$j=~s/%([\dA-Fa-f]{2})/pack('H2',$1)/ego;
-		$j=~/($eucchar*)/o?($j=$1):(''||next);
+		$j=($j=~/($eucchar*)/o)?$1:'';
 		#¥á¥¤¥ó¥Õ¥ì¡¼¥à¤Î²þ¹Ô¤Ï\x85¤é¤·¤¤¤±¤É¡¢ÂÐ±þ¤¹¤ëÉ¬Í×¤Ê¤¤¤è¤Í¡©
 		$j=~s/\x0D\x0A/\n/go;$j=~tr/\r/\n/;
 		if('body'ne$i){
@@ -1418,9 +1445,9 @@ sub showHeader{
 Status: 304 Not Modified
 Content-type: text/html; charset=euc-jp
 Content-Language: ja-JP
+Connection: keep-alive
 Date: @{[&datef($^T,'rfc1123')]}
-X-Moe: Mireille
-
+X-CGI-Moe: Mireille
 
 _HTML_
 			exit;
@@ -1476,8 +1503,9 @@ _HTML_
 Status: 200 OK
 Content-type: text/html; charset=euc-jp
 Content-Language: ja-JP
+Connection: keep-alive
 Date: @{[&datef($^T,'rfc1123')]}
-X-Moe: Mireille
+X-CGI-Moe: Mireille
 _HTML_
 	print"Last-Modified: $lastModified\n"if$CF{'useLastModified'};#exp.
 	#GZIP Switch
@@ -1743,12 +1771,12 @@ sub datef{
 =item °ú¿ô
 $ time·Á¼°¤Î»þ¹ï
 ;
-$ ½ÐÎÏ·Á¼°(cookie|last)
+$ ½ÐÎÏ·Á¼°(cookie|last|dateTime)
 =cut
-	my$time=shift();
-	my$type=shift();
+	my$time=shift;
+	my$type=shift;
 	unless($type){
-	}elsif('cookie'eq$type||'gmt'eq$type){
+	}elsif('cookie'eq$type){
 	# NetscapeÉ÷CookieÍÑ
 		return sprintf("%s, %02d-%s-%d %s GMT",(split(/\s+/o,gmtime$time))[0,2,1,4,3]);
 	}elsif('rfc1123'eq$type){
@@ -1900,25 +1928,18 @@ sub rvsij{
 4.¸ì¶ç¶¯Ä´¤Ë¤è¤ë¥¿¥°		/<STRONG  clAss="[^"]*"[^>]*>/
 ¤³¤Î¤¦¤Á¡¢1¤Ï "'<> ¤ò¥¨¥¹¥±¡¼¥×¤·¡¢2,3,4¤Ïºï½ü¤·¤Þ¤¹
 
+¤Þ¤¿2¤È3¤Ë¤Ä¤¤¤Æ¤Ïºï½ü¤ËºÝ¤·¤Æ°Ê²¼¤ò²¾Äê¤·¤Þ¤¹
+¡¦A¥¿¥°¤ÎÆâÍÆ¤Ë¤Ï[<>]¤¬Íè¤Ê¤¤
+¡¦¼«Æ°¥ê¥ó¥¯1¥»¥Ã¥È¤ÏÉ¬¤º/<A class="autolink" [^>]*>([^<]+)<\/A>/¤Ë¥Þ¥Ã¥Á¤¹¤ë
+¡¦¥ê¥ó¥¯¤¹¤ëÂÐ¾Ý¤Î¡Ö&¡×¤ò¥¨¥¹¥±¡¼¥×¤·¤¿ºÝ¤Ï¡Ö&#38;¡×¤Ç¥¨¥¹¥±¡¼¥×¤·¤¿
+²¿¤é¤«¤Î·Á¤Ç¤³¤Î²¾Äê¤¬Êø¤ì¤¿¾ì¹ç¡¢ºï½ü¤·¤­¤ì¤Ê¤¤¤³¤È¤ä¡¢¤­¤Á¤ó¤ÈÉü¸µ¤Ç¤­¤Ê¤¤²ÄÇ½À­¤¬¤¢¤ê¤Þ¤¹
+
 =cut
 
 		my$str=$CK{'body'};
-		{ #A¥¿¥°
-			my@floor;
-			$str=~s{(<(\/?)A\b([^>]*)>)}
-			{
-				if(!$2){ #³«¤­¥¿¥°
-					if($3=~/^\s+cl[aA]ss="autolink"/o){push(@floor,1);'';}
-					else{push(@floor,0);$1;}
-				}else{ #ÊÄ¤¸¥¿¥°
-					if(!@floor){last;}
-					elsif(pop@floor){'';}
-					else{$1;}
-				}
-			}egio;
-			$CK{'body'}=$str;
-		}
-		$str=$CK{'body'};
+		#A¥¿¥°
+		$str=~s{<A class="autolink" [^>]*>([^<]+)</A>}{my$tmp=$1;$tmp=~s/&#38;#38;/&#38;/g;$tmp}eg;
+		
 		{ #STRONG¥¿¥°
 			my@floor;
 			$str=~s{(<(\/?)STRONG\b([^>]*)>)}
@@ -1976,9 +1997,9 @@ BEGIN{
 	# Mireille Error Screen 1.4
 	unless(%CF){
 		$CF{'program'}=__FILE__;
-		$SIG{'__DIE__'}=sub{
+		$SIG{'__DIE__'}=$ENV{'REQUEST_METHOD'}?sub{
 			if($_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/){return}
-			print"Content-Language: ja-JP\nContent-type: text/plain; charset=euc-jp\nX-Moe: Mireille\n"
+			print"Status: 200 OK\nContent-Language: ja-JP\nContent-type: text/plain; charset=euc-jp"
 			."\n\n<PRE>\t:: Mireille ::\n   * Error Screen 1.4 (o__)o// *\n\n";
 			print"ERROR: $_[0]\n"if@_;
 			print join('',map{"$_\t: $CF{$_}\n"}grep{$CF{"$_"}}qw(Index Style Core Exte))
@@ -1991,10 +2012,14 @@ BEGIN{
 			SERVER_NAME HTTP_HOST SCRIPT_NAME OS SERVER_SOFTWARE PROCESSOR_IDENTIFIER))
 			."\n+#      Airemix Mireille     #+\n+#  http://www.airemix.com/  #+";
 			exit;
+		}:sub{
+			if($_[0]=~/^(?=.*?flock)(?=.*?unimplemented)/){return}
+			print@_?"ERROR: $_[0]":'ERROR';
+			exit;
 		};
 	}
 	# Version
-	$CF{'Version'}=join('.',q$Mireille: 1_2_5 $=~/(\d+[a-z]?)/go);
+	$CF{'Version'}=join('.',q$Mireille: 1_2_6 $=~/(\d+[a-z]?)/go);
 	($CF{'Core'}=q$Revision$)=~/(\d+((?:\.\d+)*))/o;
 	$CF{'CoreRevision'}=$1;
 	$CF{'Version'}.=$2 if-1<index(q$State$,'Exp');
