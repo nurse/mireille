@@ -180,7 +180,7 @@ _HTML_
 
 &getParam;
 unless($IN{'mode'}){
-	&menu('NULL');
+	&menu('Ready...');
 }elsif('icong'eq$IN{'mode'}){
 	&icong;
 }elsif('icont'eq$IN{'mode'}){

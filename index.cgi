@@ -97,7 +97,7 @@ $CF{'use304'}='0';
 #常に「Last-Modified」を渡すか否か (0 渡さない 1 渡す)
 $CF{'useLastModified'}='0';
 #ファイル名指定アイコンのコマンド名
-#$CF{'exicfi'}='iconfile';
+$CF{'exicfi'}='iconfile';
 #専用アイコン機能 (ON 1 OFF 0)
 $CF{'exicon'}='0';
 #専用アイコン列挙
