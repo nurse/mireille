@@ -953,9 +953,9 @@ sub showArtSeek{
 		#-----------------------------
 		#検索＆結果表示
 		my$result='';
-		my$item='';
+		my$item='ALL'eq$IN{'item'}?'':";\t$IN{'item'}";
 		my$seek=quotemeta$IN{'seek'};
-		'ALL'eq$IN{'item'}||($item="\t$IN{'item'}");
+		
 		&logfiles('number');
 		
 		#正しくパターンマッチさせる
@@ -973,7 +973,8 @@ sub showArtSeek{
 				eval{flock(RD,1)};
 				my$thread;
 				read(RD,$thread,-s"$CF{'log'}$_.cgi");
-				index($thread,$IN{'seek'})>-1||next;
+				close(RD);
+#				index($thread,$IN{'seek'})>-1||next;
 				$thread=~/$item=\t[^\t]*$eucpre$seek$eucpost[^\t]*;\t/o||next;
 				$result.=qq(<A href="index.cgi?read=$_#art$_">No.$_</A>\n);
 			}
@@ -989,8 +990,8 @@ sub showArtSeek{
 				index($thread,$IN{'seek'})>-1||next;
 				my$i=$_;
 				my$j=0;
-				for($thread=~/([\w\W]*?)$item=\t[^\t]*$eucpre$seek$eucpost[^\t]*;\t/go){
-					$j+=@{[/[\x0A\x0D]+/go]};
+				while($thread=~m/$item=\t[^\t]*$eucpre($seek)$eucpost[^\t]*;\t/go){
+					$j=@{[substr($thread,0,pos$thread)=~/[\x0A\x0D]+/go]};
 					$result.=qq(<A href="index.cgi?read=$i#art$i-$j">No.$i-$j</A>\n);
 				}
 			}
@@ -1175,12 +1176,12 @@ sub getParam{
 	my%DT;
 	while(@param){
 		my($i,$j)=split('=',shift(@param),2);
-		defined$j||($DT{$i}='',next);
-		$i=($i=~/(\w+)/o)?$1:'';
+		$i=~/(\w+)/o?($i=$1):next;
+		defined$j||($DT{$i}='')||next;
 		study$j;
 		$j=~tr/+/\ /;
 		$j=~s/%([\dA-Fa-f]{2})/pack('H2',$1)/ego;
-		$j=($j=~/($eucchar*)/o)?"$1":'';
+		$j=~/($eucchar*)/o?($j=$1):(''||next);
 		#メインフレームの改行は\x85らしいけど、対応する必要ないよね？
 		$j=~s/\x0D\x0A/\n/go;$j=~tr/\r/\n/;
 		if('body'ne$i){
@@ -1191,8 +1192,8 @@ sub getParam{
 			$j=~s/'/&#39;/go;
 			$j=~s/</&#60;/go;
 			$j=~s/>/&#62;/go;
+			$j=~s/\n+$//o;
 			$j=~s/\n/<BR>/go;
-			$j=~s/(<BR>)+$//o;
 		}#本文は後でまとめて
 		$DT{$i}=$j;
 	}
@@ -1276,6 +1277,7 @@ sub getParam{
 					$IN{'color'}=($DT{'color'}=~/([\#\w\(\)\,]{1,20})/o)?"$1":'';
 				}elsif('email'eq$_){
 					$IN{'email'}=($DT{'email'}=~/($mail_regex)/o)?"$1":'';
+					$IN{'email'}=~s/\@/&#64;/;
 				}elsif('home'eq$_){
 					$IN{'home'}=($DT{'home'}=~/($http_URL_regex)/o)?"$1":'';
 				}elsif('icon'eq$_){
@@ -1987,7 +1989,7 @@ BEGIN{
 	}
 	# Version
 	$CF{'Core'}=q$Revision$;
-	$CF{'Version'}=join('.',q$Mireille: 1_2_5 $=~/(\d+)/go);
+	$CF{'Version'}=join('.',q$Mireille: 1_2_5a $=~/(\d+[a-z]?)/go);
 	$CF{'Version'}.=".$1"if q$State$=~/Exp/o&&$CF{'Core'}=~/(?:\d+.)+(\d+)/;
 }
 
