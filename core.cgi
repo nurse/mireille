@@ -3166,7 +3166,7 @@ sub attachFile(){
 	    my $item = $_;
 	    &saveAttachFile($item);
 	    push @attach, { map{ $_,$item->{$_} }qw/hash ext content-type size/ };
-	    makeThumbnail($item)if$CF{'AttachThumbnail'};
+	    &makeThumbnail($item)if$CF{'AttachThumbnail'};
 	}
 	$IN{'attach'} = MirString::urlencode(\@attach);
 	$IN{'_attach'} = \@attach;
@@ -3186,7 +3186,7 @@ sub attachFile(){
 
 sub saveAttachFile{
     unless(-d$CF{'AttachDir'}){
-	mkdir$CF{'AttachDir'} or"Can't mkdir($CF{'AttachDir'})[$?:$!]";;
+	mkdir($CF{'AttachDir'},0777) or "Can't mkdir($CF{'AttachDir'})[$?:$!]";
     }
     my $item = shift;
     my $filename = sprintf('%s/%s.%s',$CF{'AttachDir'},$item->{'hash'},$item->{'ext'});
@@ -3209,16 +3209,12 @@ sub saveAttachFile{
 
 sub makeThumbnail{
     $CF{'AttachThumbnail'} or return;
-    unless($CF{'Image::Magick'}){
-	local $SIG{'__DIE__'} = '';
-	eval q{use Image::Magick};
-	if($@){
-	    $CF{'AttachThumbnail'} = 0;
-	    return;
-	}
+    unless($CF{'Image::Magick'}||&loadImageMagick()){
+	$CF{'AttachThumbnail'} = 0;
+	return;
     }
     unless(-d$CF{'AttachThumbnailDir'}){
-	mkdir$CF{'AttachThumbnailDir'} or"Can't mkdir($CF{'AttachThumbnailDir'})[$?:$!]";;
+	mkdir($CF{'AttachThumbnailDir'},0777) or"Can't mkdir($CF{'AttachThumbnailDir'})[$?:$!]";
     }
     my $item = shift;
     my $orig = sprintf('%s/%s.%s',$CF{'AttachDir'},$item->{'hash'},$item->{'ext'});
@@ -3234,8 +3230,15 @@ sub makeThumbnail{
 	$width *= $scale;
 	$height *= $scale;
     }
-    $image->Resize(width=>$width, height=>$height, blur=>0.7);
-    $image->Write($thumbnail);
+    if($scale < 1){
+	$image->Resize(width=>$width, height=>$height, blur=>0.7);
+	$image->Write($thumbnail);
+    }else{
+	open(ATTACH, '>'.$thumbnail)||die"Can't read/write thumbnail($thumbnail)[$?:$!]";
+	binmode(ATTACH);
+	print ATTACH $item->{'body'};
+	close(ATTACH);
+    }
 }
 
 
@@ -3273,10 +3276,11 @@ sub removeAttachedFile{
 =cut
 
 sub loadImageMagick{
-    local $SIG{'__DIE__'} = '';
+    local $SIG{'__DIE__'} = sub{};
     eval q{use Image::Magick};
     $@	? $CF{'AttachThumbnail'} = 0
     	: $CF{'Image::Magick'} = 1;
+    return $CF{'Image::Magick'};
 }
 
 
@@ -3512,7 +3516,7 @@ sub loadImageMagick{
 		  ,8,6,57,15,10,58,6,15,59,13,21,60,4,6,61,11,10,62,2,15,63,9,21,64);
 	    while(@ksi){
 		my($k,$s,$i)=splice(@ksi,0,3);
-		my$t=($s[0]+(($s[1]|~$s[3])^$s[2])+$x[$k]+$T[$i])%4294967296;
+		my$t=($s[0]+(($s[1]|(~$s[3]&4294967295))^$s[2])+$x[$k]+$T[$i])%4294967296;
 		$s[0]=((($t<<$s)|($t>>(32-$s)))+$s[1])%4294967296;
 		unshift(@s,pop(@s));
 	    }
