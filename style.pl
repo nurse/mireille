@@ -73,66 +73,40 @@ $CF{'pgfoot'}=&getPageFooter;
 
 #-----------------------------
 # 投稿フォームで使うJavaScript
-$CF{'jsWritingForms'}=sprintf(<<'_CONFIG_',$CF{'icon'},$CF{'absoluteIcon'}?1:0+$CF{'relativeIcon'}?2:0);
+$CF{'jsWritingForms'}=sprintf<<'_CONFIG_',$CF{'icon'},($CF{'absoluteIcon'}?1:0)+($CF{'relativeIcon'}?2:0);
 <SCRIPT type="text/javascript" defer>
 <!--
-var iconDirectory='%s';
-var iconSetting=%d;
+var iconDirectory='%s',iconSetting=%d;
 _CONFIG_
 
 $CF{'jsWritingForms'}.=<<'_CONFIG_';
 var isLoaded;
 var autosaveId;
-var bodyObj;
-
+var oBody,oIcon,oCommand,oPreview;
+window.onload=initialization;
 
 /*========================================================*/
-// initialization
-sub initialization(){
-	bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
-	bodyObj.addBehavior('#default#userData');
-	if(!bodyObj.getAttribute('MireilleBody'))bodyObj.load('MireilleBody');
-	if(bodyObj.value&&bodyObj.getAttribute('MireilleAutosave'))status=removeBodyData('MireilleAutosave');
-	oldData=bodyObj.value;
+// Initialization
+function initialization(){
+	if(document.all){
+		oBody=document.all('body');
+		oIcon=document.all('icon');
+		oCommand=document.all('cmd');
+		if(typeof(oBody.addBehavior)=='object'){
+			oBody.addBehavior('#default#userData');
+			if(!oBody.getAttribute('MireilleBody'))oBody.load('MireilleBody');
+			if(oBody.value&&oBody.getAttribute('MireilleAutosave'))
+				status=removeBodyData('MireilleAutosave');
+		}
+	}else if(document.getElementById){
+		oBody=document.getElementById('body');
+		oIcon=document.getElementById('icon');
+		oCommand=document.getElementById('cmd');
+	}else return false;
+	oPreview=document.images['Preview'];
+	oldData=oBody.value;
 	isLoaded=true;
 	if(!autosaveId)autosaveId=setTimeout(autosaveBodyData,60000);
-	return true;
-}
-
-
-/*========================================================*/
-// Change Icon Preview
-function changePreviewIcon(){
-	var icon,cmd;
-	if(document.all){
-		icon=document.all('icon');
-		cmd =document.all('cmd');
-	}else if(document.getElementById){
-		icon=document.getElementById('icon');
-		cmd =document.getElementById('cmd');
-	}else return false;
-	var preview=document.images['Preview'];
-	if(!preview)return false;
-	
-	if(!cmd||!cmd.value){
-		icon.disabled=false;
-	}else if(iconSetting&1&&cmd.value.match(/(^|;)absoluteIcon=([^;]*)/)){
-		//絶対指定アイコン
-		preview.src=RegExp.$2;
-		preview.title=RegExp.$2;
-		icon.disabled=true;
-	}else if(iconSetting&2&&cmd.value.match(/(^|;)relativeIcon=([^;:.]*(\.[^;:.]+)*)/)){
-		//相対指定アイコン
-		preview.src=iconDirectory+RegExp.$2;
-		preview.title=RegExp.$2;
-		icon.disabled=true;
-	}else{
-		icon.disabled=false;
-	}
-	if(!icon.disabled){
-		if(preview.src!=iconDirectory+icon.value)preview.src=iconDirectory+icon.value;
-		if(preview.title!=icon.value)preview.title=icon.value;
-	}
 	return true;
 }
 
@@ -141,13 +115,40 @@ function changePreviewIcon(){
 // General Routines
 
 /*========================================================*/
+// Change Icon Preview
+function changePreviewIcon(){
+	if(!oPreview&&!oIcon&&!initialization())return false;
+	if(!oCommand||!oCommand.value){
+		oIcon.disabled=false;
+	}else if(iconSetting&1&&oCommand.value.match(/(^|;)absoluteIcon=([^;]*)/)){
+		//絶対指定アイコン
+		oPreview.src=RegExp.$2;
+		oPreview.title='+'+RegExp.$2;
+		oIcon.disabled=true;
+	}else if(iconSetting&2&&oCommand.value.match(/(^|;)relativeIcon=([^;:.]*(\.[^;:.]+)*)/)){
+		//相対指定アイコン
+		oPreview.src=iconDirectory+RegExp.$2;
+		oPreview.title=iconDirectory+'+'+RegExp.$2;
+		oIcon.disabled=true;
+	}else{
+		oIcon.disabled=false;
+	}
+	if(!oIcon.disabled){
+		if(oPreview.src!=iconDirectory+oIcon.value)oPreview.src=iconDirectory+oIcon.value;
+		if(oPreview.title!=oIcon.value)oPreview.title=iconDirectory+'+'+oIcon.value;
+	}
+	return true;
+}
+
+
+/*========================================================*/
 // Autosave Body Data
 function autosaveBodyData(){
-	if(!isLoaded||!bodyObj||!bodyObj.value)return false;
+	if(!isLoaded||!oBody||!oBody.value)return false;
 	if(autosaveId)clearTimeout(autosaveId);
-	if(bodyObj.value==oldData){
+	if(oBody.value==oldData){
 		return false;
-	}else if(bodyObj.value.length>100){
+	}else if(oBody.value.length>100){
 		switch(saveBodyData('MireilleAutosave')){
 		case'DeleteBodyData':
 			status='as0: Something Wicked happened!';
@@ -164,7 +165,7 @@ function autosaveBodyData(){
 		default:
 			status='as1: Something Wicked happened!';
 		}
-		oldData=bodyObj.value;
+		oldData=oBody.value;
 	}
 	autosaveId=setTimeout(autosaveBodyData,60000);
 	return true;
@@ -173,7 +174,7 @@ function autosaveBodyData(){
 /*========================================================*/
 // Quick Save Body Data
 function quicksaveBodyData(){
-	if(!isLoaded||!bodyObj)return false;
+	if(!isLoaded||!oBody)return false;
 	if(!confirm("新しい本文を保存すると、古い本文データは消えてしまいます\nそれでも保存してよろしいですか？"))
 		return false;
 	
@@ -200,37 +201,37 @@ function quicksaveBodyData(){
 /*========================================================*/
 // Save Body Data
 function saveBodyData(key){
-	if(!isLoaded||!bodyObj)return false;
+	if(!isLoaded||!oBody)return false;
 	var expires=new Date();
-	if(bodyObj.addBehavior){
+	if(oBody.addBehavior){
 		//bahavior版（IE依存）（サイズ制限:escape無しで128KB）
-		if(!bodyObj.getAttribute('MireilleBody'))bodyObj.load('MireilleBody');
-		if(!bodyObj.value.length){
+		if(!oBody.getAttribute('MireilleBody'))oBody.load('MireilleBody');
+		if(!oBody.value.length){
 			//valueが空→削除
-			bodyObj.removeAttribute(key);
-			if(bodyObj.getAttribute('MireilleQuicksave')||bodyObj.getAttribute('MireilleAutosave')){
+			oBody.removeAttribute(key);
+			if(oBody.getAttribute('MireilleQuicksave')||oBody.getAttribute('MireilleAutosave')){
 				expires.setMonth(expires.getMonth()+1);
-				bodyObj.expires=expires.toUTCString();
-				bodyObj.setAttribute('MireilleBody',new Date().toUTCString());
-				bodyObj.save('MireilleBody');
+				oBody.expires=expires.toUTCString();
+				oBody.setAttribute('MireilleBody',new Date().toUTCString());
+				oBody.save('MireilleBody');
 			}else{
 				expires.setMonth(expires.getMonth()-1);
-				bodyObj.expires=expires.toUTCString();
-				bodyObj.save('MireilleBody');
+				oBody.expires=expires.toUTCString();
+				oBody.save('MireilleBody');
 			}
 			return'DeleteBodyData';
 		}else{
 			//保存
 			expires.setMonth(expires.getMonth()+1);
-			bodyObj.expires=expires.toUTCString();
-			bodyObj.setAttribute(key,bodyObj.value);
-			bodyObj.setAttribute('MireilleBody',new Date().toUTCString());
-			bodyObj.save('MireilleBody');
+			oBody.expires=expires.toUTCString();
+			oBody.setAttribute(key,oBody.value);
+			oBody.setAttribute('MireilleBody',new Date().toUTCString());
+			oBody.save('MireilleBody');
 			return'SavedBodyDataIE';
 		}
 	}else{
 		//Cookie版（サイズ制限:escapeした後で3KBほど）
-		if(!bodyObj.value.length){
+		if(!oBody.value.length){
 			//valueが空→削除
 			document.cookie=key+'=; expires=Thu, 01-Jan-1970 00:00:00 GMT; ';
 			return'DeleteBodyData';
@@ -239,8 +240,8 @@ function saveBodyData(key){
 		var regexp=new RegExp('(^|; )'+key+'=([^;]+)')
 		if(document.cookie.match(regexp))backup=unescape(RegExp.$2);
 		expires=expires.toGMTString().replace('UTC','GMT').replace(/(\d) (\w{3}) (\d)/,"$1-$2-$3");
-		document.cookie=key+'='+escape(bodyObj.value)+'; expires='+expGMT+'; ';
-		if(document.cookie.match(regexp)&&bodyObj.value==unescape(RegExp.$2)){
+		document.cookie=key+'='+escape(oBody.value)+'; expires='+expGMT+'; ';
+		if(document.cookie.match(regexp)&&oBody.value==unescape(RegExp.$2)){
 			return'SavedBodyDataCookie';
 		}else{
 			//3850byte程度でサイズ制限がかかる。
@@ -254,7 +255,7 @@ function saveBodyData(key){
 /*========================================================*/
 // Load Body Data
 function loadBodyData(key){
-	if(!isLoaded||!bodyObj)return false;
+	if(!isLoaded||!oBody)return false;
 	if(!confirm("Cookieから本文データを読み出すと、現在の本文は消えてしまいます\nそれでも読み出してよろしいですか？"))
 		return false;
 	
@@ -264,16 +265,16 @@ function loadBodyData(key){
 		key='MireilleQuicksave';
 	else key='MireilleAutosave';
 	
-	if(bodyObj.addBehavior){
-		if(!bodyObj.getAttribute('MireilleBody'))bodyObj.load('MireilleBody');
-		var temp=bodyObj.getAttribute(key);
+	if(oBody.addBehavior){
+		if(!oBody.getAttribute('MireilleBody'))oBody.load('MireilleBody');
+		var temp=oBody.getAttribute(key);
 		if(temp){
-			bodyObj.value=temp;
+			oBody.value=temp;
 		}else{
 			alert('読み込みに失敗しました');
 		}
 	}else if(document.cookie.match(new RegExp('(^|; )'+key+'=([^;]+)'))){
-		bodyObj.value=unescape(RegExp.$2);
+		oBody.value=unescape(RegExp.$2);
 	}else{
 		alert('読み込みに失敗しました');
 	}
@@ -284,45 +285,45 @@ function loadBodyData(key){
 /*========================================================*/
 // Remove Body Data
 function removeBodyData(key){
-	if(!bodyObj)return false;
+	if(!oBody)return false;
 	if(document.cookie.match(/(^|; )MirBody=([^;]+)/))
 		document.cookie='MirBody=; expires=Thu, 01-Jan-1970 00:00:00; ';
 	document.cookie=key+'=; expires=Thu, 01-Jan-1970 00:00:00; ';
-	if(bodyObj.addBehavior){
+	if(oBody.addBehavior){
 		//bahavior版（IE依存）
 		var flag=0;
 		var expires=new Date();
 		expires.setMonth(expires.getMonth()-1);
 		
-		bodyObj.load('MireilleQuicksave');
-		if(bodyObj.getAttribute('MireilleQuicksave')!=null){
-			bodyObj.expires=expires.toUTCString();
-			bodyObj.save('MireilleQuicksave');
+		oBody.load('MireilleQuicksave');
+		if(oBody.getAttribute('MireilleQuicksave')!=null){
+			oBody.expires=expires.toUTCString();
+			oBody.save('MireilleQuicksave');
 			flag+=1;
 		}
 		
-		bodyObj.load('MireilleAutosave');
-		if(bodyObj.getAttribute('MireilleAutosave')!=null){
-			bodyObj.expires=expires.toUTCString();
-			bodyObj.save('MireilleAutosave');
+		oBody.load('MireilleAutosave');
+		if(oBody.getAttribute('MireilleAutosave')!=null){
+			oBody.expires=expires.toUTCString();
+			oBody.save('MireilleAutosave');
 			flag+=2;
 		}
 		
-		bodyObj.load('MireilleBody');
-		bodyObj.removeAttribute(key);
-		if(bodyObj.getAttribute('MireilleQuicksave')||bodyObj.getAttribute('MireilleAutosave')){
+		oBody.load('MireilleBody');
+		oBody.removeAttribute(key);
+		if(oBody.getAttribute('MireilleQuicksave')||oBody.getAttribute('MireilleAutosave')){
 			expires.setMonth(expires.getMonth()+2);
-			bodyObj.expires=expires.toUTCString();
-			bodyObj.setAttribute('MireilleBody',new Date().toUTCString());
-			bodyObj.save('MireilleBody');
+			oBody.expires=expires.toUTCString();
+			oBody.setAttribute('MireilleBody',new Date().toUTCString());
+			oBody.save('MireilleBody');
 		}else{
-			bodyObj.expires=expires.toUTCString();
-			bodyObj.save('MireilleBody');
+			oBody.expires=expires.toUTCString();
+			oBody.save('MireilleBody');
 		}
 		
-		if(flag&1)bodyObj.load('MireilleQuicksave');
-		if(flag&2)bodyObj.load('MireilleAutosave');
-		if(!bodyObj.getAttribute('MireilleBody'))bodyObj.load('MireilleBody');
+		if(flag&1)oBody.load('MireilleQuicksave');
+		if(flag&2)oBody.load('MireilleAutosave');
+		if(!oBody.getAttribute('MireilleBody'))oBody.load('MireilleBody');
 	}
 	if(key=='MireilleQuicksave'){
 		return'一時保存されていた本文データを削除しました。';
@@ -731,7 +732,7 @@ sub prtfrm{
  onclick="loadBodyData('MireilleAutosave');return false" onkeypress="loadBodyData('MireilleAutosave');return false"
  >ALoad(<KBD class="ak">/</KBD>)</BUTTON>
 </TD></TR>
-<TR><TD colspan="3"><TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD></TR>
+<TR><TD colspan="3"><TEXTAREA name="body" id="body" cols="80" rows="8" onchange="if(!isLoaded)initialization()">$DT{'body'}</TEXTAREA></TD></TR>
 </TABLE>
 
 
@@ -810,7 +811,7 @@ sub chdfrm{
  onclick="loadBodyData('MireilleAutosave');return false" onkeypress="loadBodyData('MireilleAutosave');return false"
 >ALoad(<KBD class="ak">/</KBD>)</BUTTON>
 </TD></TR>
-<TR><TD colspan="3"><TEXTAREA name="body" id="body" cols="80" rows="8">$DT{'body'}</TEXTAREA></TD></TR>
+<TR><TD colspan="3"><TEXTAREA name="body" id="body" cols="80" rows="8" onchange="if(!isLoaded)initialization()">$DT{'body'}</TEXTAREA></TD></TR>
 </TABLE>
 
 
@@ -964,7 +965,7 @@ sub artnavi{
 $ 記事ナビのモード
 =cut
 	return if defined$::CF{'artnavi'}&&!$::CF{'artnavi'};
-
+	
 	#Netscape4は記事ナビ無し
 	return($::CF{'artnavi'}=0)if$::IN{'hua'}=~/^Mozilla\/4.*(?:;\s*|\()[UI](?:;|\))/;
 	
