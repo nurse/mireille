@@ -14,6 +14,47 @@ require 5.005;
 #use vars qw(%AT %CF %IN %IC);
 
 #------------------------------------------------------------------------------#
+#管理CGIのパスワード
+$AT{'pass'}='';
+
+#-------------------------------------------------
+# Switch
+
+sub main{
+__FILE__=~/\bmanage.cgi$/o&&$ENV{'SERVER_NAME'}&&$ENV{'SERVER_NAME'}ne"localhost"&& die<<"_HTML_";
+<STRONG>最低限のセキュリティを確保するための警告</STRONG>
+管理CGIを起動するのに最低限必要なセキュリティ意識が管理者に不足しています
+せめて説明書は一通り目を通してください
+_HTML_
+	
+	&getParam;
+	unless($IN{'mode'}){
+		&menu('Ready...');
+	}elsif('icong'eq$IN{'mode'}){
+		&icong;
+	}elsif('icont'eq$IN{'mode'}){
+		&icont;
+	}elsif('icons'eq$IN{'mode'}){
+		&icons;
+	}elsif('iconsmp'eq$IN{'mode'}){
+		&iconsmp;
+	}elsif('config'eq$IN{'mode'}){
+		&config;
+	}elsif('css'eq$IN{'mode'}){
+		&css;
+	}elsif('log'eq$IN{'mode'}){
+		&log;
+	}elsif('zero'eq$IN{'mode'}){
+		&zero;
+	}elsif('manage'eq$IN{'mode'}){
+		&manage;
+	}else{
+		&menu('NG');
+	}
+	exit;
+}
+
+#------------------------------------------------------------------------------#
 #-------------------------------------------------
 # Mireille内のHTMLデザイン
 
@@ -128,45 +169,6 @@ _HTML_
 	.$CF{'bodyFoot'}.$CF{'jscript_AtSe'}."</BODY>\n</HTML>\n";
 }
 #------------------------------------------------------------------------------#
-
-#管理CGIのパスワード
-$AT{'pass'}='';
-
-#-------------------------------------------------
-# Switch
-
-__FILE__=~/\bmanage.cgi$/o&&$ENV{'SERVER_NAME'}&&$ENV{'SERVER_NAME'}ne"localhost"&& die<<"_HTML_";
-<STRONG>最低限のセキュリティを確保するための警告</STRONG>
-管理CGIを起動するのに最低限必要なセキュリティ意識が管理者に不足しています
-せめて説明書は一通り目を通してください
-_HTML_
-
-&getParam;
-unless($IN{'mode'}){
-	&menu('Ready...');
-}elsif('icong'eq$IN{'mode'}){
-	&icong;
-}elsif('icont'eq$IN{'mode'}){
-	&icont;
-}elsif('icons'eq$IN{'mode'}){
-	&icons;
-}elsif('iconsmp'eq$IN{'mode'}){
-	&iconsmp;
-}elsif('config'eq$IN{'mode'}){
-	&config;
-}elsif('css'eq$IN{'mode'}){
-	&css;
-}elsif('log'eq$IN{'mode'}){
-	&log;
-}elsif('zero'eq$IN{'mode'}){
-	&zero;
-}elsif('manage'eq$IN{'mode'}){
-	&manage;
-}else{
-	&menu('NG');
-}
-exit;
-
 #-------------------------------------------------
 # Get Parameters
 sub getParam{
@@ -203,7 +205,7 @@ sub getParam{
 	$DT{'pass'}eq$AT{'pass'}||&menu('Passwordが一致しません');
 	$IN{'pass'}=($DT{'pass'}=~/(.+)/o)?"$1":'';
 	$IN{'mode'}=$1 if($DT{'mode'}=~/(\w+)/o);
-	$IN{'phase'}=$1 if($DT{'phase'}=~/(\d+)/o);
+	$IN{'phase'}=$1 if($DT{'phase'}=~/([1-9]\d*)/o);
 	if('icong'eq$DT{'mode'}){
 		for(keys%DT){
 			$IN{$_}=$DT{$_} if($_=~/^\d+-\w*/o);
@@ -229,11 +231,12 @@ sub getParam{
 		$IN{'file'}=$1 if($DT{'file'}=~/(\w+)/o);
 		return%IN;
 	}elsif('log'eq$DT{'mode'}){#LOG
-		$IN{'str'}=($DT{'str'}=~/(\d+)/o)?$1:0;
-		$IN{'end'}=($DT{'end'}=~/(\d+)/o)?$1:0;
+		$IN{'str'}=($DT{'str'}=~/([1-9]\d*)/o)?$1:0;
+		$IN{'end'}=($DT{'end'}=~/([1-9]\d*)/o)?$1:0;
 		$IN{'del'}=$1 if($DT{'del'}=~/(\w+)/o);
-		$IN{'save'}=($DT{'save'}=~/(\d+)/o)?$1:0;
+		$IN{'save'}=($DT{'save'}=~/([1-9]\d*)/o)?$1:0;
 		$IN{'push'}=($DT{'push'}=~/(\d)/o)?"$1":'';
+		$IN{'lock'}=($DT{'lock'}=~/([1-9]\d*)/o)?$1:0;
 		$IN{'type'}=$1 if($DT{'type'}=~/(\w)/o);
 		return%IN;
 	}elsif('zero'eq$DT{'mode'}){#Zero
@@ -639,6 +642,7 @@ my@required=(
  admps	=>'管理者パスワード（全ての記事を編集・削除できます 25文字以上推奨）'
 ,tags	=>'使用を許可するタグ（半角スペース区切り）'
 ,strong	=>'強調する記号と対応するCSSのクラス（半角スペース区切りで「記号 クラス 記号・・・」）'
+,ngWords=>'NGワード（半角スペース区切り）'
 ,newnc	=>'投稿後*****秒以内の記事にNewマークをつける'
 ,newuc	=>'読んだ記事でも???秒間は「未読」状態を維持する'
 ,new	=>'投稿後*****秒以内の記事につけるNewマーク'
@@ -663,7 +667,10 @@ my@required=(
 ,mailnotify	=>'新規/返信 があったときに指定アドレスにメールする','0 使わない 1 使う'
 ,readOnly	=>'掲示板を閲覧専用にする','0 読み書きOK 1 閲覧専用'
 ,use304		=>'更新がないときに「304 Not Modified」を渡すか否か','0 渡さない 1 渡す'
-,useLastModified	=>'常に「Last-Modified」を渡すか否か','0 渡さない 1 渡す'
+,useLastModified=>'常に「Last-Modified」を渡すか否か','0 渡さない 1 渡す'
+,signature		=>'署名を表示するか否か','0 表示しない 1 表示する'
+,absoluteIcon	=>'絶対指定アイコン','0 使わない 1 使う'
+,relativeIcon	=>'相対指定アイコン','0 使わない 1 使う'
 );
 		my@design=(
  colorList	=>'色リスト'
@@ -865,8 +872,6 @@ ASDF
 ASDF
 		}
 		$config.=<<"ASDF";
-#ファイル名指定アイコンのコマンド名
-#\$CF{'exicfi'}='iconfile';
 #専用アイコン機能 (ON 1 OFF 0)
 \$CF{'exicon'}=\'$IN{'exicon'}\';
 #専用アイコン列挙
@@ -1021,10 +1026,23 @@ sub log{
 <FORM accept-charset="euc-jp" name="logedit" method="post" action="$AT{'manage'}">
 
 <FIELDSET style="padding:0.5em;width:60%">
+<LEGEND>スレッドのロック</LEGEND>
+<DIV style="text-align:left">
+<P><LABEL for="threadLock"><INPUT name="type" id="threadLock" type="radio" value="4" accesskey="l" checked
+>スレッドをロックする(<SPAN class="ak">L</SPAN>)</LABEL> ---
+第<INPUT name="lock" type="text" size="3" style="ime-mode:disabled" value="">番スレッドをロックする。</P>
+<P>スレッドをロックして、新しく投稿できないようにします。
+既にロックしているスレッドをもう一度ロックしようとすると、ロックを解除します。</P>
+</DIV>
+</FIELDSET>
+
+<FIELDSET style="padding:0.5em;width:60%">
 <LEGEND>バックアップ削除</LEGEND>
-<LABEL for="back"><INPUT name="type" id="back" type="radio" value="3" accesskey="y" checked="checked"
->バックアップファイルを削除する(<SPAN class="ak">Y</SPAN>)</LABEL>
-<PRE style="text-align:center">ファイル名変更型削除やログの増大のときにできたバックアップファイルを一掃します</PRE>
+<DIV style="text-align:left">
+<P><LABEL for="back"><INPUT name="type" id="back" type="radio" value="3" accesskey="y"
+>バックアップファイルを削除する(<SPAN class="ak">Y</SPAN>)</LABEL></P>
+<P>ファイル名変更型削除やログの増大のときにできたバックアップファイルを一掃します</P>
+</DIV>
 </FIELDSET>
 
 <FIELDSET style="padding:0.5em;width:60%">
@@ -1081,6 +1099,31 @@ ASDF
 		exit;
 	}elsif($IN{'type'}=~/^\d$/){
 		#ログ管理第一段階
+		if($IN{'type'}==4){
+			#スレッドのロック
+			if($IN{'lock'}){
+				open(RW,'+>>'."$CF{'log'}$IN{'lock'}.cgi")
+				||die"Can't read/write log($IN{'lock'};.cgi)[$?:$!]";
+				eval{flock(RW,2)};
+				seek(RW,0,0);
+				my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
+				
+				my$flag=0;
+				if(index($log[$#log],"Mir12=\tLocked")){
+					push(@log,"Mir12=\tLocked;\t");$flag++;
+				}else{
+					pop@log;
+				}
+				truncate(RW,0);
+				seek(RW,0,0);
+				print RW map{"$_\n"}@log;
+				close(RW);
+				
+				&menu(sprintf"第$IN{'lock'}番スレッドのロック%s成功",$flag?'':'解除');
+			}
+		}
+		
+		#スレッドロック以外と、スレッドロックのエラー
 		print&getManageHeader.<<"_HTML_";
 <H2 class="mode">ログ管理モード</H2>
 <FORM accept-charset="euc-jp" name="logedit" method="post" action="$AT{'manage'}">
@@ -1125,11 +1168,17 @@ _HTML_
 <P>ログ詰め: @{[$IN{'push'}?'する':'しない']}</P>
 ASDF
 		}elsif($IN{'type'}==3){
-				#バックアップ削除
-				print<<"ASDF";
+			#バックアップ削除
+			print<<"ASDF";
 <P>本当に、バックアップファイルを一掃してよろしいですか？</P>
 <INPUT name="type" type="hidden" value="c">
 ASDF
+		}elsif($IN{'type'}==4){
+			#スレッドロック
+			print<<"_HTML_";
+<P>ロックするスレッド番号が入力されていません<BR>
+戻って指定しなおしてください</P>
+_HTML_
 		}else{
 			die"ログ管理第一段階にてありえないtype($IN{'type'})に遭遇";
 		}
@@ -1503,6 +1552,6 @@ BEGIN{
 	$CF{'bodyHead'}='';
 	$CF{'bodyFoot'}='';
 }
-
+&main();
 1;
 __END__
