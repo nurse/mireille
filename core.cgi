@@ -566,7 +566,7 @@ _HTML_
 	study$str;
 	$str=~tr/"'<>/\01-\04/;
 	$str=~s/&(#?\w+;)/\05$1/go;
-		
+	
 	#タグ処理
 	if($CF{'tags'}&&!$EX{'notag'}){
 	    my$tag_regex_='[^\01-\04]*(?:\01[^\01]*\01[^\01-\04]*|\02[^\02]*\02[^\01-\04]*)*(?:\04|(?=\03)|$(?!\n))';
@@ -580,7 +580,7 @@ _HTML_
 	    }elsif(defined$tagCom{'!SELECTABLE'}){
 		$tags='\w+';
 	    }
-			
+	    
 	    my$result='';
 	    #もし BRタグや Aタグなど特定のタグだけは削除したくない場合には， 
 	    #$tag_tmp = $2; の後に，次のようにして $tag_tmp を $result に加えるようにすればできます． 
@@ -611,7 +611,7 @@ _HTML_
 	}else{
 	    #許可タグ無しorCommand:notag
 	}
-		
+	
 	#記事番号リンク「>>No.12-6」
 	$str=~s{(\04\04No\.(\d+)(-\d+)?)}{<A class="autolink" href="$CF{'index'}?read=$2#art$2$3">$1</A>}go
 	    if$CF{'noartno'}||!$EX{'noartno'};
@@ -701,7 +701,8 @@ _HTML_
 	$str=~tr/\05/&/;
 	$IN{'body'}=$str;
     }
-    $IN{'body'}=~s/\t/&nbsp;&nbsp;/go;
+    $IN{'body'}=~s/\t/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/go;
+    $IN{'body'}=~s/((?:\G|>)[^<]*?) /$1&nbsp;/go;
     $IN{'body'}=~s/\n/<BR>/go;
 	
     #-----------------------------
@@ -1480,7 +1481,6 @@ _HTML_
 
 =head3 引数
 
-<link rel="alternate" type="application/rss+xml" title="RSS" href="http://d.hatena.ne.jp/yumano/rss">
 =cut
 
 sub rss{
@@ -1521,14 +1521,8 @@ sub rss{
     }
     my @latestArticles = map{$item{$_}}sort{$b<=>$a}keys%item;
     $#latestArticles = $maxItem - 1 if @latestArticles > $maxItem;
-    print <<"EOF";
-Status: 200 OK
-Cache-Control: private
-Date: @{[&datef($^T,'rfc1123')]}
-Content-Language: ja-JP
-Content-type: application/xml; charset=$CF{'encoding'}
-
-<?xml version="1.0" encoding="$CF{'encoding'}" ?>
+    
+    my $output = <<"EOF";
 <rdf:RDF 
   xmlns="http://purl.org/rss/1.0/"
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -1542,11 +1536,11 @@ Content-type: application/xml; charset=$CF{'encoding'}
    <rdf:Seq>
 EOF
     for(@latestArticles){
-	print <<EOF;
+	$output .= <<EOF;
   <rdf:li rdf:resource="$_->{'_uri'}" />
 EOF
     }
-    print <<EOF;
+    $output .= <<EOF;
    </rdf:Seq>
   </items>
  </channel>
@@ -1558,7 +1552,7 @@ EOF
 	my $description = $_->{'body'};
 	$description =~ s/<BR\b[^>]*>/　/go;
 	$description = MirString->getTruncated($description,450);
-	print <<"EOF";
+	$output .= <<"EOF";
  <item rdf:about="$_->{'_uri'}">
   <title>$title</title>
   <link>$_->{'_uri'}</link>
@@ -1568,7 +1562,38 @@ EOF
 
 EOF
     }
-    print " </rdf:RDF>\n";
+    $output .= " </rdf:RDF>\n";
+    
+    my$die = $SIG{'__DIE__'};
+    $SIG{'__DIE__'} = '';
+    # Encode
+    my$flag=0;
+    eval q{
+      use Encode;
+      Encode::from_to( $output, $CF{'encoding'}, 'utf-8' );
+      $flag=1;
+      };
+    unless( $flag ){
+	# Jcode
+	eval q{
+	  use Jcode;
+	  $output = Jcode->new( $output, $CF{'encoding'} )->utf8;
+	  $flag=1;
+	  };
+    }
+    $SIG{'__DIE__'} = $die;
+    
+    my $encoding = $flag ? 'utf-8' : $CF{'encoding'};
+    print <<"EOF";
+Status: 200 OK
+Cache-Control: private
+Date: @{[&datef($^T,'rfc1123')]}
+Content-Language: ja-JP
+Content-type: application/rss+xml; charset=$encoding
+
+<?xml version="1.0" encoding="$encoding" ?>
+EOF
+    print $output;
     exit;
 }
 
@@ -2937,6 +2962,7 @@ C<< /<STRONG  clAss="[^"]*"[^>]*>/ >>
 sub rvsij{
     #データを戻す
     $CK{'body'}=~s/<BR\b[^>]*>/\n/gio;
+    $CK{'body'}=~s/&nbsp;/ /go;
     $CK{'body'}=~s/&/&#38;/go;
 
     #data->form変換
