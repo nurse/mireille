@@ -218,10 +218,10 @@ sub writeArticle{
 
 =item ¥³¥Þ¥ó¥É¤Ç»È¤¨¤ë¤â¤Î
 
-icon : ÀìÍÑ¥¢¥¤¥³¥ó
-bring: »ý¤Á¹þ¤ß¥¢¥¤¥³¥ó
-$CF{'exicfi'}: ¥Õ¥¡¥¤¥ë»ØÄê¥¢¥¤¥³¥ó
+icon    : ÀìÍÑ¥¢¥¤¥³¥ó
 iconlist: (nolist|economy)
+absoluteIcon : ÀäÂÐ»ØÄê¥¢¥¤¥³¥ó
+relativeIcon : ÁêÂÐ»ØÄê¥¢¥¤¥³¥ó
 
 dnew : µ­»öÆü»þ¹¹¿·
 znew : ¥¹¥ì¥Ã¥ÉÆü»þ¹¹¿·
@@ -251,29 +251,17 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 
 =cut
 
+	#ÀìÍÑ¥¢¥¤¥³¥óµ¡Ç½¡£index.cgi¤ÇÀßÄê¤¹¤ë¡£
+	#index.cgi¤Ç»ØÄê¤·¤¿¥¢¥¤¥³¥ó¥Ñ¥¹¥ï¡¼¥É¤Ë¹çÃ×¤¹¤ì¤Ð¡£
+	$IN{'icon'}=$IC{"$EX{'icon'}"}if($CF{'exicon'}&&$IC{"$EX{'icon'}"});
+	
+	#ÀäÂÐ»ØÄê¥¢¥¤¥³¥ó
+	$IN{'icon'}=''if($CF{'absoluteIcon'}&&$IN{'cmd'}=~/(?:^|;)absoluteIcon=([^;]+)/o);
+	#ÁêÂÐ»ØÄê¥¢¥¤¥³¥ó
+	$IN{'icon'}=$1 if($CF{'relativeIcon'}&&$IN{'cmd'}=~/(?:^|;)relativeIcon=([^;:.]*(\.[^;:.]+)*)/o);
+	
 	#renew¤Ïdnew&&znew
 	$EX{'dnew'}=$EX{'znew'}=1if$EX{'renew'};
-	
-	#ÀìÍÑ¥¢¥¤¥³¥óµ¡Ç½¡£index.cgi¤ÇÀßÄê¤¹¤ë¡£
-	if($CF{'exicon'}){
-		#index.cgi¤Ç»ØÄê¤·¤¿¥¢¥¤¥³¥ó¥Ñ¥¹¥ï¡¼¥É¤Ë¹çÃ×¤¹¤ì¤Ð¡£
-		$IN{'icon'}=$IC{"$EX{'icon'}"}if$IC{"$EX{'icon'}"};
-
-=item »ý¤Á¹þ¤ß¥¢¥¤¥³¥ó É¸½à¤Ç¤ÏÌµ¸ú
-
-»ý¤Á¹þ¤ß¥¢¥¤¥³¥ó¤ò¿¿¤Ë²ÔÆ°¤µ¤»¤ë¤¿¤á¤Ë¤Ï$CF{'icon'}=''¤È¤·¤Ê¤¤¤È°ÕÌ£¤¬¤¢¤ê¤Þ¤»¤ó
-¤·¤«¤·¡¢²èÁü»ý¹þ¤Ï¡¢Âç¤­¤Ê²èÁü¤òÅ½¤é¤ì¤ë¤È¤¤¤¦¤ï¤«¤ê¤ä¤¹¤¤¼êË¡¤ÎÂ¾¤Ë¤â¡¢
-»È¤¤Êý¤Ë¤è¤Ã¤Æ¤ÏÍøÍÑ¼Ô¤Î¾ðÊó¤ò¼ý½¸¤¹¤ë¤³¤È¤¬¤Ç¤­¤ë¤È¤¤¤¦´í¸±¤¬¤¢¤ë¤Î¤Ç¡¢
-¿®ÍÑ¤ÎÃÖ¤±¤ë¿Í¤·¤«Íè¤Ê¤¤¾ì½ê¤ÇÌµ¤¤¸Â¤ê¡¢»È¤ï¤Ê¤¤¤Û¤¦¤¬¤¤¤¤¤Ç¤¹
-
-Perl¥â¥¸¥å¡¼¥ë¤ÎImage::size¤òÍÑ¤¤¤ë¤³¤È¤Ë¤è¤Ã¤Æ¡¢¥µ¥¤¥ºÀ©¸Â¤ò¤«¤±¤ë¤³¤È¤¬½ÐÍè¤ë¤«¤â¤·¤ì¤Þ¤»¤ó
-¤³¤ì¤Ê¤é¾¯¤·°ÂÁ´À­¤ÏÁý¤·¤Þ¤¹¤¬¡¢CGI·ÐÍ³¤ÇÅê¹Æ¼Ô¤Î¾ðÊó¤¬Î®½Ð¤¹¤ë¡¢¡¢
-¤È¤¤¤¦²ÄÇ½À­¤¬°ÍÁ³»Ä¤Ã¤Æ¤¤¤ë¤¿¤á¡¢ÌµÀ©¸Â¤Ë¤¹¤ë¤³¤È¤Ï½ÐÍè¤Ê¤¤¤Ç¤·¤ç¤¦
-
-=cut
-
-#		$IN{'icon'}=$EX{'bring'}if$EX{'bring'};
-	}
 	
 	
 	#-----------------------------
@@ -1656,17 +1644,19 @@ $ µ­»ö¥¹¥ì¥Ã¥É¥Õ¥¡¥¤¥ë¥ê¥¹¥È¤Î½çÈÖ(date|number)
 
 	undef@file;
 	opendir(DIR,$CF{'log'})||die"Can't read directory($CF{'log'})[$?:$!]";
+	my@list=readdir(DIR);
+	closedir(DIR);
 	if('date'eq$_[0]){
 		#ÆüÉÕ½ç 'date'
-		@file=map{$_->[0]+$zer2[0]}sort{$b->[1]<=>$a->[1]or$b->[0]<=>$a->[0]}
-		map{[$_,$zer2[$_]]}map{$_-$zer2[0]}grep{$_>$zer2[0]}
-		map{m/^(\d+)\.cgi$/}grep{m/^\d+\.cgi$/}readdir(DIR);
+		my@list=grep{$_>$zer2[0]}map{int}grep{m/^\d+\.cgi$/o}@list;
+		my@tmp=map{$zer2[$_-$zer2[0]]}@list;
+		@file=@list[sort{$tmp[$b]<=>$tmp[$a]or$list[$b]<=>$list[$a]}0..$#list];
 		push(@file,0);
 	}else{
 		#µ­»öÈÖ¹æ½ç 'number'
-		@file=sort{$b<=>$a}map{m/^(\d+)\.cgi$/}grep{m/^\d+\.cgi$/}readdir(DIR);
+		@file=sort{$b<=>$a}map{int}grep{m/^\d+\.cgi$/}@list;
 	}
-	closedir(DIR);
+	return@file;
 }
 
 
@@ -1691,7 +1681,7 @@ $ ¥â¡¼¥É¤ÎÊÝ»ý(rvs,del)
 	my$str=0; #$str¥Ú¡¼¥¸ÌÜ¤«¤é
 	my$end=0; #$end¥Ú¡¼¥¸ÌÜ¤Þ¤ÇÏ¢Â³¤·¤ÆÄ¾ÀÜÈô¤Ù¤ë¤è¤¦¤ËÉ½¼¨
 	my$pags=int(($#file-1)/$page)+1;
-	$IN{'page'}>$pags&&($IN{'page'}=$pags);
+	$IN{'page'}=$pags if$IN{'page'}>$pags;
 
 	#¤É¤³¤«¤é¤É¤³¤Þ¤Ç
 	if($pags<=$max){
@@ -1933,6 +1923,307 @@ $ Èæ¤Ù¤ë¥Ñ¥¹¥ï¡¼¥É
 
 
 #-------------------------------------------------
+# ¥¢¥¤¥³¥óÍÑ¤ÎIMG¥¿¥°
+#
+sub getIconTag{
+=item °ú¿ô
+
+$ µ­»ö¾ðÊó¤ÎÆþ¤Ã¤¿¥Ï¥Ã¥·¥å¤Ø¤Î¥ê¥Õ¥¡¥ì¥ó¥¹
+;
+$ ¤É¤Î¤è¤¦¤Ê·Á¤ÇÊÖ¤¹¤«¤ÎÀßÄê
+
+=item ÊÖ¤êÃÍÀßÄê
+¡Ö-!keyword!-¡×¤Î¤è¤¦¤Ê·Á¼°¤Ç¤¹
+¶ñÂÎÅª¤Ë¤Ï°Ê²¼¤Î¤È¤ª¤ê
+:-!src!-
+  dir+file
+:-!dir!-
+  dir\
+:-!file!-
+  file
+
+=cut
+
+	my$data=shift;
+	my$text=shift||'<IMG src="-!src!-" alt="" title="-!dir!-+-!file!-">';
+	my%DT=(dir=>$CF{'icon'},file=>'');
+	if($data->{'icon'}){
+	}elsif($CF{'absoluteIcon'}&&$data->{'cmd'}=~/(?:^|;)absoluteIcon=([^;]*)/o){
+		#ÀäÂÐ»ØÄê¥¢¥¤¥³¥ó
+		$DT{'dir'}='';
+		$DT{'file'}=$1;
+	}elsif($CF{'relativeIcon'}&&$data->{'cmd'}=~/(?:^|;)relativeIcon=([^;:.]*(?:\.[^;:.]+)*)/o){
+		#ÁêÂÐ»ØÄê¥¢¥¤¥³¥ó
+		$DT{'file'}=$1;
+	}
+	$DT{'file'}=$data->{'icon'}if(!$DT{'file'});
+	$DT{'src'}=$DT{'dir'}.$DT{'file'};
+	$text=~s/(-!(\w+)!-)/defined$DT{$2}?$DT{$2}:$1/ego;
+	return$DT{'file'}?$text:undef;
+}
+
+
+#-------------------------------------------------
+# ¥¢¥¤¥³¥ó¥ê¥¹¥È
+#
+sub iptico{
+
+=item °ú¿ô
+
+$ ¥Ç¥Õ¥©¥ë¥È»ØÄê¤Ë¤·¤¿¤¤¥¢¥¤¥³¥ó¥Õ¥¡¥¤¥ëÌ¾¤òÆþ¤ì¤¿½ñ¤­´¹¤¨²ÄÇ½¤ÊÊÑ¿ô
+;
+$ SELECT¥¿¥°¤ËÄÉ²Ã¤·¤¿¤¤Â°À­
+$ ³ÈÄ¥¥³¥Þ¥ó¥É
+
+=item Ê£¿ô¥¢¥¤¥³¥ó¥ê¥¹¥È
+
+$CF{'icls'}¤ÎºÇ½é¤Î°ìÊ¸»ú¤¬' '¡ÊÈ¾³Ñ¶õÇò¡Ë¤À¤Ã¤¿¾ì¹çÊ£¿ô¥ê¥¹¥È¥â¡¼¥É¤Ë¤Ê¤ê¤Þ¤¹
+¶ñÂÎÅª¤ÊÎã¤ò½Ð¤¹¤È¡¢
+¡¦Ã±°ì¤È¤ß¤Ê¤µ¤ì¤ëÎã
+'icon.txt'
+'icon1.txt icon2.txt' #"icon1.txt icon2"¤È¤¤¤¦¥Æ¥­¥¹¥È¥Õ¥¡¥¤¥ë¤À¤È¤ß¤Ê¤·¤Þ¤¹
+'"icon.txt" "exicon.txt"'
+¡¦Ê£¿ô¤È¤ß¤Ê¤µ¤ì¤ëÎã
+' "icon.txt" "exicon.txt"'
+' "icon.txt" exicon.txt'
+' icon.txt exicon.txt'
+
+=cut
+
+	my$opt=$_[1]?" $_[1]":'';
+	if($CF{'-CacheIconList'}&&('reset'ne$_[2])){
+		#¥­¥ã¥Ã¥·¥å¤Ç¤¢¤ë$CF{'-CacheIconList'}¤òÊÖ¤¹
+		return$CF{'-CacheIconList'};
+	}
+	
+	#¥¢¥¤¥³¥ó¥ê¥¹¥ÈÆÉ¤ß¹þ¤ß
+	my$iconlist='';
+	if($CK{'cmd'}=~/\biconlist=nolist(;|$)/o){
+	 #`icon=nolist`¤Ç¥¢¥¤¥³¥ó¥ê¥¹¥È¤òÆÉ¤ß¹þ¤Þ¤Ê¤¤
+	}elsif($CF{'icls'}=~/^ /o){
+		#Ê£¿ô¥¢¥¤¥³¥ó¥ê¥¹¥ÈÆÉ¤ß¹þ¤ß
+		for($CF{'icls'}=~/("[^"\\]*(?:\\.[^"\\]*)*"|\S+)/go){
+			$_||next;
+			my$tmp;
+			open(RD,'<'.$_)||die"Can't open multi-iconlist($_).";
+			eval{flock(RD,1)};
+			read(RD,$tmp,-s$_);
+			close(RD);
+			$iconlist.=$tmp;
+		}
+	}else{
+		#Ã±°ì¥¢¥¤¥³¥ó¥ê¥¹¥ÈÆÉ¤ß¹þ¤ß
+		open(RD,'<'.$CF{'icls'})||die"Can't open single-iconlist.";
+		eval{flock(RD,1)};
+		read(RD,$iconlist,-s$CF{'icls'});
+		close(RD);
+	}
+	
+	#ÁªÂò¥¢¥¤¥³¥ó¤Î·èÄê¡ÜSELECT¥¿¥°¤ÎÃæ¿È
+	my$isEconomy=$CK{'cmd'}=~/(?:^|;)iconlist=economy(?:\s*;|$)/o;
+	my$isAbsolute=0;
+	my$isDisabled='';
+	unless(@_){
+	}elsif($CF{'exicon'}&&($CK{'cmd'}=~/(?:^|;)icon=([^;]*)/o)&&$IC{$1}){
+		#¥Ñ¥¹¥ï¡¼¥É·¿
+		$_[0]=$IC{$1};
+		$iconlist.=qq(<OPTION value="$_[0]" selected>ÀìÍÑ¥¢¥¤¥³¥ó</OPTION>\n);
+	}elsif($CF{'absoluteIcon'}&&$CK{'cmd'}=~/(?:^|;)absoluteIcon=([^;]*)/o){
+		#ÀäÂÐ»ØÄê¥¢¥¤¥³¥ó
+		$_[0]=$1;
+		$isAbsolute=1;
+		$isDisabled=1;
+		$iconlist=qq(<OPTION value="$_[0]" selected>ÀäÂÐ»ØÄê</OPTION>\n)if$isEconomy;
+	}elsif($CF{'relativeIcon'}&&$CK{'cmd'}=~/(?:^|;)relativeIcon=([^;:.]*(\.[^;:.]+)*)/o){
+		#ÁêÂÐ»ØÄê¥¢¥¤¥³¥ó
+		$_[0]=$1;
+		$iconlist=qq(<OPTION value="$1" selected>ÁêÂÐ»ØÄê</OPTION>\n)if$isEconomy;
+		$isDisabled=1;
+	}elsif($_[0]and$iconlist=~s/^(.*value=(["'])$_[0]\2)(.*)$/$1 selected$3/imo){
+		$iconlist="$1 selected$3"if$isEconomy;
+	}elsif($iconlist=~s/value=(["'])(.+?)\1/value=$1$2$1 selected/io){
+		$_[0]=$2;
+	}
+	$_[0]=$CF{'icon'}.$_[0]unless$isAbsolute;
+	$isDisabled&&='disabled';
+	$CF{'-CacheIconList'}=<<"_HTML_";
+<SELECT name="icon" id="icon" onchange="document.images['Preview'].src='$CF{'icon'}'+this.value;document.images['Preview'].title=this.value;"$opt$isDisabled>
+$iconlist</SELECT>
+_HTML_
+	return$CF{'-CacheIconList'};
+}
+
+
+#-------------------------------------------------
+# ¥«¥é¡¼¥ê¥¹¥ÈÆÉ¤ß¹þ¤ß
+#
+sub iptcol{
+=item °ú¿ô
+$ ¥Ç¥Õ¥©¥ë¥È»ØÄê¤Ë¤·¤¿¤¤¿§Ì¾
+=cut
+	if('input'eq$CF{'colway'}){
+		return<<"_HTML_";
+<INPUT type="text" name="color" id="color" maxlength="20" style="ime-mode:disabled"
+ title="Color&#10;ËÜÊ¸¤Î¿§¤òÆþÎÏ¤·¤Þ¤¹&#10;¡Ê#0f0¡¢#00ff00¡¢rgb(0,255,0)¡¢WebColor(green¤È¤«)&#10;¤Î¤É¤Î·Á¼°¤Ç¤â»È¤¨¤Þ¤¹" value="$_[0]">
+_HTML_
+	}else{
+		my$list=$CF{'colorList'}=~/\S/o?$CF{'colorList'}:<<"_HTML_";#1.2.5°Ê²¼¤Îindex.cgi¤È¤Î¸ß´¹À­¤Î¤¿¤á
+<OPTION value="#000000" style="color:#000000">¢£Black</OPTION>
+<OPTION value="#696969" style="color:#696969">¢£DimGray</OPTION>
+<OPTION value="#808080" style="color:#808080">¢£Gray</OPTION>
+<OPTION value="#A9A9A9" style="color:#A9A9A9">¢£DarkGray</OPTION>
+<OPTION value="#C0C0C0" style="color:#C0C0C0">¢£Silver</OPTION>
+<OPTION value="#D3D3D3" style="color:#D3D3D3">¢£LightGrey</OPTION>
+<OPTION value="#D8BFD8" style="color:#D8BFD8">¢£Thistle</OPTION>
+<OPTION value="#DCDCDC" style="color:#DCDCDC">¢£Gainsboro</OPTION>
+<OPTION value="#F5F5DC" style="color:#F5F5DC">¢£Beige</OPTION>
+<OPTION value="#F5F5F5" style="color:#F5F5F5">¢£WhiteSmoke</OPTION>
+<OPTION value="#E6E6FA" style="color:#E6E6FA">¢£Lavender</OPTION>
+<OPTION value="#FAF0E6" style="color:#FAF0E6">¢£Linen</OPTION>
+<OPTION value="#FDF5E6" style="color:#FDF5E6">¢£Oldlace</OPTION>
+<OPTION value="#FFE4E1" style="color:#FFE4E1">¢£Mistyrose</OPTION>
+<OPTION value="#F0FFF0" style="color:#F0FFF0">¢£Honeydew</OPTION>
+<OPTION value="#FFF5EE" style="color:#FFF5EE">¢£Seashell</OPTION>
+<OPTION value="#FFF0F5" style="color:#FFF0F5">¢£LavenderBlush</OPTION>
+<OPTION value="#F0F8FF" style="color:#F0F8FF">¢£AliceBlue</OPTION>
+<OPTION value="#F8F8FF" style="color:#F8F8FF">¢£GhostWhite</OPTION>
+<OPTION value="#FFFAF0" style="color:#FFFAF0">¢£FloralWhite</OPTION>
+<OPTION value="#F5FFFA" style="color:#F5FFFA">¢£Mintcream</OPTION>
+<OPTION value="#FFFAFA" style="color:#FFFAFA">¢£Snow</OPTION>
+<OPTION value="#FFFFE0" style="color:#FFFFE0">¢£LightYellow</OPTION>
+<OPTION value="#E0FFFF" style="color:#E0FFFF">¢£LightCyan</OPTION>
+<OPTION value="#FFFFF0" style="color:#FFFFF0">¢£Ivory</OPTION>
+<OPTION value="#F0FFFF" style="color:#F0FFFF">¢£Azure</OPTION>
+<OPTION value="#FFFFFF" style="color:#FFFFFF">¢£White</OPTION>
+<OPTION value="#9370DB" style="color:#9370DB">¢£MediumPurple</OPTION>
+<OPTION value="#6A5ACD" style="color:#6A5ACD">¢£SlateBlue</OPTION>
+<OPTION value="#483D8B" style="color:#483D8B">¢£DarkSlateBlue</OPTION>
+<OPTION value="#7B68EE" style="color:#7B68EE">¢£MediumSlateBlue</OPTION>
+<OPTION value="#BA55D3" style="color:#BA55D3">¢£MediumOrchid</OPTION>
+<OPTION value="#9932CC" style="color:#9932CC">¢£DarkOrchid</OPTION>
+<OPTION value="#8A2BE2" style="color:#8A2BE2">¢£BlueViolet</OPTION>
+<OPTION value="#9400D3" style="color:#9400D3">¢£DarkViolet</OPTION>
+<OPTION value="#4B0082" style="color:#4B0082">¢£Indigo</OPTION>
+<OPTION value="#000080" style="color:#000080">¢£Navy</OPTION>
+<OPTION value="#00008B" style="color:#00008B">¢£DarkBlue</OPTION>
+<OPTION value="#0000CD" style="color:#0000CD">¢£MediumBlue</OPTION>
+<OPTION value="#0000FF" style="color:#0000FF">¢£Blue</OPTION>
+<OPTION value="#191970" style="color:#191970">¢£MidnightBlue</OPTION>
+<OPTION value="#00BFFF" style="color:#00BFFF">¢£DeepSkyBlue</OPTION>
+<OPTION value="#00CED1" style="color:#00CED1">¢£DarkTurquoise</OPTION>
+<OPTION value="#1E90FF" style="color:#1E90FF">¢£DodgerBlue</OPTION>
+<OPTION value="#4169E1" style="color:#4169E1">¢£RoyalBlue</OPTION>
+<OPTION value="#4682B4" style="color:#4682B4">¢£SteelBlue</OPTION>
+<OPTION value="#6495ED" style="color:#6495ED">¢£CornflowerBlue</OPTION>
+<OPTION value="#87CEFA" style="color:#87CEFA">¢£LightSkyblue</OPTION>
+<OPTION value="#5F9EA0" style="color:#5F9EA0">¢£CadetBlue</OPTION>
+<OPTION value="#87CEEB" style="color:#87CEEB">¢£SkyBlue</OPTION>
+<OPTION value="#B0E0E6" style="color:#B0E0E6">¢£PowderBlue</OPTION>
+<OPTION value="#ADD8E6" style="color:#ADD8E6">¢£LightBlue</OPTION>
+<OPTION value="#708090" style="color:#708090">¢£SlateGray</OPTION>
+<OPTION value="#778899" style="color:#778899">¢£LightSlateGray</OPTION>
+<OPTION value="#B0C4DE" style="color:#B0C4DE">¢£LightSteelBlue</OPTION>
+<OPTION value="#008080" style="color:#008080">¢£Teal</OPTION>
+<OPTION value="#008B8B" style="color:#008B8B">¢£DarkCyan</OPTION>
+<OPTION value="#00FFFF" style="color:#00FFFF">¢£Aqua</OPTION>
+<OPTION value="#00FFFF" style="color:#00FFFF">¢£Cyan</OPTION>
+<OPTION value="#2F4F4F" style="color:#2F4F4F">¢£DarkSlateGray</OPTION>
+<OPTION value="#AFEEEE" style="color:#AFEEEE">¢£PaleTurquoise</OPTION>
+<OPTION value="#7FFFD4" style="color:#7FFFD4">¢£Aquamarine</OPTION>
+<OPTION value="#66CDAA" style="color:#66CDAA">¢£MediumAquamarine</OPTION>
+<OPTION value="#3CB371" style="color:#3CB371">¢£MediumSeagreen</OPTION>
+<OPTION value="#2E8B57" style="color:#2E8B57">¢£SeaGreen</OPTION>
+<OPTION value="#48D1CC" style="color:#48D1CC">¢£MediumTurquoise</OPTION>
+<OPTION value="#40E0D0" style="color:#40E0D0">¢£Turquoise</OPTION>
+<OPTION value="#20B2AA" style="color:#20B2AA">¢£LightSeagreen</OPTION>
+<OPTION value="#00FA9A" style="color:#00FA9A">¢£MediumSpringGreen</OPTION>
+<OPTION value="#00FF7F" style="color:#00FF7F">¢£SpringGreen</OPTION>
+<OPTION value="#006400" style="color:#006400">¢£DarkGreen</OPTION>
+<OPTION value="#008000" style="color:#008000">¢£Green</OPTION>
+<OPTION value="#00FF00" style="color:#00FF00">¢£Lime</OPTION>
+<OPTION value="#32CD32" style="color:#32CD32">¢£LimeGreen</OPTION>
+<OPTION value="#228B22" style="color:#228B22">¢£ForestGreen</OPTION>
+<OPTION value="#90EE90" style="color:#90EE90">¢£LightGreen</OPTION>
+<OPTION value="#98FB98" style="color:#98FB98">¢£PaleGreen</OPTION>
+<OPTION value="#7CFC00" style="color:#7CFC00">¢£LawnGreen</OPTION>
+<OPTION value="#7FFF00" style="color:#7FFF00">¢£Chartreuse</OPTION>
+<OPTION value="#ADFF2F" style="color:#ADFF2F">¢£GreenYellow</OPTION>
+<OPTION value="#9ACD32" style="color:#9ACD32">¢£YellowGreen</OPTION>
+<OPTION value="#6B8E23" style="color:#6B8E23">¢£Olivedrab</OPTION>
+<OPTION value="#556B2F" style="color:#556B2F">¢£DarkOlivegreen</OPTION>
+<OPTION value="#8FBC8B" style="color:#8FBC8B">¢£DarkSeaGreen</OPTION>
+<OPTION value="#808000" style="color:#808000">¢£Olive</OPTION>
+<OPTION value="#FFFF00" style="color:#FFFF00">¢£Yellow</OPTION>
+<OPTION value="#FAFAD2" style="color:#FAFAD2">¢£LightGoldenrodYellow</OPTION>
+<OPTION value="#FAEBD7" style="color:#FAEBD7">¢£AntiqueWhite</OPTION>
+<OPTION value="#FFF8DC" style="color:#FFF8DC">¢£Cornsilk</OPTION>
+<OPTION value="#FFEFD5" style="color:#FFEFD5">¢£PapayaWhip</OPTION>
+<OPTION value="#FFEBCD" style="color:#FFEBCD">¢£BlanchedAlmond</OPTION>
+<OPTION value="#FFFACD" style="color:#FFFACD">¢£LemonChiffon</OPTION>
+<OPTION value="#FFE4C4" style="color:#FFE4C4">¢£Bisque</OPTION>
+<OPTION value="#FFDAB9" style="color:#FFDAB9">¢£PeachPuff</OPTION>
+<OPTION value="#F5DEB3" style="color:#F5DEB3">¢£Wheat</OPTION>
+<OPTION value="#FFE4B5" style="color:#FFE4B5">¢£Moccasin</OPTION>
+<OPTION value="#FFDEAD" style="color:#FFDEAD">¢£NavajoWhite</OPTION>
+<OPTION value="#EEE8AA" style="color:#EEE8AA">¢£PaleGoldenrod</OPTION>
+<OPTION value="#D2B48C" style="color:#D2B48C">¢£Tan</OPTION>
+<OPTION value="#DEB887" style="color:#DEB887">¢£Burlywood</OPTION>
+<OPTION value="#E9967A" style="color:#E9967A">¢£DarkSalmon</OPTION>
+<OPTION value="#FA8072" style="color:#FA8072">¢£Salmon</OPTION>
+<OPTION value="#F0E68C" style="color:#F0E68C">¢£Khaki</OPTION>
+<OPTION value="#FFA07A" style="color:#FFA07A">¢£LightSalmon</OPTION>
+<OPTION value="#BDB76B" style="color:#BDB76B">¢£DarkKhaki</OPTION>
+<OPTION value="#F4A460" style="color:#F4A460">¢£SandyBrown</OPTION>
+<OPTION value="#FF7F50" style="color:#FF7F50">¢£Coral</OPTION>
+<OPTION value="#FF6347" style="color:#FF6347">¢£Tomato</OPTION>
+<OPTION value="#CD853F" style="color:#CD853F">¢£Peru</OPTION>
+<OPTION value="#A0522D" style="color:#A0522D">¢£Sienna</OPTION>
+<OPTION value="#D2691E" style="color:#D2691E">¢£Chocolate</OPTION>
+<OPTION value="#8B4513" style="color:#8B4513">¢£SaddleBrown</OPTION>
+<OPTION value="#DAA520" style="color:#DAA520">¢£Goldenrod</OPTION>
+<OPTION value="#B8860B" style="color:#B8860B">¢£DarkGoldenrod</OPTION>
+<OPTION value="#FFD700" style="color:#FFD700">¢£Gold</OPTION>
+<OPTION value="#FFA500" style="color:#FFA500">¢£Orange</OPTION>
+<OPTION value="#FF8C00" style="color:#FF8C00">¢£DarkOrange</OPTION>
+<OPTION value="#FF4500" style="color:#FF4500">¢£OrangeRed</OPTION>
+<OPTION value="#800000" style="color:#800000">¢£Maroon</OPTION>
+<OPTION value="#8B0000" style="color:#8B0000">¢£DarkRed</OPTION>
+<OPTION value="#FF0000" style="color:#FF0000">¢£Red</OPTION>
+<OPTION value="#B22222" style="color:#B22222">¢£Firebrick</OPTION>
+<OPTION value="#A52A2A" style="color:#A52A2A">¢£Brown</OPTION>
+<OPTION value="#CD5C5C" style="color:#CD5C5C">¢£IndianRed</OPTION>
+<OPTION value="#F08080" style="color:#F08080">¢£LightCoral</OPTION>
+<OPTION value="#BC8F8F" style="color:#BC8F8F">¢£RosyBrown</OPTION>
+<OPTION value="#FF1493" style="color:#FF1493">¢£DeepPink</OPTION>
+<OPTION value="#C71585" style="color:#C71585">¢£MediumVioletRed</OPTION>
+<OPTION value="#DC143C" style="color:#DC143C">¢£Crimson</OPTION>
+<OPTION value="#FF69B4" style="color:#FF69B4">¢£HotPink</OPTION>
+<OPTION value="#DA70D6" style="color:#DA70D6">¢£Orchid</OPTION>
+<OPTION value="#DB7093" style="color:#DB7093">¢£PaleVioletred</OPTION>
+<OPTION value="#FFB6C1" style="color:#FFB6C1">¢£LightPink</OPTION>
+<OPTION value="#FFC0CB" style="color:#FFC0CB">¢£Pink</OPTION>
+<OPTION value="#800080" style="color:#800080">¢£Purple</OPTION>
+<OPTION value="#8B008B" style="color:#8B008B">¢£DarkMagenta</OPTION>
+<OPTION value="#FF00FF" style="color:#FF00FF">¢£Fuchsia</OPTION>
+<OPTION value="#FF00FF" style="color:#FF00FF">¢£Magenta</OPTION>
+<OPTION value="#EE82EE" style="color:#EE82EE">¢£Violet</OPTION>
+<OPTION value="#DDA0DD" style="color:#DDA0DD">¢£Plum</OPTION>
+_HTML_
+		if($_[0]&&$list=~s/(value=(["'])$_[0]\2)/$1 selected="selected"/io){
+		}elsif($list=~s/value=(["'])$CF{'colway'}\1/value=$1$CF{'colway'}$1 selected="selected"/io){
+			$_[0]=$CF{'colway'};
+		}elsif($list=~s/value=(["'])(.+?)\1/value=$1$2$1 selected="selected"/io){
+			$_[0]=$2;
+		}
+		return<<"_HTML_";
+<SELECT name="color" id="color">
+$list</SELECT>
+_HTML_
+	}
+}
+
+
+#-------------------------------------------------
 # µ­»ö¥¹¥ì¥Ã¥É¥Õ¥¡¥¤¥ëºï½ü
 #
 sub delThread{
@@ -2093,7 +2384,7 @@ BEGIN{
 		};
 	}
 	# Version
-	$CF{'Version'}=join('.',q$Mireille: 1_2_8 $=~/(\d+[a-z]?)/go);
+	$CF{'Version'}=join('.',q$Mireille: 1_2_9 $=~/(\d+[a-z]?)/go);
 	($CF{'Core'}=q$Revision$)=~/(\d+((?:\.\d+)*))/o;
 	$CF{'CoreRevision'}=$1;
 	$CF{'Version'}.=$2.'¦Â' if-1<index(q$State$,'Exp');
