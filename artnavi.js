@@ -22,7 +22,7 @@ window.onload=artnavi;
 // 初期設定
 var ncX=0,ncY=0; //NaviClientX/Y:記事ナビのクライアント領域（ウィンドウ）上の座標
 var maW=300,miW=180; //最大化横幅、最小化横幅
-var deX=-maW,deY=20; //記事ナビのクライアント領域（ウィンドウ）上の初期座標
+var deX=-maW,deY=50; //記事ナビのクライアント領域（ウィンドウ）上の初期座標
 var drag_obj; //D&D用オブジェクト
 var docele; //IE標準準拠モード時に、有効なscrollTop/scrollLeftプロパティを持つオブジェクトを入れる
 var naviwind,navibody;
@@ -50,8 +50,8 @@ function artnavi(p){
 	}else{return}
 	INIT:{
 		do{
-			if((document.location.href.lastIndexOf('?')<0)||(p=='popup')){break;}
-			if(!document.cookie.match(/(^|; )ArtNavi=([^;]+)/)){break;}
+//			if((document.location.href.lastIndexOf('?')<0)||(p=='popup')){break;} //exp.
+			if((p=='popup')||!document.cookie.match(/(^|; )ArtNavi=([^;]+)/)){break;}
 			//ページ間移動
 			var cook=unescape(RegExp.$2);
 			ncX=(cook.match(/\tncX=\t(\d+);\t/))?parseInt(RegExp.$1):0;
@@ -73,11 +73,11 @@ function artnavi(p){
 //--------------------------------------
 // フレームサイズ変更のときは再描画
 function refresh(p){
-	ncX=(deX<0?document.body.clientWidth +deX-5+(navibody.style.display=='none'?maW-miW:0):deX);
-	ncY=(deY<0?document.body.clientHeight+deY-5:deY);
-	naviwind.style.left=(docele?docele.scrollLeft:0)+ncX+'px';
-	naviwind.style.top =(docele?docele.scrollTop:0) +ncY+'px';
-	if(p=='popup'){
+	if(p=='popup'||ncX>document.body.clientWidth||ncY>document.body.clientHeight){
+		ncX=(deX<0?document.body.clientWidth +deX-5+(navibody.style.display=='none'?maW-miW:0):deX);
+		ncY=(deY<0?document.body.clientHeight+deY-5:deY);
+		naviwind.style.left=(docele?docele.scrollLeft:0)+ncX+'px';
+		naviwind.style.top =(docele?docele.scrollTop:0) +ncY+'px';
 		naviwind.style.display='block';
 		if(document.cookie.match(/(^|; )ArtNavi=([^;]+)/)){setcookie();}
 	}
@@ -99,7 +99,7 @@ function view(e,id){
 	
 	if(!viewobj.style){
 	}else if(!viewobj.style.display){
-		//Opera
+		//Opera6
 		e.preventDefault=true;
 		if(!viewobj.style.visibility){
 		}else if(viewobj.style.visibility=='hidden'){
@@ -146,11 +146,9 @@ function setcookie(){
 		+";\tnaviwinddisplay=\t"+naviwind.style.display
 		+";\tnavibodydisplay=\t"+navibody.style.display
 		+";\t");
-/* //SessionCookie化
 	var expiresDate=new Date();
 	expiresDate.setTime(expiresDate.getTime()+60*60*24*7*1000);
 	data+="; expires="+expiresDate.toGMTString();
-*/
 	document.cookie="ArtNavi="+data;
 }
 
@@ -199,22 +197,25 @@ function endDrag(){
 // ショートカットキー(accesskey)の捕獲
 function acskey(e,id){
 	if(document.all){
-		e.returnValue=false;
+//		e.returnValue=false;
 	}else if(document.getElementById){
-		e.preventDefault();
+//		e.preventDefault();
 	}else{return false;}
 	e.cancelBubble=true;
 	
-	var which;
-	which=document.all?e.keyCode:document.getElementById?e.which:null;
-	if(!which)return false;
-	
-	switch(String.fromCharCode(which)){
-	case 'C': if('naviwind'!=id)return;break;
-	case 'c': if('naviwind'!=id)return;break;
-	case 'M': if('navibody'!=id)return;break;
-	case 'm': if('navibody'!=id)return;break;
-	default : return;
+	if(e.type=='keypress'||e.type=='keydown'){
+		switch(document.all?e.keyCode:document.getElementById?e.which:0){
+		case/*'C'*/0x43:if('naviwind'!=id)return;break;
+		case/*'c'*/0x63:if('naviwind'!=id)return;break;
+		case/*'M'*/0x4d:if('navibody'!=id)return;break;
+		case/*'m'*/0x6d:if('navibody'!=id)return;break;
+		case/*'Enter'*/0x0d:if('naviwind'!=id&&'navibody'!=id)return;break;
+		case/*'Space'*/0x20:if('naviwind'!=id&&'navibody'!=id)return;break;
+		case/*'Tab'*/0x09:return true;break;
+		default : return;
+		}
+	}else{
+		return false;
 	}
 	view(e,id);
 }
