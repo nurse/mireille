@@ -11,21 +11,18 @@
 # $cvsid = q$Id$;
 require 5.005;
 use strict;
-use vars qw(%CF %IC %IN %CK %Z0 @zer2 @file);
+use vars qw(%CF %IC %IN %CK);
+my(%Z0,@zer2,@file);
 
-=item core.cgi¤òÃ±ÂÎµ¯Æ°¤µ¤»¤ë¤È¡¢location¤ÇÄ·¤Ð¤»¤ëCGI¤Ë
-
+=pod core.cgi¤òÃ±ÂÎµ¯Æ°¤µ¤»¤ë¤È¡¢location¤ÇÄ·¤Ð¤»¤ëCGI¤Ë
 # ¤³¤Îµ¡Ç½¤ò»È¤¦¤Ë¤Ï¾å¤Î¹Ô¤ò # ¤Ç #=item ¤È¥³¥á¥ó¥È¥¢¥¦¥È¤·¤Æ¤¯¤À¤µ¤¤
-
 INIT:{
 	if($CF{'program'}eq __FILE__){
 		#Ä¾ÀÜ¼Â¹Ô¤À¤Ã¤¿¤éÆ°¤­½Ð¤¹
 		&locate($ENV{'QUERY_STRING'});
 	}
 }
-
 =pod
-
 =cut
 
 #-------------------------------------------------
@@ -64,7 +61,7 @@ sub main{
 		#ÊÖ¿®
 		$IN{'i'}&&&res;
 		#¿·µ¬½ñ¤­¹þ¤ß
-		defined$IN{'j'}&&(&showHeader,&getCookie,&prtfrm,&footer);
+		defined$IN{'j'}&&(&showHeader,&getCookie,&prtfrm,(print&getFooter),exit);
 		#µ­»ö½¤Àµ¥ê¥¹¥Èor¼Â¹Ô
 		defined$IN{'rvs'}&&(index($IN{'rvs'},'-')<0?&showRvsMenu:&rvsArticle);
 		#µ­»öºï½ü¥ê¥¹¥Èor¼Â¹Ô
@@ -189,7 +186,7 @@ _HTML_
 
 	#-----------------------------
 	#¥Õ¥Ã¥¿
-	&footer;
+	print&getFooter;
 	exit;
 }
 
@@ -453,7 +450,8 @@ Perl¥â¥¸¥å¡¼¥ë¤ÎImage::size¤òÍÑ¤¤¤ë¤³¤È¤Ë¤è¤Ã¤Æ¡¢¥µ¥¤¥ºÀ©¸Â¤ò¤«¤±¤ë¤³¤È¤¬½ÐÍè¤ë¤
 _HTML_
 		%CK=%IN;
 		&rvsij;
-		&footer;
+		print&getFooter;
+		exit;
 	}
 
 	#-----------------------------
@@ -503,7 +501,8 @@ _HTML_
 _HTML_
 			%CK=%IN;
 			&rvsij;
-			&footer;
+			print&getFooter;
+			exit;
 		}elsif(!$IN{'ArtType'}){
 			#-----------------------------
 			#¿·µ¬½ñ¤­¹þ¤ß
@@ -616,7 +615,7 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 				print qq(<H2 class="mode">Password Error</H2>\n);
 				%CK=%IN;
 				&rvsij;
-				&footer;
+				print&getFooter;
 				exit;
 			}
 			#PassÊÑ¹¹
@@ -679,8 +678,7 @@ _HTML_
 	%CK=%IN;
 	$CK{'oldps'}||($CK{'oldps'}=$CK{'pass'});
 	&rvsij;
-	&footer;
-
+	print&getFooter;
 	exit;
 }
 
@@ -699,7 +697,7 @@ sub res{
 	$CK{'i'}=$IN{'i'};
 	$CK{'ak'}=1;
 	&chdfrm;
-	&footer;
+	print&getFooter;
 	exit;
 }
 
@@ -717,7 +715,7 @@ $ Á°²ó¤Î½èÍý¤Î·ë²Ì
 	#¥â¡¼¥ÉÊ¬´ô
 	if(defined$IN{'rvs'}){$mode='rvs';print qq(<H2 class="mode">- µ­»ö½¤Àµ¥â¡¼¥É -</H2>\n);}
 	elsif(defined$IN{'del'}){$mode='del';print qq(<H2 class="mode">- µ­»öºï½ü¥â¡¼¥É -</H2>\n);}
-	else{print qq(<H2 class="mode">Something Wicked happend!(mode¤¬ÉÔÌÀ)</H2>);&footer;}
+	else{print qq(<H2 class="mode">Something Wicked happend!(mode¤¬ÉÔÌÀ)</H2>).&getFooter;exit;}
 	#½èÍýÀ®¸ù-Index¤ËÌá¤ë
 	if($_[0]){
 		print<<"_HTML_";
@@ -798,7 +796,7 @@ _HTML_
 	}
 	print"</TABLE></DIV></FORM>\n";
 	print qq(<DIV class="center">$pgslct</DIV>);
-	&footer;
+	print&getFooter;
 	exit;
 }
 
@@ -861,7 +859,7 @@ sub rvsArticle{
 <INPUT type="reset" class="reset" value="¥­¥ã¥ó¥»¥ë">
 </p>
 _HTML_
-			&footer;
+			print&getFooter;
 			exit;
 		}
 		#CKpassOK
@@ -873,7 +871,7 @@ _HTML_
 	%CK=%DT;
 	@CK{qw(i j pass oldps)}=@IN{qw(i j pass oldps)};
 	&rvsij;
-	&footer;
+	print&getFooter;
 	exit;
 }
 
@@ -919,7 +917,7 @@ $i
 <INPUT type="reset" class="reset" value="¥­¥ã¥ó¥»¥ë">
 </P>
 _HTML_
-				&footer;
+				print&getFooter;
 				exit;
 			}
 			$IN{'j'}==0&&$IN{'type'}==2&& last SWITCH;
@@ -1056,7 +1054,7 @@ $select
 </UL></TD></TR></TABLE></DIV>
 </FORM>
 _HTML_
-	&footer;
+	print&getFooter;
 	exit;
 }
 
@@ -1078,7 +1076,7 @@ sub showUserError{
 _HTML_
 	print map{"<TR><TH>$_</TH><TD><XMP>$IN{$_}</XMP></TD>\n"}keys%IN;
 	print '</TABLE>';
-	&footer;
+	print&getFooter;
 	exit;
 }
 
@@ -1122,7 +1120,7 @@ X-Moe: Mireille
 <H1>: Mireille :</H1>
 <P>And, please go <A href="$i">here</A>.</P>
 <P>Location: $i</P>
-<P>Mireille <VAR>$CF{'Core'}</VAR>.<BR>
+<P>Mireille <VAR>$CF{'Version'}</VAR>.<BR>
 Copyright &#169;2001,2002 <A href="http://www.airemix.com/" target="_blank" title="Airemix">Airemix</A>. All rights reserved.</P>
 </BODY>
 </HTML>
@@ -1171,13 +1169,12 @@ sub getParam{
 		#¥µ¥¤¥ºÀ©¸Â
 		&showHeader;
 		print"¤¤¤¯¤é¤Ê¤ó¤Ç¤âÎÌ¤¬Â¿¤¹¤®¤Þ¤¹\n$param";
-		&footer;
+		print&getFooter;
 		exit;
 	}elsif(length$param>0){
 		#ÆþÎÏ¤òÅ¸³«
 		@param=split(/[&;]/o,$param);
 	}
-	undef$param;
 	
 	#ÆþÎÏ¤òÅ¸³«¤·¤Æ¥Ï¥Ã¥·¥å¤ËÆþ¤ì¤ë
 	my%DT;
@@ -1360,6 +1357,7 @@ sub getParam{
 		$IN{'page'}=1; #read¤Ç»ØÄê¤µ¤ì¤¿ÃÍ¤¬¤ª¤«¤·¤¤¤È¤­¤Î¤¿¤á
 	}else{
 		#¥Ú¡¼¥¸
+		$IN{'read'}=0;
 		$IN{'page'}=($DT{'page'}&&$DT{'page'}=~/([1-9]\d*)/o)?$1:1;
 	}
 	$IN{'viewstyle'}="$1"if$DT{'viewstyle'}=~/(\w+)/o;
@@ -1998,8 +1996,15 @@ BEGIN{
 	# Version
 	$CF{'Core'}=q$Revision$;
 	$CF{'Version'}=join('.',q$Mireille: 1_2_5 $=~/(\d+[a-z]?)/go);
-	$CF{'Version'}.=".$1"if q$State$=~/Exp/o&&$CF{'Core'}=~/(?:\d+.)+(\d+)/;
+	if(q$State$=~/Exp/o){
+		$CF{'Core'}=~/(\d+((?:\.\d+)*))/o;
+		$CF{'CoreRevision'}=$1;
+		$CF{'Version'}.=".$1"&&$2;
+	}else{
+		$CF{'Core'}=~/(\d+((?:\.\d+)*))/o;
+		$CF{'CoreRevision'}=$1;
+	}
 }
 
-1;
+$CF{'CoreRevision'};
 __END__
