@@ -31,14 +31,6 @@ A.new:link:hover,A.new:visited:hover
 A.new:link:active,A.new:visited:active
 {color:#f00;font-weight:bold;text-decoration:underline;}
 
-/* 注意なリンク文字 */
-A.warning:link		{color:#f00;font-weight:bold;text-decoration:none;}
-A.warning:visited	{color:#f00;font-weight:bold;text-decoration:none;}
-A.warning:link:hover,A.warning:visited:hover
-{color:#f55;font-weight:bold;text-decoration:underline;}
-A.warning:link:active,A.warning:visited:active
-{color:#f00;font-weight:bold;text-decoration:underline;}
-
 /* 記事番号のリンク文字 */
 A.number:link		{color:#06e;text-decoration:none;}
 A.number:visited	{color:#06e;text-decoration:none;}
@@ -81,18 +73,18 @@ BUTTON{
 	background-color: #ffb;
 	border: #355 solid 2px;
 	color: #355;
-	cursor: pointer; cursor: hand;
 }
 BUTTON:hover{
 	background-color: #eea;
 	border: #355 solid 2px;
 	color: #355;
-	cursor: pointer; cursor: hand;
+}
+BUTTON,INPUT,TEXTAREA{
+	font-family: 'ＭＳ Ｐゴシック',sans-serif;
+	font-size: 13px;
 }
 DFN{
-	border-bottom-color: #3aa;
-	border-bottom-style: dashed;
-	border-bottom-width: 1px;
+	border-bottom: 1px dashed #3aa;
 	cursor: help;
 /*	font-family: Verdana,sans-serif;*/
 	font-style: normal;
@@ -108,9 +100,6 @@ FORM{
 IMG{
 	border-style: none;
 	margin: 0;
-}
-INPUT,TEXTAREA{
-	font-family: 'ＭＳ Ｐゴシック',sans-serif;
 }
 OPTGROUP{
 	font-size: 90%;
@@ -129,9 +118,7 @@ PRE{
 	word-wrap: break-word;
 }
 Q{
-	border-bottom-color: #f77;
-	border-bottom-style: solid;
-	border-bottom-width: 1px;
+	border-bottom: 1px solid #f77;
 }
 SELECT{
 /*	background-color: transparent;*/
@@ -139,6 +126,7 @@ SELECT{
 	font-size: 90%;
 }
 TABLE{
+	background-color: transparent;
 	color: #355;
 	font-family: 'ＭＳ Ｐゴシック',sans-serif;
 	font-size: 100%;
@@ -207,19 +195,16 @@ DIV.right{
 	.button{
 		background-color: #dfe;
 		border: #6ca solid 2px;
-		cursor: pointer; cursor: hand;
-	}
+		}
 	INPUT[type="button"]{
 		background-color: #dfe;
 		border: #6ac solid 2px;
-		cursor: pointer;
 	}
 	/* 標準的ボタン（マウスが重なった時） */
 	.button:hover,.buttonover{
 		background-color: #aeb;
 		border: #6ac solid 2px;
-		cursor: pointer; cursor: hand;
-	}
+		}
 	INPUT[type="button"]:hover,INPUT[type="button"]:focus{
 		background-color: #aeb;
 	}
@@ -228,14 +213,12 @@ DIV.right{
 		background-color: #dde;
 		border: #355 solid 2px;
 		color: #355;
-		cursor: pointer; cursor: hand;
-		width: 7em;
+			width: 7em;
 	}
 	INPUT[type="submit"]{
 		background-color: #dde;
 		border: #355 solid 2px;
 		color: #355;
-		cursor: pointer;
 		width: 7em;
 	}
 	/* 了解ボタン（マウスが重なった時） */
@@ -243,8 +226,7 @@ DIV.right{
 		background-color: #bbe;
 		border: #355 solid 2px;
 		color: #355;
-		cursor: pointer; cursor: hand;
-		width: 7em;
+			width: 7em;
 	}
 	INPUT[type="submit"]:hover,INPUT[type="submit"]:focus{
 		background-color: #bbe;
@@ -254,14 +236,12 @@ DIV.right{
 		background-color: #edd;
 		border: #355 solid 2px;
 		color: #355;
-		cursor: pointer; cursor: hand;
-		width: 7em;
+			width: 7em;
 	}
 	INPUT[type="reset"]{
 		background-color: #edd;
 		border: #355 solid 2px;
 		color: #355;
-		cursor: pointer;
 		width: 7em;
 	}
 	/* 取消ボタン（マウスが重なった時） */
@@ -269,8 +249,7 @@ DIV.right{
 		background-color: #ebb;
 		border: #355 solid 2px;
 		color: #355;
-		cursor: pointer; cursor: hand;
-		width: 7em;
+			width: 7em;
 	}
 	INPUT[type="reset"]:hover,INPUT[type="reset"]:focus{
 		background-color: #ebb;
@@ -364,12 +343,14 @@ H2.mode{
 }
 /* ========== メニュー ========== */
 TABLE.menu{
+	background-color: transparent;
 	border-style: none;
 	margin: auto;
 	margin-top:10px;margin-bottom:10px;
 	text-align: center;
 }
 TD.menu{
+	background-color: transparent;/*メニューの背景色を変更するならこっち*/
 	border: #6ac solid 2px;
 	font-size: 14px;
 	padding: 5px;
@@ -397,17 +378,20 @@ STRONG.pgsl{
 
 /* ========== 注意書き ========== */
 TABLE.note{
+	background-color: transparent;
 	margin: auto;
 	text-align: center;
 	margin-top:10px;margin-bottom:10px;
 }
 DIV.note{
+	background-color: transparent;
 	border: #6ac solid 5px;
 	margin: 0 auto;
 	padding: 0.1em;
 	margin-top:0;margin-bottom:0;
 }
 UL.note{
+	background-color: transparent;/*注意書きの背景色を変更するならこっち*/
 	border: #6ac solid 5px;
 	margin: 0 auto;
 	padding: 5px 0 5px 20px;
@@ -532,9 +516,7 @@ P.artinfo{
 /* HOME */
 @media all{.thread .info SPAN.home{margin-left:3em}}
 /* 投稿日時 */
-.thread .info TD.date{
-	text-align: right;
-}
+.thread .info TD.date{text-align: right; white-space: nowrap;}
 .thread .info SPAN.date{}
 /* 【修正】 */
 @media all{.thread .info SPAN.revise{margin-left:3em}}
