@@ -1486,9 +1486,9 @@ _HTML_
 sub rss{
     my $maxItem = 15;
     
-    my %item =();
     my @logfiles = &logfiles('date');
     pop @logfiles;
+    my @latestArticles = ();
     for( 0 .. ( $maxItem > $#logfiles ? $#logfiles : $maxItem-1 ) ){
     	my $count = $_;
     	my $i = $logfiles[$_];
@@ -1512,10 +1512,10 @@ sub rss{
 	    	$subject = $DT{'title'};
 	    }
 	    $DT{'_subject'} = $subject;
-	    $item{$DT{'time'}} = \%DT;
+ 	    push( @latestArticles, \%DT );
 	}
     }
-    my @latestArticles = map{$item{$_}}sort{$b<=>$a}keys%item;
+    @latestArticles = sort{$b->{'time'}<=>$a->{'time'}}@latestArticles;
     $#latestArticles = $maxItem - 1 if @latestArticles > $maxItem;
     
     my $output = <<"EOF";
