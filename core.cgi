@@ -1500,10 +1500,12 @@ sub rss{
 	
 	my $subject = '';
 	for( 0, reverse( ($#articles-$maxItem+$count) .. $#articles )){
+	    $_ < 0 and next;
 	    my $j = $_;
 	    my %DT = ($articles[$_] =~ /([^\t]*)=\t([^\t]*);\t/go);
 	    $DT{'i'} = $i;
 	    $DT{'j'} = $j;
+	    $DT{'_uri'} = sprintf('%s?read=%d#art%d-%d', $CF{'self'}, $i, $i, $j);
 	    if($DT{'subject'}){
 		$subject = $DT{'subject'};
 	    }elsif($DT{'title'}){
@@ -1542,7 +1544,7 @@ EOF
 EOF
     for(@latestArticles){
 	#本文の縮め処理
-	my $uri = sprintf('%s?read=%d#art%d-%d', $CF{'self'}, $_->{'i'}, $_->{'i'}, $_->{'j'});
+	my $uri = $_->{'_uri'};
 	my $title = sprintf('%d-%d %s', $_->{'i'}, $_->{'j'}, $_->{'_subject'});
 	$title =~ s/&(\w*);/&amp;$1;/go;
 	$title = MirString->getTruncated($title,90);
@@ -1595,7 +1597,7 @@ Status: 200 OK
 Cache-Control: private
 Date: @{[&datef($^T,'rfc1123')]}
 Content-Language: ja-JP
-Content-type: application/rss+xml; charset=$encoding
+Content-type: application/rdf+xml; charset=$encoding
 
 <?xml version="1.0" encoding="$encoding" ?>
 EOF
@@ -3158,7 +3160,7 @@ BEGIN{
     }
     $CF{'_HiraganaLetterA'}->{'Core'}='あ';
     # Version
-    $CF{'Version'}=join('.',q$Mireille: 1_2_13 $=~/\d+[a-z]?/go);
+    $CF{'Version'}=join('.',q$Mireille: 1_2_14 $=~/\d+[a-z]?/go);
     ($CF{'Core'}=q$Revision$)=~/(\d+((?:\.\d+)*))/o;
     $CF{'CoreRevision'}=$1;
     my$subver=$2;
