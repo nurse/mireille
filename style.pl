@@ -9,7 +9,7 @@
 # $cvsid = q$Id$;
 require 5.005;
 #use strict;
-#use vars qw(%CF %IC %IN %CK);
+#use vars qw(%CF %IN %CK);
 
 #-----------------------------
 # デザイン情報
@@ -72,12 +72,52 @@ _HTML_
 $CF{'pgfoot'}=&getPageFooter;
 
 #-----------------------------
-# Cookieに本文データを一時保存するJavaScript
-$CF{'SaveBody2Cookie'}=<<'_CONFIG_';
+# 投稿フォームで使うJavaScript
+$CF{'jsWritingForms'}=<<"_CONFIG_";
 <SCRIPT type="text/javascript" defer>
 <!--
-// Save/Load BodyData from Cookie
+var iconDirectory='$CF{'icon'}';
+var iconSetting=@{[$CF{'absoluteIcon'}?1:0]}+@{[$CF{'relativeIcon'}?1:0]}*2
+_CONFIG_
+$CF{'jsWritingForms'}.=<<'_CONFIG_';
+/*========================================================*/
+// Change Icon Preview
+function changePreviewIcon(){
+	var icon,cmd;
+	if(document.all){
+		icon=document.all('icon');
+		cmd =document.all('cmd');
+	}else if(document.getElementById){
+		icon=document.getElementById('icon');
+		cmd =document.getElementById('cmd');
+	}else return false;
+	var preview=document.images['Preview'];
+	
+	if(!cmd||!cmd.value){
+		icon.disabled=false;
+	}else if(iconSetting&1&&cmd.value.match(/(^|;)absoluteIcon=([^;]*)/)){
+		//絶対指定アイコン
+		preview.src=RegExp.$2;
+		preview.title=RegExp.$2;
+		icon.disabled=true;
+	}else if(iconSetting&2&&cmd.value.match(/(^|;)relativeIcon=([^;:.]*(\.[^;:.]+)*)/)){
+		//相対指定アイコン
+		preview.src=iconDirectory+RegExp.$2;
+		preview.title=RegExp.$2;
+		icon.disabled=true;
+	}else{
+		icon.disabled=false;
+	}
+	if(!icon.disabled){
+		if(preview.src!=iconDirectory+icon.value)preview.src=iconDirectory+icon.value;
+		if(preview.title!=icon.value)preview.title=icon.value;
+	}
+	return true;
+}
 
+
+/*========================================================*/
+// Save/Load BodyData from Cookie
 function saveBodyCk(){
 	if(!confirm("新しい本文を保存すると、古い本文データは消えてしまいます\nそれでも保存してよろしいですか？"))
 		return false;
@@ -247,7 +287,7 @@ $CF{'wrtfm'}=<<'_CONFIG_';
 <INPUT name="cook" id="cook" type="checkbox" checked></LABEL>
 </TD>
 <TD rowspan="4" style="margin:0;text-align:center;vertical-align:middle" title="Icon Preview">
-<IMG name="Preview" id="Preview" src="$CF{'icon'}$DT{'icon'}" alt="" title="$DT{'icon'}">
+<IMG name="Preview" id="Preview" src="$DT{'icon'}" alt="" title="$DT{'icon'}">
 </TD>
 </TR>
 <TR title="e-maiL&#10;メールアドレスを入力します">
@@ -288,7 +328,7 @@ $CF{'wrtfm'}=<<'_CONFIG_';
 <LABEL accesskey="m" for="cmd">■コマンド(<SPAN class="ak">M</SPAN>)：</LABEL>
 </TH>
 <TD class="input">
-<INPUT type="text" name="cmd" id="cmd" value="$DT{'cmd'}">
+<INPUT type="text" name="cmd" id="cmd" value="$DT{'cmd'}" onchange="changePreviewIcon()">
 </TD>
 <TD class="input" title="Icon&#10;アイコンを選択します">
 @{[&iptico($DT{'icon'})]}
@@ -314,7 +354,7 @@ $CF{'wrtfm'}=<<'_CONFIG_';
 </TABLE>
 </DIV>
 
-$CF{'SaveBody2Cookie'}
+$CF{'jsWritingForms'}
 _CONFIG_
 
 #-----------------------------
@@ -351,7 +391,7 @@ $CF{'resfm'}=<<'_CONFIG_';
 <INPUT name="cook" id="cook" type="checkbox" checked></LABEL>
 </TD>
 <TD rowspan="4" style="margin:0;text-align:center;vertical-align:middle" title="Icon Preview">
-<IMG name="Preview" id="Preview" src="$CF{'icon'}$DT{'icon'}" alt="" title="$DT{'icon'}">
+<IMG name="Preview" id="Preview" src="$DT{'icon'}" alt="" title="$DT{'icon'}">
 </TD>
 </TR>
 <TR title="e-maiL&#10;メールアドレスを入力します">
@@ -392,7 +432,7 @@ $CF{'resfm'}=<<'_CONFIG_';
 <LABEL accesskey="m" for="cmd">■コマンド(<SPAN class="ak">M</SPAN>)：</LABEL>
 </TH>
 <TD class="input">
-<INPUT type="text" name="cmd" id="cmd" value="$DT{'cmd'}">
+<INPUT type="text" name="cmd" id="cmd" value="$DT{'cmd'}" onchange="changePreviewIcon()">
 </TD>
 <TD class="input" title="Icon&#10;アイコンを選択します">
 @{[&iptico($DT{'icon'})]}
@@ -417,7 +457,7 @@ $CF{'resfm'}=<<'_CONFIG_';
 <LI>その他、機能の詳細についてはヘルプをご覧ください。</LI>
 </UL></TD></TR></TABLE></DIV>
 
-$CF{'SaveBody2Cookie'}
+$CF{'jsWritingForms'}
 _CONFIG_
 
 
@@ -445,6 +485,7 @@ $	この記事の情報
 	$DT{'email'}&&($DT{'name'}=qq(<A href="mailto:$DT{'email'}">$DT{'name'}</A>));
 	$DT{'home'}&&=qq(<A href="$DT{'home'}" target="_top">【HOME】</A>);
 	$DT{'date'}=&date($DT{'time'}); #UNIX秒から日付に
+	$DT{'-iconTag'}=&getIconTag(\%DT)||'&nbsp;';
 	#未読記事に印
 	$DT{'time'}>$CK{'time'}&&($DT{'date'}=qq(<SPAN class="new">$DT{'date'}</SPAN>));
 	$DT{'time'}>$^T-$CF{'newnc'}&&($DT{'new'}=$CF{'new'});
@@ -470,7 +511,7 @@ $	この記事の情報
 	<SPAN class="revise" title="$DT{'i'}番スレッドの親記事を修正"><A
 	 href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【修正】</A></SPAN></TD>
 </TR>
-<TR><TD class="icon"><IMG src="$CF{'icon'}$DT{'icon'}" alt="" title="$DT{'icon'}"></TD>
+<TR><TD class="icon">$DT{'-iconTag'}</TD>
 	<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD></TR>
 </TABLE>
 
@@ -496,6 +537,7 @@ $	この記事の情報
 	$DT{'email'}&&($DT{'name'}=qq(<A href="mailto:$DT{'email'}">$DT{'name'}</A>));
 	$DT{'home'}&&=qq(<A href="$DT{'home'}" target="_top">【HOME】</A>);
 	$DT{'date'}=&date($DT{'time'}); #UNIX秒から日付に
+	$DT{'-iconTag'}=&getIconTag(\%DT)||'&nbsp;';
 	#未読記事に印
 	$DT{'time'}>$CK{'time'}&&($DT{'date'}=qq(<SPAN class="new">$DT{'date'}</SPAN>));
 	$DT{'time'}>$^T-$CF{'newnc'}&&($DT{'new'}=$CF{'new'});
@@ -521,7 +563,7 @@ _HTML_
 	<SPAN class="revise" title="$DT{'i'}番スレッドの子記事$DT{'j'}を修正"
 	><A href="index.cgi?rvs=$DT{'i'}-$DT{'j'}">【修正】</A></SPAN></TD>
 </TR>
-<TR><TD class="icon"><IMG src="$CF{'icon'}$DT{'icon'}" alt="" title="$DT{'icon'}"></TD>
+<TR><TD class="icon">$DT{'-iconTag'}</TD>
 	<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD></TR>
 </TABLE>
 
@@ -596,7 +638,7 @@ sub prtfrm{
 
 この初期設定部は一見必要なさそうです
 しかしプレビュー機能というものがこの掲示板にはあります
-通常は<IMG src="$CF{'icon'}$DT{'icon'}">としているわけですが、
+通常は<IMG src="$DT{'icon'}">としているわけですが、
 $DT{'icon'}が空だったら、もしくは存在しないアイコンだったらどうしましょう
 それを前もって設定するためにここでリストと照合しておくわけです
 但し、これは初期デザインのようにこのIMGタグがアイコンリストのSELECTタグより、
@@ -670,9 +712,6 @@ _HTML_
 #-------------------------------------------------
 # 書き込みの前処理を拡張したい時用
 sub exprewrt{
-	#ファイル名指定アイコン
-	$IN{'icon'}=$1 if($CF{'exicfi'}&&($IN{'cmd'}=~/\b$CF{'exicfi'}=([^;]*)/o)&& index($1,':')<0&& index($1,'..')<0);
-	
 	return 0;
 }
 
@@ -690,260 +729,6 @@ $ time形式時刻
 	,$year+1900,$mon+1,$day,('日','月','火','水','木','金','土')[$wday],$hour,$min,$ENV{'TZ'});
 #	return sprintf("%1d:%01d:%2d %4d/%02d/%02d(%s)" #"9:0: 0 1970/01/01(Thu)"の例
 #	,$hour,$min,$sec,$year+1900,$mon+1,$day,('Sun','Mon','Tue','Wed','Thu','Fri','Sat')[$wday]);
-}
-
-
-#-------------------------------------------------
-# アイコンリスト
-#
-sub iptico{
-
-=item 引数
-
-$ デフォルト指定にしたいアイコンファイル名を入れた書き換え可能な変数
-;
-$ SELECTタグに追加したい属性
-$ 拡張コマンド
-
-=item 複数アイコンリスト
-
-$CF{'icls'}の最初の一文字が' '（半角空白）だった場合複数リストモードになります
-具体的な例を出すと、
-・単一とみなされる例
-'icon.txt'
-'icon1.txt icon2.txt' #"icon1.txt icon2"というテキストファイルだとみなします
-'"icon.txt" "exicon.txt"'
-・複数とみなされる例
-' "icon.txt" "exicon.txt"'
-' "icon.txt" exicon.txt'
-' icon.txt exicon.txt'
-
-=cut
-
-	my$opt=$_[1]?" $_[1]":'';
-	if($CF{'-CacheIconList'}&&('reset'ne$_[2])){
-		#キャッシュである$CF{'-CacheIconList'}を返す
-		return$CF{'-CacheIconList'};
-	}
-	
-	#アイコンリスト読み込み
-	my$iconlist='';
-	if($CK{'cmd'}=~/\biconlist=nolist(;|$)/o){
-	 #`icon=nolist`でアイコンリストを読み込まない
-	}elsif($CF{'icls'}=~/^ /o){
-		#複数アイコンリスト読み込み
-		for($CF{'icls'}=~/("[^"\\]*(?:\\.[^"\\]*)*"|\S+)/go){
-			$_||next;
-			my$tmp;
-			open(RD,'<'.$_)||die"Can't open multi-iconlist($_).";
-			eval{flock(RD,1)};
-			read(RD,$tmp,-s$_);
-			close(RD);
-			$iconlist.=$tmp;
-		}
-	}else{
-		#単一アイコンリスト読み込み
-		open(RD,'<'.$CF{'icls'})||die"Can't open single-iconlist.";
-		eval{flock(RD,1)};
-		read(RD,$iconlist,-s$CF{'icls'});
-		close(RD);
-	}
-	
-	#選択アイコンの決定＋SELECTタグの中身
-	my$isEconomy=$CK{'cmd'}=~/\biconlist=economy(?:\s*;|$)/o;
-	unless(@_){
-	}elsif($CF{'exicon'}&&($CK{'cmd'}=~/\bicon=([^;]*)/o)&&$IC{$1}){
-		#パスワード型
-		$_[0]=$IC{$1};
-		$iconlist.=qq(<OPTION value="$_[0]" selected>専用アイコン</OPTION>\n);
-	}elsif($CF{'exicfi'}&&($CK{'cmd'}=~/\b$CF{'exicfi'}=([^;]*)/o)&& index($1,':')<0&& index($1,'..')<0){
-		#ファイル指定型
-		$_[0]=$1;
-		if($isEconomy){
-			$iconlist=qq(<OPTION value="$_[0]" selected>ファイル指定</OPTION>\n);
-		}else{
-			$iconlist.=qq(<OPTION value="$_[0]" selected>ファイル指定</OPTION>\n);
-		}
-	}elsif($_[0]and$iconlist=~s/^(.*value=(["'])$_[0]\2)(.*)$/$1 selected$3/imo){
-		$iconlist="$1 selected$3"if$isEconomy;
-	}elsif($iconlist=~s/value=(["'])(.+?)\1/value=$1$2$1 selected/io){
-		$_[0]=$2;
-	}
-	
-	$CF{'-CacheIconList'}=<<"_HTML_";
-<SELECT name="icon" id="icon" onchange="document.images['Preview'].src='$CF{'icon'}'+this.value;document.images['Preview'].title=this.value;"$opt>
-$iconlist</SELECT>
-_HTML_
-	return$CF{'-CacheIconList'};
-}
-
-
-#-------------------------------------------------
-# カラーリスト読み込み
-#
-sub iptcol{
-=item 引数
-$ デフォルト指定にしたい色名
-=cut
-	if('input'eq$CF{'colway'}){
-		return<<"_HTML_";
-<INPUT type="text" name="color" id="color" maxlength="20" style="ime-mode:disabled"
- title="Color&#10;本文の色を入力します&#10;（#0f0、#00ff00、rgb(0,255,0)、WebColor(greenとか)&#10;のどの形式でも使えます" value="$_[0]">
-_HTML_
-	}else{
-		my$list=$CF{'colorList'}=~/\S/o?$CF{'colorList'}:<<"_HTML_";#1.2.5以下のindex.cgiとの互換性のため
-<OPTION value="#000000" style="color:#000000">■Black</OPTION>
-<OPTION value="#696969" style="color:#696969">■DimGray</OPTION>
-<OPTION value="#808080" style="color:#808080">■Gray</OPTION>
-<OPTION value="#A9A9A9" style="color:#A9A9A9">■DarkGray</OPTION>
-<OPTION value="#C0C0C0" style="color:#C0C0C0">■Silver</OPTION>
-<OPTION value="#D3D3D3" style="color:#D3D3D3">■LightGrey</OPTION>
-<OPTION value="#D8BFD8" style="color:#D8BFD8">■Thistle</OPTION>
-<OPTION value="#DCDCDC" style="color:#DCDCDC">■Gainsboro</OPTION>
-<OPTION value="#F5F5DC" style="color:#F5F5DC">■Beige</OPTION>
-<OPTION value="#F5F5F5" style="color:#F5F5F5">■WhiteSmoke</OPTION>
-<OPTION value="#E6E6FA" style="color:#E6E6FA">■Lavender</OPTION>
-<OPTION value="#FAF0E6" style="color:#FAF0E6">■Linen</OPTION>
-<OPTION value="#FDF5E6" style="color:#FDF5E6">■Oldlace</OPTION>
-<OPTION value="#FFE4E1" style="color:#FFE4E1">■Mistyrose</OPTION>
-<OPTION value="#F0FFF0" style="color:#F0FFF0">■Honeydew</OPTION>
-<OPTION value="#FFF5EE" style="color:#FFF5EE">■Seashell</OPTION>
-<OPTION value="#FFF0F5" style="color:#FFF0F5">■LavenderBlush</OPTION>
-<OPTION value="#F0F8FF" style="color:#F0F8FF">■AliceBlue</OPTION>
-<OPTION value="#F8F8FF" style="color:#F8F8FF">■GhostWhite</OPTION>
-<OPTION value="#FFFAF0" style="color:#FFFAF0">■FloralWhite</OPTION>
-<OPTION value="#F5FFFA" style="color:#F5FFFA">■Mintcream</OPTION>
-<OPTION value="#FFFAFA" style="color:#FFFAFA">■Snow</OPTION>
-<OPTION value="#FFFFE0" style="color:#FFFFE0">■LightYellow</OPTION>
-<OPTION value="#E0FFFF" style="color:#E0FFFF">■LightCyan</OPTION>
-<OPTION value="#FFFFF0" style="color:#FFFFF0">■Ivory</OPTION>
-<OPTION value="#F0FFFF" style="color:#F0FFFF">■Azure</OPTION>
-<OPTION value="#FFFFFF" style="color:#FFFFFF">■White</OPTION>
-<OPTION value="#9370DB" style="color:#9370DB">■MediumPurple</OPTION>
-<OPTION value="#6A5ACD" style="color:#6A5ACD">■SlateBlue</OPTION>
-<OPTION value="#483D8B" style="color:#483D8B">■DarkSlateBlue</OPTION>
-<OPTION value="#7B68EE" style="color:#7B68EE">■MediumSlateBlue</OPTION>
-<OPTION value="#BA55D3" style="color:#BA55D3">■MediumOrchid</OPTION>
-<OPTION value="#9932CC" style="color:#9932CC">■DarkOrchid</OPTION>
-<OPTION value="#8A2BE2" style="color:#8A2BE2">■BlueViolet</OPTION>
-<OPTION value="#9400D3" style="color:#9400D3">■DarkViolet</OPTION>
-<OPTION value="#4B0082" style="color:#4B0082">■Indigo</OPTION>
-<OPTION value="#000080" style="color:#000080">■Navy</OPTION>
-<OPTION value="#00008B" style="color:#00008B">■DarkBlue</OPTION>
-<OPTION value="#0000CD" style="color:#0000CD">■MediumBlue</OPTION>
-<OPTION value="#0000FF" style="color:#0000FF">■Blue</OPTION>
-<OPTION value="#191970" style="color:#191970">■MidnightBlue</OPTION>
-<OPTION value="#00BFFF" style="color:#00BFFF">■DeepSkyBlue</OPTION>
-<OPTION value="#00CED1" style="color:#00CED1">■DarkTurquoise</OPTION>
-<OPTION value="#1E90FF" style="color:#1E90FF">■DodgerBlue</OPTION>
-<OPTION value="#4169E1" style="color:#4169E1">■RoyalBlue</OPTION>
-<OPTION value="#4682B4" style="color:#4682B4">■SteelBlue</OPTION>
-<OPTION value="#6495ED" style="color:#6495ED">■CornflowerBlue</OPTION>
-<OPTION value="#87CEFA" style="color:#87CEFA">■LightSkyblue</OPTION>
-<OPTION value="#5F9EA0" style="color:#5F9EA0">■CadetBlue</OPTION>
-<OPTION value="#87CEEB" style="color:#87CEEB">■SkyBlue</OPTION>
-<OPTION value="#B0E0E6" style="color:#B0E0E6">■PowderBlue</OPTION>
-<OPTION value="#ADD8E6" style="color:#ADD8E6">■LightBlue</OPTION>
-<OPTION value="#708090" style="color:#708090">■SlateGray</OPTION>
-<OPTION value="#778899" style="color:#778899">■LightSlateGray</OPTION>
-<OPTION value="#B0C4DE" style="color:#B0C4DE">■LightSteelBlue</OPTION>
-<OPTION value="#008080" style="color:#008080">■Teal</OPTION>
-<OPTION value="#008B8B" style="color:#008B8B">■DarkCyan</OPTION>
-<OPTION value="#00FFFF" style="color:#00FFFF">■Aqua</OPTION>
-<OPTION value="#00FFFF" style="color:#00FFFF">■Cyan</OPTION>
-<OPTION value="#2F4F4F" style="color:#2F4F4F">■DarkSlateGray</OPTION>
-<OPTION value="#AFEEEE" style="color:#AFEEEE">■PaleTurquoise</OPTION>
-<OPTION value="#7FFFD4" style="color:#7FFFD4">■Aquamarine</OPTION>
-<OPTION value="#66CDAA" style="color:#66CDAA">■MediumAquamarine</OPTION>
-<OPTION value="#3CB371" style="color:#3CB371">■MediumSeagreen</OPTION>
-<OPTION value="#2E8B57" style="color:#2E8B57">■SeaGreen</OPTION>
-<OPTION value="#48D1CC" style="color:#48D1CC">■MediumTurquoise</OPTION>
-<OPTION value="#40E0D0" style="color:#40E0D0">■Turquoise</OPTION>
-<OPTION value="#20B2AA" style="color:#20B2AA">■LightSeagreen</OPTION>
-<OPTION value="#00FA9A" style="color:#00FA9A">■MediumSpringGreen</OPTION>
-<OPTION value="#00FF7F" style="color:#00FF7F">■SpringGreen</OPTION>
-<OPTION value="#006400" style="color:#006400">■DarkGreen</OPTION>
-<OPTION value="#008000" style="color:#008000">■Green</OPTION>
-<OPTION value="#00FF00" style="color:#00FF00">■Lime</OPTION>
-<OPTION value="#32CD32" style="color:#32CD32">■LimeGreen</OPTION>
-<OPTION value="#228B22" style="color:#228B22">■ForestGreen</OPTION>
-<OPTION value="#90EE90" style="color:#90EE90">■LightGreen</OPTION>
-<OPTION value="#98FB98" style="color:#98FB98">■PaleGreen</OPTION>
-<OPTION value="#7CFC00" style="color:#7CFC00">■LawnGreen</OPTION>
-<OPTION value="#7FFF00" style="color:#7FFF00">■Chartreuse</OPTION>
-<OPTION value="#ADFF2F" style="color:#ADFF2F">■GreenYellow</OPTION>
-<OPTION value="#9ACD32" style="color:#9ACD32">■YellowGreen</OPTION>
-<OPTION value="#6B8E23" style="color:#6B8E23">■Olivedrab</OPTION>
-<OPTION value="#556B2F" style="color:#556B2F">■DarkOlivegreen</OPTION>
-<OPTION value="#8FBC8B" style="color:#8FBC8B">■DarkSeaGreen</OPTION>
-<OPTION value="#808000" style="color:#808000">■Olive</OPTION>
-<OPTION value="#FFFF00" style="color:#FFFF00">■Yellow</OPTION>
-<OPTION value="#FAFAD2" style="color:#FAFAD2">■LightGoldenrodYellow</OPTION>
-<OPTION value="#FAEBD7" style="color:#FAEBD7">■AntiqueWhite</OPTION>
-<OPTION value="#FFF8DC" style="color:#FFF8DC">■Cornsilk</OPTION>
-<OPTION value="#FFEFD5" style="color:#FFEFD5">■PapayaWhip</OPTION>
-<OPTION value="#FFEBCD" style="color:#FFEBCD">■BlanchedAlmond</OPTION>
-<OPTION value="#FFFACD" style="color:#FFFACD">■LemonChiffon</OPTION>
-<OPTION value="#FFE4C4" style="color:#FFE4C4">■Bisque</OPTION>
-<OPTION value="#FFDAB9" style="color:#FFDAB9">■PeachPuff</OPTION>
-<OPTION value="#F5DEB3" style="color:#F5DEB3">■Wheat</OPTION>
-<OPTION value="#FFE4B5" style="color:#FFE4B5">■Moccasin</OPTION>
-<OPTION value="#FFDEAD" style="color:#FFDEAD">■NavajoWhite</OPTION>
-<OPTION value="#EEE8AA" style="color:#EEE8AA">■PaleGoldenrod</OPTION>
-<OPTION value="#D2B48C" style="color:#D2B48C">■Tan</OPTION>
-<OPTION value="#DEB887" style="color:#DEB887">■Burlywood</OPTION>
-<OPTION value="#E9967A" style="color:#E9967A">■DarkSalmon</OPTION>
-<OPTION value="#FA8072" style="color:#FA8072">■Salmon</OPTION>
-<OPTION value="#F0E68C" style="color:#F0E68C">■Khaki</OPTION>
-<OPTION value="#FFA07A" style="color:#FFA07A">■LightSalmon</OPTION>
-<OPTION value="#BDB76B" style="color:#BDB76B">■DarkKhaki</OPTION>
-<OPTION value="#F4A460" style="color:#F4A460">■SandyBrown</OPTION>
-<OPTION value="#FF7F50" style="color:#FF7F50">■Coral</OPTION>
-<OPTION value="#FF6347" style="color:#FF6347">■Tomato</OPTION>
-<OPTION value="#CD853F" style="color:#CD853F">■Peru</OPTION>
-<OPTION value="#A0522D" style="color:#A0522D">■Sienna</OPTION>
-<OPTION value="#D2691E" style="color:#D2691E">■Chocolate</OPTION>
-<OPTION value="#8B4513" style="color:#8B4513">■SaddleBrown</OPTION>
-<OPTION value="#DAA520" style="color:#DAA520">■Goldenrod</OPTION>
-<OPTION value="#B8860B" style="color:#B8860B">■DarkGoldenrod</OPTION>
-<OPTION value="#FFD700" style="color:#FFD700">■Gold</OPTION>
-<OPTION value="#FFA500" style="color:#FFA500">■Orange</OPTION>
-<OPTION value="#FF8C00" style="color:#FF8C00">■DarkOrange</OPTION>
-<OPTION value="#FF4500" style="color:#FF4500">■OrangeRed</OPTION>
-<OPTION value="#800000" style="color:#800000">■Maroon</OPTION>
-<OPTION value="#8B0000" style="color:#8B0000">■DarkRed</OPTION>
-<OPTION value="#FF0000" style="color:#FF0000">■Red</OPTION>
-<OPTION value="#B22222" style="color:#B22222">■Firebrick</OPTION>
-<OPTION value="#A52A2A" style="color:#A52A2A">■Brown</OPTION>
-<OPTION value="#CD5C5C" style="color:#CD5C5C">■IndianRed</OPTION>
-<OPTION value="#F08080" style="color:#F08080">■LightCoral</OPTION>
-<OPTION value="#BC8F8F" style="color:#BC8F8F">■RosyBrown</OPTION>
-<OPTION value="#FF1493" style="color:#FF1493">■DeepPink</OPTION>
-<OPTION value="#C71585" style="color:#C71585">■MediumVioletRed</OPTION>
-<OPTION value="#DC143C" style="color:#DC143C">■Crimson</OPTION>
-<OPTION value="#FF69B4" style="color:#FF69B4">■HotPink</OPTION>
-<OPTION value="#DA70D6" style="color:#DA70D6">■Orchid</OPTION>
-<OPTION value="#DB7093" style="color:#DB7093">■PaleVioletred</OPTION>
-<OPTION value="#FFB6C1" style="color:#FFB6C1">■LightPink</OPTION>
-<OPTION value="#FFC0CB" style="color:#FFC0CB">■Pink</OPTION>
-<OPTION value="#800080" style="color:#800080">■Purple</OPTION>
-<OPTION value="#8B008B" style="color:#8B008B">■DarkMagenta</OPTION>
-<OPTION value="#FF00FF" style="color:#FF00FF">■Fuchsia</OPTION>
-<OPTION value="#FF00FF" style="color:#FF00FF">■Magenta</OPTION>
-<OPTION value="#EE82EE" style="color:#EE82EE">■Violet</OPTION>
-<OPTION value="#DDA0DD" style="color:#DDA0DD">■Plum</OPTION>
-_HTML_
-		if($_[0]&&$list=~s/(value=(["'])$_[0]\2)/$1 selected="selected"/io){
-		}elsif($list=~s/value=(["'])$CF{'colway'}\1/value=$1$CF{'colway'}$1 selected="selected"/io){
-			$_[0]=$CF{'colway'};
-		}elsif($list=~s/value=(["'])(.+?)\1/value=$1$2$1 selected="selected"/io){
-			$_[0]=$2;
-		}
-		return<<"_HTML_";
-<SELECT name="color" id="color">
-$list</SELECT>
-_HTML_
-	}
 }
 
 
