@@ -1,15 +1,12 @@
-@charset"EUC-JP";
+@charset'EUC-JP';
 /* Mireille Style Sheet */
 /* Default Style Sheet for Mireille */
 /* "This file is written in euc-jp, CRLF." 空 */
 /* $Id$ */
 
 /* note.
-・cursolをhand,pointerと分けている
-MSIE6未満対策のためです
-・input,textareなどを@mediaでくくっている
-	Netscape4対策のためです
-
+:input,textareaなどを@mediaでくくっている
+  Netscape4対策のためです。
 */
 
 
@@ -18,8 +15,10 @@ MSIE6未満対策のためです
 
 /* ========== リンクのスタイル ========== */
 /* 通常のリンク */
-A:link		{color:#44f;text-decoration:none;}
-A:visited	{color:#44f;text-decoration:none;}
+A:link
+{color:#44f;text-decoration:none;}
+A:visited
+{color:#44f;text-decoration:none;}
 A:link:hover,A:visited:hover
 {color:#fa8;text-decoration:underline;}
 A:link:active,A:visited:active
@@ -31,7 +30,7 @@ HTML{
 	overflow-y: scroll;/*WinIE6の標準モード対策*/
 }
 ABBR,ACRONYM{
-	border-bottom: dotted 1px #66c;
+	border-bottom: #66c dotted 1px;
 	cursor: help;
 }
 BODY{
@@ -64,7 +63,7 @@ BUTTON,INPUT,TEXTAREA{
 	font-size: 13px;
 }
 DFN{
-	border-bottom: 1px dashed #3aa;
+	border-bottom: 1px dashed #080;
 	cursor: help;
 	font-style: normal;
 /*
@@ -73,7 +72,7 @@ DFN{
 */
 }
 EM{
-	border-bottom: solid 1px #333;
+	border-bottom: #444 solid 1px;
 	font-style: normal;
 /*
 	font-family: serif;
@@ -104,7 +103,7 @@ PRE{
 	word-wrap: break-word;
 }
 Q{
-	border-bottom: 1px solid #f77;
+	border-bottom: 1px solid #f55;
 }
 SELECT{
 /*	background-color: transparent;*/
@@ -156,28 +155,34 @@ DT{
 /* ==================== 全体に共通のクラス ==================== */
 
 /* 新しいものへのリンク */
-A.new:link		{color:#f00;font-weight:bold;text-decoration:none;}
-A.new:visited	{color:#f00;font-weight:bold;text-decoration:none;}
+A.new:link
+{color:#f00;font-weight:bold;text-decoration:none;}
+A.new:visited
+{color:#f00;font-weight:bold;text-decoration:none;}
 A.new:link:hover,A.new:visited:hover
 {color:#f55;font-weight:bold;text-decoration:underline;}
 A.new:link:active,A.new:visited:active
 {color:#f00;font-weight:bold;text-decoration:underline;}
 
 /* 記事番号のリンク */
-A.number:link		{color:#06e;text-decoration:none;}
-A.number:visited	{color:#06e;text-decoration:none;}
+A.number:link
+{color:#06e;text-decoration:none;}
+A.number:visited
+{color:#06e;text-decoration:none;}
 A.number:link:hover,A.number:visited:hover
 {color:#fa8;text-decoration:underline;}
 A.number:link:active,A.number:visited:active
-{color:#f50;text-decoration:underline;}
+{color:#f55;text-decoration:underline;}
 
 /* 本文自動リンク機能のリンク */
-A.autolink:link		{border-bottom: dashed 1px #88f;color:#44f;text-decoration:none;}
-A.autolink:visited	{border-bottom: dashed 1px #b9f;color:#97d;text-decoration:none;}
+A.autolink:link
+{border-bottom: #aaf dashed 1px;color:#44f;text-decoration:none;}
+A.autolink:visited
+{border-bottom: #b9f dashed 1px;color:#97d;text-decoration:none;}
 A.autolink:link:hover,A.autolink:visited:hover
-{border-bottom: dashed 1px #fa8;color:#fa8;text-decoration:none;}
+{border-bottom: #fa8 dashed 1px;color:#fa8;text-decoration:none;}
 A.autolink:link:active,A.autolink:visited:active
-{border-bottom: dashed 1px #f00;color:#f00;text-decoration:none;}
+{border-bottom: #f00 dashed 1px;color:#f00;text-decoration:none;}
 
 /* アクセスキー */
 .ak{
@@ -188,7 +193,7 @@ A.autolink:link:active,A.autolink:visited:active
 	color: #f00;
 }
 /* 何らかの注意や警告 */
-.warning, .caution{
+.warning,.caution{
 	color: #f00;
 }
 /* N4調整用一揃えクラス */
@@ -344,19 +349,15 @@ DIV.right{
 /* Table in Sections*/
 .section table{
 	border-collapse: collapse;
-	border-color: #99a;
-	border-spacing: 0; 
-	border-style: solid;
-	border-width: 1px;
+	border: #66c solid 1px;
+	border-spacing: 0;
 	font-family: 'MS UI Gothic',Osaka,sans-serif;
 	font-size: 100%;
 	margin-left: 4em;
 	text-align: left;
 }
-.section td, .section th{
-	border-color: #aaf;
-	border-style: solid;
-	border-width: 1px;
+.section td,.section th{
+	border-color: #aaf solid 1px;
 	padding: 0.1em;
 }
 
@@ -379,29 +380,29 @@ DIV.right{
 	.button:hover,.buttonover{
 		background-color: #aeb;
 		border: #6ac solid 2px;
-		}
+	}
 	INPUT[type="button"]:hover,INPUT[type="button"]:focus{
 		background-color: #aeb;
 	}
 	/* 了解ボタン（投稿/修正/削除） */
 	.submit{
-		background-color: #dde;
+		background-color: #ccf;
 		border: #355 solid 2px;
 		color: #355;
-			width: 7em;
+		width: 7em;
 	}
 	INPUT[type="submit"]{
-		background-color: #dde;
+		background-color: #ccf;
 		border: #355 solid 2px;
 		color: #355;
 		width: 7em;
 	}
 	/* 了解ボタン（マウスが重なった時） */
 	.submit:hover,.submitover,{
-		background-color: #bbe;
+		background-color: #aaf;
 		border: #355 solid 2px;
 		color: #355;
-			width: 7em;
+		width: 7em;
 	}
 	INPUT[type="submit"]:hover,INPUT[type="submit"]:focus{
 		background-color: #bbe;
@@ -411,7 +412,7 @@ DIV.right{
 		background-color: #edd;
 		border: #355 solid 2px;
 		color: #355;
-			width: 7em;
+		width: 7em;
 	}
 	INPUT[type="reset"]{
 		background-color: #edd;
@@ -421,13 +422,13 @@ DIV.right{
 	}
 	/* 取消ボタン（マウスが重なった時） */
 	.reset:hover,.resetover{
-		background-color: #ebb;
+		background-color: #eaa;
 		border: #355 solid 2px;
 		color: #355;
-			width: 7em;
+		width: 7em;
 	}
 	INPUT[type="reset"]:hover,INPUT[type="reset"]:focus{
-		background-color: #ebb;
+		background-color: #eaa;
 	}
 	/* フォームにフォーカスが無い時 */
 	.blur,TEXTAREA{
@@ -449,7 +450,7 @@ DIV.right{
 	/* フォームにフォーカスがある時 */
 	.focus{
 		background-color: #dfd;
-		border: #9cf dashed 1px;
+		border: #aeb dashed 1px;
 		color: #355;
 		font-size: 14px;
 		padding: 1px;
@@ -752,7 +753,7 @@ TABLE.write{
 #cook	{}
 #icon	{width:160px;}
 #icon OPTGROUP{color: #6ac;font-style: normal;}
-#icon OPTION{color:#333;}
+#icon OPTION{color:#444;}
 #email	{width:300px;ime-mode:inactive;}
 #home	{width:300px;ime-mode:inactive;}
 #subject{width:300px;ime-mode:active;}
@@ -822,19 +823,18 @@ TABLE.icon TH.foot{
 /* 記事ナビウィンドウ */
 DIV#naviwind{
 	background-color: #fff;
-	border: #379 solid 2px;
+	border: #05a solid 2px;
 	font-size:12px;
 	margin: 0;
 	opacity: 0.6;
 	padding: 0;
 	text-align: left;
-	width:300px;
+	width: 300px;
+	-moz-opacity: 0.6;
 }
 DIV#naviwind:hover{
 	opacity: 0.9;
-	/* Mozilla1.0の:hover-MozOpacity-overflowコンボ回避のため、1.0でなく0.9 */
-	-moz-opacity: 0.9;
-	/* IEもA以外でhoverを使えればいいのだけど */
+	-moz-opacity: 0.9;/* 1.0だと場合によってMozillaが落ちる */
 }
 /* 記事ナビヘッダ */
 #navihead{
@@ -892,17 +892,17 @@ STRONG.s2f2f{
 }
 /* ＞の強調 */
 STRONG.s8184{
-	background-color: #ddf;
+	background-color: #ccf;
 	font-weight:normal;
 }
 /* §の強調 */
 STRONG.s8198{
-	background-color: #fea;
+	background-color: #ffb;
 	font-weight:bold;
 }
 /* ◇の強調 */
 STRONG.s819e{
-	background-color: #ddf;
+	background-color: #ccf;
 	font-weight:bold;
 }
 /* □の強調 */
