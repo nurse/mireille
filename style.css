@@ -5,8 +5,14 @@
 /* $Id$ */
 
 /* note.
+:overflow-yを指定している
+  WinIE6の標準モードで横スクロールバーが表示されてしまう問題への対策です。
 :input,textareaなどを@mediaでくくっている
   Netscape4対策のためです。
+:-moz-opacityの指定が1.0でなく0.9となっている
+  1.0だとバージョンと場合によってはMozillaが落ちることがあったからです。
+:他に注意すること
+  一部CSS3で実装される予定のプロパティをフライングで指定しています。
 */
 
 
@@ -27,7 +33,7 @@ A:link:active,A:visited:active
 
 /* ========== その他の要素 ========== */
 HTML{
-	overflow-y: scroll;/*WinIE6の標準モード対策*/
+	overflow-y: scroll; /*IE独自*/
 }
 ABBR,ACRONYM{
 	border-bottom: #66c dotted 1px;
@@ -43,7 +49,7 @@ BODY{
 	border-width: 0;
 	color: #355;
 	font-family: 'ＭＳ Ｐゴシック',sans-serif;
-	font-size: 15px;
+	font-size: 13px;
 	margin: 0.2em 0;
 	padding: 0;
 	text-align: center;
@@ -58,7 +64,7 @@ BUTTON:hover{
 	border: #355 solid 2px;
 	color: #355;
 }
-BUTTON,INPUT,TEXTAREA{
+BUTTON,INPUT,SELECT,TEXTAREA{
 	font-family: 'ＭＳ Ｐゴシック',sans-serif;
 	font-size: 13px;
 }
@@ -87,7 +93,7 @@ IMG{
 	margin: 0;
 }
 OPTGROUP{
-	font-size: 90%;
+	color: #6ac;
 	font-style: normal;
 	font-weight: bold;
 }
@@ -108,7 +114,6 @@ Q{
 SELECT{
 /*	background-color: transparent;*/
 	color: #355;
-	font-size: 13px;
 }
 SMALL{
 	font-size: 75%;
@@ -135,7 +140,7 @@ OL,UL{
 	text-align: left;
 }
 LI{
-	line-height: 120%;
+	line-height: 1.2;
 	margin-bottom: 3px;
 	text-align: left;
 }
@@ -202,7 +207,7 @@ DIV.center{
 	text-align: center;
 }
 DIV.right{
-	margin-left:5%;
+	margin-left: 5%;
 	text-align: right;
 }
 
@@ -210,14 +215,14 @@ DIV.right{
 /* ========== 著作権表示 ========== */
 .AiremixCopy{
 	font-family: Tahoma,sans-serif;
-	font-size: 115%;
+	font-size: 130%;
 	font-style: normal;
 	font-weight: normal;
 	text-align: right;
 }
 .Copyright{
 	font-family: Tahoma,sans-serif;
-	font-size: 100%;
+	font-size: 115%;
 	font-style: normal;
 	font-weight: normal;
 	text-align: center;
@@ -229,7 +234,7 @@ DIV.right{
 	background-color: #ace;
 	color: #fff;
 	font-family: 'Comic Sans MS','ＭＳ Ｐゴシック',sans-serif;
-	font-size: 17px;
+	font-size: 130%;
 	font-weight: bold;
 	margin: 1em auto;
 	padding: 0.2em;
@@ -239,8 +244,8 @@ DIV.right{
 .heading3{
 	background-color: #cdf;
 	color: #05a;
-	font-size: 15px;
-	font-weight: normal;
+	font-size: 130%;
+	font-weight: bold;
 	margin: 0.4em auto 0 auto;
 	padding: 0.1em;
 	text-align: center;
@@ -250,7 +255,7 @@ DIV.right{
 .heading4{
 	background-color: #eef;
 	color: #59f;
-	font-size: 15px;
+	font-size: 115%;
 	font-weight: normal;
 	margin: 0.4em auto 0 auto;
 	padding: 0.1em;
@@ -265,16 +270,17 @@ DIV.right{
 	border: #6ac solid 5px;
 	color: #246;
 	margin: 2em auto;
+	padding: 0.2em;
 	text-align: left;
 	width: 90%;
 }
 .section .h{
 	background-color: #6ac;
 	color: #fff;
-	font-size: 1.3em;
+	font-size: 145%;
 	font-weight: bold;
-	margin: 0.2em;
-	padding: 0.2em 0.3em;
+	margin: 0;
+	padding: 0.2em;
 	text-align: left;
 }
 /* Second Level */
@@ -285,7 +291,7 @@ DIV.right{
 .section .section .h{
 	background-color: #cdf;
 	color: #05a;
-	font-size: 1.1em;
+	font-size: 130%;
 	font-weight: normal;
 }
 /* ThirdLevel */
@@ -307,7 +313,7 @@ DIV.right{
 }
 /* Paragraph in Sections */
 .section P{
-	line-height: 1.3em;
+	line-height: 1.2;
 	margin: 1em 2em;
 }
 /* PRE in Sections */
@@ -325,11 +331,11 @@ DIV.right{
 }
 /* List in Sections */
 .section OL,.section UL{
-	line-height: 1.3em;
+	line-height: 1.2;
 	margin: 0.5em 4em;
 }
 .section DL{
-	line-height: 1.3em;
+	line-height: 1.2;
 	margin: 0.5em 2em;
 }
 .section DT{
@@ -337,13 +343,13 @@ DIV.right{
 	color: #444;
 	font-size: 100%;
 	font-weight: normal;
-	margin: 0.2em;
+	margin: 0;
 	padding: 0.2em 0.3em;
 	text-align: left;
 }
 .section DD{
 	font-size: 100%;
-	margin: 0 2em;
+	margin: 0.5em 2em;
 	text-align: left;
 }
 /* Table in Sections*/
@@ -353,7 +359,7 @@ DIV.right{
 	border-spacing: 0; 
 	border-style: solid;
 	border-width: 1px;
-	font-family: 'MS UI Gothic',Osaka,sans-serif;
+	font-family: 'ＭＳ Ｐゴシック',sans-serif;
 	font-size: 100%;
 	margin-left: 4em;
 	text-align: left;
@@ -379,7 +385,7 @@ DIV.right{
 .box .h{
 	background-color: #6ac;
 	color: #fff;
-	font-size: 1.3em;
+	font-size: 130%;
 	font-weight: bold;
 	margin: 0;
 	padding: 0.2em;
@@ -413,7 +419,7 @@ DIV.right{
 		border: #6ac solid 2px;
 	}
 	/* 標準的ボタン:hover */
-	.button:hover,.buttonover{
+	.button:hover,.buttonover,.buttonOver{
 		background-color: #afa;
 		border: #6ac solid 2px;
 	}
@@ -421,7 +427,7 @@ DIV.right{
 		background-color: #afa;
 	}
 	/* ボタン共通 */
-	.submit,.submitover,.reset,.resetover{
+	.submit,.submitover,.submitOver,.reset,.resetover,.resetOver{
 		border: #355 solid 2px;
 		color: #355;
 		width: 7em;
@@ -439,7 +445,7 @@ DIV.right{
 		background-color: #ddf;
 	}
 	/* 了解ボタン:hover */
-	.submit:hover,.submitover{
+	.submit:hover,.submitover,.submitOver{
 		background-color: #aaf;
 	}
 	INPUT[type="submit"]:hover,INPUT[type="submit"]:focus{
@@ -453,7 +459,7 @@ DIV.right{
 		background-color: #fdd;
 	}
 	/* 取消ボタン:hover */
-	.reset:hover,.resetover{
+	.reset:hover,.resetover,.resetOver{
 		background-color: #faa;
 	}
 	INPUT[type="reset"]:hover,INPUT[type="reset"]:focus{
@@ -462,7 +468,6 @@ DIV.right{
 	/* 入力フォーム共通 */
 	.blur,TEXTAREA,.focus{
 		color: #355;
-		font-size: 14px;
 		padding: 0.1em;
 		margin: 0;
 	}
@@ -487,7 +492,7 @@ DIV.right{
 		border: #afa dashed 1px;
 	}
 	INPUT[disabled]{
-		color:#777;
+		color: #777;
 	}
 }
 
@@ -503,7 +508,7 @@ P.lastpost{
 P.lastpost A{
 	background-color: #cdf;
 	color: #05a;
-	font-size: 13px;
+	font-size: 100%;
 }
 /* ========== ページヘッダーテーブル ========== */
 TABLE.head{
@@ -513,20 +518,22 @@ TABLE.head{
 	width: 90%;
 }
 TABLE.head TH{
+	font-size: 100%;
 	padding: 3px 5px;
 	text-align: left;
 	white-space: nowrap;
 }
-H1.head,H1.head A:link{
+H1.head,DIV.head A{
 	color: #fff;
 	font-family: 'Comic Sans MS','ＭＳ Ｐゴシック',sans-serif;
-	font-size: 19px;
+	font-size: 145%;
 	font-weight: normal;
 }
 H1.head{margin: 0;}
-H1.head A:visited{color: #fff;}
+DIV.head A:visited{color: #fff;}
 TABLE.head TD{
 	color: #fff;
+	font-size: 115%;
 	letter-spacing: 1em;
 	padding: 3px 5px;
 	text-align: right;
@@ -545,7 +552,7 @@ TABLE.menu{
 TD.menu{
 /*	background-color: transparent;*/ /*メニューの背景色を変更するならこっち*/
 	border: #6ac solid 2px;
-	font-size: 14px;
+	font-size: 100%;
 	padding: 0.4em;
 	text-align: center;
 }
@@ -564,7 +571,7 @@ TABLE.pgsl TD{
 }
 /* 今見ているページ番号の強調 */
 STRONG.pgsl{
-	font-size: 130%;
+	font-size: 145%;
 }
 
 /* ========== 注意書き ========== */
@@ -622,7 +629,7 @@ P.artinfo{
 }
 /* 記事スレッド移動の矢印 */
 .thread .arrow{
-	font-size: 20px;
+	font-size: 145%;
 	text-align: right;
 }
 /* 親記事のタイトルセル */
@@ -631,7 +638,7 @@ P.artinfo{
 /* 親記事のタイトル */
 .thread H2.subject{
 	color: #fff;
-	font-size: 21px;
+	font-size: 145%;
 	font-weight: bold;
 	margin: 0;
 	padding: 0.2em;
@@ -662,7 +669,7 @@ P.artinfo{
 .thread .child H3.subject{
 	background-color: #ace;
 	color: #fff;
-	font-size: 17px;
+	font-size: 115%;
 	font-weight: bold;
 	margin: 0;
 	padding: 0.2em;
@@ -673,7 +680,7 @@ P.artinfo{
 .thread .info TD{
 	background-color: #ace;
 	color: #355;
-	font-size: 13px;
+	font-size: 100%;
 	font-weight: bold;
 	padding: 0.2em 0.5em;
 	text-align: left;
@@ -682,15 +689,15 @@ P.artinfo{
 /* ＊記事の返信番号 */
 .thread .info TH.number,TH.number{text-align: center; vertical-align: middle;white-space: nowrap;}
 /* 親記事の記事番号 */
-.thread .parent .info .number{font-size: 15px; font-weight: bold;}
+.thread .parent .info .number{font-size: 115%; font-weight: bold;}
 /* 子記事の返信番号 */
-.thread .child .info .number{font-size: 13px; font-weight: normal;}
+.thread .child .info .number{font-size: 100%; font-weight: normal;}
 
 /* 投稿者名 */
 .thread .info TD.name{text-align: left;}
-.thread .info SPAN.name{font-size: 17px;}
+.thread .info SPAN.name{font-size: 130%;}
 /* 署名 */
-.thread SPAN.signature{font-size: 13px; font-weight: normal}
+.thread SPAN.signature{font-size: 100%; font-weight: normal}
 /* HOME */
 @media all{.thread .info SPAN.home{margin-left:1em}}
 /* 投稿日時 */
@@ -709,8 +716,8 @@ P.artinfo{
 /* 記事本文 */
 .thread .body{
 	color: #355;
-	font-size: 15px;
-	line-height: 115%;
+	font-size: 100%;
+	line-height: 1.2;
 	padding: 0.2em;
 	text-align: left;
 	vertical-align: top;
@@ -730,7 +737,7 @@ P.artinfo{
 .thread TABLE.foot{
 	background-color: #cdf;
 	color: #05a;
-	font-size: 16px;
+	font-size: 115%;
 	font-weight: bold;
 	margin: 0;
 	text-align: right;
@@ -743,7 +750,7 @@ P.artinfo{
 
 /* ==================== 書き込みフォーム ==================== */
 #writingForm{
-	text-align:center;
+	text-align: center;
 	width: 600px;
 }
 /* 項目名セル */
@@ -817,7 +824,6 @@ P.artinfo{
 #name	{width:220px;ime-mode:active;}
 #cook	{}
 #icon	{width:160px;}
-#icon OPTGROUP{color: #6ac;font-style: normal;}
 #icon OPTION{color:#444;}
 #email	{width:300px;ime-mode:inactive;}
 #home	{width:300px;ime-mode:inactive;}
@@ -861,7 +867,7 @@ P.artinfo{
 .iconCatalog{
 }
 .iconCatalog .box{
-	text-align:center;
+	text-align: center;
 	width: 660px;
 }
 /* テーブルセル */
@@ -900,24 +906,24 @@ TABLE.list TR.child th,TABLE.list TR.child TD{
 DIV#naviwind{
 	background-color: #fff;
 	border: #05a solid 2px;
-	font-size:12px;
+	font-size: 12px;
 	margin: 0;
-	opacity: 0.6;
+	opacity: 0.6; /*CSS3Color*/
 	padding: 0;
 	text-align: left;
 	width: 300px;
-	-moz-opacity: 0.6;
+	-moz-opacity: 0.6; /*Mozilla独自*/
 }
 DIV#naviwind:hover{
-	opacity: 0.9;
-	-moz-opacity: 0.9;/* 1.0だと場合によってMozillaが落ちる */
+	opacity: 0.9; /*CSS3Color*/
+	-moz-opacity: 0.9; /*Mozilla独自*/
 }
 /* 記事ナビヘッダ */
 #navihead{
 	background-color: #6ac;
 	color: #fff;
 	cursor: default;
-	font-size: 13px;
+	font-size: 100%;
 	font-weight: bold;
 	margin: 0;
 	padding: 0;
@@ -926,23 +932,22 @@ DIV#naviwind:hover{
 }
 /* 記事ナビタイトル */
 #navititl{
-	font-size: 100%;
 	margin: 0;
 	overflow: hidden;
-	padding: 0;
+	padding: 0.1em;
 } 
 /* 記事ナビ縮小・閉じるボタン */
 #navibutt{
-	font-size: 100%;
 	text-align: right;
 	white-space: nowrap;
 }
+#navibutt A:link,#navibutt A:visited{color:#fff}
 /* 記事ナビ本文 */
 #navibody{
 	height: 180px;
 	margin: 0;
 	overflow: auto;
-	padding: 0 0.1em;
+	padding: 0;
 }
 /* 記事ナビスレッド */
 .navithre{
@@ -950,9 +955,12 @@ DIV#naviwind:hover{
 /* 記事ナビスレッド題名 */
 .navisubj{
 	background-color: #cdf;
-	height: 16px;
+	height: 1.2em;
 	overflow: hidden;
-	padding: 0.2em;
+	padding: 1%;
+	text-overflow: ellipsis; /*CSS3*/
+	white-space: nowrap;
+	width: 98%;
 }
 /* 記事ナビスレッド記事番号 */
 .navinums{
@@ -965,30 +973,30 @@ DIV#naviwind:hover{
 /* //の強調 */
 STRONG.s2f2f{
 	color: #080;
-	font-weight:normal;
+	font-weight: normal;
 }
 /* ＞の強調 */
 STRONG.s8184{
 	background-color: #ddf;
-	font-weight:normal;
+	font-weight: normal;
 }
 /* §の強調 */
 STRONG.s8198{
 	background-color: #ffb;
-	font-weight:bold;
+	font-weight: bold;
 }
 /* ◇の強調 */
 STRONG.s819e{
 	background-color: #ddf;
-	font-weight:bold;
+	font-weight: bold;
 }
 /* □の強調 */
 STRONG.s81a0{
 	background-color: #dfd;
-	font-weight:normal;
+	font-weight: normal;
 }
 /* ※の強調 */
 STRONG.s81a6{
 	color: #f00;
-	font-weight:bold;
+	font-weight: bold;
 }
