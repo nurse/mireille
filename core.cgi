@@ -244,30 +244,69 @@ _HTML_
 		my($i,$j)=split('=',$_,2);
 		$i||next;
 		defined$j||($j=1);
+		$i=~s/^\s+//o;
+		$i=~s/\s+$//o;
+		$j=~s/^\s+//o;
+		$j=~s/\s+$//o;
 		$EX{$i}=$j;
 	}
 	$IN{'cmd'}=~s/(?:^|;)(?:d|z|re)new(?:=[^;]*)?(?:;|$)//go; #new·Ï¤Ïcmd¤È¤·¤ÆÊÝÂ¸¤µ¤ì¤ë¤Èº¤¤ë
 
-=item ¥³¥Þ¥ó¥É¤Ç»È¤¨¤ë¤â¤Î
+=pod ¥³¥Þ¥ó¥É¤Ç»È¤¨¤ë¤â¤Î
 
-icon    : ÀìÍÑ¥¢¥¤¥³¥ó
-iconlist: (nolist|economy)
-absoluteIcon : ÀäÂÐ»ØÄê¥¢¥¤¥³¥ó
-relativeIcon : ÁêÂÐ»ØÄê¥¢¥¤¥³¥ó
+:icon
+  ¡Öicon = <password>¡×
+  ÀìÍÑ¥¢¥¤¥³¥ó
+:iconlist
+  ¡Öiconlist = (nolist|economy)¡×
+  :nolist
+    ¥¢¥¤¥³¥ó¥ê¥¹¥È¤òÆÉ¤ß¹þ¤Þ¤Ê¤¤
+  :economy
+    ¥¢¥¤¥³¥ó¥ê¥¹¥È¤òÆÉ¤ß¹þ¤à¤±¤ì¤É¡¢É½¼¨¤·¤Ê¤¤
+:absoluteIcon
+  ¡ÖabsoluteIcon = <absoluteUrl>¡×
+  ÀäÂÐ»ØÄê¥¢¥¤¥³¥ó
+:relativeIcon
+  ¡ÖrelativeIcon = <relativeUrl>¡×
+  ÁêÂÐ»ØÄê¥¢¥¤¥³¥ó
+  ¡ÊÁêÂÐ»ØÄê¤Î´ð½à¤Ï$CF{'icon'}¤Ç¤¹¡Ë
 
-signature : ¡Ö½ðÌ¾¤Î¤â¤È¡×¤ò»ØÄê
+:signature
+  ¡Ösignature = <seed of signature>¡×
+  ¡Ö½ðÌ¾¤Î¤â¤È¡×¤ò»ØÄê
 
-dnew : µ­»öÆü»þ¹¹¿·
-znew : ¥¹¥ì¥Ã¥ÉÆü»þ¹¹¿·
-renew: dnew&&znew
+:dnew
+  µ­»öÆü»þ¹¹¿·
+:znew
+  ¥¹¥ì¥Ã¥ÉÆü»þ¹¹¿·
+:renew
+  dnew¤Èznew¤òÆ±»þ¤Ë¹Ô¤¦
 
-usetag:		!SELECTABLE()¤Çµö²Ä¤·¤Æ¤¢¤ëÈÏ°ÏÆâ¤Ç»È¤¦¥¿¥°¤òÁª¤Ù¤ë
-notag:		¥¿¥°¤ò»È¤ï¤Ê¤¤
-noautolink:	URI¼«Æ°¥ê¥ó¥¯¤ò»È¤ï¤Ê¤¤
-noartno:	µ­»öÈÖ¹æ¥ê¥ó¥¯¤ò»È¤ï¤Ê¤¤
-nostrong:	¸ì¶ç¶¯Ä´¤ò»È¤ï¤Ê¤¤
+:usetag
+  !SELECTABLE()¤Çµö²Ä¤·¤Æ¤¢¤ëÈÏ°ÏÆâ¤Ç»È¤¦¥¿¥°¤òÁª¤Ù¤ë
+:notag
+  ¥¿¥°¤ò»È¤ï¤Ê¤¤
+:noautolink
+  URI¼«Æ°¥ê¥ó¥¯¤ò»È¤ï¤Ê¤¤
+:noartno
+  µ­»öÈÖ¹æ¥ê¥ó¥¯¤ò»È¤ï¤Ê¤¤
+:nostrong
+  ¸ì¶ç¶¯Ä´¤ò»È¤ï¤Ê¤¤
 
-lockThread:	¥¹¥ì¥Ã¥É¤ò¥í¥Ã¥¯¤·¤Þ¤¹¡Ê´ÉÍý¥Ñ¥¹¥ï¡¼¥É¤¬É¬Í×¡Ë
+:lockArticle
+  µ­»ö¤ò¥í¥Ã¥¯¤·¤Þ¤¹
+:lockThread
+  ¡ÖlockThread = (all| (revise|delete).. )¡×
+  ¥¹¥ì¥Ã¥É¤ò¥í¥Ã¥¯¤·¤Þ¤¹¡£
+  ´ÉÍý¥Ñ¥¹¥ï¡¼¥É¤«¡¢¿Æµ­»ö¤Î¥Ñ¥¹¥ï¡¼¥É¤ò»È¤Ã¤Æ¡¢
+  ¥í¥Ã¥¯¤·¤¿¤¤¥¹¥ì¥Ã¥É¤ËÊÖ¿®¤¹¤ë¤È¥í¥Ã¥¯¤Ç¤­¤Þ¤¹
+  ¥ª¥×¥·¥ç¥ó¤ò»ØÄê¤·¤Ê¤¤¾ì¹ç¤Ï¡¢¤½¤Î¥¹¥ì¥Ã¥É¤ËÂÐ¤¹¤ëÊÖ¿®¤¬¥í¥Ã¥¯¤µ¤ì¤Þ¤¹¡£
+  :all
+    Á´¤Æ¤Î¥ª¥×¥·¥ç¥ó¤ò¥ª¥ó
+  :revise
+    ½¤Àµ¤ò¥í¥Ã¥¯
+  :delete
+    ºï½ü¤ò¥í¥Ã¥¯
 
 #Ì¤¼ÂÁõ
 su:	´ÉÍý¥Ñ¥¹¥ï¡¼¥É¤òÆþ¤ì¤Æ¤ª¤¯¤È¡¢ÊÖ¿®¤Ç¤­¤Ê¤¤¥¹¥ì¥Ã¥É¤ËÊÖ¿®¤Ç¤­¤¿¤ê¤¹¤ë¡Ê¤è¤¦¤Ë¤Ê¤ëÍ½Äê¡Ë
@@ -316,8 +355,17 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 			die '¤¢¤Ê¤¿¤Ï¤³¤Î¥¹¥ì¥Ã¥É¤ò¥í¥Ã¥¯¤Ç¤­¤Þ¤»¤ó¡£'unless&mircrypt($DT{'time'},$IN{'pass'},$DT{'pass'});
 		}
 		
+		#¥í¥Ã¥¯¥ª¥×¥·¥ç¥ó
+		my$option='';
+		my@options=('revise','delete');
+		$EX{'lockThread'}=' '.lc($EX{'lockThread'}).' ';
+		if(index($EX{'lockThread'},' all ')+1){
+			$option=join" ",@options;
+		}else{
+			$option=join" ",grep{index($EX{'lockThread'}," $_ ")+1}@options;
+		}
 		my$isLocking=0;
-		index($log[$#log],"Mir12=\tLocked")+1?pop@log:++$isLocking&&push(@log,"Mir12=\tLocked;\t");
+		index($log[$#log],"Mir12=\tLocked")+1?pop@log:++$isLocking&&push(@log,"Mir12=\tLocked:$option;\t");
 		truncate(RW,0);
 		seek(RW,0,0);
 		print RW map{"$_\n"}@log;
@@ -688,11 +736,15 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 				exit;
 			}
 			index($log[$IN{'j'}],"Mir12=\tdel")+1&&&showUserError("Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Ï´û¤Ëºï½ü¤µ¤ì¤Æ¤¤¤ë");
-			index($log[$IN{'j'}],"Mir12=\tLocked")+1&&&showUserError("Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Ï¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤ë");
+			index($log[$IN{'j'}],"Mir12=\tlock")+1&&&showUserError("Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Ï¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤ë");
 			$log[$#log]=~/Mir12=\tLocked[^\t]*\brevise\b/o&&&showUserError('¤³¤Î¥¹¥ì¥Ã¥É¤Ï¸Ç¤¯¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤ë');
 			#PassÊÑ¹¹
 			$IN{'oldps'}=$IN{'pass'};
 		}
+		
+		#µ­»ö¤Î¥í¥Ã¥¯
+		$IN{'Mir12'}='lock:'if$EX{'lockArticle'};
+		
 		unless($IN{'_NewPassword'}){
 			#PassÊÑ¹¹¡¦Æü»þÊÑ¹¹
 			$EX{'dnew'}&&($DT{'time'}=$^T);
@@ -700,7 +752,7 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 		}
 		#½ñ¤­¹þ¤ß
 		$log[$IN{'j'}]=
-			"Mir12=\t;\tname=\t$IN{'name'};\tpass=\t$IN{'_NewPassword'};\ttime=\t$DT{'time'};\t"
+			"Mir12=\t$IN{'Mir12'};\tname=\t$IN{'name'};\tpass=\t$IN{'_NewPassword'};\ttime=\t$DT{'time'};\t"
 			."body=\t$IN{'body'};\tsignature=\t$IN{'_Signature'};\t"
 			.join('',map{"$_=\t$IN{$_};\t"}grep{defined$IN{$_}}
 			((!$IN{'j'}?$CF{'prtitm'}:$CF{'chditm'})=~/\+([a-z\d]+)\b/go));
@@ -778,7 +830,7 @@ sub res{
 	&showHeader;
 	print qq(<H2 class="mode">- µ­»öÊÖ¿®¥â¡¼¥É -</H2>\n)
 	.qq(<DIV id="thread_div" style="border:dashed 1px #333;height:auto;overflow:visible;width:99%">\n)
-	.qq(<H3>¤³¤Î¥¹¥ì¥Ã¥É¤Îº£¤Þ¤Ç¤ÎÆâÍÆ</H3>\n);
+	.qq(<H3 class="mode">¤³¤Î¥¹¥ì¥Ã¥É¤Îº£¤Þ¤Ç¤ÎÆâÍÆ</H3>\n);
 	print"This thread$IN{'i'} is deleted."if"del"eq&showArticle(i=>$IN{'i'},ak=>1,res=>1);
 	print<<'_HTML_';
 </DIV>
@@ -863,8 +915,8 @@ $ Á°²ó¤Î½èÍý¤Î·ë²Ì
 	if($_[0]){
 		print<<"_HTML_";
 <DIV class="center">
+<H3 class="mode">$_[0]</H3>
 <TABLE align="center" border="0" cellspacing="0" summary="BackMenu">
-<CAPTION>$_[0]</CAPTION>
 <COL span="2" width="150">
 <TR><TD><FORM action="index.cgi?read=$IN{'i'}#art$IN{'i'}-$IN{'j'}" method="get">
 <INPUT type="submit" class="button" accesskey="q" value="·Ç¼¨ÈÄ¤ËÌá¤ë(Q)">
@@ -960,11 +1012,14 @@ sub rvsArticle{
 	eval{flock(RD,1)};
 	my$i=0;
 	my%DT;
+	my$lastLine='';
 	while(<RD>){
+		$lastLine=$_;
 		$i++==$IN{'j'}||next;
-		%DT=($_=~/([^\t]*)=\t([^\t]*);\t/go);
+		%DT=/([^\t]*)=\t([^\t]*);\t/go;
 	}
 	close(RD);
+	%DT||die"Âè$IN{'i'}ÈÖ¥¹¥ì¥Ã¥É¤Ë¤Ï$IN{'j'}¤Ê¤ó¤Æ¤¢¤ê¤Þ¤»¤ó";
 =pod
 ¤¿¤È¤¨$IN{'pass'}¤¬ÅÏ¤µ¤ì¤Ê¤¯¤Æ¤â¡¢GetCookie¤ÇCookie¤ò»²¾È¤·¡¢
 ¤â¤·¤½¤³¤ÇÆÀ¤é¤ì¤¿$CK{'pass'}¤¬¥Ñ¥¹¥ï¡¼¥É¤È°ìÃ×¤¹¤ì¤Ð½¤Àµ¥â¡¼¥É¤ËÄÌ¤¹¡¢
@@ -974,17 +1029,21 @@ sub rvsArticle{
 	if($IN{'pass'}){
 		#IN¤ÇÁ÷¤é¤ì¤Æ¤­¤¿¡©
 		$IN{'oldps'}=$IN{'pass'};
-		if(&mircrypt($DT{'time'},$IN{'pass'},$DT{'pass'})){
-			#INpassOK
-			#½èÍý¤Ø
-		}elsif($CF{'admps'}&&($IN{'pass'}eq$CF{'admps'})){
+		if($CF{'admps'}&&$IN{'pass'}eq$CF{'admps'}){
 			#ADMINpassOK
 			$IN{'pass'}='';
+			#½èÍý¤Ø
+		}elsif(&mircrypt($DT{'time'},$IN{'pass'},$DT{'pass'})){
+			#INpassOK
 			#½èÍý¤Ø
 		}else{
 			&showRvsMenu("ÆþÎÏ¤µ¤ì¤¿¥Ñ¥¹¥ï¡¼¥É¤¬Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Î¤â¤Î¤È¹çÃ×¤·¤Þ¤»¤ó¡£");
 		}
 	}else{
+		#Cookie¤òÄ´¤Ù¤ëÁ°¤Ë¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤ë¤«¤É¤¦¤«¥Á¥§¥Ã¥¯
+		index($DT{'Mir12'},'lock')+1&&&showRvsMenu("Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Ï¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤Þ¤¹¡£");
+		$lastLine=~/Mir12=\tLocked[^\t]*\bdelete\b/o&&&showRvsMenu('¤³¤Î¥¹¥ì¥Ã¥É¤Ï¸Ç¤¯¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤Þ¤¹¡£');
+		
 		#Cookie¤Ë¤¢¤ë¡©
 		&getCookie;
 		$IN{'pass'}=$CK{'pass'};
@@ -1068,7 +1127,7 @@ _HTML_
 			&mircrypt($DT{'time'},$IN{'pass'},$DT{'pass'})
 			 or &showRvsMenu("ÆþÎÏ¤µ¤ì¤¿¥Ñ¥¹¥ï¡¼¥É¤¬Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Î¤â¤Î¤È¹çÃ×¤·¤Þ¤»¤ó¡£");
 			index($log[$IN{'j'}],"Mir12=\tdel")+1&&&showRvsMenu("Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Ï´û¤Ëºï½ü¤µ¤ì¤Æ¤¤¤Þ¤¹¡£");
-			index($log[$IN{'j'}],"Mir12=\tLocked")+1&&&showRvsMenu("Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Ï¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤Þ¤¹¡£");
+			index($log[$IN{'j'}],"Mir12=\tlock")+1&&&showRvsMenu("Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Ï¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤Þ¤¹¡£");
 			$log[$#log]=~/Mir12=\tLocked[^\t]*\bdelete\b/o&&&showRvsMenu('¤³¤Î¥¹¥ì¥Ã¥É¤Ï¸Ç¤¯¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤Þ¤¹¡£');
 			$IN{'j'}==0&&$#log==0&&last SWITCH;
 		}
@@ -2170,7 +2229,11 @@ $CF{'icls'}¤ÎºÇ½é¤Î°ìÊ¸»ú¤¬' '¡ÊÈ¾³Ñ¶õÇò¡Ë¤À¤Ã¤¿¾ì¹çÊ£¿ô¥ê¥¹¥È¥â¡¼¥É¤Ë¤Ê¤ê¤Þ¤¹
 	}elsif($CF{'exicon'}&&($CK{'cmd'}=~/(?:^|;)icon=([^;]*)/o)&&$IC{$1}){
 		#¥Ñ¥¹¥ï¡¼¥É·¿
 		$_[0]=$IC{$1};
-		$iconlist.=qq(<OPTION value="$_[0]" selected>ÀìÍÑ¥¢¥¤¥³¥ó</OPTION>\n);
+		if($isEconomy){
+			$iconlist=qq(<OPTION value="$_[0]" selected>ÀìÍÑ¥¢¥¤¥³¥ó</OPTION>\n);
+		}else{
+			$iconlist.=qq(<OPTION value="$_[0]" selected>ÀìÍÑ¥¢¥¤¥³¥ó</OPTION>\n);
+		}
 	}elsif($CF{'absoluteIcon'}&&$CK{'cmd'}=~/(?:^|;)absoluteIcon=([^;]*)/o){
 		#ÀäÂÐ»ØÄê¥¢¥¤¥³¥ó
 		$_[0]=$1;
