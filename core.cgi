@@ -34,12 +34,14 @@ if($CF{'Attach'}){
     $CF{'AttachMaxSize'} = 300*1000	unless exists $CF{'AttachMaxSize'};
     $CF{'AttachParentLength'} = 3	unless exists $CF{'AttachParentLength'};
     $CF{'AttachChildLength'} = 3	unless exists $CF{'AttachChildLength'};
-    $CF{'AttachDir'} = 'attach'	unless exists $CF{'AttachDir'};
+    $CF{'AttachDir'} = 'attach'		unless exists $CF{'AttachDir'};
 }else{
     for(grep{/^Attach\//o}keys%CF){
 	delete $CF{$_};
     }
 }
+$CF{'AttackAverage'}	=> '10'		unless exists $CF{'AttackAverage'};
+$CF{'AttackInterval'}	=> '3600'	unless exists $CF{'AttackInterval'};
 
 #-------------------------------------------------
 # MAIN SWITCH
@@ -734,9 +736,10 @@ _HTML_
 	
     #-----------------------------
     #@zer1ベース荒らし対策(?)
-    #120秒以内に@zer1が全て入れ替わったら危険の兆候
+    #$CF{'AttackInterval'}秒以内に@zer1が全て（$CF{'AttackAverage'}）入れ替わったら危険の兆候
     my@zer1=split(/\s+/o,$zero[1]);
-    @zer1>4&&$zer1[$#zer1]=~/\d+:\w+:\d+\[(\d+)\]/o&&$1+3600>$^T&&&showUserError('凶兆が見えた');
+    @zer1>=$CF{'AttackAverage'}&&$zer1[$#zer1]=~/\d+:\w+:\d+\[(\d+)\]/o
+	&&$1+$CF{'AttackInterval'}>$^T&&&showUserError('凶兆が見えた');
 	
     #-----------------------------
     #現在あるログのリストを取得
@@ -978,7 +981,7 @@ $file[$CF{'logmax'}-2] は削除された後に残った記事スレッドのうち、
 	#-----------------------------
 	#ログ管理ファイル、0.cgiに書き込み
 	#新規・返信の時には投稿情報を保存
-	$#zer1=3if$#zer1>3; #(3+2=)5が@zer1の保存件数
+	$#zer1=$CF{'AttackAverage'}-2if$#zer1>$CF{'AttackAverage'}-2;
 	unshift(@zer1,sprintf"%d:%s:%d[%d]",$IN{'i'},$crcOfThisArticle,$IN{'j'},$^T);
 	my$num=$IN{'i'}-$zer2[0];
 	$num>0||die"ZER2のデータが不正です 'i':$IN{'i'},'zer2':$zer2[0]";
