@@ -16,11 +16,9 @@ my(%Z0,@zer2,@file);
 
 =pod core.cgiを単体起動させると、locationで跳ばせるCGIに
 # この機能を使うには上の行を # で #=item とコメントアウトしてください
-INIT:{
-	if($CF{'program'}eq __FILE__){
-		#直接実行だったら動き出す
-		&locate($ENV{'QUERY_STRING'});
-	}
+if($CF{'program'}eq __FILE__){
+	#直接実行だったら動き出す
+	&locate($ENV{'QUERY_STRING'});
 }
 =pod
 =cut
@@ -33,11 +31,7 @@ sub main{
 	defined$CF{'log'}||die"\$CF{'log'} is Undefined";
 	unless(-e"$CF{'log'}0.cgi"){
 		-e"$CF{'log'}0.pl"&&die"旧形式0.plが残っています 不具合の兆し？";
-		DIR:{
-			-e"$CF{'log'}"&&last DIR;
-			mkdir("$CF{'log'}",0777)&&last DIR;
-			die"Can't read/write/create LogDir($CF{'log'})[$?:$!]";
-		}
+		!-e"$CF{'log'}"&&!mkdir("$CF{'log'}",0777)&&die"Can't read/write/create LogDir($CF{'log'})[$?:$!]";
 		open(ZERO,'+>>'."$CF{'log'}0.cgi")||die"Can't write log(0.cgi)[$?:$!]";
 		eval{flock(ZERO,2)};
 		if(!-s"$CF{'log'}0.cgi"){
@@ -207,21 +201,32 @@ sub writeArticle{
 
 	#-----------------------------
 	#エラー表示
-	my@error;
-	$IN{'name'}||push(@error,'名前');
-	$IN{'body'}||push(@error,'本文');
-	$IN{'pass'}||($CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'})or push(@error,'パスワード');
-	if($CF{'ngWords'}){index($IN{'body'},$_)<0||push(@error,'本文')for(split(/\s+/o,$CF{'ngWords'}))}
-	if(@error){
-		&showHeader;
-		print<<"_HTML_";
+	{
+		my@error=();
+		my@message=();
+		$IN{'name'}||push(@error,'名前');
+		$IN{'body'}||push(@error,'本文');
+		$IN{'pass'}||($CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'})
+		or push(@message,'パスワードは8文字以上、128文字以下でなければなりません。')&&push(@error,'パスワード');
+		if($CF{'ngWords'}){
+			for($CF{'ngWords'}=~/(\S+)/go){
+				index($IN{'body'},$_)<0||last;
+				push(@error,'本文');
+				push(@message,'Something Wicked happend!(不正な文字列)');
+			}
+		}
+		if(@error){
+			&showHeader;
+			print<<"_HTML_";
 <H2 class="mode">- Write Error -</H2>
 <P>@{[join('と',map{qq(<SPAN style="color:#f00">$_</SPAN>)}@error)]}をちゃんと入力してください</P>
 _HTML_
-		%CK=%IN;
-		&rvsij;
-		print&getFooter;
-		exit;
+			printf '<P>%s</P>',join"<BR>",@message if@message;
+			%CK=%IN;
+			&rvsij;
+			print&getFooter;
+			exit;
+		}
 	}
 	
 	#-----------------------------
@@ -679,19 +684,23 @@ $file[$CF{'logmax'}-2] は削除された後に残った記事スレッドのうち、
 		$zer2[$No]=$^T;
 		truncate(ZERO,0);
 		seek(ZERO,0,0);
+		unless($Z0{'Serial'}){
+			srand();
+			$Z0{'Serial'}=1+int(rand(-2+2**32));
+		}
 		print ZERO 
 			"Mir12=\t$IN{'i'}-$IN{'j'};\tsubject=\t$IN{'subject'};\tname=\t$IN{'name'};\ttime=\t$^T;\t"
-			."\n@zer1\n@zer2\n";
+			."Serial=\t$Z0{'Serial'};\t\n@zer1\n@zer2\n";
 	}
 	close(ZERO); #ここでやっと書き込み終了
 	
 	#-----------------------------
 	#$IN{'cook'}がONならCookieの書き込み
-	COOKIE:{
-		$IN{'cook'}||last COOKIE;
-		$CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'}&&last COOKIE; #管理パスの時はCookie保存しない
-		&getCookie;
-		&setCookie(\%IN);
+	if($IN{'cook'}){
+		unless($CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'}){#管理パスの時はCookie保存しない
+			&getCookie;
+			&setCookie(\%IN);
+		}
 	}
 	
 	#-----------------------------
@@ -846,7 +855,7 @@ _HTML_
 <COL>
 <TR>
 <TD style="text-align:center">[$i[0]-$i[$#i]]</TD>
-<TD><SPAN class="ak">P</SPAN>assword: <INPUT name="pass" type="password"
+<TD><SPAN class="ak">P</SPAN>assword: <INPUT name="pass" type="text"
  accesskey="p" size="12" style="ime-mode:disabled" value="$CK{'pass'}"></TD>
 <TD>
 <INPUT name="$mode" type="hidden" value="">
@@ -950,7 +959,7 @@ sub rvsArticle{
 <COL width="330">
 <P style="margin:0.6em">パスワードを入力してください</P>
 <P style="margin:0.6em"><SPAN class="ak">P</SPAN>assword:
-<INPUT name="pass" type="password" accesskey="p" size="12" style="ime-mode:disabled" value="$CK{'pass'}">
+<INPUT name="pass" type="text" accesskey="p" size="12" style="ime-mode:disabled" value="$CK{'pass'}">
 <INPUT name="rvs" type="hidden" value="$IN{'rvs'}"></P>
 <P style="margin:0.6em">
 <INPUT type="submit" class="submit" accesskey="s" value="OK">　
@@ -1972,7 +1981,7 @@ sub getSignature{
 	if($CF{'signatureSpecial'}&&$CF{'signatureSpecial'}=~/(?:^|\s+)\Q$word\E\s+(\S+)/o){
 		$signature='!'.$1;
 	}else{
-		my$salt;
+		my$salt='';
 		for(0,1){
 			my$c=chop$word;
 			my$n=ord$c;
@@ -1989,7 +1998,6 @@ sub getSignature{
 #-------------------------------------------------
 # 署名の生成（表示時）
 #
-my$signatureBaseView;
 my%signatureCacheView;
 sub getSignatureView{
 	my$data=shift;
@@ -2001,15 +2009,11 @@ sub getSignatureView{
 		#キャッシュ
 		$signature=$signatureCacheView{$data->{signature}.' '.$data->{name}};
 	}else{
-		unless($signatureBaseView){
-			$signatureBaseView=$zer2[$#zer2]^($zer2[$#zer2]>>1);
-			scalar\%Z0=~/(0x[\d]+)/o;
-			$signatureBaseView^=$1;
-			scalar\@zer2=~/(0x[\d]+)/o;
-			$signatureBaseView^=$1;
-			$signatureBaseView^=$1;
+		unless($Z0{'Serial'}){
+			srand();
+			$Z0{'Serial'}=1+int(rand(-2+2**32));
 		}
-		srand($signatureBaseView^&getCRC32($data->{name},1));
+		srand($Z0{'Serial'}^&getCRC32($data->{name},1));
 		my$saltForSignatureView=chr(47+rand 76).chr(47+rand 76);
 		$signature=substr(crypt($data->{signature},$saltForSignatureView),2);
 		$signatureCacheView{$data->{signature}.' '.$data->{name}}=$signature;
