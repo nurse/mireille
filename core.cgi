@@ -29,12 +29,17 @@ if($CF{'program'}eq __FILE__){
 
 =cut
 
-$CF{'MaxSize'} = 1048576;
-$CF{'Attach/MaxSize'} = 300*1000;
-$CF{'Attach/ParentLength'} = 3;
-$CF{'Attach/ChildLength'} = 3;
-$CF{'Attach/Dir'} = 'attach';
-$CF{'Attach/AcceptContentType'} = 'text/plain, text/html, application/xml, image/pjepg, image/x-png, application/octet-stream, image/gif';
+$CF{'MaxSize'} = 1048576		unless exists$CF{'MaxSize'};
+if($CF{'Attach'}){
+    $CF{'AttachMaxSize'} = 300*1000	unless exists $CF{'AttachMaxSize'};
+    $CF{'AttachParentLength'} = 3	unless exists $CF{'AttachParentLength'};
+    $CF{'AttachChildLength'} = 3	unless exists $CF{'AttachChildLength'};
+    $CF{'AttachDir'} = 'attach'	unless exists $CF{'AttachDir'};
+}else{
+    for(grep{/^Attach\//o}keys%CF){
+	delete $CF{$_};
+    }
+}
 
 #-------------------------------------------------
 # MAIN SWITCH
@@ -48,9 +53,9 @@ sub main{
 	my$chr=ord$CF{'_HiraganaLetterA'}->{$_};
 	if($enc{$chr}){
 	    lc$CF{'encoding'}eq$enc{$chr}||die sprintf($message,$_,$CF{'encoding'},$enc{$chr});
-#		}elsif($chr==12354){
+	    #		}elsif($chr==12354){
 	    #Perl Nativeなのは、何やってるのかわからないからスルーする
-#		}else{
+	    #		}else{
 	    #未知のエンコーディングはもっとわからないので無視する
 	}
     }
@@ -200,7 +205,7 @@ sub showCover{
 	my$unreads=1;
 	for(0..$#view){
 	    $unreads+=&showArticle(i=>$view[$_],ak=>($_+1)
-				   ,-maxChildsShown=>$CF{'maxChildsShown'},-unreads=>$unreads);
+				   ,-maxChildrenShown=>$CF{'maxChildrenShown'},-unreads=>$unreads);
 	}
     }else{
 	#log0のみ つまり設置直後のとき
@@ -259,22 +264,23 @@ C<($IN{'i'}&&$IN{'j'}ne 0)>
 
 sub writeArticle{
     
-#    {
-#	open(ENV,'>>'."$CF{'log'}env.log")||die"Can't write log(0.cgi)[$?:$!]";
-#	flock(ENV,2);
-#	my $log = '';
-#	for(qw/REMOTE_ADDR REMOTE_HOST HTTP_USER_AGENT HTTP_CLIENT_IP HTTP_FORWARDED HTTP_SP_HOST HTTP_FORWARDED HTTP_X_FORWARDED_FOR HTTP_FROM HTTP_HOST HTTP_VIA HTTP_REFERER HTTP_X_LOCKING REQUEST_METHOD QUERY_STRING/){
-#	    $ENV{$_} or next;
-#	    $log .= qq{$_ => "$ENV{$_}", };
-#	}
-#	$log .= "\n";
-#	print ENV $log;
-#	close ENV;
-#    }
+    #    {
+    #	open(ENV,'>>'."$CF{'log'}env.log")||die"Can't write log(0.cgi)[$?:$!]";
+    #	flock(ENV,2);
+    #	my $log = '';
+    #	for(qw/REMOTE_ADDR REMOTE_HOST HTTP_USER_AGENT HTTP_CLIENT_IP HTTP_FORWARDED HTTP_SP_HOST HTTP_FORWARDED HTTP_X_FORWARDED_FOR HTTP_FROM HTTP_HOST HTTP_VIA HTTP_REFERER HTTP_X_LOCKING REQUEST_METHOD QUERY_STRING/){
+    #	    $ENV{$_} or next;
+    #	    $log .= qq{$_ => "$ENV{$_}", };
+    #	}
+    #	$log .= "\n";
+    #	print ENV $log;
+    #	close ENV;
+    #    }
     unlink "$CF{'log'}env.log";
 
     'POST'eq$ENV{'REQUEST_METHOD'} or die 'wa: Something Wicked happend!';
-#    gethostbyaddr(pack('C4',split('\.',$ENV{'REMOTE_ADDR'})),2) or die 'wa: Something Wicked happend!';
+    #$IN{'_ENCTYPE'} eq 'multipart/form-data' or die 'wa: Something Wicked happend!';
+    #gethostbyaddr(pack('C4',split('\.',$ENV{'REMOTE_ADDR'})),2) or die 'wa: Something Wicked happend!';
     
     
     #-----------------------------
@@ -501,10 +507,9 @@ Marldiaはデータの保持などは適当でもいいこともあって、
 	my@error=();
 	my@message=();
 	$IN{'name'}||push(@error,'名前');
-	$IN{'body'}||push(@error,'本文');
+	$IN{'body'} and !($IN{'body'} =~ /^[\x21-\x7e]*$/o) or push(@error,'本文');
 	$IN{'pass'}||($CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'})
 	    or push(@error,'パスワード')&&push(@message,'パスワードは8文字以上、128文字以下でなければなりません。');
-	$IN{'body'} =~ /^[\x21-\x7e]*$/o and die 'wa: Something Wicked happend!';
 	if($CF{'ngWords'}&&!@error){
 
 =head2 CONFIG::NGワード
@@ -711,56 +716,7 @@ _HTML_
     
     #-----------------------------
     #ファイル添付処理
-    #$IN{'_ArticleType'}&1?'chditm':'prtitm'
-    while( $IN{'_attach'} ){
-	unless(ref$IN{'_attach'} eq 'ARRAY'){
-	    delete$IN{'_attach'};
-	    last;
-	}
-	my @file = @{$IN{'_attach'}};
-	unless( @file > 0 ){
-	    delete$IN{'_attach'};
-	    last;
-	}
-	my $length;
-	if($IN{'_ArticleType'}&1){
-	    $CF{'Attach/ChildLength'} > 0 or last;
-	    $length = $CF{'Attach/ChildLength'};
-	    $CF{'chditm'}.=' +attach';
-	}else{
-	    $CF{'Attach/ParentLength'} > 0 or last;
-	    $length = $CF{'Attach/ParentLength'};
-	    $CF{'prtitm'}.=' +attach';
-	}
-	if($length > 0){
-	    unless(-d$CF{'Attach/Dir'}){
-		mkdir$CF{'Attach/Dir'};
-	    }
-	    my @attach;
-	    if(@file > $length){
-		$#file = $length - 1 ;
-		$#{$IN{'_attach'}} = $length - 1 ;
-	    }
-	    
-#	    $IN{'_attach'}[0]{'body'}='' if defined$IN{'_attach'}[0];
-#	    $IN{'_attach'}[1]{'body'}='' if defined$IN{'_attach'}[1];
-#	    $IN{'_attach'}[2]{'body'}='' if defined$IN{'_attach'}[2];
-#	    use Data::Dumper;die "<XMP>".Data::Dumper->Dump([\%IN],['data'])."</XMP>";
-	    
-	    for(@file){
-		my $item = $_;
-		my $filename = sprintf('%s/%s.%s',$CF{'Attach/Dir'},$item->{'hash'},$item->{'ext'});
-		$names.=' '.$filename;
-		open(ATTACH, '>'.$filename)||die"Can't read/write attached file($filename)[$?:$!]";
-		binmode(ATTACH);
-		print ATTACH $item->{'body'};
-		close(ATTACH);
-		push @attach, { map{ $_,$item->{$_} }qw/hash ext content-type size/ };
-	    }
-	    $IN{'attach'} = MirString::urlencode(@attach);
-	}
-	last;
-    }
+    &attachFile();
     
     #-----------------------------
     #書き込むデータの前処理
@@ -903,7 +859,7 @@ $file[$CF{'logmax'}-2] は削除された後に残った記事スレッドのうち、
 	    seek(FILE,0,2);
 	    if($CF{'admps'}&&$IN{'pass'}eq$CF{'admps'}){
 		#パスワードが管理パスのときは最大子記事数制限がかかっていても投稿出来る
-	    }elsif($CF{'maxChilds'}&&$IN{'j'}>$CF{'maxChilds'}){
+	    }elsif($CF{'maxChildren'}&&$IN{'j'}>$CF{'maxChildren'}){
 		&showUserError('既に最大子記事数制限を越えている');
 	    }
 	    print FILE (!chomp$line&&++$IN{'j'}?"\n":'')
@@ -967,44 +923,45 @@ $file[$CF{'logmax'}-2] は削除された後に残った記事スレッドのうち、
 	    $DT{'time'}=$^T if$EX{'dnew'};
 	    $IN{'_NewPassword'}=&mircrypt($DT{'time'},$IN{'pass'});
 	}
-	while($DT{'attach'}){
-	    my $attach = MirString::urldecode($DT{'attach'});
-	    ref$attach eq 'ARRAY' or last;
-	    my @attach = @{ $attach };
+	
+	# 添付ファイル
+	my $attach = MirString::urldecode($DT{'attach'});
+	if($attach and ref$attach eq 'ARRAY'){
+	    my %attach = ();
+	    my @remove = ();
+	    
+	    # Remove Attachments Phase 1/2
 	    if($IN{'_remove_attach'} and ref$IN{'_remove_attach'} eq 'ARRAY'){
-		for(@{$IN{'_remove_attach'}}){
-		    index( $DT{'attach'}, $_ ) > -1 or next;
-		    my $hash = $_;
-		    my $i;
-		    for($i = 0; $i < @attach; $i++ ){
-			if($attach[$i]->{'hash'} eq $hash){
-			    unlink( "$CF{'Attach/Dir'}/$attach[$i]->{'hash'}.$attach[$i]->{'ext'}" );
-			    splice(@attach, $i, 1);
-			    last;
-			}
-		    }
-		}
-		@attach = grep{ref$_ eq 'HASH'}@attach;
+		my %remove = ();
+		@remove = @{$IN{'_remove_attach'}};
+		$remove{$_} = 1 for @remove;
+		$attach{ $_->{'hash'} } = $_ for grep{ !$remove{ $_->{'hash'} } }@{ $attach };
+	    }else{
+		$attach{ $_->{'hash'} } = $_ for @{ $attach };
 	    }
+	    
+	    # Add New Attachments
 	    if($IN{'_attach'}){
-		for(@{$IN{'_attach'}}){
-		    my $hash = $_->{'hash'};
-		    my $push = 1;
-		    for(@attach){
-			if( $_->{'hash'} eq $hash ){
-			    $push = 0;
-			    last;
-			}
-		    }
-		    if($push){
-			push @attach, $_;
-		    }
-		}
+		$attach{ $_->{'hash'} } = $_ for @{$IN{'_attach'}};
 	    }
-	    $IN{'attach'} = MirString::urlencode(@attach);
-	    last;
+	    
+	    # Remove Attachments Phase 2/2
+	    for(@remove){
+		removeAttachedFile($_) unless $attach{$_};
+	    }
+	    
+	    $IN{'attach'} = MirString::urlencode([values%attach]);
 	}
 	
+	# Save Atatchment Information
+	if($IN{'attach'}){
+	    if($IN{'_ArticleType'}&1){
+		$CF{'chditm'}.=' +attach';
+	    }else{
+		$CF{'prtitm'}.=' +attach';
+	    }
+	}
+    	
 	#書き込み
 	$log[$IN{'j'}]=
 	    "Mir12=\t$IN{'Mir12'};\tname=\t$IN{'name'};\tpass=\t$IN{'_NewPassword'};\ttime=\t$DT{'time'};\t"
@@ -1604,10 +1561,10 @@ sub rss{
 	    if($DT{'subject'}){
 		$subject = $DT{'subject'};
 	    }elsif($DT{'title'}){
-	    	$subject = $DT{'title'};
+		$subject = $DT{'title'};
 	    }
 	    $DT{'_subject'} = $subject;
- 	    push( @latestArticles, \%DT );
+	    push( @latestArticles, \%DT );
 	}
     }
     @latestArticles = sort{$b->{'time'}<=>$a->{'time'}}@latestArticles;
@@ -1667,26 +1624,19 @@ EOF
     }
     $output .= " </rdf:RDF>\n";
     
-    my$die = $SIG{'__DIE__'};
-    $SIG{'__DIE__'} = '';
-    # Encode
-    my$flag=0;
-    eval q{
-      use Encode;
-      Encode::from_to( $output, $CF{'encoding'}, 'utf-8' );
-      $flag=1;
-      };
-    unless( $flag ){
+    my $encoding = 'utf-8';
+    {
+	local $SIG{'__DIE__'} = sub{};
+	# Encode
+	eval q{use Encode;Encode::from_to( $output, $CF{'encoding'}, 'utf-8' )};
+	
 	# Jcode
-	eval q{
-	  use Jcode;
-	  $output = Jcode->new( $output, $CF{'encoding'} )->utf8;
-	  $flag=1;
-	  };
+	eval q{use Jcode;$output = Jcode->new( $output, $CF{'encoding'} )->utf8} if $@;
+	
+	$encoding = $CF{'encoding'} if $@;
     }
-    $SIG{'__DIE__'} = $die;
     
-    my $encoding = $flag ? 'utf-8' : $CF{'encoding'};
+    
     print <<"EOF";
 Status: 200 OK
 Cache-Control: private
@@ -1810,7 +1760,7 @@ sub getParam{
 		for(@mixture){
 		    my ( $head, $value ) = split("\r\n\r\n",shift(@params),2);
 		    if($head=~/filename="([^"]+)"[\w\W]+Content-Type:\s*(\S.*\S)/io){
-			length($value) < $CF{'Attach/MaxSize'} or next;
+			length($value) < $CF{'AttachMaxSize'} or next;
 			my $item = { 'filename' => $1, 'content-type' => $2, 'head' =>$head, 'body' => $value };
 			$item->{'ext'} =  $1 if $item->{'filename'} =~ /(\w+)$/o;
 			$item->{'hash'} = Airemix::Digest::MD5_hex($value);
@@ -1820,7 +1770,7 @@ sub getParam{
 		}
 		$value = \@files;
 	    }elsif($head=~/filename="([^"]+)"[\w\W]+Content-Type:\s*(\S.*\S)/io){
-		length($value) < $CF{'Attach/MaxSize'} or next;
+		length($value) < $CF{'AttachMaxSize'} or next;
 		my $item = { 'filename' => $1, 'content-type' => $2, 'head' =>$head, 'body' => $value };
 		$item->{'ext'} =  $1 if $item->{'filename'} =~ /(\w+)$/o;
 		$item->{'hash'} = Airemix::Digest::MD5_hex($value);
@@ -1848,7 +1798,7 @@ sub getParam{
 		$DT{$key} = [] unless ref$DT{$key} eq 'ARRAY';
 		push @{$DT{$key}}, $value if $value;
 	    }else{
-	       $DT{$key} = $value;
+		$DT{$key} = $value;
 	    }
 	}
 	#binmode STDOUT;print"content-type: $DT{'hoe'}{'content-type'}\n\n$DT{'hoe'}{'body'}";exit;
@@ -1856,6 +1806,7 @@ sub getParam{
 	#$DT{'attach'}[1]{'body'}='' if $DT{'attach'}[1];
 	#$DT{'attach'}[2]{'body'}='' if $DT{'attach'}[2];
 	#use Data::Dumper;die "<XMP>".Data::Dumper->Dump([\%DT],['data'])."</XMP>";
+	$IN{'_ENCTYPE'} = 'multipart/form-data';
     }else{
 	#x-www-form-urlencodedな入力を展開
 	@params=split(/[&;]/o,$params);
@@ -1882,6 +1833,7 @@ sub getParam{
 	    }#本文は後でまとめて
 	    $DT{$i}=$j;
 	}
+	$IN{'_ENCTYPE'} = 'x-www-form-urlencoded';
     }
     #use Data::Dumper;
     #die sprintf'<xmp>%s</xmp>',Data::Dumper->Dump([\%DT]);
@@ -2230,7 +2182,7 @@ sub getZeroInfo{
 
 sub logfiles{
     undef@file;
-    opendir(DIR,$CF{'log'})||die"Can't read directory($CF{'log'})[$?:$!]";
+    opendir(DIR,$CF{'log'})||die"Can't opendir($CF{'log'})[$?:$!]";
     my@list=grep{int$_}map{/^(\d+)\.cgi$/o}readdir(DIR);
     closedir(DIR);
     if('date'eq$_[0]){
@@ -2330,7 +2282,7 @@ sub showArticle{
     #このスレッド共通の情報
     my%DT=@_;
     $DT{'j'}=-1;
-    $DT{'-maxChildsShown'}=-1if!defined$DT{'-maxChildsShown'};
+    $DT{'-maxChildrenShown'}=-1if!defined$DT{'-maxChildrenShown'};
     $DT{'-unreads'}||=1;
     $DT{'-isLocked'}=0;
 	
@@ -2341,8 +2293,8 @@ sub showArticle{
     my@articles=<FILE>;
     close(FILE);
 	
-    my$maxChildsShown=$DT{'-maxChildsShown'}>-1?int(abs($DT{'-maxChildsShown'})):$#articles;
-    my$horizon=$#articles-$maxChildsShown;
+    my$maxChildrenShown=$DT{'-maxChildrenShown'}>-1?int(abs($DT{'-maxChildrenShown'})):$#articles;
+    my$horizon=$#articles-$maxChildrenShown;
 	
     #readモードの時の補正
     $horizon=0if$IN{'read'}&&$IN{'read'}==$DT{'i'};
@@ -2352,7 +2304,7 @@ sub showArticle{
 	    #親記事
 	    $DT{'-unreads'}=&artprt(\%DT,$_);
 	    print<<"_HTML_"if$horizon>0;
-<P class="overflowMessage">子記事数が多いため、最新の$maxChildsShown件のみ表示します。
+<P class="overflowMessage">子記事数が多いため、最新の$maxChildrenShown件のみ表示します。
 それ以前の記事は<A href="$CF{'index'}?res=$DT{'i'}">返信モード</A>で見ることができます。</P>
 _HTML_
 	}else{
@@ -2363,7 +2315,7 @@ _HTML_
 	    $DT{'-unreads'}=&artchd(\%DT,$_);
 	}
     }
-    $DT{'-isOverflowed'}=$CF{'maxChilds'}&&$DT{'j'}>=$CF{'maxChilds'}?1:0;
+    $DT{'-isOverflowed'}=$CF{'maxChildren'}&&$DT{'j'}>=$CF{'maxChildren'}?1:0;
     $DT{'-isAvailable'}=not$DT{'-isLocked'}+$DT{'-isOverflowed'};
     #記事フッタ
     &artfot(\%DT)if$DT{'j'}+1;
@@ -3175,6 +3127,158 @@ sub rvsij{
 }
 
 
+#-------------------------------------------------
+
+=head2 ファイル添付処理
+
+=cut
+
+sub attachFile(){
+    unless(ref$IN{'_attach'} eq 'ARRAY'){
+	delete$IN{'_attach'};
+	return;
+    }
+    
+    my @file = @{$IN{'_attach'}};
+    unless( @file > 0 ){
+	delete$IN{'_attach'};
+	return;
+    }
+    
+    my $length;
+    if($IN{'_ArticleType'}&1){
+	$CF{'AttachChildLength'} > 0 or return;
+	$length = $CF{'AttachChildLength'};
+	$CF{'chditm'}.=' +attach';
+    }else{
+	$CF{'AttachParentLength'} > 0 or return;
+	$length = $CF{'AttachParentLength'};
+	$CF{'prtitm'}.=' +attach';
+    }
+    
+    if($length > 0){
+	my @attach;
+	if(@file > $length){
+	    $#file = $length - 1 ;
+	    $#{$IN{'_attach'}} = $length - 1 ;
+	}
+	for(@file){
+	    my $item = $_;
+	    &saveAttachFile($item);
+	    push @attach, { map{ $_,$item->{$_} }qw/hash ext content-type size/ };
+	    makeThumbnail($item)if$CF{'AttachThumbnail'};
+	}
+	$IN{'attach'} = MirString::urlencode(\@attach);
+	$IN{'_attach'} = \@attach;
+    }
+}
+
+
+#-------------------------------------------------
+
+=head2 添付ファイルを保存
+
+=head3 引数
+
+  $ $item
+
+=cut
+
+sub saveAttachFile{
+    unless(-d$CF{'AttachDir'}){
+	mkdir$CF{'AttachDir'} or"Can't mkdir($CF{'AttachDir'})[$?:$!]";;
+    }
+    my $item = shift;
+    my $filename = sprintf('%s/%s.%s',$CF{'AttachDir'},$item->{'hash'},$item->{'ext'});
+    open(ATTACH, '>'.$filename)||die"Can't read/write attached file($filename)[$?:$!]";
+    binmode(ATTACH);
+    print ATTACH $item->{'body'};
+    close(ATTACH);
+}
+
+
+#-------------------------------------------------
+
+=head2 添付ファイルのサムネイルを作成
+
+=head3 引数
+
+  $ $item
+
+=cut
+
+sub makeThumbnail{
+    $CF{'AttachThumbnail'} or return;
+    unless($CF{'Image::Magick'}){
+	local $SIG{'__DIE__'} = '';
+	eval q{use Image::Magick};
+	if($@){
+	    $CF{'AttachThumbnail'} = 0;
+	    return;
+	}
+    }
+    unless(-d$CF{'AttachThumbnailDir'}){
+	mkdir$CF{'AttachThumbnailDir'} or"Can't mkdir($CF{'AttachThumbnailDir'})[$?:$!]";;
+    }
+    my $item = shift;
+    my $orig = sprintf('%s/%s.%s',$CF{'AttachDir'},$item->{'hash'},$item->{'ext'});
+    my $thumbnail = sprintf('%s/%s.%s',$CF{'AttachThumbnailDir'},$item->{'hash'},$item->{'ext'});
+    
+    my $image = new Image::Magick;
+    $image->Read($orig);
+    my ($width, $height) = $image->Get('width', 'height');
+    my $scale = 1;
+    $scale = $CF{'AttachThumbnailWidth'} / $width if $width > $CF{'AttachThumbnailWidth'};
+    $scale = $CF{'AttachThumbnailHeight'} / $height if $height * $scale > $CF{'AttachThumbnailHeight'};
+    if($scale != 1){
+	$width *= $scale;
+	$height *= $scale;
+    }
+    $image->Resize(width=>$width, height=>$height, blur=>0.7);
+    $image->Write($thumbnail);
+}
+
+
+#-------------------------------------------------
+
+=head2 添付ファイルの削除
+
+=head3 引数
+
+  $ 削除するファイルのitem
+
+=cut
+
+sub removeAttachedFile{
+    my $hash = shift;
+    
+    for(qw/AttachDir AttachThumbnailDir/){
+	my $key = $_;
+	opendir(DIR,$CF{$key})||die"Can't opendir($CF{'$key'})[$?:$!]";
+	for(readdir(DIR)){
+	    -f"$CF{$key}/$_" or next;
+	    /(\w+)/o;
+	    $1 eq $hash or next;
+	    unlink "$CF{$key}/$_" or die"Can't unlink($CF{$key}/$_)";
+	}
+	closedir(DIR);
+    }
+}
+
+
+#-------------------------------------------------
+
+=head2 Image::Magickを読み込む
+
+=cut
+
+sub loadImageMagick{
+    local $SIG{'__DIE__'} = '';
+    eval q{use Image::Magick};
+    $@	? $CF{'AttachThumbnail'} = 0
+    	: $CF{'Image::Magick'} = 1;
+}
+
 
 #-----------------------------------------------------------------
 # String Class
@@ -3364,69 +3468,69 @@ sub rvsij{
 #
 
 {package Airemix::Digest;
-	my@T;
-	sub MD5{
-		@T=map{int}map{4294967296.0*$_}map{abs}map{sin}0..64unless@T;
-		my$data=shift;
-		my@state=(0x67452301,0xefcdab89,0x98badcfe,0x10325476);
-		my$len=length$data;
-		my$index=$len&0x3f;
-		my$padLen=($index<56?55:119)-$index;
-		$data.=($padLen>1?"\x80".("\x00"x$padLen):'').pack('VV',$len*8);
-		while($data=~/(.{64})/gos){
-			my@x=unpack('V16',$1);
-			my@s=@state;
-			#Round 1
-			my@ksi=(0,7,1,1,12,2,2,17,3,3,22,4,4,7,5,5,12,6,6,17,7,7,22,8,8,7,9,9
-			,12,10,10,17,11,11,22,12,12,7,13,13,12,14,14,17,15,15,22,16);
-			while(@ksi){
-				my($k,$s,$i)=splice(@ksi,0,3);
-				my$t=($s[0]+((($s[2]^$s[3])&$s[1])^$s[3])+$x[$k]+$T[$i])%4294967296;
-				$s[0]=((($t<<$s)|($t>>(32-$s)))+$s[1])%4294967296;
-				unshift(@s,pop(@s));
-			}
-			#Round 2
-			@ksi=(1,5,17,6,9,18,11,14,19,0,20,20,5,5,21,10,9,22,15,14,23,4,20,24
-				,9,5,25,14,9,26,3,14,27,8,20,28,13,5,29,2,9,30,7,14,31,12,20,32);
-			while(@ksi){
-				my($k,$s,$i)=splice(@ksi,0,3);
-				my$t=($s[0]+((($s[1]^$s[2])&$s[3])^$s[2])+$x[$k]+$T[$i])%4294967296;
-				$s[0]=((($t<<$s)|($t>>(32-$s)))+$s[1])%4294967296;
-				unshift(@s,pop(@s));
-			}
-			#Round 3
-			@ksi=(5,4,33,8,11,34,11,16,35,14,23,36,1,4,37,4,11,38,7,16,39,10,23,40
-				,13,4,41,0,11,42,3,16,43,6,23,44,9,4,45,12,11,46,15,16,47,2,23,48);
-			while(@ksi){
-				my($k,$s,$i)=splice(@ksi,0,3);
-				my$t=($s[0]+($s[1]^$s[2]^$s[3])+$x[$k]+$T[$i])%4294967296;
-				$s[0]=((($t<<$s)|($t>>(32-$s)))+$s[1])%4294967296;
-				unshift(@s,pop(@s));
-			}
-			#Round 4
-			@ksi=(0,6,49,7,10,50,14,15,51,5,21,52,12,6,53,3,10,54,10,15,55,1,21,56
-				,8,6,57,15,10,58,6,15,59,13,21,60,4,6,61,11,10,62,2,15,63,9,21,64);
-			while(@ksi){
-				my($k,$s,$i)=splice(@ksi,0,3);
-				my$t=($s[0]+(($s[1]|~$s[3])^$s[2])+$x[$k]+$T[$i])%4294967296;
-				$s[0]=((($t<<$s)|($t>>(32-$s)))+$s[1])%4294967296;
-				unshift(@s,pop(@s));
-			}
-			$state[$_]+=$s[$_],$state[$_]%=4294967296for 0..3;
-		}
-		return wantarray?@state:pack('VVVV',@state);
+    my@T;
+    sub MD5{
+	@T=map{int}map{4294967296.0*$_}map{abs}map{sin}0..64unless@T;
+	my$data=shift;
+	my@state=(0x67452301,0xefcdab89,0x98badcfe,0x10325476);
+	my$len=length$data;
+	my$index=$len&0x3f;
+	my$padLen=($index<56?55:119)-$index;
+	$data.=($padLen>1?"\x80".("\x00"x$padLen):'').pack('VV',$len*8);
+	while($data=~/(.{64})/gos){
+	    my@x=unpack('V16',$1);
+	    my@s=@state;
+	    #Round 1
+	    my@ksi=(0,7,1,1,12,2,2,17,3,3,22,4,4,7,5,5,12,6,6,17,7,7,22,8,8,7,9,9
+		    ,12,10,10,17,11,11,22,12,12,7,13,13,12,14,14,17,15,15,22,16);
+	    while(@ksi){
+		my($k,$s,$i)=splice(@ksi,0,3);
+		my$t=($s[0]+((($s[2]^$s[3])&$s[1])^$s[3])+$x[$k]+$T[$i])%4294967296;
+		$s[0]=((($t<<$s)|($t>>(32-$s)))+$s[1])%4294967296;
+		unshift(@s,pop(@s));
+	    }
+	    #Round 2
+	    @ksi=(1,5,17,6,9,18,11,14,19,0,20,20,5,5,21,10,9,22,15,14,23,4,20,24
+		  ,9,5,25,14,9,26,3,14,27,8,20,28,13,5,29,2,9,30,7,14,31,12,20,32);
+	    while(@ksi){
+		my($k,$s,$i)=splice(@ksi,0,3);
+		my$t=($s[0]+((($s[1]^$s[2])&$s[3])^$s[2])+$x[$k]+$T[$i])%4294967296;
+		$s[0]=((($t<<$s)|($t>>(32-$s)))+$s[1])%4294967296;
+		unshift(@s,pop(@s));
+	    }
+	    #Round 3
+	    @ksi=(5,4,33,8,11,34,11,16,35,14,23,36,1,4,37,4,11,38,7,16,39,10,23,40
+		  ,13,4,41,0,11,42,3,16,43,6,23,44,9,4,45,12,11,46,15,16,47,2,23,48);
+	    while(@ksi){
+		my($k,$s,$i)=splice(@ksi,0,3);
+		my$t=($s[0]+($s[1]^$s[2]^$s[3])+$x[$k]+$T[$i])%4294967296;
+		$s[0]=((($t<<$s)|($t>>(32-$s)))+$s[1])%4294967296;
+		unshift(@s,pop(@s));
+	    }
+	    #Round 4
+	    @ksi=(0,6,49,7,10,50,14,15,51,5,21,52,12,6,53,3,10,54,10,15,55,1,21,56
+		  ,8,6,57,15,10,58,6,15,59,13,21,60,4,6,61,11,10,62,2,15,63,9,21,64);
+	    while(@ksi){
+		my($k,$s,$i)=splice(@ksi,0,3);
+		my$t=($s[0]+(($s[1]|~$s[3])^$s[2])+$x[$k]+$T[$i])%4294967296;
+		$s[0]=((($t<<$s)|($t>>(32-$s)))+$s[1])%4294967296;
+		unshift(@s,pop(@s));
+	    }
+	    $state[$_]+=$s[$_],$state[$_]%=4294967296for 0..3;
 	}
+	return wantarray?@state:pack('VVVV',@state);
+    }
 	
-	sub MD5_hex{
-		return unpack('H*',MD5(shift));
-	}
-	sub MD5_uue{
-		return pack('u*',MD5(shift));
-	}
-	sub MD5_0Zencode{
-		my@ar=split(//o,'-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz');
-		return join"",map{my$res='';do{$res.=$ar[($_&63)]}while($_>>=6);$res}unpack('V*',MD5(shift));
-	}
+    sub MD5_hex{
+	return unpack('H*',MD5(shift));
+    }
+    sub MD5_uue{
+	return pack('u*',MD5(shift));
+    }
+    sub MD5_0Zencode{
+	my@ar=split(//o,'-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz');
+	return join"",map{my$res='';do{$res.=$ar[($_&63)]}while($_>>=6);$res}unpack('V*',MD5(shift));
+    }
 }
 
 

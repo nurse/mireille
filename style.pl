@@ -497,27 +497,7 @@ $	この記事の情報
     }
     
     #ファイル添付
-    my $files = '';
-    if($DT{'attach'}){
-	my $attach = MirString::urldecode($DT{'attach'});
-	my @array;
-	if( ref$attach eq 'ARRAY' ){
-	    @array = @{$attach};
-	}elsif( ref$attach eq 'HASH' ){
-	    push @array, $attach;
-	}
-	for(@array){
-	    ref$_ eq 'HASH' or next;
-	    $files .= <<"_HTML_";
-<a href="$CF{'Attach/Dir'}/$_->{'hash'}.$_->{'ext'}">$_->{'hash'}.$_->{'ext'}</a>
-_HTML_
-	}
-    }
-    if($files){
-	$files = <<"_HTML_";
-<TR><TD>Attached Files:</TD><TD class="file" colspan="2">$files</TD></TR>
-_HTML_
-    }
+    my($files,$thumbnails) = getAttachedFiles(\%DT) if $DT{'attach'};
     
     #いよいよ出力だよ
     print<<"_HTML_";
@@ -543,7 +523,7 @@ _HTML_
 </TR>
 <TR><TD class="icon">$DT{'_Signature'} $DT{'_Icon'}</TD>
 	<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD></TR>
-$files</TABLE>
+$thumbnails$files</TABLE>
 
 _HTML_
     return$DT{'-unreads'};
@@ -579,27 +559,7 @@ $	この記事の情報
     }
     
     #ファイル添付
-    my $files = '';
-    if($DT{'attach'}){
-	my $attach = MirString::urldecode($DT{'attach'});
-	my @array;
-	if( ref$attach eq 'ARRAY' ){
-	    @array = @{$attach};
-	}elsif( ref$attach eq 'HASH' ){
-	    push @array, $attach;
-	}
-	for(@array){
-	    ref$_ eq 'HASH' or next;
-	    $files .= <<"_HTML_";
-<a href="$CF{'Attach/Dir'}/$_->{'hash'}.$_->{'ext'}">$_->{'hash'}.$_->{'ext'}</a>
-_HTML_
-	}
-    }
-    if($files){
-	$files = <<"_HTML_";
-<TR><TD>&nbsp;</TD><TD>Attached Files:</TD><TD class="file">$files</TD></TR>
-_HTML_
-    }
+    my($files,$thumbnails) = getAttachedFiles(\%DT) if $DT{'attach'};
     
     #いよいよ出力だよ
     print<<"_HTML_";
@@ -625,7 +585,7 @@ _HTML_
 </TR>
 <TR><TD class="icon">$DT{'_Signature'} $DT{'_Icon'}</TD>
 	<TD colspan="2" class="body" style="color:$DT{'color'}">$DT{'body'}</TD></TR>
-$files</TABLE>
+$thumbnails$files</TABLE>
 
 _HTML_
     return$DT{'-unreads'};
@@ -680,6 +640,53 @@ _HTML_
     }
     #記事ナビ
     ArtNavi->addThreadFoot(\%DT);
+}
+
+
+#-------------------------------------------------
+# 記事ファイル添付欄
+#
+sub getAttachedFiles{
+    my %DT = %{shift()};
+    my $files = '';
+    my $thumbnails = '';
+    if($DT{'attach'}){
+	my $attach = MirString::urldecode($DT{'attach'});
+	my @array;
+	if( ref$attach eq 'ARRAY' ){
+	    @array = @{$attach};
+	}elsif( ref$attach eq 'HASH' ){
+	    push @array, $attach;
+	}
+	my $length = !$DT{'j'} ? $CF{'AttachParentLength'} : $CF{'AttachChildLength'};
+	$#array = $length - 1 if @array > $length;
+	for(@array){
+	    ref$_ eq 'HASH' or next;
+	    my $item = $_;
+	    my $filename = sprintf('%s.%s',$item->{'hash'},$item->{'ext'});
+	    my $attach = sprintf('%s/%s',$CF{'AttachDir'},$filename);
+	    my $thumbnail = sprintf('%s/%s',$CF{'AttachThumbnailDir'},$filename);
+	    $files .= <<"_HTML_";
+<a href="$attach" title="$filename">$_->{'hash'}.$_->{'ext'}</a>
+_HTML_
+	    if(AttachThumbnail&&-s$thumbnail){
+		$thumbnails .= <<"_HTML_";
+<a href="$attach" title="$filename"><img src="$thumbnail" alt=""></a>
+_HTML_
+	    }
+	}
+    }
+    if($files){
+	$files = <<"_HTML_";
+<TR><TD>&nbsp;</TD><TD>Attached Files:</TD><TD class="file">$files</TD></TR>
+_HTML_
+    }
+    if($thumbnails){
+	$thumbnails = <<"_HTML_";
+<TR><TD>&nbsp;</TD><TD>Thumbnails:</TD><TD class="thumbnail">$thumbnails</TD></TR>
+_HTML_
+    }
+    return($files,$thumbnails);
 }
 
 
@@ -772,10 +779,8 @@ sub prtfrm{
 <TD class="input" title="Icon&#10;アイコンを選択します">@{[&iptico($DT{'icon'})]}</TD>
 
 
-<TR title="file&#10;ファイルを添付します">
-<TH class="item"><LABEL>■ファイル添付：</LABEL></TH>
-<TD class="input">$attachForm</TD>
-</TR>
+$attachForm
+
 </TABLE>
 
 
@@ -928,10 +933,8 @@ sub chdfrm{
 <TD class="input" title="Icon&#10;アイコンを選択します">@{[&iptico($DT{'icon'})]}</TD>
 </TR>
 
-<TR title="attach&#10;ファイルを添付します">
-<TH class="item"><LABEL>■ファイル添付：</LABEL></TH>
-<TD class="input" colspan="2">$attachForm</TD>
-</TR>
+$attachForm
+
 </TABLE>
 
 
@@ -962,8 +965,9 @@ _HTML_
 #-------------------------------------------------
 # ファイル添付フォーム
 sub getAttachForm{
+    $CF{'Attach'} > 0 or return '';
     my %DT = %{shift()};
-    my $length = $CF{'Attach/'.$DT{'_type'}.'Length'};
+    my $length = $CF{'Attach'.$DT{'_type'}.'Length'};
     my $html = '';
     my @array;
     if($DT{'attach'}){
@@ -977,7 +981,7 @@ sub getAttachForm{
 	for( grep{ref$_ eq 'HASH'}@array ){
 	    my $hash = $_->{'hash'};
 	    $html .= <<"_HTML_";
-<A href="$CF{'Attach/Dir'}/$hash.$_->{'ext'}">$hash.$_->{'ext'}</A>
+<A href="$CF{'AttachDir'}/$hash.$_->{'ext'}">$hash.$_->{'ext'}</A>
 [<LABEL for="remove_attach__$hash"><INPUT type="checkbox" id="remove_attach__$hash" name="remove_attach__$hash" value="$hash">削除</LABEL>]
 <br>
 _HTML_
@@ -986,7 +990,13 @@ _HTML_
     for( my $i = 0; $i < $length - @array; $i++ ){
 	$html .= qq{<INPUT id="attach__$i" name="attach__$i" type="file"><br>\n};
     }
-    return $html;
+    
+    return <<"_HTML_";
+<TR title="attach&#10;ファイルを添付します">
+<TH class="item"><LABEL>■ファイル添付：</LABEL></TH>
+<TD class="input" colspan="2">$html</TD>
+</TR>
+_HTML_
 }
 
 
