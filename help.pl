@@ -97,11 +97,11 @@ _HTML_
 }
 #アイコン関連
 {
-	&iptico;
-	my$group=@{[$CK{'iconlist'}=~/<OPTGROUP.*/gio]};
-	my$icons=@{[$CK{'iconlist'}=~/<OPTION.*/gio]};
+	my$iconlist=&iptico;
+	my$group=@{[$iconlist=~/<OPTGROUP.*/gio]};
+	my$icons=@{[$iconlist=~/<OPTION.*/gio]};
 	my($name,$link,%icon);
-	for($CK{'iconlist'}=~/(<!-- %(?:[A-Z0-9]+_)?(?:VENDOR|COPY1)(?:_[A-Z0-9]+)?(?: (?:.*?))?\s*-->)/go){
+	for($iconlist=~/(<!-- %(?:[A-Z0-9]+_)?(?:VENDOR|COPY1)(?:_[A-Z0-9]+)?(?: (?:.*?))?\s*-->)/go){
 		$_=~/<!-- %([A-Z0-9]+_)?(VENDOR|COPY1)(_[A-Z0-9]+)?(?: (.*?))?\s*-->/o;
 =item
 $1: 'BEGIN_','END_'
@@ -157,9 +157,9 @@ $4: data
 			</TR>
 			<TR><TD colspan="2">
 				<INPUT type="submit" class="submit" value="OK"
-				 onclick="reviseCookie(window.event)" onkeypress="reviseCookie(window.event)">
+				 onclick="reviseCookie(event);return false" onkeypress="reviseCookie(event);return false">
 				<INPUT type="reset" class="reset" value="Reset"
-				 onclick="resetCookie(window.event)" onkeypress="resetCookie(window.event)">
+				 onclick="resetCookie(event);return false" onkeypress="resetCookie(event);return false">
 			</TD></TR></TABLE>
 			</FORM>
 _HTML_
@@ -168,14 +168,11 @@ _HTML_
 <SCRIPT type="text/JavaScript">
 <!--
 function reviseCookie(e){
-	if(e.preventDefault){
-		e.preventDefault();
-		e.stopPropagation();
-	}else if(document.all){
-		e.cancelBubble=true;
-		e.returnValue=false; 
-	}
-	var cookie=document.all('cookiedata').value;
+	var cookie;
+	if(document.all)cookiedata=document.all('cookiedata').value;
+	else if(document.getElementById)cookie=document.getElementById('cookiedata').value;
+	else return false;
+	
 	if(cookie){
 		if(confirm('以下のようにMireilleのクッキーを書き換えますがよろしいですか？'
 		 +"（仕様上日本語が化けていますが、実際に書き込まれる内容は正常に書き込まれます）\n"+unescape(cookie))){
@@ -188,19 +185,15 @@ function reviseCookie(e){
 			alert("クッキーを削除しました");
 		}
 	}
-	return false;
 }
 function resetCookie(e){
-	if(e.preventDefault){
-		e.preventDefault();
-		e.stopPropagation();
-	}else if(document.all){
-		e.cancelBubble=true;
-		e.returnValue=false; 
-	}
+	var cookiedata;
+	if(document.all)cookiedata=document.all('cookiedata');
+	else if(document.getElementById)cookiedata=document.getElementById('cookiedata');
+	else return false;
+	
 	var date=new Date();
-	document.all('cookiedata').value="expire%09"+parseInt(date.getTime()/1000);
-	return false;
+	cookiedata.value="expire%09"+parseInt(date.getTime()/1000);
 }
 //-->
 </SCRIPT>
