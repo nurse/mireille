@@ -2,12 +2,12 @@
 # 'Mireille' Bulletin Board System
 # - Mireille Style Module -
 #
-$CF{'Style'} =qq$Revision$;
+# $Revision$
 # "This file is written in euc-jp, CRLF." 空
 # Scripted by NARUSE,Yui.
 #------------------------------------------------------------------------------#
 # $cvsid = q$Id$;
-require 5.004;
+require 5.005;
 use strict;
 use vars qw(%CF %IC %IN %CK);
 
@@ -59,12 +59,111 @@ _CONFIG_
 
 #-----------------------------
 # Page Footer
-$CF{'pgfoot'}=<<"_CONFIG_";
+sub getPageFooter{
+	return<<"_HTML_";
 <DIV class="center"><TABLE align="center" border="0" cellspacing="0" class="head" summary="PageFooter" width="90%"><TR>
 <TD nowrap>■■■■■■■</TD>
-<TH width="100%"><H1 class="head" align="right"><A href="$CF{'home'}">BACK to HOME</A></H1></TH>
+<TH width="100%"><H1 class="head" align="right"><A href="@{[
+	$_[0]?qq($CF{'home'}">BACK to HOME):qq(index.cgi">BACK to INDEX)
+]}</A></H1></TH>
 </TR></TABLE></DIV>
+_HTML_
+}
+$CF{'pgfoot'}=&getPageFooter;
+
+#-----------------------------
+# フォーム用JavaScript
+$CF{'form_jscript'}=<<'_CONFIG_';
+<SCRIPT type="text/javascript" defer>
+<!--
+// Save/Load BodyData from Cookie
+function saveBodyCk(){
+	var bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
+	if(!bodyObj)return false;
+	if(confirm("新しい本文を保存すると、古い本文データは消えてしまいます\nそれでも保存しちゃってよいですか？")){
+		var backup='';
+		if(document.cookie.match(/(^|; )MirBody=([^;]+)/))backup=unescape(RegExp.$2);
+		if(bodyObj.value.length){
+			document.cookie='MirBody='+escape(bodyObj.value)+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';
+		}else{
+			document.cookie='MirBody=; expires=Thu, 01-Jan-1970 00:00:00; ';
+			alert('一時保存されていた本文データを削除しましたょ');
+			return;
+		}
+		if(!document.cookie.match(/(^|; )MirBody=([^;]+)/)){
+			//3850byte程度でサイズ制限がかかる。
+			document.cookie='MirBody='+backup+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';//終わりの日
+			alert("save失敗\nサイズオーバーかも。");
+			return false;
+		}
+		alert("今の本文データを一時保存しましたょ\nあくまで“一時保存”だから過信しないでねっ");
+	}
+}
+function loadBodyCk(){
+	var bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
+	if(!bodyObj)return false;
+	if(!confirm('Cookieから本文データをロードしますよ？？'))return;
+	if(!document.cookie.match(/(^|; )MirBody=([^;]+)/)){
+		alert('load失敗');
+		return false;
+	}
+	bodyObj.value=unescape(RegExp.$2);
+}
+
+
+// InternetExplorer with ConditionalCompilation
+/*@cc_on
+if(document.getElementsByTagName){
+	var tags=document.getElementsByTagName('INPUT');
+	for(var i in tags){
+		if('button'==tags[i].type||'button'==tags[i].className){
+			tags[i].className='button';
+			tags[i].onfocus=function()		{this.className='buttonover'};
+			tags[i].onmouseover=function()	{this.className='buttonover'};
+			tags[i].onblur=function()		{this.className='button'};
+			tags[i].onmouseout=function()	{this.className='button'};
+		}else if('submit'==tags[i].type){
+			tags[i].className='submit';
+			tags[i].onfocus=function()		{this.className='submitover'};
+			tags[i].onmouseover=function()	{this.className='submitover'};
+			tags[i].onblur=function()		{this.className='submit'};
+			tags[i].onmouseout=function()	{this.className='submit'};
+		}else if('reset'==tags[i].type){
+			tags[i].className='reset';
+			tags[i].onfocus=function()		{this.className='resetover'};
+			tags[i].onmouseover=function()	{this.className='resetover'};
+			tags[i].onblur=function()		{this.className='reset'};
+			tags[i].onmouseout=function()	{this.className='reset'};
+		}else if('text'==tags[i].type||'password'==tags[i].type){
+			tags[i].className='blur';
+			tags[i].onfocus=function()	{this.className='focus';};
+			tags[i].onblur=function()	{this.className='blur';};
+		}
+	}
+	tags=document.getElementsByTagName('TEXTAREA');
+	for(var i in tags){
+		tags[i].className='blur';
+		tags[i].onfocus=function(){this.className='focus';};
+		tags[i].onblur=function(){this.className='blur';};
+	}
+}
+// @*/
+-->
+</SCRIPT>
 _CONFIG_
+
+
+#-----------------------------
+# フッターの生成
+sub getFooter{
+	my$AiremixCopy=<<"_HTML_";
+<DIV class="AiremixCopy"><SMALL>- $CF{'Design'} -</SMALL><BR>
+- <A href="http://www.airemix.com/" target="_top" title="Airemix - Mireille -">Airemix Mireille</A>
+<VAR title="times:@{[times]}">$CF{'Version'}</VAR> -</DIV>
+_HTML_
+	return$CF{'menu'}.&getPageFooter(defined$IN{'read'}).$AiremixCopy
+	.$CF{'bodyFoot'}.$CF{'form_jscript'}."</BODY>\n</HTML>\n";
+}
 
 #-----------------------------
 # 注意書き（TOPページのメニューの下に表示されます）
@@ -179,87 +278,6 @@ $CF{'artfotr'}=<<'_CONFIG_';
 </DIV>
 
 
-_CONFIG_
-
-#-----------------------------
-# フォーム用JavaScript
-$CF{'form_jscript'}=<<'_CONFIG_';
-<SCRIPT type="text/javascript" defer>
-<!--
-// Save/Load BodyData from Cookie
-function saveBodyCk(){
-	var bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
-	if(!bodyObj)return false;
-	if(confirm("新しい本文を保存すると、古い本文データは消えてしまいます\nそれでも保存しちゃってよいですか？")){
-		var backup='';
-		if(document.cookie.match(/(^|; )MirBody=([^;]+)/))backup=unescape(RegExp.$2);
-		if(bodyObj.value.length){
-			document.cookie='MirBody='+escape(bodyObj.value)+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';
-		}else{
-			document.cookie='MirBody=; expires=Thu, 01-Jan-1970 00:00:00; ';
-			alert('一時保存されていた本文データを削除しましたょ');
-			return;
-		}
-		if(!document.cookie.match(/(^|; )MirBody=([^;]+)/)){
-			//3850byte程度でサイズ制限がかかる。
-			document.cookie='MirBody='+backup+'; expires=Tue, 19-Jan-2038 03:14:07 GMT; ';//終わりの日
-			alert("save失敗\nサイズオーバーかも。");
-			return false;
-		}
-		alert("今の本文データを一時保存しましたょ\nあくまで“一時保存”だから過信しないでねっ");
-	}
-}
-function loadBodyCk(){
-	var bodyObj=document.all?document.all('body'):document.getElementById?document.getElementById('body'):null;
-	if(!bodyObj)return false;
-	if(!confirm('Cookieから本文データをロードしますよ？？'))return;
-	if(!document.cookie.match(/(^|; )MirBody=([^;]+)/)){
-		alert('load失敗');
-		return false;
-	}
-	bodyObj.value=unescape(RegExp.$2);
-}
-
-
-// InternetExplorer with ConditionalCompilation
-/*@cc_on
-if(document.getElementsByTagName){
-	var tags=document.getElementsByTagName('INPUT');
-	for(var i in tags){
-		if('button'==tags[i].type||'button'==tags[i].className){
-			tags[i].className='button';
-			tags[i].onfocus=function()		{this.className='buttonover'};
-			tags[i].onmouseover=function()	{this.className='buttonover'};
-			tags[i].onblur=function()		{this.className='button'};
-			tags[i].onmouseout=function()	{this.className='button'};
-		}else if('submit'==tags[i].type){
-			tags[i].className='submit';
-			tags[i].onfocus=function()		{this.className='submitover'};
-			tags[i].onmouseover=function()	{this.className='submitover'};
-			tags[i].onblur=function()		{this.className='submit'};
-			tags[i].onmouseout=function()	{this.className='submit'};
-		}else if('reset'==tags[i].type){
-			tags[i].className='reset';
-			tags[i].onfocus=function()		{this.className='resetover'};
-			tags[i].onmouseover=function()	{this.className='resetover'};
-			tags[i].onblur=function()		{this.className='reset'};
-			tags[i].onmouseout=function()	{this.className='reset'};
-		}else if('text'==tags[i].type||'password'==tags[i].type){
-			tags[i].className='blur';
-			tags[i].onfocus=function()	{this.className='focus';};
-			tags[i].onblur=function()	{this.className='blur';};
-		}
-	}
-	tags=document.getElementsByTagName('TEXTAREA');
-	for(var i in tags){
-		tags[i].className='blur';
-		tags[i].onfocus=function(){this.className='focus';};
-		tags[i].onblur=function(){this.className='blur';};
-	}
-}
-// @*/
--->
-</SCRIPT>
 _CONFIG_
 
 #-----------------------------
@@ -703,7 +721,7 @@ $CF{'icls'}の最初の一文字が' '（半角空白）だった場合複数リストモードになります
 			$_||next;
 			my$tmp;
 			open(RD,"<$_")||die"Can't open multi-iconlist($_).";
-			eval"flock(RD,1);";
+			eval{flock(RD,1)};
 			read(RD,$tmp,-s$_);
 			close(RD);
 			$iconlist.=$tmp;
@@ -711,7 +729,7 @@ $CF{'icls'}の最初の一文字が' '（半角空白）だった場合複数リストモードになります
 	}else{
 		#単一アイコンリスト読み込み
 		open(RD,"<$CF{'icls'}")||die"Can't open single-iconlist.";
-		eval"flock(RD,1);";
+		eval{flock(RD,1)};
 		read(RD,$iconlist,-s$CF{'icls'});
 		close(RD);
 	}
@@ -749,7 +767,7 @@ $ デフォルト指定にしたい色名
  value="$_[0]">
 _HTML_
 	}else{
-		my$list=$CF{'colorList'}=~/\S/o?$CF{'colorList'}:<<"_HTML_";
+		my$list=$CF{'colorList'}=~/\S/o?$CF{'colorList'}:<<"_HTML_";#1.2.5以下のindex.cgiとの互換性のため
 <OPTION value="#000000" style="color:#000000">■Black</OPTION>
 <OPTION value="#696969" style="color:#696969">■DimGray</OPTION>
 <OPTION value="#808080" style="color:#808080">■Gray</OPTION>
@@ -906,24 +924,6 @@ _HTML_
 
 
 #-------------------------------------------------
-# フッター出力
-#
-sub footer{
-	print<<"_HTML_";
-$CF{'menu'}
-$CF{'form_jscript'}
-$CF{'pgfoot'}
-<DIV class="AiremixCopy"><SMALL>- $CF{'Design'} -</SMALL><BR>
-- <A href="http://www.airemix.com/" target="_top" title="Airemix - Mireille -">Airemix Mireille</A>
-<VAR title="times:@{[times]}">$CF{'Version'}</VAR> -</DIV>
-</BODY>
-</HTML>
-_HTML_
-	exit;
-}
-
-
-#-------------------------------------------------
 #記事ナビHTML
 sub artnavi{
 =item 引数
@@ -1026,6 +1026,8 @@ _HTML_
 	}
 }
 
-
-1;
+#requireにstyle.cgiのRevisionを返す
+$CF{'Style'}=qq$Revision$;
+$CF{'Style'}=~/(\d+(?:\.\d+)*)/o;
+$CF{'StyleRevision'}=$1;
 __END__
