@@ -48,7 +48,7 @@ BODY{
 	border-style: none;
 	border-width: 0;
 	color: #355;
-	font-family: 'MS UI Gothic',sans-serif;
+	font-family: 'MS UI Gothic', '¥Ò¥é¥®¥ÎÌÀÄ« Pro W6', 'Osaka', sans-serif;
 	font-size: 13px;
 	margin: 0.2em 0;
 	padding: 0;
@@ -65,7 +65,7 @@ BUTTON:hover{
 	color: #355;
 }
 BUTTON,INPUT,SELECT,TEXTAREA{
-	font-family: 'MS UI Gothic',sans-serif;
+	font-family: 'MS UI Gothic', '¥Ò¥é¥®¥ÎÌÀÄ« Pro W6', 'Osaka', sans-serif;
 	font-size: 13px;
 }
 DFN{
@@ -121,7 +121,7 @@ SMALL{
 TABLE{
 /*	background-color: transparent;*/
 	color: #355;
-	font-family: 'MS UI Gothic',sans-serif;
+	font-family: 'MS UI Gothic', '¥Ò¥é¥®¥ÎÌÀÄ« Pro W6', 'Osaka', sans-serif;
 	font-size: 100%;
 	margin: 1em auto;
 	text-align: center;
@@ -243,7 +243,7 @@ DIV.right{
 .heading2{
 	background-color: #ace;
 	color: #fff;
-	font-family: 'Comic Sans MS','MS UI Gothic',sans-serif;
+	font-family: 'Comic Sans MS','MS UI Gothic', '¥Ò¥é¥®¥ÎÌÀÄ« Pro W6', 'Osaka', sans-serif;
 	font-size: 130%;
 	font-weight: bold;
 	margin: 1em auto;
@@ -369,7 +369,7 @@ DIV.right{
 	border-spacing: 0; 
 	border-style: solid;
 	border-width: 1px;
-	font-family: 'MS UI Gothic',sans-serif;
+	font-family: 'MS UI Gothic', '¥Ò¥é¥®¥ÎÌÀÄ« Pro W6', 'Osaka', sans-serif;
 	font-size: 100%;
 	margin-left: 4em;
 	text-align: left;
@@ -534,7 +534,7 @@ TABLE.head TH{
 }
 H1.head,DIV.head A{
 	color: #fff;
-	font-family: 'Comic Sans MS','MS UI Gothic',sans-serif;
+	font-family: 'Comic Sans MS','MS UI Gothic', '¥Ò¥é¥®¥ÎÌÀÄ« Pro W6', 'Osaka', sans-serif;
 	font-size: 145%;
 	font-weight: normal;
 }
