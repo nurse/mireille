@@ -610,8 +610,8 @@ TABLE.write{
 #email	{width:300px;ime-mode:inactive;}
 #home	{width:300px;ime-mode:inactive;}
 #subject{width:300px;ime-mode:active;}
-#color	{width:100px;}
-#pass	{width:90px;ime-mode:disabled;}
+#color	{width:100px;ime-mode:inactive;}
+#pass	{width: 90px;ime-mode:active;}
 #cmd	{width:300px;ime-mode:inactive;}
 #body	{width:500px;ime-mode:active;}
 
