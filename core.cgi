@@ -155,8 +155,10 @@ _HTML_
 	if(0 ne$view[0]){
 		#´û¤Ë²ÔÆ°Ãæ¤Î¤È¤­
 		#Threads Body
+		my$unreads=1;
 		for(0..$#view){
-			&showArticle(i=>$view[$_],ak=>($_+1),maxChildsShown=>$CF{'maxChildsShown'});
+			$unreads+=&showArticle(i=>$view[$_],ak=>($_+1)
+			,-maxChildsShown=>$CF{'maxChildsShown'},-unreads=>$unreads);
 		}
 	}else{
 		#log0¤Î¤ß ¤Ä¤Þ¤êÀßÃÖÄ¾¸å¤Î¤È¤­
@@ -239,11 +241,11 @@ sub writeArticle{
   ¡Ö½ðÌ¾¤Î¤â¤È¡×¤ò»ØÄê
 
 :dnew
-  µ­»öÆü»þ¹¹¿·
+  µ­»ö¤ÎÅê¹ÆÆü»þ¤ò¹¹¿·¤·¤Þ¤¹
 :znew
-  ¥¹¥ì¥Ã¥ÉÆü»þ¹¹¿·
+  ¥¹¥ì¥Ã¥É¤ÎºÇ½ªÊÑ¹¹Æü»þ¤ò¹¹¿·¤·¤Þ¤¹
 :renew
-  dnew¤Èznew¤òÆ±»þ¤Ë¹Ô¤¦
+  dnew¤Èznew¤òÆ±»þ¤Ë¹Ô¤¤¤Þ¤¹
 
 :usetag
   !SELECTABLE()¤Çµö²Ä¤·¤Æ¤¢¤ëÈÏ°ÏÆâ¤Ç»È¤¦¥¿¥°¤òÁª¤Ù¤ë
@@ -336,6 +338,8 @@ Marldia¤Ï¥Ç¡¼¥¿¤ÎÊÝ»ý¤Ê¤É¤ÏÅ¬Åö¤Ç¤â¤¤¤¤¤³¤È¤â¤¢¤Ã¤Æ¡¢·ë¹½´ÉÍý¥³¥Þ¥ó¥É¤ò¤Ä¤±¤Æ¤¤¤
 			$option=join" ",grep{index($EX{'lockThread'}," $_ ")+1}@options;
 		}
 		$option.=" lockedBy=$lockedBy";
+		
+		#¥í¥Ã¥¯
 		if($isLocked){
 			#¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤ë»þ¤Ï²ò½ü¢ªpop
 			index(pop@log,"Mir12=\tLocked")+1||die 'Mireille¤Î¥¹¥ì¥Ã¥É¥í¥Ã¥¯µ¡Ç½¤Ë¥Ð¥°¤¬¤¢¤ê¤Þ¤¹¡£';
@@ -730,7 +734,7 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 		my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
 		$#log<$IN{'j'}&&die 'Something Wicked happend!(j¤¬Âç¤­¤¹¤®)';
 		$log[$IN{'j'}]||die 'Something Wicked happend!(½¤Àµ¤Ç¤Ê¤¤j)';
-		my%DT=($log[$IN{'j'}]=~/([^\t]*)=\t([^\t]*);\t/go);
+		my%DT=$log[$IN{'j'}]=~/([^\t]*)=\t([^\t]*);\t/go;
 		
 		#PasswordCheck
 		if($CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'}){
@@ -754,7 +758,7 @@ $file[$CF{'logmax'}-2] ¤Ïºï½ü¤µ¤ì¤¿¸å¤Ë»Ä¤Ã¤¿µ­»ö¥¹¥ì¥Ã¥É¤Î¤¦¤Á¡¢
 			}
 			index($log[$IN{'j'}],"Mir12=\tdel")+1&&&showUserError("Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Ï´û¤Ëºï½ü¤µ¤ì¤Æ¤¤¤ë");
 			index($log[$IN{'j'}],"Mir12=\tlock")+1&&&showUserError("Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Ï¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤ë");
-			$log[$#log]=~/Mir12=\tLocked(?:\S+ )*revise;?[ \t]/o&&&showUserError('¤³¤Î¥¹¥ì¥Ã¥É¤Ï¸Ç¤¯¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤ë');
+			$log[$#log]=~/Mir12=\tLocked(?:\S+ )*revise[ ;]/o&&&showUserError('¤³¤Î¥¹¥ì¥Ã¥É¤Ï¸Ç¤¯¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤ë');
 			#PassÊÑ¹¹
 			$IN{'oldps'}=$IN{'pass'};
 		}
@@ -962,7 +966,7 @@ _HTML_
 <TR>
 <TD style="text-align:center">[$thisPage[0]-$thisPage[$#thisPage]]</TD>
 <TD><SPAN class="ak">P</SPAN>assword: <INPUT name="pass" type="text"
- accesskey="p" size="12" style="ime-mode:disabled" value="$CK{'pass'}"></TD>
+ accesskey="p" size="12" style="ime-mode:inactive" value="$CK{'pass'}"></TD>
 <TD>
 <INPUT name="$mode" type="hidden" value="">
 <INPUT type="submit" class="submit" accesskey="s" value="OK">¡¡
@@ -1027,15 +1031,9 @@ sub rvsArticle{
 	($IN{'i'},$IN{'j'})=split('-',$IN{'rvs'});
 	open(RD,'<'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read log($IN{'i'}.cgi)[$?:$!]";
 	eval{flock(RD,1)};
-	my$i=0;
-	my%DT;
-	my$lastLine='';
-	while(<RD>){
-		$lastLine=$_;
-		$i++==$IN{'j'}||next;
-		%DT=/([^\t]*)=\t([^\t]*);\t/go;
-	}
+	my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
 	close(RD);
+	my%DT=$log[$IN{'j'}]=~/([^\t]*)=\t([^\t]*);\t/go;
 	%DT||die"Âè$IN{'i'}ÈÖ¥¹¥ì¥Ã¥É¤Ë¤Ï$IN{'j'}¤Ê¤ó¤Æ¤¢¤ê¤Þ¤»¤ó";
 =pod
 ¤¿¤È¤¨$IN{'pass'}¤¬ÅÏ¤µ¤ì¤Ê¤¯¤Æ¤â¡¢GetCookie¤ÇCookie¤ò»²¾È¤·¡¢
@@ -1050,26 +1048,25 @@ sub rvsArticle{
 			#ADMINpassOK
 			$IN{'pass'}='';
 			#½èÍý¤Ø
-		}elsif(&mircrypt($DT{'time'},$IN{'pass'},$DT{'pass'})){
+		}else{
 			index($DT{'Mir12'},'lock')+1&&&showRvsMenu("Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Ï¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤Þ¤¹¡£");
 			#¸¢¸Â¤ò¥Á¥§¥Ã¥¯
-			if($lastLine=~/Mir12=\tLocked:(?:\S+ )*revise;?[ \t]/o){
-				$lastLine=~/Mir12=\tLocked:(?:\S+ )*lockedBy=(\S+)[ ;]/o;
+			if($log[$#log]=~/Mir12=\tLocked:(?:\S+ )*revise[ ;]/o){
+				$log[$#log]=~/Mir12=\tLocked:(?:\S+ )*lockedBy=(\S+)[ ;]/o;
 				'ThreadBuilder'eq$1||&showRvsMenu('¤³¤Î¥¹¥ì¥Ã¥É¤Ï¸Ç¤¯¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤Þ¤¹¡£');
-				my%DT=$lastLine=~/([^\t]*)=\t([^\t]*);\t/o;
-				&mircrypt($DT{'time'},$IN{'pass'},$DT{'pass'})||&showRvsMenu('¤³¤Î¥¹¥ì¥Ã¥É¤Ï¸Ç¤¯¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤Þ¤¹¡£');
+				my%parent=$log[0]=~/([^\t]*)=\t([^\t]*);\t/go;
+				&mircrypt($parent{'time'},$IN{'pass'},$parent{'pass'})
+					or&showRvsMenu('¤³¤Î¥¹¥ì¥Ã¥É¤Ï¸Ç¤¯¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤Þ¤¹¡£');
 			}
 			&mircrypt($DT{'time'},$IN{'pass'},$DT{'pass'})
 				or&showRvsMenu("ÆþÎÏ¤µ¤ì¤¿¥Ñ¥¹¥ï¡¼¥É¤¬Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Î¤â¤Î¤È¹çÃ×¤·¤Þ¤»¤ó¡£");
 			#INpassOK
 			#½èÍý¤Ø
-		}else{
-			&showRvsMenu("ÆþÎÏ¤µ¤ì¤¿¥Ñ¥¹¥ï¡¼¥É¤¬Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Î¤â¤Î¤È¹çÃ×¤·¤Þ¤»¤ó¡£");
 		}
 	}else{
 		#Cookie¤òÄ´¤Ù¤ëÁ°¤Ë¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤ë¤«¤É¤¦¤«¥Á¥§¥Ã¥¯
 		index($DT{'Mir12'},'lock')+1&&&showRvsMenu("Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Ï¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤Þ¤¹¡£");
-		$lastLine=~/Mir12=\tLocked:(?:\S+ )*revise;?[ \t]/o
+		$log[$#log]=~/Mir12=\tLocked:(?:\S+ )*revise[ ;]/o
 			and&showRvsMenu('¤³¤Î¥¹¥ì¥Ã¥É¤Ï¸Ç¤¯¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤Þ¤¹¡£');
 		
 		#Cookie¤Ë¤¢¤ë¡©
@@ -1120,7 +1117,7 @@ sub delArticle{
 	open(RW,'+>>'."$CF{'log'}$IN{'i'}.cgi")||die"Can't read/write log($IN{'i'}.cgi)[$?:$!]";
 	eval{flock(RD,2)};
 	seek(RW,0,0);
-	my@log=<RW>;
+	my@log=map{m/^([^\x0D\x0A]*)/o}<RW>;
 	my%DT=$log[$IN{'j'}]=~/([^\t]*)=\t([^\t]*);\t/go;
 	#ºï½üÊ¬´ô
 	SWITCH:{
@@ -1153,7 +1150,7 @@ _HTML_
 			#°ìÈÌPass
 			index($log[$IN{'j'}],"Mir12=\tdel")+1&&&showRvsMenu("Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Ï´û¤Ëºï½ü¤µ¤ì¤Æ¤¤¤Þ¤¹¡£");
 			index($log[$IN{'j'}],"Mir12=\tlock")+1&&&showRvsMenu("Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Ï¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤Þ¤¹¡£");
-			$log[$#log]=~/Mir12=\tLocked:(?:\S+ )*delete;?[ \t]/o
+			$log[$#log]=~/Mir12=\tLocked:(?:\S+ )*delete[ ;]/o
 				and&showRvsMenu('¤³¤Î¥¹¥ì¥Ã¥É¤Ï¸Ç¤¯¥í¥Ã¥¯¤µ¤ì¤Æ¤¤¤Þ¤¹¡£');
 			&mircrypt($DT{'time'},$IN{'pass'},$DT{'pass'})
 				or&showRvsMenu("ÆþÎÏ¤µ¤ì¤¿¥Ñ¥¹¥ï¡¼¥É¤¬Âè$IN{'i'}ÈÖ¤Î$IN{'j'}¤Î¤â¤Î¤È¹çÃ×¤·¤Þ¤»¤ó¡£");
@@ -1886,14 +1883,15 @@ sub showArticle{
 	#¤³¤Î¥¹¥ì¥Ã¥É¶¦ÄÌ¤Î¾ðÊó
 	my%DT=@_;
 	$DT{'j'}=-1;
-	$DT{'maxChildsShown'}=-1if!defined$DT{'maxChildsShown'};
+	$DT{'-maxChildsShown'}=-1if!defined$DT{'-maxChildsShown'};
+	$DT{'-unreads'}||=1;
 	
 	open(RD,'<'."$CF{'log'}$DT{'i'}.cgi")||die"Can't read log($DT{'i'}.cgi)[$?:$!]";
 	eval{flock(RD,1)};
 	my@articles=<RD>;
 	close(RD);
 	
-	my$maxChildsShown=$DT{'maxChildsShown'}>-1?int(abs($DT{'maxChildsShown'})):$#articles;
+	my$maxChildsShown=$DT{'-maxChildsShown'}>-1?int(abs($DT{'-maxChildsShown'})):$#articles;
 	my$horizon=$#articles-$maxChildsShown;
 	
 	#read¥â¡¼¥É¤Î»þ¤ÎÊäÀµ
@@ -1903,7 +1901,7 @@ sub showArticle{
 	for(@articles){
 		unless(++$DT{'j'}){
 			#¿Æµ­»ö
-			&artprt(\%DT,$_);
+			$DT{'-unreads'}=&artprt(\%DT,$_);
 			print<<"_HTML_"if$horizon>0;
 <P class="note" style="text-align:center;width:80%">»Òµ­»ö¿ô¤¬Â¿¤¤¤¿¤á¡¢ºÇ¿·¤Î$maxChildsShown·ï¤Î¤ßÉ½¼¨¤·¤Þ¤¹¡£
 ¤½¤ì°ÊÁ°¤Îµ­»ö¤Ï<A href="index.cgi?res=$DT{'i'}">ÊÖ¿®¥â¡¼¥É</A>¤Ç¸«¤ë¤³¤È¤¬¤Ç¤­¤Þ¤¹¡£</P>
@@ -1913,13 +1911,14 @@ _HTML_
 			$DT{'j'}>$horizon||next;
 			index($_,"Mir12=\tdel")+1&&next;
 			index($_,"Mir12=\tLocked")+1&&++$isLocked&&last;
-			&artchd(\%DT,$_);
+			$DT{'-unreads'}=&artchd(\%DT,$_);
 		}
 	}
 	$DT{'j'}<0&&return;#µ­»ö¤¬¤Ê¤¤¤Ê¤é¥Õ¥Ã¥¿¤òÉ½¼¨¤»¤ºÊÖ¤¹
 	#µ­»ö¥Õ¥Ã¥¿
 	$DT{'-isLocked'}=$isLocked;
 	&artfot(\%DT);
+	return$DT{'-unreads'};
 }
 
 
@@ -2073,7 +2072,7 @@ $ Èæ¤Ù¤ë¥Ñ¥¹¥ï¡¼¥É
 		length$_||next;
 		$pass.=substr(crypt($_,$salt),2);
 	}
-	return$_[2]?($_[2]eq$pass?1:undef):$pass;
+	return defined$_[2]?($_[2]&&$_[2]eq$pass?1:undef):$pass;
 }
 
 
