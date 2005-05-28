@@ -61,7 +61,8 @@ sub main{
 	    #未知のエンコーディングはもっとわからないので無視する
 	}
     }
-	
+    $CF{'AttachDB'} = sprintf('%s/attach_db.cgi',$CF{'AttachDir'}) unless $CF{'AttachDB'};
+    
     #-----------------------------
     #ログファイルちゃんとある？
     defined$CF{'log'}||die q($CF{'log'} is Undefined);
@@ -82,7 +83,10 @@ sub main{
     #-----------------------------
     #モードごとの振り分け
     &getParam;
-	
+    
+    #検索
+    defined$IN{'mode'}&&$IN{'mode'}eq'download'&&&downloadAttachment;
+    
     if($CF{'readOnly'}&&$IN{'_isEditing'}){
 	#閲覧専用モード
 	&showUserError('現在この掲示板は閲覧専用モードに設定されています');
@@ -1693,12 +1697,132 @@ Content-type: text/html; charset=$CF{'encoding'}
 <P>And, please go <A href="$i">here</A>.</P>
 <P>Location: $i</P>
 <P>Mireille <VAR>$CF{'Version'}</VAR>.<BR>
-Copyright &#169;2001,2002 <A href="http://www.airemix.com/" target="_blank" title="Airemix">Airemix</A>. All rights reserved.</P>
+Copyright &#169;2001,2002 <A href="http://airemix.com/" target="_blank" title="Airemix">Airemix</A>. All rights reserved.</P>
 </BODY>
 </HTML>
 _HTML_
     exit;
 }
+
+
+#-------------------------------------------------
+
+=head2 ファイルダウンロード
+
+=cut
+
+sub downloadAttachment{
+    $IN{'hash'} or die "invalid argument(hash:$IN{'hash'})";
+    
+    my %item;
+    if(open(ATTACHDB,'<'.$CF{'AttachDB'})){
+	eval{flock(ATTACHDB,1)};
+	while(<ATTACHDB>){
+	    if(/(?:^|\t)hash=\t$IN{'hash'};\t/){
+		%item = /([^\t]*)=\t([^\t]*);\t/go;
+		last;
+	    }
+	}
+	close(ATTACHDB);
+    }
+    
+    my $datafilename;
+    if(%item){
+	$datafilename = sprintf('%s/%s.dat',$CF{'AttachDir'},$item{'hash'});
+	unless(-e$datafilename){
+	    $datafilename = sprintf('%s/%s.%s',$CF{'AttachDir'},$item{'hash'},$item{'ext'});
+	}
+    }else{
+	$item{'hash'} = $IN{'hash'};
+    }
+    unless(-e$datafilename){
+	opendir(DIR,$CF{'AttachDir'})||die"Can't open attach dir($CF{'AttachDir'})[$?:$!]";
+	for(readdir(DIR)){
+	    substr($_,0,32) eq $item{'hash'}or next;
+	    $datafilename = sprintf('%s/%s',$CF{'AttachDir'},$_);
+	    $item{'filename'} = $_;
+	    last;
+	}
+	closedir(DIR);
+    }
+    -e$datafilename or return;
+    
+    my $body = '';
+    open(ATTACH, '<'.$datafilename)||die"Can't read attached file($filename)[$?:$!]";
+    binmode(ATTACH);
+    read(ATTACH, $body, -s$datafilename);
+    close(ATTACH);
+    
+    my $filename = $item{'filename'};
+    if($filename =~ /[^\x20\x21\x23-\x7e]/){
+	my $browser = '';
+	if($ENV{'HTTP_ACCEPT'}&&index($ENV{'HTTP_ACCEPT'},'msword') > -1){
+	    $browser = 'MSIE';
+	}elsif(!$ENV{'HTTP_USER_AGENT'}){
+	}elsif(index($ENV{'HTTP_USER_AGENT'},'Opera') > -1){
+	    # utf-8 に対応
+	    $browser = 'Opera';
+	}elsif(index($ENV{'HTTP_USER_AGENT'},'MSIE' ) > -1){
+	    # urlescaped utf-8 に対応
+	    $browser = 'MSIE';
+	}elsif(index($ENV{'HTTP_USER_AGENT'},'Gecko') > -1){
+	    # utf-8 と RFC 2231 に対応
+	    $browser = 'Gecko';
+	}elsif(index($ENV{'HTTP_USER_AGENT'},'w3m') > -1){
+	    # utf-8 に対応
+	    $browser = 'Opera';
+	}elsif(guessIE()){
+	    #たぶんIE
+	    $browser = 'MSIE';
+	}
+	#未知はとりあえずOperaと同様に扱う。
+	$browser = 'Opera' unless $browser;
+	    
+	if($browser eq 'MSIE' || $browser eq 'Opera'){
+	    #WinIE or Opera
+	    {
+		local $SIG{'__DIE__'} = sub{};
+		# Encode
+		eval q{use Encode;Encode::from_to( $filename, $CF{'encoding'}, 'utf-8' )};
+		# Jcode
+		eval q{use Jcode;$output = Jcode->new( $filename, $CF{'encoding'} )->utf8} if $@;
+	    }
+	    if($browser eq 'MSIE'){
+		$filename =~ s/([^\w\.])/'%'.unpack('H2',$1)/ego;
+	    }
+	    $filename = 'filename=' . $filename;
+	}else{
+	    $filename =~ s/([^\w\.])/'%'.unpack('H2',$1)/ego;
+	    $filename = "filename*=euc-jp'ja'" . $filename;
+	}
+    }else{
+	$filename = 'filename=' . $filename;
+    }
+    
+    print<<"_HTML_";
+Content-Disposition: attachment; $filename
+Content-type: application/octet-stream
+
+_HTML_
+    binmode(STDOUT);
+    print $body;
+    exit;
+}
+
+sub guessIE{
+    $ENV{'HTTP_ACCEPT_CHARSET'} or return 0;
+    $ENV{'HTTP_KEEP_ALIVE'} or return 0;
+    !$ENV{'HTTP_ACCEPT'} or return 0;
+    index($ENV{'HTTP_ACCEPT'},'q=') > -1 and return 0;
+    index($ENV{'HTTP_ACCEPT'},'msword') > -1 and return 1;
+    !$ENV{'HTTP_ACCEPT_LANGUAGE'} or return 0;
+    index($ENV{'HTTP_ACCEPT_LANGUAGE'},'q=') > -1 and return 0;
+    !$ENV{'HTTP_ACCEPT_ENCODING'} or return 0;
+    $ENV{'HTTP_ACCEPT_ENCODING'} eq 'gzip, deflate' or return 0;
+    index($ENV{'HTTP_ACCEPT_ENCODING'},'q=') > -1 and return 0;
+    return 1;
+}
+
 
 
 
@@ -1765,7 +1889,8 @@ sub getParam{
 		    if($head=~/filename="([^"]+)"[\w\W]+Content-Type:\s*(\S.*\S)/io){
 			length($value) < $CF{'AttachMaxSize'} or next;
 			my $item = { 'filename' => $1, 'content-type' => $2, 'head' =>$head, 'body' => $value };
-			$item->{'ext'} =  $1 if $item->{'filename'} =~ /(\w+)$/o;
+			$item->{'filename'} = $1 if $item->{'filename'} =~ /([^\/\\\:]+)$/o;
+			$item->{'ext'} = $1 if $item->{'filename'} =~ /(\w+)$/o;
 			$item->{'hash'} = Airemix::Digest::MD5_hex($value);
 			$item->{'size'} = length$value;
 		    }
@@ -1775,7 +1900,8 @@ sub getParam{
 	    }elsif($head=~/filename="([^"]+)"[\w\W]+Content-Type:\s*(\S.*\S)/io){
 		length($value) < $CF{'AttachMaxSize'} or next;
 		my $item = { 'filename' => $1, 'content-type' => $2, 'head' =>$head, 'body' => $value };
-		$item->{'ext'} =  $1 if $item->{'filename'} =~ /(\w+)$/o;
+		$item->{'filename'} = $1 if $item->{'filename'} =~ /([^\/\\\:]+)$/o;
+		$item->{'ext'} = $1 if $item->{'filename'} =~ /(\w+)$/o;
 		$item->{'hash'} = Airemix::Digest::MD5_hex($value);
 		$item->{'size'} = length$value;
 		$value = $item;
@@ -1847,7 +1973,10 @@ sub getParam{
     $IN{'hua'}=MirString::getValidString($ENV{'HTTP_USER_AGENT'});
     $IN{'hua'}=~tr/\x09\x0A\x0D/\x20\x20\x20/;
 	
-    if(defined$DT{'body'}){
+    if(defined$DT{'mode'}&&$DT{'mode'}eq'download'){
+	$IN{'mode'} = 'download';
+	$IN{'hash'} = $1 if $DT{'hash'} && $DT{'hash'} =~ /^([0-9a-f]{32})$/o;
+    }elsif(defined$DT{'body'}){
 	#記事書き込み
 	#http URL の正規表現
 	my$http_URL_regex =
@@ -3168,7 +3297,7 @@ sub attachFile(){
 	for(@file){
 	    my $item = $_;
 	    &saveAttachFile($item);
-	    push @attach, { map{ $_,$item->{$_} }qw/hash ext content-type size/ };
+	    push @attach, { map{ $_,$item->{$_} }qw/hash ext content-type size filename/ };
 	    &makeThumbnail($item)if$CF{'AttachThumbnail'};
 	}
 	$IN{'attach'} = MirString::urlencode(\@attach);
@@ -3192,11 +3321,36 @@ sub saveAttachFile{
 	mkdir($CF{'AttachDir'},0777) or "Can't mkdir($CF{'AttachDir'})[$?:$!]";
     }
     my $item = shift;
-    my $filename = sprintf('%s/%s.%s',$CF{'AttachDir'},$item->{'hash'},$item->{'ext'});
+    #my $filename = sprintf('%s/%s.%s',$CF{'AttachDir'},$item->{'hash'},$item->{'ext'});
+    my $filename = sprintf('%s/%s.dat',$CF{'AttachDir'},$item->{'hash'});
     open(ATTACH, '>'.$filename)||die"Can't read/write attached file($filename)[$?:$!]";
     binmode(ATTACH);
     print ATTACH $item->{'body'};
     close(ATTACH);
+    
+    my %attachdb;
+    if(open(ATTACHDB,'+<'.$CF{'AttachDB'})){
+	eval{flock(ATTACHDB,2)};
+	seek(ATTACHDB,0,0);
+	while(<ATTACHDB>){
+	    if(/(?:^|\t)hash=\t(\w+);\t/){
+		my $key = $1;
+		$attachdb{$key} = {/([^\t]*)=\t([^\t]*);\t/go};
+	    }
+	}
+	seek(ATTACHDB,0,0);
+	truncate(ATTACHDB,0);
+    }elsif(open(ATTACHDB,'>>'.$CF{'AttachDB'})){
+	eval{flock(ATTACHDB,2)};
+    }else{
+    	die"Can't read attach_db($CF{'AttachDB'})[$?:$!]";
+    }
+    $attachdb{$key} = { map{ $_,$item->{$_} }qw/hash ext content-type size filename/ };
+    for(values%attachdb){
+	my %item = %{$_};
+	print ATTACHDB join('',map{sprintf"%s=\t%s;\t",$_,$item{$_}}keys%item)."\n";
+    }
+    close(ATTACHDB);
 }
 
 
@@ -3220,7 +3374,7 @@ sub makeThumbnail{
 	mkdir($CF{'AttachThumbnailDir'},0777) or"Can't mkdir($CF{'AttachThumbnailDir'})[$?:$!]";
     }
     my $item = shift;
-    my $orig = sprintf('%s/%s.%s',$CF{'AttachDir'},$item->{'hash'},$item->{'ext'});
+    my $orig = sprintf('%s/%s.dat',$CF{'AttachDir'},$item->{'hash'});
     my $thumbnail = sprintf('%s/%s.%s',$CF{'AttachThumbnailDir'},$item->{'hash'},$item->{'ext'});
     
     my $image = new Image::Magick;
@@ -3271,6 +3425,25 @@ sub removeAttachedFile{
 	}
 	closedir(DIR);
     }
+    
+    open(ATTACHDB,'+<'.$CF{'AttachDB'})||die"Can't read attach_db($CF{'AttachDB'})[$?:$!]";
+    eval{flock(ATTACHDB,2)};
+    seek(ATTACHDB,0,0);
+    my %attachdb;
+    while(<ATTACHDB>){
+	if(/(?:^|\t)hash=\t(\w+);\t/){
+	    my $key = $1;
+	    $attachdb{$key} = {/([^\t]*)=\t([^\t]*);\t/go};
+	}
+    }
+    seek(ATTACHDB,0,0);
+    truncate(ATTACHDB,0);
+    delete$attachdb{$hash};
+    for(values%attachdb){
+	my %item = %{$_};
+	print ATTACHDB join('',map{sprintf"%s=\t%s;\t",$_,$item{$_}}keys%item)."\n";
+    }
+    close(ATTACHDB);
 }
 
 
@@ -3579,7 +3752,7 @@ BEGIN{
 	    print "\n = = = ENVIRONMENTAL VARIABLE = = =\n";
 	    printf"%-20.20s : %s\n",$_,$ENV{$_} for grep{$ENV{$_}}
 		qw(CONTENT_LENGTH QUERY_STRING REQUEST_METHOD SERVER_NAME HTTP_HOST SCRIPT_NAME OS SERVER_SOFTWARE);
-	    print "\n+#      Airemix Mireille     #+\n+#  http://www.airemix.com/  #+\n</PRE>\n</BODY>\n</HTML>\n";
+	    print "\n+#      Airemix Mireille     #+\n+#    http://airemix.com/    #+\n</PRE>\n</BODY>\n</HTML>\n";
 	    exit;
 	}:sub{
 	    index($_[0],'flock')+1 and index($_[0],'unimplemented')+1 and return;
