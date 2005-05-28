@@ -660,19 +660,18 @@ sub getAttachedFiles{
 	}
 	my $length = !$DT{'j'} ? $CF{'AttachParentLength'} : $CF{'AttachChildLength'};
 	$#array = $length - 1 if @array > $length;
-	for(@array){
-	    ref$_ eq 'HASH' or next;
+	for( grep{ref$_ eq 'HASH'}@array ){
 	    my $item = $_;
-	    my $filename = sprintf('%s.%s',$item->{'hash'},$item->{'ext'});
-	    my $attach = sprintf('%s/%s',$CF{'AttachDir'},$filename);
-	    my $thumbnail = sprintf('%s/%s',$CF{'AttachThumbnailDir'},$filename);
+	    my $filename = $item->{'filename'} || "$item->{'hash'}.$item->{'ext'}";
+	    my $attach = sprintf('%s?mode=download&hash=%s',$CF{'index'},$item->{'hash'});
+	    my $thumbnail = sprintf('%s/%s.%s',$CF{'AttachThumbnailDir'},$item->{'hash'},$item->{'ext'});
 	    if($CF{'AttachThumbnail'}&&-s$thumbnail){
 		$thumbnails .= <<"_HTML_";
 <a href="$attach" title="$filename"><img src="$thumbnail" alt="$filename"></a>
 _HTML_
 	    }else{
 		$attachments .= <<"_HTML_";
-<a href="$attach" title="$filename">$_->{'hash'}.$_->{'ext'}</a>
+<a href="$attach" title="$filename">$filename</a>
 _HTML_
 	    }
 	}
@@ -977,16 +976,16 @@ sub getAttachForm{
 	}
 	$#array = $length - 1 if @array > $length;
 	for( grep{ref$_ eq 'HASH'}@array ){
-	    my $hash = $_->{'hash'};
+	    my $filename = $item->{'filename'} || "$item->{'hash'}.$item->{'ext'}";
+	    my $attach = sprintf('%s?mode=download&hash=%s',$CF{'index'},$item->{'hash'});
 	    $html .= <<"_HTML_";
-<A href="$CF{'AttachDir'}/$hash.$_->{'ext'}">$hash.$_->{'ext'}</A>
+<A href="$attach">$filename</A>
 [<LABEL for="remove_attach__$hash"><INPUT type="checkbox" id="remove_attach__$hash" name="remove_attach__$hash" value="$hash">ºï½ü</LABEL>]
-<br>
 _HTML_
 	}
     }
     for( my $i = 0; $i < $length - @array; $i++ ){
-	$html .= qq{<INPUT id="attach__$i" name="attach__$i" type="file"><br>\n};
+	$html .= qq{<INPUT id="attach__$i" name="attach__$i" type="file">\n};
     }
     
     return <<"_HTML_";
