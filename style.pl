@@ -976,11 +976,12 @@ sub getAttachForm{
 	}
 	$#array = $length - 1 if @array > $length;
 	for( grep{ref$_ eq 'HASH'}@array ){
+	    my $item = $_;
 	    my $filename = $item->{'filename'} || "$item->{'hash'}.$item->{'ext'}";
 	    my $attach = sprintf('%s?mode=download&hash=%s',$CF{'index'},$item->{'hash'});
 	    $html .= <<"_HTML_";
 <A href="$attach">$filename</A>
-[<LABEL for="remove_attach__$hash"><INPUT type="checkbox" id="remove_attach__$hash" name="remove_attach__$hash" value="$hash">ºï½ü</LABEL>]
+[<LABEL for="remove_attach__$item->{'hash'}"><INPUT type="checkbox" id="remove_attach__$item->{'hash'}" name="remove_attach__$item->{'hash'}" value="$item->{'hash'}">ºï½ü</LABEL>]
 _HTML_
 	}
     }
