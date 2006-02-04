@@ -1097,9 +1097,13 @@ $ 記事ナビのモード
 	}
 		
 	print<<"_HTML_";
-<!--[if IE]>
+<!--[if gte IE 7]>
+<DIV id="naviwind" style="display:none;position:fixed;filter:alpha(opacity=60)">
+<![endif]-->
+<!--[if lt IE 7]>
 <DIV id="naviwind" style="display:none;position:absolute;filter:alpha(opacity=60)">
-<![endif]--><![if ! IE]>
+<![endif]-->
+<![if ! IE]>
 <DIV id="naviwind" style="$style">
 <![endif]>
 <TABLE id="navihead" cellspacing="1" summary="ArtNavi Header">
