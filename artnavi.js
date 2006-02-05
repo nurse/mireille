@@ -60,15 +60,14 @@ function artnavi(p){
 		&&document.documentElement.clientHeight<document.body.clientHeight
 		?document.documentElement:document.body;
 	if(p=='popup'||!document.cookie.match(/(^|; )ArtNavi=([^;]+)/)){
-		naviwind.style.width=maW+'px';
 		naviwind.style.display=navibody.style.display='block';
-		resetXY(1);
+		setNaviWindWidth(maW);
+		resetXY();
 		if(document.cookie.match(/(^|; )ArtNavi=([^;]+)/))setcookie();
 	}else{
 		//ページ間移動
 		var cook=unescape(RegExp.$2);
 		navibody.style.display=(cook.match(/\tnavibodydisplay=\t(\w+);\t/))?RegExp.$1:'block';
-		naviwind.style.width=(navibody.style.display=='none'?miW:maW)+'px';
 		naviwind.style.display=(cook.match(/\tnaviwinddisplay=\t(\w+);\t/))?RegExp.$1:'block';
 		ncX=(cook.match(/\tncX=\t(\d+);\t/))?parseInt(RegExp.$1):
 			(deX<0?docmentObj.clientWidth +deX+1-naviwind.offsetWidth :deX);
@@ -81,6 +80,7 @@ function artnavi(p){
 			naviwind.style.left=ncX+'px';
 			naviwind.style.top =ncY+'px';
 		}
+		setNaviWindWidth(navibody.style.display=='none' ? miW : maW);
 	}
 	window.onresize=refresh;
 	return true;
@@ -149,14 +149,14 @@ function view(e,id){
 		}else if(id=='navibody'){
 			ncX=ncX-(maW-miW);
 			naviwind.style.left=(scrollObj?scrollObj.scrollLeft:0)+ncX+'px';
-			naviwind.style.width=maW+'px';
+			setNaviWindWidth(maW);
 		}
 		viewobj.style.display='block';
 	}else{
 		viewobj.style.display='none';
 		if(id=='naviwind'){
 		}else if(id=='navibody'){
-			naviwind.style.width=miW+'px';
+			setNaviWindWidth(miW);
 			ncX=ncX+maW-miW;
 			naviwind.style.left=(scrollObj?scrollObj.scrollLeft:0)+ncX+'px';
 		}
@@ -251,6 +251,17 @@ function acskey(e,id){
 	}
 	view(e,id);
 	return true;
+}
+
+
+//--------------------------------------
+// naviwindの幅設定
+function setNaviWindWidth(width){
+	naviwind.style.width = width + 'px';
+	if(naviwind.offsetWidth == width){
+		naviwind.style.width = width + naviwind.offsetWidth - naviwind.clientWidth + 'px';
+		navihead.style.width = width + 'px';
+	}
 }
 
 

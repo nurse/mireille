@@ -972,7 +972,7 @@ DIV#naviwind:hover{
 #navititl{
 	margin: 0;
 	overflow: hidden;
-	padding: 0.1em;
+	padding: 1px;
 } 
 /* 記事ナビ縮小・閉じるボタン */
 #navibutt{
@@ -995,10 +995,10 @@ DIV#naviwind:hover{
 	background-color: #cdf;
 	height: 1.2em;
 	overflow: hidden;
-	padding: 1%;
+	padding: 2px;
 	text-overflow: ellipsis; /*CSS3*/
 	white-space: nowrap;
-	width: 98%;
+	width: 296px;
 }
 /* 記事ナビスレッド記事番号 */
 .navinums{

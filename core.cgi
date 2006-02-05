@@ -3762,7 +3762,7 @@ BEGIN{
     }
     $CF{'_HiraganaLetterA'}->{'Core'}='дв';
     # Version
-    $CF{'Version'}=join('.',q$Mireille: 1_2_17 $=~/\d+[a-z]?/go);
+    $CF{'Version'}=join('.',q$Mireille: 1_2_18 $=~/\d+[a-z]?/go);
     ($CF{'Core'}=q$Revision$)=~/(\d+((?:\.\d+)*))/o;
     $CF{'CoreRevision'}=$1;
     my$subver=$2;

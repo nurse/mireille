@@ -74,13 +74,13 @@ $CF{'maxChildrenShown'}='10';
 #読み込む最大サイズ
 $CF{'MaxSize'}='1048576';
 #ファイルを添付可能にする
-$CF{'Attach'}='1';
+$CF{'Attach'}='0';
 #添付可能な最大ファイルサイズ
 $CF{'AttachMaxSize'}='300000';
 #親記事に添付できるファイル数
-$CF{'AttachParentLength'}='3';
+$CF{'AttachParentLength'}='2';
 #子記事に添付できるファイル数
-$CF{'AttachChildLength'}='3';
+$CF{'AttachChildLength'}='2';
 #添付ファイルを保存するディレクトリ
 $CF{'AttachDir'}='./attach/';
 #添付イメージファイルのサムネイルを作る
