@@ -514,6 +514,8 @@ Marldiaはデータの保持などは適当でもいいこともあって、
 	my@message=();
 	$IN{'name'}||push(@error,'名前');
 	$IN{'body'} and !($IN{'body'} =~ /^[\x21-\x7e]*$/o) or push(@error,'本文');
+	!$IN{'icon'} || $IN{'icon'} eq '1' and push(@error,'アイコン');
+	$IN{'color'} and $IN{'color'} eq '1' and push(@error,'色');
 	$IN{'pass'}||($CF{'admps'}&&$IN{'oldps'}eq$CF{'admps'})
 	    or push(@error,'パスワード')&&push(@message,'パスワードは8文字以上、128文字以下でなければなりません。');
 	if($CF{'ngWords'}&&!@error){
@@ -1863,14 +1865,13 @@ sub getParam{
     
     #引数をハッシュに
     my%DT;
-    unless($params){
+    unless($params || @params){
     }elsif(length$params>$CF{'MaxSize'}){
 	#サイズ制限
 	&showHeader;
 	print"いくらなんでも量が多すぎます\n$params";
 	print&getFooter;
 	exit;
-    }elsif(!length$params){
     }elsif($boundary){
 	#multipartな入力を展開
 	@params = map{/([\w\W]+)\r\n/o}split(/--$boundary(?:--|\r\n)/o,$params);
@@ -1938,7 +1939,7 @@ sub getParam{
 	$IN{'_ENCTYPE'} = 'multipart/form-data';
     }else{
 	#x-www-form-urlencodedな入力を展開
-	@params=split(/[&;]/o,$params);
+	@params=split(/[&;]/o,$params) unless @params;
 	#入力を展開してハッシュに入れる
 	while(@params){
 	    my($i,$j)=split('=',shift(@params),2);
@@ -3762,7 +3763,7 @@ BEGIN{
     }
     $CF{'_HiraganaLetterA'}->{'Core'}='あ';
     # Version
-    $CF{'Version'}=join('.',q$Mireille: 1_2_18 $=~/\d+[a-z]?/go);
+    $CF{'Version'}=join('.',q$Mireille: 1_2_19 $=~/\d+[a-z]?/go);
     ($CF{'Core'}=q$Revision$)=~/(\d+((?:\.\d+)*))/o;
     $CF{'CoreRevision'}=$1;
     my$subver=$2;
